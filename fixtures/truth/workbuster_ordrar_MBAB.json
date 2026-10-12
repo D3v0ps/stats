@@ -1,0 +1,4875 @@
+[
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 23800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 42000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 24600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 21600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 5300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 24600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 38900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 41000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 18500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 26400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 37500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 4000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 5900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 31800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 9700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 4000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 4800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 3500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 3600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 6600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 7200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 3700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 6300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 15300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 16700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 6300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 17900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 14000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 9600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 35000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 22300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 12500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 30200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 50100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 16800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 26500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 31100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 2800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 26500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 16600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 27600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 16600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 2500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 9000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 7100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 3100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 6100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 2300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 1800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 6800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 6100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 23800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 10600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 22400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 7500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 23400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Uppsala",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 10200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 11100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 14600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 43400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 34800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 20000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 21800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 14300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 5200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 31900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 14100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 28300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 43900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 47300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 24900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 22500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 29000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 30700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 4900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 3600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 6900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 6300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 3600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 5000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 6400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 2300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 12400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 6300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 8600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 11000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Uppsala",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 21700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 10800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 16800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 10200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 15000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 46700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 26400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 37500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 21000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 7000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 25500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 21900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 36300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 2500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 40700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 1100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 11200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 21800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 2400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 8700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 4600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 7200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 7600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 7000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 5300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 4900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 2200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 12700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 20800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 20100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 23400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 17800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Uppsala",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 18800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 15100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 19300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 5600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 18600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 13100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 18100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 9200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 33000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 32300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 18700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 17100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 7900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 31300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 31700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 22600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 27400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 11200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 1900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 2500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 4400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 3700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 7100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 4600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 8300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 2400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 9000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 8300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 7200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 11400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 8100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 19800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 21200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 19300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 37700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 29300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 4000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 5100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 42700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 7100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 19300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 14100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 15900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 8400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 5200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 24200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 8600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 4900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 21200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 5200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 8100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 8100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 6100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 4800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 3100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 2100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 8000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 15100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 15100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 20100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 18100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 16100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 17600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 9000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 4500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 18600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 48300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 10100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 11200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 5200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 22900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 45500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 9200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 32200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 19200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 27100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 16400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 18600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 48700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 38800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 7600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 5900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 8300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 8000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 5400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 23900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 18100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Uppsala",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 6900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 22500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 13200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 29300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 25800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 9600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 35100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 26400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 24000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 34000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 31300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 18700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 14300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 23500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 21300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 27300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 4200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 8900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 9000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 1700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 2500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 8200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 12800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 7600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 13000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 16300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 9500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 15000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Uppsala",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 16500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 11700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 13100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 25700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 39400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 3400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 46900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 24800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 24600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 25300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 46100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 11500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 35700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 19800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 28600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 12800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 33500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 24000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 8600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 6600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 3900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 8800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 4100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 4900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 8700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 9000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 23900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 18600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 11300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Uppsala",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 15100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 17800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 36600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 13200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 42200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 17000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 10300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 7700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 15700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 31000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 12100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 2800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 7100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 24900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 16600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 25300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 12000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 4100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 3900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 6500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 1800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 3100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 8500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 5200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 3700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 19300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 22300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 9400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 14600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 21600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 5700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 13600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 20300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 11600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 24500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 29400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 24600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 9500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 44000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 18000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 32100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 8700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 46800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 37300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 38500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 4800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 6200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 7200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 8900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 4500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 5800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 3900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 7500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 6400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 13500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 12500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 11900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 10700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 49700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 34300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 18800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 20100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 20700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 43900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 22400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 12800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": -700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 14800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 3200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 38000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 39800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 16100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 32600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 21900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 3700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 6100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 6300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 4500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 3300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 7900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 5700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 10500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 7300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 12400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 14700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 22300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 14400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 7600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Uppsala",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 6900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 33000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 34300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 6400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 7600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 52700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 32700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 30900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 8900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 21000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 40700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 5600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 23600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 17700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 34400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 22600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 31900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 2300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 5200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 4800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 6400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 1700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 7900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 20100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 16300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 12000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 19300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 22600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 13900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 14500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 2600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 22000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 16500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 11900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 10500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 25900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 35400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 21300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 20100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 5900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 36600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 24800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 29900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 4300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 18700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 29600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 8500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 2700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 7400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 3000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 6100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 2000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 2800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 3300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 6800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 2900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 6600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 17000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 11200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 14600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 16000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 7000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 12200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 19900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 23500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Uppsala",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 14800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 17100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 9400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 28000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 19500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 21900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 37800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 20200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 41400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 22900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 25600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 40400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 17900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 48400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 40700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 31400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 5500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 20600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 3500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 4000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 2800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 1800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 7200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 6100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 2300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 5400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 2200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 8000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 5100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 9000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 21200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 13100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 37900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 24400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 18400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 5500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 21600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 18900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 14900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 23200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 12100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 18000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 34400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 8000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 44000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 36500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 43500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 27100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 4900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 4500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 3400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 8800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 7300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 4800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 7500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 8000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 7000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 11300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 23700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 13900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 14000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 16500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 17400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 6500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Uppsala",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 10200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 19300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 15100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 8900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 5000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 33800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 24200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 18800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 26300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 10200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 17200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 25000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 51800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 18000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 3500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 22200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 20700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 7300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 2800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 6400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 2200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 6600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 2800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 5300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 6800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 2100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 8400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 5200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 3800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 8600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 20200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 15700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 17600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 11700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 21700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Uppsala",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 19000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 17800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 10400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 27900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 27900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 25100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 5200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 22000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 6700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 17000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 11000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 33700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 31400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 27800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 43300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 2700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 16200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 40600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 2300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 5800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 8600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 8900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 2500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 5000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 18900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 12900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 17800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 21400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 10100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Uppsala",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 16300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 24000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 27900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 27100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 13900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 2900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 7600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 22100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 38600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 30500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 25200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 24300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 16700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 47500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 26300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 18700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 22500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 27100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 6100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 3500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 3100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 8100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 9000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 6400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 4500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 1600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 7700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 1600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 14700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 19600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 7500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 21000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 10300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Uppsala",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 19000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 20800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 48800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 39300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 6800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 20300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 7700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 47600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 10500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 20300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 24300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 33000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 9800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 36300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 15900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 33400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 19500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 7900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 4900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 8900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 7300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 6300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 6900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 5200
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 7800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 10400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 22800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 11700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 25700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 12000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "Karriärvägledning" },
+    "value": 22700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Botkyrka", "verksamhet": "ROM2" },
+    "value": 23500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 4000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 27800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 14400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 12100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 18900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 33100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "ordertyp": "Grundersättning",
+      "ort": "Södertälje",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 41300
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 27900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 17400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "KVL" },
+    "value": 20900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "Karriärvägledning" },
+    "value": 14900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Grundersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 4600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Botkyrka", "verksamhet": "KVL" },
+    "value": 6400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Botkyrka",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 1900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 2900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "ordertyp": "Periodersättning",
+      "ort": "Stockholm",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 3400
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 7800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KROM" },
+    "value": 7900
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 3500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Södertälje", "verksamhet": "ROM2" },
+    "value": 4100
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "KROM" },
+    "value": 2700
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Periodersättning", "ort": "Uppsala", "verksamhet": "ROM2" },
+    "value": 4000
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Botkyrka", "verksamhet": "KROM" },
+    "value": 14500
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 22800
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ordertyp": "Resultatersättning", "ort": "Södertälje", "verksamhet": "KVL" },
+    "value": 23600
+  },
+  {
+    "metricKey": "af_intakt",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "ordertyp": "Resultatersättning",
+      "ort": "Uppsala",
+      "verksamhet": "Karriärvägledning"
+    },
+    "value": 12000
+  }
+]

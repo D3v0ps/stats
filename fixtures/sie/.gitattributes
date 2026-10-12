@@ -1,0 +1,2 @@
+# SIE fixtures are byte-exact (CP437/Windows-1252, CRLF): never normalize line endings.
+*.se -text

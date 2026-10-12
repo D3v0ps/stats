@@ -1,0 +1,18 @@
+{
+  "name": "Fortnox – försäljning per kund",
+  "kind": "table",
+  "header": ["Kund", "Fakturadatum"],
+  "columns": {
+    "nr": ["Fakturanr", "Fakturanummer"],
+    "kund": ["Kund", "Kundnamn"],
+    "datum": ["Fakturadatum"],
+    "belopp": ["Belopp exkl. moms", "Belopp exkl moms", "Exkl. moms"]
+  },
+  "skip": [{ "label": "summarad / sum row", "column": "nr", "regex": "^(summa|totalt)\\b" }],
+  "company": { "filename_regex": "_(MBAB|MBR)[_.]" },
+  "period": { "column": "datum" },
+  "aliases": { "kund": { "Postnord": "PostNord AB" } },
+  "dims": { "kund": "kund" },
+  "metrics": [{ "key": "fakturerat_kund", "sum": "belopp" }],
+  "compare_aliases": { "kund": { "Postnord": "PostNord AB" } }
+}

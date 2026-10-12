@@ -1,0 +1,3530 @@
+[
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 9
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 10
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 9
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 9
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 9
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 10
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 11
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 10
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 8
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 8
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 12
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 8
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 8
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 11
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 8
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 10
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 9
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 10
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 11
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 12
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 11
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 9
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 12
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 8
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 10
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 9
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 9
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 8
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 9
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 11
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 9
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 9
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 8
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 5
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 6
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 7
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 4
+  },
+  {
+    "metricKey": "aktiva_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 4
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avbrott_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 4
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 3
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 3
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 3
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 4
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 3
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 3
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 3
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 3
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 3
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 3
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 3
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 3
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Linköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 3
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Norrköping", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Stockholm", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Stockholm", "verksamhet": "Stöd och matchning" },
+    "value": 3
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Linköping", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Norrköping", "verksamhet": "KROM" },
+    "value": 3
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Stockholm", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Linköping", "verksamhet": "KROM" },
+    "value": 2
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Linköping", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "nya_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Norrköping", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-01",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Norrköping", "resultattyp": "Studier", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-02",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Norrköping", "resultattyp": "Studier", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-03",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-04",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Linköping", "resultattyp": "Studier", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-05",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Linköping", "resultattyp": "Studier", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-06",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Linköping", "resultattyp": "Studier", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Norrköping", "resultattyp": "Studier", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-07",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Norrköping", "resultattyp": "Studier", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-08",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Linköping", "resultattyp": "Studier", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-09",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-10",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-11",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 2
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Linköping", "resultattyp": "Studier", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2025-12",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "ort": "Norrköping", "resultattyp": "Studier", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Linköping", "resultattyp": "Studier", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Norrköping", "resultattyp": "Studier", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "ort": "Stockholm", "resultattyp": "Studier", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Norrköping", "resultattyp": "Studier", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Linköping", "resultattyp": "Studier", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "KVL" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "ROM2" },
+    "value": 2
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Norrköping", "resultattyp": "Arbete", "verksamhet": "Stöd och matchning" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "KROM" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "ort": "Stockholm", "resultattyp": "Arbete", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "ROM2" },
+    "value": 1
+  },
+  {
+    "metricKey": "resultat_deltagare",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "ort": "Linköping", "resultattyp": "Arbete", "verksamhet": "KROM" },
+    "value": 1
+  }
+]

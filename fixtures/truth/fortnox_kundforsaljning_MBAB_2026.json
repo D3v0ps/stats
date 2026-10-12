@@ -1,0 +1,506 @@
+[
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "kund": "Arbetsförmedlingen" },
+    "value": 366751.62
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "kund": "Bosch" },
+    "value": 208039.83
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "kund": "Budbee Kungsängen" },
+    "value": 245087.9
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "kund": "Budbee Södertälje" },
+    "value": 483508.17
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "kund": "Early Bird AB" },
+    "value": 175817.36
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "kund": "PRV" },
+    "value": 76913.67
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "kund": "PostNord AB" },
+    "value": 363931.66
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "kund": "Premo" },
+    "value": 129194.94
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "kund": "Arbetsförmedlingen" },
+    "value": 313385.22
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "kund": "Bosch" },
+    "value": 191106.46
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "kund": "Budbee Kungsängen" },
+    "value": 254453.7
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "kund": "Budbee Södertälje" },
+    "value": 394122.9
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "kund": "Early Bird AB" },
+    "value": 178214.9
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "kund": "PRV" },
+    "value": 93289.22
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "kund": "PostNord AB" },
+    "value": 407554.32
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "kund": "Premo" },
+    "value": 105058.74
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "kund": "Arbetsförmedlingen" },
+    "value": 309318.81
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "kund": "Bosch" },
+    "value": 190547.32
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "kund": "Budbee Kungsängen" },
+    "value": 287050.21
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "kund": "Budbee Södertälje" },
+    "value": 487341.3
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "kund": "Early Bird AB" },
+    "value": 223548.06
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "kund": "PRV" },
+    "value": 73215.42
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "kund": "PostNord AB" },
+    "value": 355666.56
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "kund": "Premo" },
+    "value": 113974.34
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "kund": "Arbetsförmedlingen" },
+    "value": 269879.37
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "kund": "Bosch" },
+    "value": 233015.8
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "kund": "Budbee Kungsängen" },
+    "value": 269480.01
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "kund": "Budbee Södertälje" },
+    "value": 361210.82
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "kund": "Early Bird AB" },
+    "value": 170863.42
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "kund": "PRV" },
+    "value": 77585.82
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "kund": "PostNord AB" },
+    "value": 371182.1
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "kund": "Premo" },
+    "value": 116619.74
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "kund": "Arbetsförmedlingen" },
+    "value": 248363.61
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "kund": "Bosch" },
+    "value": 246195.76
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "kund": "Budbee Kungsängen" },
+    "value": 300612.41
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "kund": "Budbee Södertälje" },
+    "value": 494030.34
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "kund": "Early Bird AB" },
+    "value": 179066.19
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "kund": "PRV" },
+    "value": 26818.73
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "kund": "PostNord AB" },
+    "value": 381920.49
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "kund": "Premo" },
+    "value": 111515.37
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "kund": "Arbetsförmedlingen" },
+    "value": 324103.19
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "kund": "Bosch" },
+    "value": 219656.64
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "kund": "Budbee Kungsängen" },
+    "value": 295703
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "kund": "Budbee Södertälje" },
+    "value": 401212.31
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "kund": "Early Bird AB" },
+    "value": 194950.4
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "kund": "PRV" },
+    "value": 77712.58
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "kund": "PostNord AB" },
+    "value": 432025.69
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "kund": "Premo" },
+    "value": 101607.06
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "kund": "Arbetsförmedlingen" },
+    "value": 306908.84
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "kund": "Bosch" },
+    "value": 245493.15
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "kund": "Budbee Kungsängen" },
+    "value": 216930.55
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "kund": "Budbee Södertälje" },
+    "value": 386567.94
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "kund": "Early Bird AB" },
+    "value": 160818.63
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "kund": "PRV" },
+    "value": 82842.45
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "kund": "PostNord AB" },
+    "value": 360688.14
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "kund": "Premo" },
+    "value": 111850.65
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "kund": "Arbetsförmedlingen" },
+    "value": 350284.15
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "kund": "Bosch" },
+    "value": 174431.28
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "kund": "Budbee Kungsängen" },
+    "value": 271047.39
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "kund": "Budbee Södertälje" },
+    "value": 340257.27
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "kund": "Early Bird AB" },
+    "value": 183638.64
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "kund": "PRV" },
+    "value": 64768.01
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "kund": "PostNord AB" },
+    "value": 418812.18
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "kund": "Premo" },
+    "value": 128953.91
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "kund": "Arbetsförmedlingen" },
+    "value": 325203.18
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "kund": "Bosch" },
+    "value": 178038.76
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "kund": "Budbee Kungsängen" },
+    "value": 227870.54
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "kund": "Budbee Södertälje" },
+    "value": 445748.07
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "kund": "Early Bird AB" },
+    "value": 152203.02
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "kund": "PRV" },
+    "value": 87917.96
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "kund": "PostNord AB" },
+    "value": 326413.49
+  },
+  {
+    "metricKey": "fakturerat_kund",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "kund": "Premo" },
+    "value": 116896.4
+  }
+]

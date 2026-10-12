@@ -1,0 +1,227 @@
+@import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+/*
+ * The app has no dark theme. The variant is kept pointing at a `.dark` class that is never
+ * set, so the `dark:` utilities inside the shadcn components stay inert instead of following
+ * the OS colour scheme (Tailwind's default `dark` variant is prefers-color-scheme).
+ */
+@custom-variant dark (&:is(.dark *));
+
+/*
+ * MB brand palette. Tailwind's default colours are removed entirely so that only brand
+ * colours exist as utilities (no green, no stray greys). Each family has a base colour and
+ * three lighter tones: -300, -200, -100 (lightest).
+ */
+@theme {
+  --color-*: initial;
+  --color-white: #ffffff;
+  /* Not in the palette: shadcn's black overlays (bg-black/10) become antracit tints. */
+  --color-black: #1e252b;
+
+  --color-antracit: #1e252b;
+  --color-antracit-300: #494e52;
+  --color-antracit-200: #8d9093;
+  --color-antracit-100: #c6c8c9;
+
+  --color-rod: #ff0c01;
+  --color-rod-300: #fe5d4a;
+  --color-rod-200: #ff998e;
+  --color-rod-100: #ffccc6;
+
+  --color-ljusgra: #d1d3d3;
+  --color-ljusgra-300: #d3d6d7;
+  --color-ljusgra-200: #e4e5e6;
+  --color-ljusgra-100: #f1f2f3;
+
+  --color-bla: #6ba2b9;
+  --color-bla-300: #7eacc0;
+  --color-bla-200: #aecbd7;
+  --color-bla-100: #d7e5eb;
+
+  --radius-card: 18px;
+  --shadow-soft: 0 1px 2px 0 rgb(30 37 43 / 0.04), 0 10px 28px -12px rgb(30 37 43 / 0.12);
+
+  --animate-draw: mb-draw 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  @keyframes mb-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-heading: var(--font-montserrat), ui-sans-serif, system-ui, sans-serif;
+  --color-sidebar-ring: var(--sidebar-ring);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar: var(--sidebar);
+  --color-chart-5: var(--chart-5);
+  --color-chart-4: var(--chart-4);
+  --color-chart-3: var(--chart-3);
+  --color-chart-2: var(--chart-2);
+  --color-chart-1: var(--chart-1);
+  --color-chart-primary: var(--chart-primary);
+  --color-chart-secondary: var(--chart-secondary);
+  --color-chart-previous: var(--chart-previous);
+  --color-chart-highlight: var(--chart-highlight);
+  --color-ring: var(--ring);
+  --color-input: var(--input);
+  --color-border: var(--border);
+  --color-destructive: var(--destructive);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-accent: var(--accent);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-muted: var(--muted);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-secondary: var(--secondary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary: var(--primary);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-popover: var(--popover);
+  --color-card-foreground: var(--card-foreground);
+  --color-card: var(--card);
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  /* 12px × 1.5 = 18px: shadcn cards (rounded-xl) get the brand card radius. */
+  --radius-xl: calc(var(--radius) * 1.5);
+  --radius-2xl: calc(var(--radius) * 1.8);
+  --radius-3xl: calc(var(--radius) * 2.2);
+  --radius-4xl: calc(var(--radius) * 2.6);
+}
+
+:root {
+  --background: #f1f2f3;
+  --foreground: #1e252b;
+  --card: #ffffff;
+  --card-foreground: #1e252b;
+  --popover: #ffffff;
+  --popover-foreground: #1e252b;
+  --primary: #1e252b;
+  --primary-foreground: #ffffff;
+  --secondary: #e4e5e6;
+  --secondary-foreground: #1e252b;
+  --muted: #e4e5e6;
+  --muted-foreground: #494e52;
+  /* shadcn's hover/focus fill for menu items and options: calm grey, never brand red. */
+  --accent: #e4e5e6;
+  --accent-foreground: #1e252b;
+  --destructive: #ff0c01;
+  --border: #e4e5e6;
+  /* Form field outlines need 3:1 against white (WCAG 1.4.11); #E4E5E6 would be ~1.2:1. */
+  --input: #8d9093;
+  --ring: #6ba2b9;
+  --chart-1: #1e252b;
+  --chart-2: #6ba2b9;
+  --chart-3: #d1d3d3;
+  --chart-4: #8d9093;
+  --chart-5: #aecbd7;
+  /* Chart roles (see src/components/brand/tokens.ts). Red only highlights. */
+  --chart-primary: var(--chart-1);
+  --chart-secondary: var(--chart-2);
+  --chart-previous: var(--chart-3);
+  --chart-highlight: #ff0c01;
+  --radius: 0.75rem;
+  --sidebar: #1e252b;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ff0c01;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #494e52;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #494e52;
+  --sidebar-ring: #6ba2b9;
+}
+
+/* Presentation mode (board meetings, projector): antracit canvas, white type. */
+.theme-present {
+  --background: #1e252b;
+  --foreground: #ffffff;
+  --card: #1e252b;
+  --card-foreground: #ffffff;
+  --popover: #1e252b;
+  --popover-foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-foreground: #1e252b;
+  --secondary: #494e52;
+  --secondary-foreground: #ffffff;
+  --muted: #494e52;
+  --muted-foreground: #c6c8c9;
+  --border: #494e52;
+  --input: #8d9093;
+  --chart-1: #ffffff;
+  --chart-2: #6ba2b9;
+  --chart-3: #8d9093;
+  --chart-4: #c6c8c9;
+  --chart-5: #aecbd7;
+  /* Custom properties inherit resolved values, so the role aliases must be restated here. */
+  --chart-primary: var(--chart-1);
+  --chart-secondary: var(--chart-2);
+  --chart-previous: var(--chart-3);
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+@utility num {
+  font-variant-numeric: tabular-nums;
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  html {
+    @apply font-sans;
+  }
+  table {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Motion: off for users who ask for it, in print and in frozen/static views. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+[data-static],
+[data-static] *,
+[data-static] *::before,
+[data-static] *::after {
+  animation: none !important;
+  transition: none !important;
+}

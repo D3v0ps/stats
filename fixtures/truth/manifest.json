@@ -1,0 +1,1687 @@
+{
+  "generator": "scripts/fixtures/generate.ts",
+  "seed": "mb-stats-fixtures-v1",
+  "files": [
+    {
+      "file": "budget_2026.xlsx",
+      "truth": "budget_2026.json",
+      "months": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08",
+        "2026-09",
+        "2026-10",
+        "2026-11",
+        "2026-12"
+      ],
+      "format": "xlsx",
+      "datasetKey": "budget",
+      "kind": "table",
+      "description": "Budget 2026 i brett format, ett blad per bolag (MB AB, MB Restart), månader Jan–Dec plus Helår (formel), kostnader negativa, summarader med formler.",
+      "companies": ["MBAB", "MBR"],
+      "scenario": "budget",
+      "choices": {},
+      "layout": [
+        {
+          "sheet": "MB AB",
+          "headerRow": 5,
+          "firstDataRow": 6,
+          "lastDataRow": 13,
+          "dataRows": 6,
+          "metaRows": [1, 2, 3],
+          "emptyRows": [4, 12],
+          "sumRows": [11, 14],
+          "footerRows": [],
+          "merges": ["A1:N1"]
+        },
+        {
+          "sheet": "MB Restart",
+          "headerRow": 5,
+          "firstDataRow": 6,
+          "lastDataRow": 13,
+          "dataRows": 6,
+          "metaRows": [1, 2, 3],
+          "emptyRows": [4, 12],
+          "sumRows": [11, 14],
+          "footerRows": [],
+          "merges": ["A1:N1"]
+        }
+      ],
+      "aliases": {
+        "kontogrupp": {
+          "Intäkter": "intakter",
+          "Varor och underleverantörer": "varor_ul",
+          "Övriga externa kostnader": "ovriga_externa",
+          "Personalkostnader": "personal",
+          "Avskrivningar": "avskrivningar",
+          "Finansiella poster": "finansiella"
+        }
+      },
+      "templates": [
+        {
+          "datasetKey": "budget",
+          "name": "Budget 2026 – MB AB (fixture)",
+          "headerSignature": [
+            "post",
+            "jan",
+            "feb",
+            "mar",
+            "apr",
+            "maj",
+            "jun",
+            "jul",
+            "aug",
+            "sep",
+            "okt",
+            "nov",
+            "dec",
+            "helår"
+          ],
+          "version": 1,
+          "config": {
+            "kind": "table",
+            "steps": [
+              {
+                "op": "filter",
+                "column": "post",
+                "operator": "equals",
+                "value": "Rörelseresultat",
+                "caseSensitive": false
+              },
+              {
+                "op": "filter",
+                "column": "post",
+                "operator": "equals",
+                "value": "Resultat efter finansiella poster",
+                "caseSensitive": false
+              },
+              { "op": "drop", "column": "helår" },
+              {
+                "op": "unpivot",
+                "columns": [
+                  "jan",
+                  "feb",
+                  "mar",
+                  "apr",
+                  "maj",
+                  "jun",
+                  "jul",
+                  "aug",
+                  "sep",
+                  "okt",
+                  "nov",
+                  "dec"
+                ],
+                "nameColumn": "månad",
+                "valueColumn": "belopp"
+              },
+              { "op": "constant", "column": "år", "value": "2026" },
+              { "op": "merge", "columns": ["månad", "år"], "separator": " ", "into": "period" },
+              {
+                "op": "replace",
+                "column": "post",
+                "find": "Intäkter",
+                "replace": "intakter",
+                "match": "whole_cell",
+                "caseSensitive": false
+              },
+              {
+                "op": "replace",
+                "column": "post",
+                "find": "Varor och underleverantörer",
+                "replace": "varor_ul",
+                "match": "whole_cell",
+                "caseSensitive": false
+              },
+              {
+                "op": "replace",
+                "column": "post",
+                "find": "Övriga externa kostnader",
+                "replace": "ovriga_externa",
+                "match": "whole_cell",
+                "caseSensitive": false
+              },
+              {
+                "op": "replace",
+                "column": "post",
+                "find": "Personalkostnader",
+                "replace": "personal",
+                "match": "whole_cell",
+                "caseSensitive": false
+              },
+              {
+                "op": "replace",
+                "column": "post",
+                "find": "Avskrivningar",
+                "replace": "avskrivningar",
+                "match": "whole_cell",
+                "caseSensitive": false
+              },
+              {
+                "op": "replace",
+                "column": "post",
+                "find": "Finansiella poster",
+                "replace": "finansiella",
+                "match": "whole_cell",
+                "caseSensitive": false
+              }
+            ],
+            "columns": [
+              {
+                "column": "post",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "kontogrupp"
+              },
+              { "column": "period", "type": "date", "usage": "period" },
+              {
+                "column": "belopp",
+                "type": "amount",
+                "usage": "measure",
+                "metricKey": "budget_belopp"
+              }
+            ],
+            "counters": [],
+            "period": { "kind": "column", "column": "period" },
+            "company": { "kind": "fixed", "company": "MBAB" },
+            "scenario": "budget",
+            "budgetSign": "result"
+          },
+          "sheetHint": "MB AB"
+        },
+        {
+          "datasetKey": "budget",
+          "name": "Budget 2026 – MB Restart (fixture)",
+          "headerSignature": [
+            "post",
+            "jan",
+            "feb",
+            "mar",
+            "apr",
+            "maj",
+            "jun",
+            "jul",
+            "aug",
+            "sep",
+            "okt",
+            "nov",
+            "dec",
+            "helår"
+          ],
+          "version": 1,
+          "config": {
+            "kind": "table",
+            "steps": [
+              {
+                "op": "filter",
+                "column": "post",
+                "operator": "equals",
+                "value": "Rörelseresultat",
+                "caseSensitive": false
+              },
+              {
+                "op": "filter",
+                "column": "post",
+                "operator": "equals",
+                "value": "Resultat efter finansiella poster",
+                "caseSensitive": false
+              },
+              { "op": "drop", "column": "helår" },
+              {
+                "op": "unpivot",
+                "columns": [
+                  "jan",
+                  "feb",
+                  "mar",
+                  "apr",
+                  "maj",
+                  "jun",
+                  "jul",
+                  "aug",
+                  "sep",
+                  "okt",
+                  "nov",
+                  "dec"
+                ],
+                "nameColumn": "månad",
+                "valueColumn": "belopp"
+              },
+              { "op": "constant", "column": "år", "value": "2026" },
+              { "op": "merge", "columns": ["månad", "år"], "separator": " ", "into": "period" },
+              {
+                "op": "replace",
+                "column": "post",
+                "find": "Intäkter",
+                "replace": "intakter",
+                "match": "whole_cell",
+                "caseSensitive": false
+              },
+              {
+                "op": "replace",
+                "column": "post",
+                "find": "Varor och underleverantörer",
+                "replace": "varor_ul",
+                "match": "whole_cell",
+                "caseSensitive": false
+              },
+              {
+                "op": "replace",
+                "column": "post",
+                "find": "Övriga externa kostnader",
+                "replace": "ovriga_externa",
+                "match": "whole_cell",
+                "caseSensitive": false
+              },
+              {
+                "op": "replace",
+                "column": "post",
+                "find": "Personalkostnader",
+                "replace": "personal",
+                "match": "whole_cell",
+                "caseSensitive": false
+              },
+              {
+                "op": "replace",
+                "column": "post",
+                "find": "Avskrivningar",
+                "replace": "avskrivningar",
+                "match": "whole_cell",
+                "caseSensitive": false
+              },
+              {
+                "op": "replace",
+                "column": "post",
+                "find": "Finansiella poster",
+                "replace": "finansiella",
+                "match": "whole_cell",
+                "caseSensitive": false
+              }
+            ],
+            "columns": [
+              {
+                "column": "post",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "kontogrupp"
+              },
+              { "column": "period", "type": "date", "usage": "period" },
+              {
+                "column": "belopp",
+                "type": "amount",
+                "usage": "measure",
+                "metricKey": "budget_belopp"
+              }
+            ],
+            "counters": [],
+            "period": { "kind": "column", "column": "period" },
+            "company": { "kind": "fixed", "company": "MBR" },
+            "scenario": "budget",
+            "budgetSign": "result"
+          },
+          "sheetHint": "MB Restart"
+        }
+      ],
+      "reconcileConfig": "budget.json",
+      "counts": { "facts": 144 }
+    },
+    {
+      "file": "fortnox_kundforsaljning_MBAB_2026.xlsx",
+      "truth": "fortnox_kundforsaljning_MBAB_2026.json",
+      "months": [
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08",
+        "2026-09"
+      ],
+      "format": "xlsx",
+      "datasetKey": "fx_kundforsaljning",
+      "kind": "table",
+      "description": "Fortnox kundfakturor 2026-01–2026-09 exkl./inkl. moms, kreditfakturor som negativa belopp, två kundposter för PostNord, Summa-rad sist.",
+      "companies": ["MBAB"],
+      "scenario": "utfall",
+      "choices": { "company": "MBAB" },
+      "layout": [
+        {
+          "sheet": "Kundfakturor",
+          "headerRow": 5,
+          "firstDataRow": 6,
+          "lastDataRow": 168,
+          "dataRows": 163,
+          "metaRows": [1, 2, 3],
+          "emptyRows": [4, 169],
+          "sumRows": [170],
+          "footerRows": [],
+          "merges": []
+        }
+      ],
+      "aliases": { "kund": { "Postnord": "PostNord AB" } },
+      "templates": [
+        {
+          "datasetKey": "fx_kundforsaljning",
+          "name": "Fortnox – kundfakturor (fixture)",
+          "headerSignature": [
+            "fakturanr",
+            "kundnr",
+            "kund",
+            "fakturadatum",
+            "förfallodatum",
+            "belopp exkl. moms",
+            "moms",
+            "totalt"
+          ],
+          "version": 1,
+          "config": {
+            "kind": "table",
+            "steps": [
+              {
+                "op": "filter",
+                "column": "fakturanr",
+                "operator": "equals",
+                "value": "summa",
+                "caseSensitive": false
+              },
+              {
+                "op": "replace",
+                "column": "kund",
+                "find": "Postnord",
+                "replace": "PostNord AB",
+                "match": "whole_cell",
+                "caseSensitive": false
+              }
+            ],
+            "columns": [
+              { "column": "fakturanr", "type": "text", "usage": "ignore" },
+              { "column": "kundnr", "type": "text", "usage": "ignore" },
+              { "column": "kund", "type": "text", "usage": "dimension", "dimensionKey": "kund" },
+              { "column": "fakturadatum", "type": "date", "usage": "period" },
+              { "column": "förfallodatum", "type": "date", "usage": "ignore" },
+              {
+                "column": "belopp exkl. moms",
+                "type": "amount",
+                "usage": "measure",
+                "metricKey": "fakturerat_kund"
+              },
+              { "column": "moms", "type": "amount", "usage": "ignore" },
+              { "column": "totalt", "type": "amount", "usage": "ignore" }
+            ],
+            "counters": [],
+            "period": { "kind": "column", "column": "fakturadatum" },
+            "company": { "kind": "fixed", "company": "MBAB" },
+            "scenario": "utfall"
+          }
+        }
+      ],
+      "reconcileConfig": "fortnox_kundforsaljning.json",
+      "counts": { "invoices": 163, "creditNotes": 6 }
+    },
+    {
+      "file": "intelliplan_fakturering_MBAB_2026-09.xlsx",
+      "truth": "intelliplan_fakturering_MBAB_2026-09.json",
+      "months": ["2026-09"],
+      "format": "xlsx",
+      "datasetKey": "ip_fakturering",
+      "kind": "table",
+      "description": "Fakturaunderlag och löneunderlag per kund och konsult: grupperad rapport (kund bara på gruppens första rad), Summa-rader per kund, Totalt, belopp ibland som text '12 345,50 kr'.",
+      "companies": ["MBAB"],
+      "scenario": "utfall",
+      "choices": { "month": "2026-09", "company": "MBAB" },
+      "layout": [
+        {
+          "sheet": "Underlag",
+          "headerRow": 5,
+          "firstDataRow": 6,
+          "lastDataRow": 76,
+          "dataRows": 55,
+          "metaRows": [1, 2, 3],
+          "emptyRows": [4, 14, 22, 34, 46, 50, 58, 65, 75, 78],
+          "sumRows": [13, 21, 33, 45, 49, 57, 64, 74, 77, 79],
+          "footerRows": [],
+          "merges": ["A1:F1"]
+        }
+      ],
+      "aliases": { "kund": { "Postnord": "PostNord AB" } },
+      "templates": [
+        {
+          "datasetKey": "ip_fakturering",
+          "name": "Intelliplan – fakturering (fixture)",
+          "headerSignature": [
+            "kund",
+            "anställnings id",
+            "konsult",
+            "timmar",
+            "fakturerat belopp",
+            "lönekostnad"
+          ],
+          "version": 1,
+          "config": {
+            "kind": "table",
+            "steps": [
+              {
+                "op": "filter",
+                "column": "kund",
+                "operator": "contains",
+                "value": "summa",
+                "caseSensitive": false
+              },
+              {
+                "op": "filter",
+                "column": "kund",
+                "operator": "equals",
+                "value": "totalt",
+                "caseSensitive": false
+              },
+              { "op": "fill_down", "column": "kund" },
+              {
+                "op": "filter",
+                "column": "kund",
+                "operator": "equals",
+                "value": "Miljonbemanning Presentation (Stockholm)",
+                "caseSensitive": false
+              },
+              { "op": "clean", "column": "fakturerat belopp", "as": "amount" },
+              { "op": "clean", "column": "lönekostnad", "as": "amount" },
+              {
+                "op": "replace",
+                "column": "kund",
+                "find": "Postnord",
+                "replace": "PostNord AB",
+                "match": "whole_cell",
+                "caseSensitive": false
+              }
+            ],
+            "columns": [
+              { "column": "kund", "type": "text", "usage": "dimension", "dimensionKey": "kund" },
+              {
+                "column": "anställnings id",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "konsult"
+              },
+              {
+                "column": "konsult",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              { "column": "timmar", "type": "hours", "usage": "ignore" },
+              {
+                "column": "fakturerat belopp",
+                "type": "amount",
+                "usage": "measure",
+                "metricKey": "fakturerat_ip"
+              },
+              {
+                "column": "lönekostnad",
+                "type": "amount",
+                "usage": "measure",
+                "metricKey": "lonekostnad"
+              }
+            ],
+            "counters": [],
+            "period": { "kind": "per_upload" },
+            "company": { "kind": "fixed", "company": "MBAB" },
+            "scenario": "utfall"
+          }
+        }
+      ],
+      "reconcileConfig": "intelliplan_fakturering.json",
+      "counts": {
+        "lineRows": 55,
+        "amountsAsText": 14,
+        "filteredPresentationCustomer": 2,
+        "groups": 9
+      }
+    },
+    {
+      "file": "intelliplan_franvaro_MBAB_2026-09.csv",
+      "truth": "intelliplan_franvaro_MBAB_2026-09.json",
+      "months": ["2026-09"],
+      "format": "csv",
+      "datasetKey": "ip_franvaro",
+      "kind": "table",
+      "description": "Frånvaro september: semikolonseparerad, windows-1252, svenska decimaler, konsultnamn i citattecken.",
+      "companies": ["MBAB"],
+      "scenario": "utfall",
+      "choices": { "month": "2026-09", "company": "MBAB" },
+      "encoding": "windows-1252",
+      "delimiter": ";",
+      "layout": { "headerLine": 1, "dataLines": 50, "lineEnding": "CRLF" },
+      "aliases": { "kund": { "Postnord": "PostNord AB" } },
+      "templates": [
+        {
+          "datasetKey": "ip_franvaro",
+          "name": "Intelliplan – frånvaro (fixture)",
+          "headerSignature": [
+            "kund",
+            "anställnings id",
+            "konsult",
+            "datum",
+            "frånvaroorsak",
+            "timmar"
+          ],
+          "version": 1,
+          "config": {
+            "kind": "table",
+            "steps": [
+              {
+                "op": "filter",
+                "column": "frånvaroorsak",
+                "operator": "equals",
+                "value": "Olovlig frånvaro",
+                "caseSensitive": false
+              },
+              { "op": "clean", "column": "timmar", "as": "hours" },
+              {
+                "op": "replace",
+                "column": "kund",
+                "find": "Postnord",
+                "replace": "PostNord AB",
+                "match": "whole_cell",
+                "caseSensitive": false
+              }
+            ],
+            "columns": [
+              { "column": "kund", "type": "text", "usage": "dimension", "dimensionKey": "kund" },
+              {
+                "column": "anställnings id",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "konsult"
+              },
+              {
+                "column": "konsult",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              { "column": "datum", "type": "date", "usage": "period" },
+              {
+                "column": "frånvaroorsak",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "franvarotyp"
+              },
+              { "column": "timmar", "type": "hours", "usage": "measure", "metricKey": "sjuktimmar" }
+            ],
+            "counters": [{ "metricKey": "sjukpass", "kind": "count_rows" }],
+            "period": { "kind": "column", "column": "datum" },
+            "company": { "kind": "fixed", "company": "MBAB" },
+            "scenario": "utfall"
+          }
+        }
+      ],
+      "reconcileConfig": "intelliplan_franvaro.json",
+      "counts": { "absenceRows": 50, "filteredOlovligFranvaro": 8 }
+    },
+    {
+      "file": "intelliplan_konsulter_MBAB.xlsx",
+      "truth": "intelliplan_konsulter_MBAB.json",
+      "months": [
+        "2023-01",
+        "2023-02",
+        "2023-03",
+        "2023-04",
+        "2023-05",
+        "2023-06",
+        "2023-07",
+        "2023-08",
+        "2023-09",
+        "2023-10",
+        "2023-11",
+        "2023-12",
+        "2024-01",
+        "2024-02",
+        "2024-03",
+        "2024-04",
+        "2024-05",
+        "2024-06",
+        "2024-07",
+        "2024-08",
+        "2024-09",
+        "2024-10",
+        "2024-11",
+        "2024-12",
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06",
+        "2025-07",
+        "2025-08",
+        "2025-09",
+        "2025-10",
+        "2025-11",
+        "2025-12",
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08",
+        "2026-09"
+      ],
+      "format": "xlsx",
+      "datasetKey": "ip_konsulter",
+      "kind": "cases",
+      "description": "Konsultlista med alla anställningar 2023–2026 (en rad per anställning, återanställningar med samma id, två dubblettrader).",
+      "companies": ["MBAB"],
+      "scenario": "utfall",
+      "choices": { "company": "MBAB", "asOfDate": "2026-09-30" },
+      "exportDate": "2026-10-01",
+      "layout": [
+        {
+          "sheet": "Konsulter",
+          "headerRow": 5,
+          "firstDataRow": 6,
+          "lastDataRow": 157,
+          "dataRows": 152,
+          "metaRows": [1, 2, 3],
+          "emptyRows": [4],
+          "sumRows": [],
+          "footerRows": [],
+          "merges": ["A1:G1"]
+        }
+      ],
+      "aliases": {},
+      "templates": [
+        {
+          "datasetKey": "ip_konsulter",
+          "name": "Intelliplan – konsultlista (fixture)",
+          "headerSignature": [
+            "anställnings id",
+            "namn",
+            "personnummer",
+            "anställningsform",
+            "organisationsenhet",
+            "startdatum",
+            "slutdatum"
+          ],
+          "version": 1,
+          "config": {
+            "kind": "cases",
+            "steps": [
+              {
+                "op": "replace",
+                "column": "organisationsenhet",
+                "find": "MBAB / ",
+                "replace": "",
+                "match": "contains",
+                "caseSensitive": false
+              }
+            ],
+            "columns": [
+              { "column": "anställnings id", "type": "text", "usage": "case_key" },
+              {
+                "column": "namn",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              {
+                "column": "personnummer",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              { "column": "anställningsform", "type": "text", "usage": "ignore" },
+              {
+                "column": "organisationsenhet",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "ort"
+              },
+              { "column": "startdatum", "type": "date", "usage": "case_start" },
+              { "column": "slutdatum", "type": "date", "usage": "case_end" }
+            ],
+            "cases": {
+              "keyColumn": "anställnings id",
+              "startColumn": "startdatum",
+              "endColumn": "slutdatum",
+              "groupBy": ["organisationsenhet"],
+              "metrics": {
+                "active": "anstallda_konsulter",
+                "started": "nyanstallda",
+                "ended": "avslutade_anstallningar",
+                "tenureMonthsSum": "anstallningsmanader"
+              },
+              "fromMonth": "2023-01"
+            },
+            "company": { "kind": "fixed", "company": "MBAB" }
+          }
+        }
+      ],
+      "reconcileConfig": "intelliplan_konsulter.json",
+      "counts": {
+        "rows": 152,
+        "employments": 150,
+        "duplicateRows": 2,
+        "people": 145,
+        "rehires": 5,
+        "activeAt20260930": 51
+      }
+    },
+    {
+      "file": "intelliplan_kundlista.xls",
+      "truth": "intelliplan_kundlista.json",
+      "months": [],
+      "format": "xls-html",
+      "datasetKey": null,
+      "kind": "reference",
+      "description": "Kundlista som .xls men egentligen en HTML-tabell (vanligt exportformat), HTML-entiteter för åäö. Referensdata för kund-alias, inga fakta.",
+      "companies": ["MBAB"],
+      "scenario": "utfall",
+      "choices": {},
+      "encoding": "utf-8",
+      "layout": { "headerLine": 1, "dataLines": 11, "lineEnding": "CRLF" },
+      "aliases": { "kund": { "Postnord": "PostNord AB" } },
+      "templates": [],
+      "reconcileConfig": "intelliplan_kundlista.json",
+      "counts": { "rows": 11, "customers": 9 }
+    },
+    {
+      "file": "intelliplan_timmar_MBAB_2026-08.xlsx",
+      "truth": "intelliplan_timmar_MBAB_2026-08.json",
+      "months": ["2026-08"],
+      "format": "xlsx",
+      "datasetKey": "ip_timmar",
+      "kind": "table",
+      "description": "Intelliplan tidrapport 2026-08: titelblock med sammanfogad cell, rubrik på rad 4, pass per rad, blandade tal/text-timmar och datum, Totalt-rad och sidfot.",
+      "companies": ["MBAB"],
+      "scenario": "utfall",
+      "choices": { "month": "2026-08", "company": "MBAB" },
+      "exportDate": "2026-09-01",
+      "layout": [
+        {
+          "sheet": "Tidrapport",
+          "headerRow": 4,
+          "firstDataRow": 5,
+          "lastDataRow": 434,
+          "dataRows": 422,
+          "metaRows": [1, 2, 3],
+          "emptyRows": [67, 188, 255, 290, 297, 323, 359, 406, 435, 437],
+          "sumRows": [436],
+          "footerRows": [438],
+          "merges": ["A1:H1"]
+        }
+      ],
+      "aliases": { "kund": { "Postnord": "PostNord AB" } },
+      "templates": [
+        {
+          "datasetKey": "ip_timmar",
+          "name": "Intelliplan – timmar (fixture)",
+          "headerSignature": [
+            "kund",
+            "uppdrag",
+            "anställnings id",
+            "konsult",
+            "personnummer",
+            "datum",
+            "timmar",
+            "status"
+          ],
+          "version": 1,
+          "config": {
+            "kind": "table",
+            "steps": [
+              {
+                "op": "filter",
+                "column": "kund",
+                "operator": "equals",
+                "value": "Miljonbemanning Presentation (Stockholm)",
+                "caseSensitive": false
+              },
+              {
+                "op": "filter",
+                "column": "anställnings id",
+                "operator": "empty",
+                "caseSensitive": false
+              },
+              {
+                "op": "filter",
+                "column": "status",
+                "operator": "equals",
+                "value": "Makulerad",
+                "caseSensitive": false
+              },
+              { "op": "clean", "column": "timmar", "as": "hours" },
+              {
+                "op": "replace",
+                "column": "kund",
+                "find": "Postnord",
+                "replace": "PostNord AB",
+                "match": "whole_cell",
+                "caseSensitive": false
+              },
+              { "op": "constant", "column": "verksamhet", "value": "Bemanning" }
+            ],
+            "columns": [
+              { "column": "kund", "type": "text", "usage": "dimension", "dimensionKey": "kund" },
+              {
+                "column": "uppdrag",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "uppdrag"
+              },
+              {
+                "column": "anställnings id",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "konsult"
+              },
+              {
+                "column": "konsult",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              {
+                "column": "personnummer",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              { "column": "datum", "type": "date", "usage": "period" },
+              { "column": "timmar", "type": "hours", "usage": "measure", "metricKey": "timmar" },
+              { "column": "status", "type": "text", "usage": "ignore" },
+              {
+                "column": "verksamhet",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "verksamhet"
+              }
+            ],
+            "counters": [{ "metricKey": "pass", "kind": "count_rows" }],
+            "period": { "kind": "column", "column": "datum" },
+            "company": { "kind": "fixed", "company": "MBAB" },
+            "scenario": "utfall"
+          }
+        }
+      ],
+      "reconcileConfig": "intelliplan_timmar.json",
+      "counts": {
+        "shiftRows": 422,
+        "includedShifts": 400,
+        "filteredPresentationCustomer": 6,
+        "filteredUnstaffed": 10,
+        "filteredCancelled": 6
+      }
+    },
+    {
+      "file": "intelliplan_timmar_MBAB_2026-09.xlsx",
+      "truth": "intelliplan_timmar_MBAB_2026-09.json",
+      "months": ["2026-09"],
+      "format": "xlsx",
+      "datasetKey": "ip_timmar",
+      "kind": "table",
+      "description": "Intelliplan tidrapport 2026-09: titelblock med sammanfogad cell, rubrik på rad 4, pass per rad, blandade tal/text-timmar och datum, Totalt-rad och sidfot.",
+      "companies": ["MBAB"],
+      "scenario": "utfall",
+      "choices": { "month": "2026-09", "company": "MBAB" },
+      "exportDate": "2026-10-01",
+      "layout": [
+        {
+          "sheet": "Tidrapport",
+          "headerRow": 4,
+          "firstDataRow": 5,
+          "lastDataRow": 433,
+          "dataRows": 421,
+          "metaRows": [1, 2, 3],
+          "emptyRows": [70, 118, 188, 281, 288, 327, 368, 421, 434, 436],
+          "sumRows": [435],
+          "footerRows": [437],
+          "merges": ["A1:H1"]
+        }
+      ],
+      "aliases": { "kund": { "Postnord": "PostNord AB" } },
+      "templates": [
+        {
+          "datasetKey": "ip_timmar",
+          "name": "Intelliplan – timmar (fixture)",
+          "headerSignature": [
+            "kund",
+            "uppdrag",
+            "anställnings id",
+            "konsult",
+            "personnummer",
+            "datum",
+            "timmar",
+            "status"
+          ],
+          "version": 1,
+          "config": {
+            "kind": "table",
+            "steps": [
+              {
+                "op": "filter",
+                "column": "kund",
+                "operator": "equals",
+                "value": "Miljonbemanning Presentation (Stockholm)",
+                "caseSensitive": false
+              },
+              {
+                "op": "filter",
+                "column": "anställnings id",
+                "operator": "empty",
+                "caseSensitive": false
+              },
+              {
+                "op": "filter",
+                "column": "status",
+                "operator": "equals",
+                "value": "Makulerad",
+                "caseSensitive": false
+              },
+              { "op": "clean", "column": "timmar", "as": "hours" },
+              {
+                "op": "replace",
+                "column": "kund",
+                "find": "Postnord",
+                "replace": "PostNord AB",
+                "match": "whole_cell",
+                "caseSensitive": false
+              },
+              { "op": "constant", "column": "verksamhet", "value": "Bemanning" }
+            ],
+            "columns": [
+              { "column": "kund", "type": "text", "usage": "dimension", "dimensionKey": "kund" },
+              {
+                "column": "uppdrag",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "uppdrag"
+              },
+              {
+                "column": "anställnings id",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "konsult"
+              },
+              {
+                "column": "konsult",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              {
+                "column": "personnummer",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              { "column": "datum", "type": "date", "usage": "period" },
+              { "column": "timmar", "type": "hours", "usage": "measure", "metricKey": "timmar" },
+              { "column": "status", "type": "text", "usage": "ignore" },
+              {
+                "column": "verksamhet",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "verksamhet"
+              }
+            ],
+            "counters": [{ "metricKey": "pass", "kind": "count_rows" }],
+            "period": { "kind": "column", "column": "datum" },
+            "company": { "kind": "fixed", "company": "MBAB" },
+            "scenario": "utfall"
+          }
+        }
+      ],
+      "reconcileConfig": "intelliplan_timmar.json",
+      "counts": {
+        "shiftRows": 421,
+        "includedShifts": 399,
+        "filteredPresentationCustomer": 6,
+        "filteredUnstaffed": 10,
+        "filteredCancelled": 6
+      }
+    },
+    {
+      "file": "intelliplan_timmar_MBAB_2026-09_andrad.xlsx",
+      "truth": "intelliplan_timmar_MBAB_2026-09_andrad.json",
+      "months": ["2026-09"],
+      "format": "xlsx",
+      "datasetKey": "ip_timmar",
+      "kind": "table",
+      "description": "Samma pass som 2026-09 men kolumnen Timmar heter Antal timmar och Avdelning har tillkommit (drift).",
+      "companies": ["MBAB"],
+      "scenario": "utfall",
+      "choices": { "month": "2026-09", "company": "MBAB" },
+      "exportDate": "2026-10-01",
+      "layout": [
+        {
+          "sheet": "Tidrapport",
+          "headerRow": 4,
+          "firstDataRow": 5,
+          "lastDataRow": 433,
+          "dataRows": 421,
+          "metaRows": [1, 2, 3],
+          "emptyRows": [70, 118, 188, 281, 288, 327, 368, 421, 434, 436],
+          "sumRows": [435],
+          "footerRows": [437],
+          "merges": ["A1:I1"]
+        }
+      ],
+      "aliases": { "kund": { "Postnord": "PostNord AB" } },
+      "templates": [
+        {
+          "datasetKey": "ip_timmar",
+          "name": "Intelliplan – timmar (fixture, v2 efter kolumnbyte)",
+          "headerSignature": [
+            "kund",
+            "uppdrag",
+            "avdelning",
+            "anställnings id",
+            "konsult",
+            "personnummer",
+            "datum",
+            "antal timmar",
+            "status"
+          ],
+          "version": 1,
+          "config": {
+            "kind": "table",
+            "steps": [
+              { "op": "rename", "column": "antal timmar", "to": "timmar" },
+              {
+                "op": "filter",
+                "column": "kund",
+                "operator": "equals",
+                "value": "Miljonbemanning Presentation (Stockholm)",
+                "caseSensitive": false
+              },
+              {
+                "op": "filter",
+                "column": "anställnings id",
+                "operator": "empty",
+                "caseSensitive": false
+              },
+              {
+                "op": "filter",
+                "column": "status",
+                "operator": "equals",
+                "value": "Makulerad",
+                "caseSensitive": false
+              },
+              { "op": "clean", "column": "timmar", "as": "hours" },
+              {
+                "op": "replace",
+                "column": "kund",
+                "find": "Postnord",
+                "replace": "PostNord AB",
+                "match": "whole_cell",
+                "caseSensitive": false
+              },
+              { "op": "constant", "column": "verksamhet", "value": "Bemanning" }
+            ],
+            "columns": [
+              { "column": "kund", "type": "text", "usage": "dimension", "dimensionKey": "kund" },
+              {
+                "column": "uppdrag",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "uppdrag"
+              },
+              {
+                "column": "anställnings id",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "konsult"
+              },
+              {
+                "column": "konsult",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              {
+                "column": "personnummer",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              { "column": "datum", "type": "date", "usage": "period" },
+              { "column": "timmar", "type": "hours", "usage": "measure", "metricKey": "timmar" },
+              { "column": "status", "type": "text", "usage": "ignore" },
+              { "column": "avdelning", "type": "text", "usage": "ignore" },
+              {
+                "column": "verksamhet",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "verksamhet"
+              }
+            ],
+            "counters": [{ "metricKey": "pass", "kind": "count_rows" }],
+            "period": { "kind": "column", "column": "datum" },
+            "company": { "kind": "fixed", "company": "MBAB" },
+            "scenario": "utfall"
+          }
+        }
+      ],
+      "sameTruthAs": "intelliplan_timmar_MBAB_2026-09.xlsx",
+      "drift": {
+        "fromTemplateOf": "intelliplan_timmar_MBAB_2026-09.xlsx",
+        "added": ["avdelning", "antal timmar"],
+        "removed": ["timmar"],
+        "renamed": [{ "from": "timmar", "to": "antal timmar" }],
+        "compatible": false
+      },
+      "reconcileConfig": "intelliplan_timmar.json",
+      "counts": {
+        "shiftRows": 421,
+        "includedShifts": 399,
+        "filteredPresentationCustomer": 6,
+        "filteredUnstaffed": 10,
+        "filteredCancelled": 6
+      }
+    },
+    {
+      "file": "intelliplan_timmar_MBAB_2026-09_utf16.csv",
+      "truth": "intelliplan_timmar_MBAB_2026-09_utf16.json",
+      "months": ["2026-09"],
+      "format": "csv",
+      "datasetKey": "ip_timmar",
+      "kind": "table",
+      "description": "Samma pass som 2026-09 som UTF-16LE-text med BOM, tabbseparerad, rubrik på rad 1, allt som text.",
+      "companies": ["MBAB"],
+      "scenario": "utfall",
+      "choices": { "month": "2026-09", "company": "MBAB" },
+      "encoding": "utf-16le",
+      "delimiter": "\t",
+      "layout": { "headerLine": 1, "dataLines": 421, "lineEnding": "CRLF" },
+      "aliases": { "kund": { "Postnord": "PostNord AB" } },
+      "templates": [
+        {
+          "datasetKey": "ip_timmar",
+          "name": "Intelliplan – timmar (fixture)",
+          "headerSignature": [
+            "kund",
+            "uppdrag",
+            "anställnings id",
+            "konsult",
+            "personnummer",
+            "datum",
+            "timmar",
+            "status"
+          ],
+          "version": 1,
+          "config": {
+            "kind": "table",
+            "steps": [
+              {
+                "op": "filter",
+                "column": "kund",
+                "operator": "equals",
+                "value": "Miljonbemanning Presentation (Stockholm)",
+                "caseSensitive": false
+              },
+              {
+                "op": "filter",
+                "column": "anställnings id",
+                "operator": "empty",
+                "caseSensitive": false
+              },
+              {
+                "op": "filter",
+                "column": "status",
+                "operator": "equals",
+                "value": "Makulerad",
+                "caseSensitive": false
+              },
+              { "op": "clean", "column": "timmar", "as": "hours" },
+              {
+                "op": "replace",
+                "column": "kund",
+                "find": "Postnord",
+                "replace": "PostNord AB",
+                "match": "whole_cell",
+                "caseSensitive": false
+              },
+              { "op": "constant", "column": "verksamhet", "value": "Bemanning" }
+            ],
+            "columns": [
+              { "column": "kund", "type": "text", "usage": "dimension", "dimensionKey": "kund" },
+              {
+                "column": "uppdrag",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "uppdrag"
+              },
+              {
+                "column": "anställnings id",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "konsult"
+              },
+              {
+                "column": "konsult",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              {
+                "column": "personnummer",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              { "column": "datum", "type": "date", "usage": "period" },
+              { "column": "timmar", "type": "hours", "usage": "measure", "metricKey": "timmar" },
+              { "column": "status", "type": "text", "usage": "ignore" },
+              {
+                "column": "verksamhet",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "verksamhet"
+              }
+            ],
+            "counters": [{ "metricKey": "pass", "kind": "count_rows" }],
+            "period": { "kind": "column", "column": "datum" },
+            "company": { "kind": "fixed", "company": "MBAB" },
+            "scenario": "utfall"
+          }
+        }
+      ],
+      "sameTruthAs": "intelliplan_timmar_MBAB_2026-09.xlsx",
+      "reconcileConfig": "intelliplan_timmar.json",
+      "counts": {
+        "shiftRows": 421,
+        "includedShifts": 399,
+        "filteredPresentationCustomer": 6,
+        "filteredUnstaffed": 10,
+        "filteredCancelled": 6
+      }
+    },
+    {
+      "file": "workbuster_deltagare_MBAB.xlsx",
+      "truth": "workbuster_deltagare_MBAB.json",
+      "months": [
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06",
+        "2025-07",
+        "2025-08",
+        "2025-09",
+        "2025-10",
+        "2025-11",
+        "2025-12",
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08",
+        "2026-09"
+      ],
+      "format": "xlsx",
+      "datasetKey": "wb_deltagare",
+      "kind": "cases",
+      "description": "Workbuster deltagarexport Miljonbemanning AB: metarad med exportdatum 2026-10-05 ovanför rubriken, en rad per deltagare.",
+      "companies": ["MBAB"],
+      "scenario": "utfall",
+      "choices": { "company": "MBAB", "asOfDate": "2026-09-30" },
+      "exportDate": "2026-10-05",
+      "layout": [
+        {
+          "sheet": "Deltagare",
+          "headerRow": 4,
+          "firstDataRow": 5,
+          "lastDataRow": 304,
+          "dataRows": 300,
+          "metaRows": [1, 2],
+          "emptyRows": [3],
+          "sumRows": [],
+          "footerRows": [],
+          "merges": []
+        }
+      ],
+      "aliases": {},
+      "templates": [
+        {
+          "datasetKey": "wb_deltagare",
+          "name": "Workbuster – deltagare MBAB (fixture)",
+          "headerSignature": [
+            "gen-nummer",
+            "namn",
+            "personnummer",
+            "tjänst",
+            "ort",
+            "startdatum",
+            "slutdatum",
+            "avbrott",
+            "avbrottsorsak",
+            "resultat",
+            "resultatdatum"
+          ],
+          "version": 1,
+          "config": {
+            "kind": "cases",
+            "steps": [],
+            "columns": [
+              { "column": "gen-nummer", "type": "text", "usage": "case_key" },
+              {
+                "column": "namn",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              {
+                "column": "personnummer",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              {
+                "column": "tjänst",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "verksamhet"
+              },
+              { "column": "ort", "type": "text", "usage": "dimension", "dimensionKey": "ort" },
+              { "column": "startdatum", "type": "date", "usage": "case_start" },
+              { "column": "slutdatum", "type": "date", "usage": "case_end" },
+              { "column": "avbrott", "type": "text", "usage": "case_interrupt" },
+              { "column": "avbrottsorsak", "type": "text", "usage": "ignore" },
+              { "column": "resultat", "type": "text", "usage": "case_result" },
+              { "column": "resultatdatum", "type": "date", "usage": "case_result_date" }
+            ],
+            "cases": {
+              "keyColumn": "gen-nummer",
+              "startColumn": "startdatum",
+              "endColumn": "slutdatum",
+              "interruptColumn": "avbrott",
+              "resultColumn": "resultat",
+              "resultMap": { "arbete": "Arbete", "studier": "Studier" },
+              "resultDateColumn": "resultatdatum",
+              "groupBy": ["tjänst", "ort"],
+              "metrics": {
+                "active": "aktiva_deltagare",
+                "started": "nya_deltagare",
+                "ended": "avslutade_deltagare",
+                "interrupted": "avbrott_deltagare",
+                "results": "resultat_deltagare"
+              },
+              "fromMonth": "2025-01"
+            },
+            "company": { "kind": "fixed", "company": "MBAB" }
+          }
+        }
+      ],
+      "reconcileConfig": "workbuster_deltagare.json",
+      "counts": {
+        "rows": 300,
+        "cases": 300,
+        "duplicateRows": 0,
+        "interrupted": 26,
+        "withResult": 105,
+        "resultWithoutDate": 3,
+        "ongoingAtExport": 63,
+        "startedAfterTruthWindow": 1
+      }
+    },
+    {
+      "file": "workbuster_deltagare_MBR.xlsx",
+      "truth": "workbuster_deltagare_MBR.json",
+      "months": [
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06",
+        "2025-07",
+        "2025-08",
+        "2025-09",
+        "2025-10",
+        "2025-11",
+        "2025-12",
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08",
+        "2026-09"
+      ],
+      "format": "xlsx",
+      "datasetKey": "wb_deltagare",
+      "kind": "cases",
+      "description": "Workbuster deltagarexport Miljonbemanning Restart AB: metarad med exportdatum 2026-10-05 ovanför rubriken, en rad per deltagare.",
+      "companies": ["MBR"],
+      "scenario": "utfall",
+      "choices": { "company": "MBR", "asOfDate": "2026-09-30" },
+      "exportDate": "2026-10-05",
+      "layout": [
+        {
+          "sheet": "Deltagare",
+          "headerRow": 4,
+          "firstDataRow": 5,
+          "lastDataRow": 205,
+          "dataRows": 201,
+          "metaRows": [1, 2],
+          "emptyRows": [3],
+          "sumRows": [],
+          "footerRows": [],
+          "merges": []
+        }
+      ],
+      "aliases": {},
+      "templates": [
+        {
+          "datasetKey": "wb_deltagare",
+          "name": "Workbuster – deltagare MBR (fixture)",
+          "headerSignature": [
+            "gen-nummer",
+            "namn",
+            "personnummer",
+            "tjänst",
+            "ort",
+            "startdatum",
+            "slutdatum",
+            "avbrott",
+            "avbrottsorsak",
+            "resultat",
+            "resultatdatum"
+          ],
+          "version": 1,
+          "config": {
+            "kind": "cases",
+            "steps": [],
+            "columns": [
+              { "column": "gen-nummer", "type": "text", "usage": "case_key" },
+              {
+                "column": "namn",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              {
+                "column": "personnummer",
+                "type": "text",
+                "usage": "ignore",
+                "personal": true,
+                "keep": false
+              },
+              {
+                "column": "tjänst",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "verksamhet"
+              },
+              { "column": "ort", "type": "text", "usage": "dimension", "dimensionKey": "ort" },
+              { "column": "startdatum", "type": "date", "usage": "case_start" },
+              { "column": "slutdatum", "type": "date", "usage": "case_end" },
+              { "column": "avbrott", "type": "text", "usage": "case_interrupt" },
+              { "column": "avbrottsorsak", "type": "text", "usage": "ignore" },
+              { "column": "resultat", "type": "text", "usage": "case_result" },
+              { "column": "resultatdatum", "type": "date", "usage": "case_result_date" }
+            ],
+            "cases": {
+              "keyColumn": "gen-nummer",
+              "startColumn": "startdatum",
+              "endColumn": "slutdatum",
+              "interruptColumn": "avbrott",
+              "resultColumn": "resultat",
+              "resultMap": { "arbete": "Arbete", "studier": "Studier" },
+              "resultDateColumn": "resultatdatum",
+              "groupBy": ["tjänst", "ort"],
+              "metrics": {
+                "active": "aktiva_deltagare",
+                "started": "nya_deltagare",
+                "ended": "avslutade_deltagare",
+                "interrupted": "avbrott_deltagare",
+                "results": "resultat_deltagare"
+              },
+              "fromMonth": "2025-01"
+            },
+            "company": { "kind": "fixed", "company": "MBR" }
+          }
+        }
+      ],
+      "reconcileConfig": "workbuster_deltagare.json",
+      "counts": {
+        "rows": 201,
+        "cases": 200,
+        "duplicateRows": 1,
+        "interrupted": 18,
+        "withResult": 70,
+        "resultWithoutDate": 3,
+        "ongoingAtExport": 43,
+        "startedAfterTruthWindow": 1
+      }
+    },
+    {
+      "file": "workbuster_ordrar_MBAB.xlsx",
+      "truth": "workbuster_ordrar_MBAB.json",
+      "months": [
+        "2025-01",
+        "2025-02",
+        "2025-03",
+        "2025-04",
+        "2025-05",
+        "2025-06",
+        "2025-07",
+        "2025-08",
+        "2025-09",
+        "2025-10",
+        "2025-11",
+        "2025-12",
+        "2026-01",
+        "2026-02",
+        "2026-03",
+        "2026-04",
+        "2026-05",
+        "2026-06",
+        "2026-07",
+        "2026-08",
+        "2026-09"
+      ],
+      "format": "xlsx",
+      "datasetKey": "wb_ordrar",
+      "kind": "table",
+      "description": "Workbuster ordrar 2025-01–2026-09 per tjänst, ordertyp och ort; några krediteringar (negativa), belopp ibland som text, Summa-rad sist.",
+      "companies": ["MBAB"],
+      "scenario": "utfall",
+      "choices": { "company": "MBAB" },
+      "exportDate": "2026-10-05",
+      "layout": [
+        {
+          "sheet": "Ordrar",
+          "headerRow": 4,
+          "firstDataRow": 5,
+          "lastDataRow": 815,
+          "dataRows": 811,
+          "metaRows": [1, 2],
+          "emptyRows": [3],
+          "sumRows": [816],
+          "footerRows": [],
+          "merges": []
+        }
+      ],
+      "aliases": {},
+      "templates": [
+        {
+          "datasetKey": "wb_ordrar",
+          "name": "Workbuster – ordrar (fixture)",
+          "headerSignature": ["ordernummer", "tjänst", "ordertyp", "belopp", "datum", "ort"],
+          "version": 1,
+          "config": {
+            "kind": "table",
+            "steps": [
+              {
+                "op": "filter",
+                "column": "ordernummer",
+                "operator": "equals",
+                "value": "summa",
+                "caseSensitive": false
+              },
+              { "op": "clean", "column": "belopp", "as": "amount" }
+            ],
+            "columns": [
+              { "column": "ordernummer", "type": "text", "usage": "ignore" },
+              {
+                "column": "tjänst",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "verksamhet"
+              },
+              {
+                "column": "ordertyp",
+                "type": "text",
+                "usage": "dimension",
+                "dimensionKey": "ordertyp"
+              },
+              {
+                "column": "belopp",
+                "type": "amount",
+                "usage": "measure",
+                "metricKey": "af_intakt"
+              },
+              { "column": "datum", "type": "date", "usage": "period" },
+              { "column": "ort", "type": "text", "usage": "dimension", "dimensionKey": "ort" }
+            ],
+            "counters": [],
+            "period": { "kind": "column", "column": "datum" },
+            "company": { "kind": "fixed", "company": "MBAB" },
+            "scenario": "utfall"
+          }
+        }
+      ],
+      "reconcileConfig": "workbuster_ordrar.json",
+      "counts": { "orders": 811, "creditOrders": 8, "amountsAsText": 66 }
+    }
+  ]
+}

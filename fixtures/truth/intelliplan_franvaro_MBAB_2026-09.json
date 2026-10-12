@@ -1,0 +1,366 @@
+[
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2036", "kund": "Budbee Kungsängen" },
+    "value": 3
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2046", "kund": "PRV" },
+    "value": 2
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2059", "kund": "Bosch" },
+    "value": 1
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2060", "kund": "Bosch" },
+    "value": 1
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2074", "kund": "Budbee Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2106", "kund": "Bosch" },
+    "value": 1
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2110", "kund": "Budbee Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2111", "kund": "Budbee Södertälje" },
+    "value": 3
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2123", "kund": "PostNord AB" },
+    "value": 2
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2128", "kund": "Budbee Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2129", "kund": "PostNord AB" },
+    "value": 2
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2136", "kund": "Budbee Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2156", "kund": "Budbee Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2158", "kund": "PostNord AB" },
+    "value": 1
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2170", "kund": "Early Bird AB" },
+    "value": 2
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2171", "kund": "Early Bird AB" },
+    "value": 1
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2176", "kund": "Premo" },
+    "value": 1
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2185", "kund": "Early Bird AB" },
+    "value": 2
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2060", "kund": "Bosch" },
+    "value": 2
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2106", "kund": "Bosch" },
+    "value": 1
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2110", "kund": "Budbee Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2139", "kund": "Early Bird AB" },
+    "value": 2
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2153", "kund": "Premo" },
+    "value": 1
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2170", "kund": "Early Bird AB" },
+    "value": 1
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2176", "kund": "Premo" },
+    "value": 2
+  },
+  {
+    "metricKey": "sjukpass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2181", "kund": "Early Bird AB" },
+    "value": 1
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2036", "kund": "Budbee Kungsängen" },
+    "value": 23.25
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2046", "kund": "PRV" },
+    "value": 16.25
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2059", "kund": "Bosch" },
+    "value": 4
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2060", "kund": "Bosch" },
+    "value": 8.25
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2074", "kund": "Budbee Södertälje" },
+    "value": 14.25
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2106", "kund": "Bosch" },
+    "value": 6
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2110", "kund": "Budbee Södertälje" },
+    "value": 14.25
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2111", "kund": "Budbee Södertälje" },
+    "value": 24.75
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2123", "kund": "PostNord AB" },
+    "value": 14.25
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2128", "kund": "Budbee Södertälje" },
+    "value": 6
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2129", "kund": "PostNord AB" },
+    "value": 15
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2136", "kund": "Budbee Södertälje" },
+    "value": 10
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2156", "kund": "Budbee Kungsängen" },
+    "value": 6
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2158", "kund": "PostNord AB" },
+    "value": 6
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2170", "kund": "Early Bird AB" },
+    "value": 12
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2171", "kund": "Early Bird AB" },
+    "value": 8.25
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2176", "kund": "Premo" },
+    "value": 8
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK LO", "konsult": "2185", "kund": "Early Bird AB" },
+    "value": 8
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2060", "kund": "Bosch" },
+    "value": 14.25
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2106", "kund": "Bosch" },
+    "value": 4
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2110", "kund": "Budbee Södertälje" },
+    "value": 10
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2139", "kund": "Early Bird AB" },
+    "value": 14.25
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2153", "kund": "Premo" },
+    "value": 8
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2170", "kund": "Early Bird AB" },
+    "value": 7.5
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2176", "kund": "Premo" },
+    "value": 15.75
+  },
+  {
+    "metricKey": "sjuktimmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "franvarotyp": "SJUK UNI", "konsult": "2181", "kund": "Early Bird AB" },
+    "value": 6
+  }
+]
