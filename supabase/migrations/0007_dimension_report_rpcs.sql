@@ -26,7 +26,9 @@ create index dimension_values_norm_label_idx
 -- Resolve labels to dimension_values ids: alias first, then code, then an active
 -- value with the same normalized label. Unknown labels are created for auto_create
 -- dimensions (or any dimension when p_force); otherwise their id is null so the
--- caller can ask the user. Returns one row per distinct input label, as given.
+-- caller can ask the user. A kostnadsställe is only created from a company-scoped
+-- label ("MBAB:100"): an unscoped one would never match the company's SIE objects.
+-- Returns one row per distinct input label, as given.
 create or replace function public.ensure_dimension_values(
   p_dimension text,
   p_labels text[],
@@ -84,7 +86,16 @@ begin
         limit 1;
       end if;
 
-      if v_id is null and v_create then
+      if v_id is null and v_create and (
+        v_dim.key <> 'kostnadsstalle'
+        or (
+          substr(v_code, strpos(v_code, ':') + 1) <> ''
+          and exists (
+            select 1 from public.companies c
+            where left(v_code, length(c.code) + 1) = c.code || ':'
+          )
+        )
+      ) then
         insert into public.dimension_values (dimension_id, code, label)
         values (v_dim.id, v_code, private.clean_label(v_label))
         on conflict (dimension_id, code) do nothing
@@ -167,7 +178,19 @@ begin
   if v_from.dimension_id <> v_into.dimension_id then
     raise exception 'Värdena hör till olika dimensioner' using errcode = 'invalid_parameter_value';
   end if;
+  -- An inactive target was itself merged away: its facts live on another value, so
+  -- merging into it would split the data again.
+  if not v_into.active then
+    raise exception 'Det går inte att slå ihop till ett inaktivt värde'
+      using errcode = 'invalid_parameter_value';
+  end if;
   select d.key into v_key from public.dimensions d where d.id = v_from.dimension_id;
+  -- Kostnadsställen are scoped per company ("MBAB:100"); publish_upload relies on it.
+  if v_key = 'kostnadsstalle'
+    and split_part(v_from.code, ':', 1) <> split_part(v_into.code, ':', 1) then
+    raise exception 'Kostnadsställen i olika bolag kan inte slås ihop'
+      using errcode = 'invalid_parameter_value';
+  end if;
 
   update public.metric_values mv
   set dims = jsonb_set(mv.dims, array[v_key], to_jsonb(p_into))

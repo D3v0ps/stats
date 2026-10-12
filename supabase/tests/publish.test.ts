@@ -256,6 +256,105 @@ describe("upload lifecycle", () => {
       const id = await stage(db, app, { dataset: "ip_timmar", slices: [] });
       await expect(publish(db, app, id)).rejects.toThrow(/saknar månader/);
     });
+
+    it("rejects dimension 1 ledger object rows that are not the company's kostnadsställen", async () => {
+      const own = await ensureValue(db, "kostnadsstalle", "MBAB:900", "900 Test");
+      const otherCompany = await ensureValue(db, "kostnadsstalle", "MBR:900", "900 Test");
+      const ledger = (dimNo: number, objectValueId: number) => ({
+        dataset: "fx_bokforing",
+        slices: [{ company: "MBAB" as const, month: "2024-02" }],
+        ledger: [
+          { company: "MBAB" as const, month: "2024-02", account: 3010, amount: -100 },
+          {
+            company: "MBAB" as const,
+            month: "2024-02",
+            account: 3010,
+            dimNo,
+            objectValueId,
+            amount: -60,
+          },
+        ],
+      });
+      for (const [name, input] of [
+        ["another company's kostnadsställe", ledger(1, otherCompany)],
+        ["a value of another dimension", ledger(1, krom)],
+      ] as const) {
+        const id = await stage(db, app, input);
+        await expect(publish(db, app, id), name).rejects.toThrow(/objektrader/);
+      }
+      const ok = await stage(db, app, ledger(1, own));
+      await expect(publish(db, app, ok)).resolves.toMatchObject({ ledger_rows: 2 });
+    });
+
+    it("rejects facts on a kostnadsställe of another company or without company scope", async () => {
+      const own = await ensureValue(db, "kostnadsstalle", "MBR:910", "910 Budget");
+      const other = await ensureValue(db, "kostnadsstalle", "MBAB:910", "910 Budget");
+      const unscoped = await ensureValue(db, "kostnadsstalle", "910", "910");
+      const intakter = await valueId(db, "kontogrupp", "intakter");
+      const budget = (kostnadsstalle: number): StageInput => ({
+        dataset: "budget",
+        scenario: "budget",
+        slices: [{ company: "MBR", month: "2024-03" }],
+        facts: [
+          {
+            metric: "budget_belopp",
+            company: "MBR",
+            month: "2024-03",
+            dims: { kontogrupp: intakter, kostnadsstalle },
+            value: 100,
+          },
+        ],
+      });
+      for (const [name, ks] of [
+        ["another company's", other],
+        ["unscoped", unscoped],
+      ] as const) {
+        const id = await stage(db, app, budget(ks));
+        await expect(publish(db, app, id), name).rejects.toThrow(/kostnadsställe/);
+      }
+      const ok = await stage(db, app, budget(own));
+      await expect(publish(db, app, ok)).resolves.toMatchObject({ facts: 1 });
+    });
+  });
+
+  describe("publish order", () => {
+    it("orders uploads published in one transaction by when they were published", async () => {
+      // published_at must follow the order in which publishes take effect, even when
+      // they share a transaction start time, so retract restores the latest one.
+      const [a, b] = await asUser(db, app, async (tx) => {
+        const ids: string[] = [];
+        for (const value of [1, 2]) {
+          const input = timmar(["2021-06"], value);
+          const res = await tx.query<{ id: string }>(
+            `insert into public.uploads (dataset_id, scenario, file_name, file_sha256, file_size,
+               content_hash, engine_version)
+             select d.id, 'utfall', 'tx.xlsx', md5($1) || md5($1), 1, md5($2) || md5($2), 1
+             from public.datasets d where d.key = $3 returning id`,
+            [`tx-${value}`, `c-${value}`, input.dataset],
+          );
+          const id = res.rows[0]!.id;
+          await tx.query(
+            `insert into public.upload_slices (upload_id, dataset_id, company_id, scenario, month)
+             select u.id, u.dataset_id, 1, 'utfall', '2021-06-01' from public.uploads u where u.id = $1`,
+            [id],
+          );
+          await tx.query(`select public.publish_upload($1)`, [id]);
+          ids.push(id);
+        }
+        return ids as [string, string];
+      });
+      const times = await db.query<{ id: string; published_at: Date }>(
+        `select id, published_at from public.uploads where id = any($1) order by published_at`,
+        [[a, b]],
+      );
+      expect(times.rows.map((r) => r.id)).toEqual([a, b]);
+      expect(times.rows[0]!.published_at.getTime()).toBeLessThan(
+        times.rows[1]!.published_at.getTime(),
+      );
+      const c = await stageAndPublish(db, app, timmar(["2021-06"], 3));
+      await retract(c.id);
+      expect((await currentSlices(db, "ip_timmar"))["MBAB:utfall:2021-06"]).toBe(b);
+    });
   });
 
   describe("retract", () => {

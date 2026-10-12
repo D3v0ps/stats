@@ -114,6 +114,26 @@ describe("dimension values", () => {
       expect((await valueRow(res["mbr:100"]!))?.code).toBe("MBR:100");
     });
 
+    it("never creates a kostnadsställe without a company prefix, even when forced", async () => {
+      // "100" would be a value no SIE object row ever points at, so budget and utfall per
+      // kostnadsställe would silently not line up.
+      expect(await ensure("kostnadsstalle", ["100", "Okänd:100", "MBAB:"], true)).toEqual({
+        "100": null,
+        "Okänd:100": null,
+        "MBAB:": null,
+      });
+      const created = await db.query<{ n: number }>(
+        `select count(*)::int n from public.dimension_values dv
+         join public.dimensions d on d.id = dv.dimension_id
+         where d.key = 'kostnadsstalle' and dv.code in ('100', 'OKÄND:100', 'MBAB:')`,
+      );
+      expect(created.rows[0]?.n).toBe(0);
+      // Existing values still resolve by label or alias.
+      const id = (await ensure("kostnadsstalle", ["MBR:300"]))["MBR:300"]!;
+      await db.query(`update public.dimension_values set label = '300 Malmö' where id = $1`, [id]);
+      expect(await ensure("kostnadsstalle", ["300 malmö"])).toEqual({ "300 malmö": id });
+    });
+
     it("rejects unknown dimensions", async () => {
       await expect(ensure("finns_inte", ["x"])).rejects.toThrow(/Okänd dimension/);
     });
@@ -259,6 +279,28 @@ describe("dimension values", () => {
       await expect(merge(ort, ort)).rejects.toThrow(/sig självt/);
       await expect(merge(ort, krom)).rejects.toThrow(/olika dimensioner/);
       await expect(merge(ort, 99999999)).rejects.toThrow(/finns inte/);
+    });
+
+    it("refuses to merge into an inactive value (its facts already moved on)", async () => {
+      const a = await ensureValue(db, "ort", "lund", "Lund");
+      const b = await ensureValue(db, "ort", "lunds kommun", "Lunds kommun");
+      const c = await ensureValue(db, "ort", "lund c", "Lund C");
+      const merge = (from: number, into: number) =>
+        rpc(db, app, `select public.merge_dimension_values($1, $2)`, [from, into]);
+      await merge(a, b);
+      // c's facts would land on a, while a's own facts already live on b.
+      await expect(merge(c, a)).rejects.toThrow(/inaktivt/);
+      await expect(merge(c, b)).resolves.toHaveLength(1);
+    });
+
+    it("refuses to merge kostnadsställen of different companies", async () => {
+      const mbab = await ensureValue(db, "kostnadsstalle", "MBAB:700", "700 Lager");
+      const mbr = await ensureValue(db, "kostnadsstalle", "MBR:700", "700 Lager");
+      const mbab2 = await ensureValue(db, "kostnadsstalle", "MBAB:701", "701 Lager");
+      const merge = (from: number, into: number) =>
+        rpc(db, app, `select public.merge_dimension_values($1, $2)`, [from, into]);
+      await expect(merge(mbab, mbr)).rejects.toThrow(/olika bolag/);
+      await expect(merge(mbab2, mbab)).resolves.toHaveLength(1);
     });
   });
 });

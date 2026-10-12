@@ -106,6 +106,25 @@ describe("frozen reports", () => {
     ).toThrow(/okänd snapshot-version/);
   });
 
+  it("still reads a frozen report whose stored specs no longer match today's schema", () => {
+    // Frozen reports are immutable; the rendered ResolvedReport must stay readable when
+    // SlideSpecSchema evolves. The specs are metadata only.
+    const frozen = toFrozenReport({
+      id: "b3",
+      title: "Gammal",
+      template_id: null,
+      anchor_month: "2026-09-01",
+      schema_version: 1,
+      frozen_at: "2026-10-12T09:00:00Z",
+      snapshot: {
+        ...report,
+        specs: [{ id: "s1", viz: "sparkline", metricKey: "timmar" }],
+      } as never,
+    });
+    expect(frozen.report).toEqual(report);
+    expect(frozen.specs).toEqual([]);
+  });
+
   it("lists frozen reports without snapshots and gets one", async () => {
     const { client, calls } = createFakeClient({
       tables: {

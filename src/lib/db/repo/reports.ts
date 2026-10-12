@@ -142,7 +142,9 @@ export function toFrozenReport(row: Tables<"board_reports">): FrozenReport {
     schemaVersion: row.schema_version,
     frozenAt: row.frozen_at,
     report: report as unknown as ResolvedReport,
-    specs: SlidesSchema.parse(specs ?? []),
+    // Frozen reports never change but SlideSpecSchema may: specs that no longer parse
+    // must not make the archived report unreadable (only the report is rendered).
+    specs: SlidesSchema.safeParse(specs ?? []).data ?? [],
   };
 }
 

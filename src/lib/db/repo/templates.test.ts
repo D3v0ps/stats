@@ -98,6 +98,34 @@ describe("import templates", () => {
     ).rejects.toThrow(/typen table/);
   });
 
+  it("lists every template even when their versions exceed one response page", async () => {
+    const row = (id: string, name: string, current: number) => ({
+      id,
+      dataset_id: 1,
+      name,
+      kind: "table",
+      current_version: current,
+      header_signature: [],
+      sheet_hint: null,
+      created_at: "",
+      updated_at: "",
+    });
+    const versions = (id: string, n: number) =>
+      Array.from({ length: n }, (_, i) => ({ template_id: id, version: i + 1, config }));
+    const { client } = createFakeClient({
+      tables: {
+        ...catalogTables(),
+        import_templates: [row("t1", "A", 700), row("t2", "B", 600)],
+        import_template_versions: [...versions("t1", 700), ...versions("t2", 600)],
+      },
+    });
+    const listed = await listTemplates(client);
+    expect(listed.map((t) => [t.id, t.version])).toEqual([
+      ["t1", 700],
+      ["t2", 600],
+    ]);
+  });
+
   it("removes the template row when the first version cannot be saved", async () => {
     const { client, tables } = createFakeClient({
       tables: catalogTables(),

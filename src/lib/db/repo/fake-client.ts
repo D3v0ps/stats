@@ -1,7 +1,7 @@
 // In-memory stand-in for the slice of SupabaseClient the repo adapters use. Test-only:
 // it evaluates eq/neq/in/is filters, order, range/limit and single() over plain rows
 // and records every call, so adapters can be tested without a database.
-import type { DbClient } from "./shared";
+import { PAGE_SIZE, type DbClient } from "./shared";
 
 export type Row = Record<string, unknown>;
 
@@ -31,6 +31,8 @@ export interface FakeOptions {
   rpc?: Record<string, (args: Record<string, unknown>) => unknown>;
   /** Make matching calls fail. */
   fail?: (call: FakeCall) => FakeError | null;
+  /** Cap on rows per response, like PostgREST's max_rows (default 1000). */
+  maxRows?: number;
 }
 
 export interface FakeClient {
@@ -181,6 +183,7 @@ class FakeQuery implements PromiseLike<Result> {
       if (Array.isArray(data) && this.rangeValue) {
         data = data.slice(this.rangeValue[0], this.rangeValue[1] + 1);
       }
+      if (Array.isArray(data)) data = data.slice(0, this.ctx.maxRows);
       return this.shape(data);
     }
 
@@ -195,6 +198,7 @@ class FakeQuery implements PromiseLike<Result> {
         }
         if (this.rangeValue) rows = rows.slice(this.rangeValue[0], this.rangeValue[1] + 1);
         if (this.limitValue !== undefined) rows = rows.slice(0, this.limitValue);
+        rows = rows.slice(0, this.ctx.maxRows);
         return this.shape(rows.map((r) => ({ ...r })));
       }
       case "insert": {
@@ -251,6 +255,7 @@ interface Context {
   tables: Record<string, Row[]>;
   rpc: Record<string, (args: Record<string, unknown>) => unknown>;
   fail?: (call: FakeCall) => FakeError | null;
+  maxRows: number;
   calls: FakeCall[];
   seq: number;
 }
@@ -262,6 +267,7 @@ export function createFakeClient(options: FakeOptions = {}): FakeClient {
     ),
     rpc: options.rpc ?? {},
     fail: options.fail,
+    maxRows: options.maxRows ?? PAGE_SIZE,
     calls: [],
     seq: 0,
   };

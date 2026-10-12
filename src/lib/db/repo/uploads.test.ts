@@ -17,6 +17,7 @@ import {
   stageUpload,
   toLedgerInserts,
   toReviewComparison,
+  uniqueSlices,
 } from "./uploads";
 
 const hex = (c: string) => c.repeat(64);
@@ -103,19 +104,53 @@ describe("createUpload", () => {
           severity: "error",
         },
       ],
-      skipped: [{ sourceRow: 9, reason: "sum_row" }],
+      skipped: [
+        { sourceRow: 9, reason: "sum_row", detail: "Summa Anna Andersson" },
+        { sourceRow: 12, reason: "empty" },
+      ],
+      warnings: ["Okända värden för kund: Acme AB."],
     };
     expect(sanitizeParseReport(report)).toEqual({
       rowsRead: 3,
       issues: [{ sourceRow: 4, column: "timmar", message: "Inte ett tal", severity: "error" }],
-      skipped: [{ sourceRow: 9, reason: "sum_row" }],
+      skipped: [
+        { sourceRow: 9, reason: "sum_row" },
+        { sourceRow: 12, reason: "empty" },
+      ],
+      warnings: ["Okända värden för kund: Acme AB."],
     });
     expect(report.issues[0]?.value).toBe("Anna 8,5");
+    expect(report.skipped[0]?.detail).toBe("Summa Anna Andersson");
     expect(sanitizeParseReport(null)).toEqual({});
     expect(sanitizeParseReport([1, 2])).toEqual({});
     const { client, tables } = fake();
     await createUpload(client, upload({ parseReport: report }));
     expect(tables.uploads?.[0]?.parse_report).toEqual(sanitizeParseReport(report));
+  });
+
+  it("inserts one slice per company and month, keeping the highest priority", async () => {
+    const { client, tables } = fake();
+    await createUpload(
+      client,
+      upload({
+        slices: [
+          { company: "MBAB", month: "2026-09", priority: -1 },
+          { company: "MBAB", month: "2026-09", priority: 0 },
+          { company: "MBR", month: "2026-09", priority: 0 },
+          { company: "MBAB", month: "2026-09", priority: -1 },
+        ],
+      }),
+    );
+    expect(tables.upload_slices?.map((s) => [s.company_id, s.month, s.priority])).toEqual([
+      [1, "2026-09-01", 0],
+      [2, "2026-09-01", 0],
+    ]);
+    expect(
+      uniqueSlices([
+        { company: "MBR" as const, month: "2026-01", priority: 0 },
+        { company: "MBR" as const, month: "2026-01", priority: -1 },
+      ]),
+    ).toEqual([{ company: "MBR", month: "2026-01", priority: 0 }]);
   });
 
   it("validates input with the contract schema", async () => {
@@ -174,8 +209,11 @@ describe("stageFacts", () => {
       metric_id: 2,
     });
     await expect(stageFacts(client, "u1", [fact(1, { metricKey: "okant" })])).rejects.toThrow(
-      /Okänd mått/,
+      "Okänt mått: okant",
     );
+    await expect(
+      stageFacts(client, "u1", [fact(1, { company: "XYZ" as unknown as "MBAB" })]),
+    ).rejects.toThrow("Okänt bolag: XYZ");
   });
 
   it("stops at the first failing chunk", async () => {
@@ -312,6 +350,49 @@ describe("stageLedger", () => {
 
   it("builds scoped codes", () => {
     expect(kostnadsstalleCode("MBR", " 100 ")).toBe("MBR:100");
+    expect(kostnadsstalleCode("MBAB", "Syd \u00a0 2")).toBe("MBAB:Syd 2");
+  });
+
+  it("names new values by their scoped label, also when the code has letters", async () => {
+    // ensure_dimension_values lowercases the code ("MBAB:a1") but creates the label as sent.
+    const { client, tables } = fake({
+      rpc: {
+        ensure_dimension_values: () => [
+          { label: "MBAB:A1", id: 600 },
+          { label: "MBAB:Syd 2", id: 601 },
+          { label: "MBAB:300", id: 602 },
+        ],
+      },
+    });
+    tables.dimension_values!.push(
+      { id: 600, dimension_id: 4, code: "MBAB:a1", label: "MBAB:A1", sort: 0, active: true },
+      { id: 601, dimension_id: 4, code: "MBAB:syd 2", label: "MBAB:Syd 2", sort: 0, active: true },
+      // Matched through an alias: a value with another label is never renamed.
+      { id: 602, dimension_id: 4, code: "MBAB:3000", label: "MBAB:3000", sort: 0, active: true },
+    );
+    await stageLedger(client, "u1", {
+      rows: [row({ dimNo: 1, objectCode: "A1" }), row({ dimNo: 1, objectCode: "Syd  2" })],
+      accounts: [
+        { company: "MBAB", account: 3010, name: "Försäljning" },
+        { company: "MBAB", account: 3010, name: "Försäljning tjänster" },
+        { company: "MBR", account: 3010, name: "Försäljning" },
+      ],
+      objects: [
+        { company: "MBAB", dimNo: 1, code: "A1", name: " Administration " },
+        { company: "MBAB", dimNo: 1, code: "Syd 2", name: "Region  syd" },
+        { company: "MBAB", dimNo: 1, code: "300", name: "Lager" },
+      ],
+    });
+    const labels = Object.fromEntries(
+      tables.dimension_values!.filter((v) => (v.id as number) >= 600).map((v) => [v.id, v.label]),
+    );
+    expect(labels).toEqual({ 600: "A1 Administration", 601: "Syd 2 Region syd", 602: "MBAB:3000" });
+    expect(tables.ledger_balances?.map((r) => r.object_value_id)).toEqual([600, 601]);
+    // A repeated account in one upsert would fail in Postgres; the last name wins.
+    expect(tables.ledger_accounts).toEqual([
+      { company_id: 1, account: 3010, name: "Försäljning tjänster" },
+      { company_id: 2, account: 3010, name: "Försäljning" },
+    ]);
   });
 });
 

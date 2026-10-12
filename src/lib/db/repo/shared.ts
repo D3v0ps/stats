@@ -93,12 +93,12 @@ export function chunk<T>(items: readonly T[], size: number): T[][] {
 // collapsed, trimmed, Swedish lowercase. Keys of the dimension dictionary use it.
 const ZERO_WIDTH = /[​-‍⁠]/g;
 export function normKey(input: string): string {
-  return input
-    .normalize("NFC")
-    .replace(ZERO_WIDTH, "")
-    .replace(/\s+/g, " ")
-    .trim()
-    .toLocaleLowerCase("sv");
+  return cleanLabel(input).toLocaleLowerCase("sv");
+}
+
+/** Display form of a label, case kept. Mirrors private.clean_label() in SQL. */
+export function cleanLabel(input: string): string {
+  return input.normalize("NFC").replace(ZERO_WIDTH, "").replace(/\s+/g, " ").trim();
 }
 
 export function isJsonObject(

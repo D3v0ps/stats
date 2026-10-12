@@ -104,6 +104,9 @@ as $$
   )
 $$;
 
+-- The specs are what the check can see, so every resolved slide must come from one of
+-- them (ResolvedSlide.id = SlideSpec.id); otherwise an empty specs array would let any
+-- breakdown through.
 create or replace function private.assert_snapshot_nonpersonal()
 returns trigger
 language plpgsql
@@ -113,6 +116,21 @@ as $$
 begin
   if jsonb_typeof(new.snapshot -> 'specs') is distinct from 'array' then
     raise exception 'Rapportens ögonblicksbild saknar bildspecifikationer (specs)'
+      using errcode = 'check_violation';
+  end if;
+  if jsonb_typeof(new.snapshot -> 'slides') is distinct from 'array' then
+    raise exception 'Rapportens ögonblicksbild saknar bilder (slides)'
+      using errcode = 'check_violation';
+  end if;
+  if exists (
+    select 1
+    from jsonb_array_elements(new.snapshot -> 'slides') sl
+    where not exists (
+      select 1 from jsonb_array_elements(new.snapshot -> 'specs') sp
+      where jsonb_typeof(sp) = 'object' and sp ->> 'id' = sl ->> 'id'
+    )
+  ) then
+    raise exception 'Varje bild i en fryst rapport måste ha sin bildspecifikation'
       using errcode = 'check_violation';
   end if;
   if private.specs_reference_personal(new.snapshot -> 'specs') then
@@ -164,6 +182,22 @@ create trigger board_reports_no_truncate
 create trigger audit_log_append_only
   before update or delete on public.audit_log
   for each row execute function private.reject_change();
+
+-- Clients may insert audit entries but not choose who or when.
+create or replace function private.stamp_audit_entry()
+returns trigger
+language plpgsql
+set search_path = ''
+as $$
+begin
+  new.at := now();
+  new.actor := auth.uid();
+  return new;
+end;
+$$;
+create trigger audit_log_stamp
+  before insert on public.audit_log
+  for each row execute function private.stamp_audit_entry();
 create trigger audit_log_no_truncate
   before truncate on public.audit_log
   for each statement execute function private.reject_change();

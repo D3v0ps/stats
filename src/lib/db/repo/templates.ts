@@ -7,7 +7,7 @@ import {
   type TemplateConfig,
 } from "@/lib/contracts/pipeline";
 import type { Json, Tables } from "../types";
-import { check, unwrap, unwrapMaybe, type DbClient } from "./shared";
+import { check, fetchAll, unwrap, unwrapMaybe, type DbClient } from "./shared";
 
 export interface StoredTemplate extends ImportTemplate {
   id: string;
@@ -73,15 +73,19 @@ export async function listTemplates(
   }
   const templates = unwrap("import_templates", await q.order("name").order("id"));
   if (templates.length === 0) return [];
-  const versions = unwrap(
-    "import_template_versions",
-    await db
+  // Every version of every listed template: page past max_rows, or templates whose
+  // current version falls beyond the first page would silently disappear.
+  const versions = await fetchAll("import_template_versions", (from, to) =>
+    db
       .from("import_template_versions")
       .select("template_id, version, config")
       .in(
         "template_id",
         templates.map((t) => t.id),
-      ),
+      )
+      .order("template_id")
+      .order("version")
+      .range(from, to),
   );
   return templates.flatMap((t) => {
     const v = versions.find((x) => x.template_id === t.id && x.version === t.current_version);

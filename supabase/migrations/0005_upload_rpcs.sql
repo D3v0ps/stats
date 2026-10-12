@@ -161,6 +161,21 @@ begin
       using errcode = 'check_violation';
   end if;
 
+  -- Kostnadsställen are scoped per company ("MBAB:100"); a fact (e.g. budget) on another
+  -- company's or an unscoped value would never line up with that company's ledger.
+  if exists (
+    select 1
+    from public.metric_values mv
+    join public.companies c on c.id = mv.company_id
+    join public.dimension_values dv on dv.id = (mv.dims ->> 'kostnadsstalle')::bigint
+    where mv.upload_id = p_upload_id
+      and mv.dims ? 'kostnadsstalle'
+      and left(dv.code, length(c.code) + 1) <> c.code || ':'
+  ) then
+    raise exception 'Uppladdningen refererar till kostnadsställen i ett annat bolag eller utan bolag'
+      using errcode = 'check_violation';
+  end if;
+
   select count(*) into v_ledger from public.ledger_balances lb where lb.upload_id = p_upload_id;
   if v_ledger > 0 and v_dataset.kind <> 'ledger' then
     raise exception 'Bokföringsrader kan bara publiceras i en bokföringskälla'
@@ -181,6 +196,24 @@ begin
         )
     ) then
       raise exception 'Bokföringens bolag eller månader stämmer inte med uppladdningen'
+        using errcode = 'check_violation';
+    end if;
+    -- Dimension 1 object rows are what ledger_monthly groups by kostnadsstalle: they must
+    -- point at the company's own kostnadsställen (codes are scoped "MBAB:100").
+    if exists (
+      select 1
+      from public.ledger_balances lb
+      join public.companies c on c.id = lb.company_id
+      left join public.dimension_values dv on dv.id = lb.object_value_id
+      left join public.dimensions d on d.id = dv.dimension_id
+      where lb.upload_id = p_upload_id
+        and lb.dim_no = 1
+        and (
+          d.key is distinct from 'kostnadsstalle'
+          or left(dv.code, length(c.code) + 1) is distinct from c.code || ':'
+        )
+    ) then
+      raise exception 'Bokföringens objektrader för dimension 1 måste vara kostnadsställen i uppladdningens bolag'
         using errcode = 'check_violation';
     end if;
   end if;
@@ -233,8 +266,11 @@ begin
     );
   get diagnostics v_won = row_count;
 
+  -- clock_timestamp(), taken under the advisory lock: published_at follows the order in
+  -- which publishes take effect (now() is the transaction start, which can be earlier
+  -- than a publish that committed while this one waited, or equal within a transaction).
   update public.uploads
-  set status = 'published', published_at = now()
+  set status = 'published', published_at = clock_timestamp()
   where id = p_upload_id;
 
   select count(*) into v_facts from public.metric_values mv where mv.upload_id = p_upload_id;
@@ -303,7 +339,7 @@ begin
       and s.month = v_slice.month
       and u.status = 'published'
       and u.id <> p_upload_id
-    order by s.priority desc, u.published_at desc
+    order by s.priority desc, u.published_at desc, u.id desc
     limit 1;
 
     if v_replacement is not null then

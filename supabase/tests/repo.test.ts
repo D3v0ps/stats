@@ -335,6 +335,43 @@ describe("repo adapters against the database", () => {
     expect(await ds.coverage(["intakter"], budget)).toEqual({ intakter: ["2026-01"] });
   });
 
+  it("names new kostnadsställen whose SIE code has letters or odd spacing", async () => {
+    const row = (objectCode: string | null, amount: number) => ({
+      company: "MBR" as const,
+      month: "2026-02",
+      account: 3010,
+      dimNo: objectCode === null ? null : 1,
+      objectCode,
+      amount,
+      yearOffset: 0,
+      source: "psaldo" as const,
+    });
+    const id = await stageUpload(client, {
+      upload: upload("sie-mbr-letters", {
+        datasetKey: "fx_bokforing",
+        slices: [{ company: "MBR", month: "2026-02", priority: 0 }],
+      }),
+      ledger: {
+        rows: [row(null, -500), row("A1", -200), row("Syd 2", -100)],
+        accounts: [
+          { company: "MBR", account: 3010, name: "Försäljning" },
+          { company: "MBR", account: 3010, name: "Försäljning tjänster" },
+        ],
+        objects: [
+          { company: "MBR", dimNo: 1, code: "A1", name: "Administration" },
+          { company: "MBR", dimNo: 1, code: "Syd 2", name: "Region syd" },
+        ],
+      },
+    });
+    await publishUpload(client, id);
+    const ids = await ensureDimensionValues(client, "kostnadsstalle", ["MBR:A1", "MBR:Syd 2"]);
+    const ds = new SupabaseMetricDataSource(client);
+    expect(await ds.labels("kostnadsstalle", [ids["MBR:A1"]!, ids["MBR:Syd 2"]!])).toEqual({
+      [ids["MBR:A1"]!]: "A1 Administration",
+      [ids["MBR:Syd 2"]!]: "Syd 2 Region syd",
+    });
+  });
+
   it("round-trips templates, reports, dashboards and settings", async () => {
     const tpl = await createTemplate(client, {
       datasetKey: "wb_deltagare",

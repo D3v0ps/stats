@@ -260,6 +260,21 @@ describe("security", () => {
     });
   });
 
+  describe("audit log", () => {
+    it("stamps the caller and the database time, whatever the client sends", async () => {
+      const other = await createAppUser(db);
+      const res = await asUser(db, app, (tx) =>
+        tx.query<{ actor: string; recent: boolean }>(
+          `insert into public.audit_log (at, actor, action, entity)
+           values ('2001-01-01T00:00:00Z', $1, 'forged', 'upload')
+           returning actor, at > now() - interval '1 minute' as recent`,
+          [other],
+        ),
+      );
+      expect(res.rows).toEqual([{ actor: app, recent: true }]);
+    });
+  });
+
   describe("frozen board reports", () => {
     it("are immutable, even for the table owner", async () => {
       const id = (await db.query<{ id: string }>(`select id from public.board_reports limit 1`))
@@ -312,6 +327,29 @@ describe("security", () => {
       const ok = await freeze([
         { ...spec, groupBy: "kund", filters: [{ dimension: "verksamhet", valueIds: [1] }] },
       ]);
+      expect(ok.rows).toHaveLength(1);
+    });
+
+    it("reject snapshots with slides that have no spec (specs cannot be left out)", async () => {
+      const freeze = (snapshot: unknown) =>
+        asUser(db, app, (tx) =>
+          tx.query(`select public.freeze_report('R', null, '2026-09-01', $1::jsonb) as id`, [
+            JSON.stringify(snapshot),
+          ]),
+        );
+      const spec = { id: "s1", viz: "table", metricKey: "timmar", groupBy: "kund", filters: [] };
+      // A konsult breakdown resolved client-side but frozen with an empty specs array.
+      await expect(
+        freeze({ schemaVersion: 1, slides: [{ id: "s1", table: { rows: [] } }], specs: [] }),
+      ).rejects.toThrow(/bildspecifikation/);
+      await expect(
+        freeze({ schemaVersion: 1, slides: [{ id: "s2" }], specs: [spec] }),
+      ).rejects.toThrow(/bildspecifikation/);
+      await expect(freeze({ schemaVersion: 1, slides: [{}], specs: [spec] })).rejects.toThrow(
+        /bildspecifikation/,
+      );
+      await expect(freeze({ schemaVersion: 1, specs: [spec] })).rejects.toThrow(/saknar bilder/);
+      const ok = await freeze({ schemaVersion: 1, slides: [{ id: "s1" }], specs: [spec] });
       expect(ok.rows).toHaveLength(1);
     });
 

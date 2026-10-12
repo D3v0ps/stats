@@ -21,6 +21,7 @@ import {
   STAGE_CHUNK_SIZE,
   check,
   chunk,
+  cleanLabel,
   fetchAll,
   isJsonObject,
   toNumber,
@@ -48,21 +49,25 @@ async function loadLookups(db: DbClient): Promise<Lookups> {
   const ds = new Map(unwrap("datasets", datasets).map((r) => [r.key, r.id]));
   const co = new Map(unwrap("companies", companies).map((r) => [r.code, r.id]));
   const me = new Map(unwrap("metrics", metrics).map((r) => [r.key, r.id]));
-  const get = <K>(map: Map<K, number>, key: K, what: string) => {
+  const get = <K>(map: Map<K, number>, key: K, unknown: string) => {
     const id = map.get(key);
-    if (id === undefined) throw new Error(`Okänd ${what}: ${String(key)}`);
+    if (id === undefined) throw new Error(`${unknown}: ${String(key)}`);
     return id;
   };
   return {
-    datasetId: (key) => get(ds, key, "datakälla"),
-    companyId: (code) => get(co, code, "bolag"),
-    metricId: (key) => get(me, key, "mått"),
+    datasetId: (key) => get(ds, key, "Okänd datakälla"),
+    companyId: (code) => get(co, code, "Okänt bolag"),
+    metricId: (key) => get(me, key, "Okänt mått"),
   };
 }
 
-/** Scoped dimension_values.code of a kostnadsställe object, e.g. "MBAB:100". */
+/**
+ * Scoped label of a kostnadsställe object, e.g. "MBAB:100", sent to
+ * ensure_dimension_values (which derives dimension_values.code from it). Whitespace is
+ * cleaned like private.clean_label, so it equals the label a new value is created with.
+ */
 export function kostnadsstalleCode(company: CompanyCode, objectCode: string): string {
-  return `${company}:${objectCode.trim()}`;
+  return `${company}:${cleanLabel(objectCode)}`;
 }
 
 // ---- Pure mapping ----------------------------------------------------------
@@ -197,22 +202,41 @@ export function toReviewComparison(json: Json): ReviewComparison {
 
 // ---- Staging ---------------------------------------------------------------
 
+/** Copies of the entries of an array field without the given keys. */
+function withoutKey(list: Json | undefined, key: string): Json | undefined {
+  if (!Array.isArray(list)) return list;
+  return list.map((entry) => {
+    if (!isJsonObject(entry)) return entry;
+    const rest = { ...entry };
+    delete rest[key];
+    return rest;
+  });
+}
+
 /**
- * The parse report as stored server-side: issue entries lose their raw cell value
- * (it can be personal data); row numbers, columns and messages are kept.
+ * The parse report as stored server-side. Raw cell text can be personal data (a sum row
+ * "Summa Anna Andersson", a filtered value), so issue values and skipped-row details
+ * are dropped; row numbers, columns, reasons and messages are kept.
  */
 export function sanitizeParseReport(report: unknown): Json {
   if (typeof report !== "object" || report === null || Array.isArray(report)) return {};
   const copy = JSON.parse(JSON.stringify(report)) as { [key: string]: Json | undefined };
-  if (Array.isArray(copy.issues)) {
-    copy.issues = copy.issues.map((issue) => {
-      if (!isJsonObject(issue)) return issue;
-      const rest = { ...issue };
-      delete rest.value;
-      return rest;
-    });
-  }
+  if (Array.isArray(copy.issues)) copy.issues = withoutKey(copy.issues, "value");
+  if (Array.isArray(copy.skipped)) copy.skipped = withoutKey(copy.skipped, "detail");
   return copy;
+}
+
+/** One slice per company and month; a duplicate keeps the highest priority. */
+export function uniqueSlices<T extends { company: CompanyCode; month: string; priority: number }>(
+  slices: T[],
+): T[] {
+  const byKey = new Map<string, T>();
+  for (const s of slices) {
+    const key = `${s.company}|${s.month}`;
+    const prev = byKey.get(key);
+    if (!prev || s.priority > prev.priority) byKey.set(key, s);
+  }
+  return [...byKey.values()];
 }
 
 /** Insert a staged upload with its month slices. Returns the upload id. */
@@ -241,7 +265,7 @@ export async function createUpload(db: DbClient, input: UploadCreate): Promise<s
       .select("id")
       .single(),
   );
-  const slices: TablesInsert<"upload_slices">[] = upload.slices.map((s) => ({
+  const slices: TablesInsert<"upload_slices">[] = uniqueSlices(upload.slices).map((s) => ({
     upload_id: created.id,
     dataset_id: datasetId,
     company_id: lookups.companyId(s.company),
@@ -311,7 +335,7 @@ export async function stageLedger(
   const names = new Map<string, string>();
   for (const o of ledger.objects) {
     if (o.dimNo === KOSTNADSSTALLE_DIM_NO)
-      names.set(kostnadsstalleCode(o.company, o.code), o.name.trim());
+      names.set(kostnadsstalleCode(o.company, o.code), cleanLabel(o.name));
   }
   const codes = new Set(names.keys());
   for (const r of ledger.rows) {
@@ -322,11 +346,17 @@ export async function stageLedger(
   const ids = codes.size > 0 ? await ensureDimensionValues(db, "kostnadsstalle", [...codes]) : {};
   await nameNewObjects(db, ids, names);
 
-  const accounts = ledger.accounts.map((a) => ({
-    company_id: lookups.companyId(a.company),
-    account: a.account,
-    name: a.name.trim(),
-  }));
+  // One row per account: a repeated account in one upsert statement is an error.
+  const byAccount = new Map<string, TablesInsert<"ledger_accounts">>();
+  for (const a of ledger.accounts) {
+    const companyId = lookups.companyId(a.company);
+    byAccount.set(`${companyId}:${a.account}`, {
+      company_id: companyId,
+      account: a.account,
+      name: a.name.trim(),
+    });
+  }
+  const accounts = [...byAccount.values()];
   for (const part of chunk(accounts, STAGE_CHUNK_SIZE)) {
     check(
       "ledger_accounts.upsert",
@@ -355,35 +385,41 @@ export async function stageLedger(
 }
 
 /**
- * New kostnadsställe values are created with their code as label; give them the SIE
- * object name ("100 Stockholm"). Values renamed by the user are left alone.
+ * New kostnadsställe values are created with their scoped label ("MBAB:100") as label;
+ * give them the SIE object name ("100 Stockholm"). Values whose label is anything else
+ * (renamed by the user, or matched through an alias) are left alone. Matching is by
+ * label, not code: the code is normalized (lowercased), the label keeps the SIE case.
  */
 async function nameNewObjects(
   db: DbClient,
   ids: Record<string, number | null>,
   names: Map<string, string>,
 ): Promise<void> {
-  const valueIds = Object.values(ids).filter((id): id is number => id !== null);
-  if (valueIds.length === 0) return;
+  const wanted = new Map<number, { scoped: string; name: string }>();
+  for (const [scoped, name] of names) {
+    const id = ids[scoped];
+    if (id !== undefined && id !== null && name !== "") wanted.set(id, { scoped, name });
+  }
+  if (wanted.size === 0) return;
   const current = await fetchAll("dimension_values", (from, to) =>
     db
       .from("dimension_values")
-      .select("id, code, label")
-      .in("id", valueIds)
+      .select("id, label")
+      .in("id", [...wanted.keys()])
       .order("id")
       .range(from, to),
   );
   for (const v of current) {
-    const name = names.get(v.code);
-    if (!name || v.label !== v.code) continue;
-    const objectCode = v.code.slice(v.code.indexOf(":") + 1);
+    const w = wanted.get(v.id);
+    if (!w || v.label !== w.scoped) continue;
+    const objectCode = w.scoped.slice(w.scoped.indexOf(":") + 1);
     check(
       "dimension_values.update",
       await db
         .from("dimension_values")
-        .update({ label: `${objectCode} ${name}` })
+        .update({ label: `${objectCode} ${w.name}` })
         .eq("id", v.id)
-        .eq("label", v.code),
+        .eq("label", v.label),
     );
   }
 }
