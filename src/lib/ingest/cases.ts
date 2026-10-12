@@ -85,10 +85,14 @@ function parseCaseDate(v: CellValue | undefined, edge: "start" | "end"): DatePar
   return { ok: true, date: edge === "start" ? `${r.month}-01` : monthEndDate(r.month) };
 }
 
+/** Marker texts that start by saying no: "Inget avbrott", "Nej, fullföljt", "Ej aktuellt". */
+const NEGATIVE_START = /^(?:nej|ej|inget|ingen|no|none)(?=$|[^\p{L}])/u;
+
 function isTruthy(v: CellValue | undefined): boolean {
   if (typeof v === "boolean") return v;
   if (typeof v === "number") return v !== 0;
-  return !FALSY.has(normalizeValue(valueText(v)));
+  const text = normalizeValue(valueText(v));
+  return !FALSY.has(text) && !NEGATIVE_START.test(text);
 }
 
 function isValidIsoDate(s: string): boolean {
@@ -138,7 +142,7 @@ export function buildCases(
   const resultCol = optional(c.resultColumn, "Resultatkolumnen");
   const resultDateCol = optional(c.resultDateColumn, "Resultatdatum-kolumnen");
 
-  // Group-by columns -> dimension keys. The key column is never a dimension.
+  // Group-by columns -> dimension keys. The key column and removed columns are never dimensions.
   const groupCols: { column: string; dim: string }[] = [];
   const usedDims = new Set<string>();
   for (const col of c.groupBy ?? []) {
@@ -150,7 +154,12 @@ export function buildCases(
       issues.push(globalIssue(col, `Grupperingskolumnen "${col}" finns inte.`));
       continue;
     }
-    const dim = config.columns.find((m) => m.column === col)?.dimensionKey;
+    const mapping = config.columns.find((m) => m.column === col);
+    if (mapping?.keep === false) {
+      issues.push(globalIssue(col, `Grupperingskolumnen "${col}" är borttagen och används inte.`));
+      continue;
+    }
+    const dim = mapping?.dimensionKey;
     if (!dim) {
       issues.push(globalIssue(col, `Grupperingskolumnen "${col}" saknar dimension.`));
       continue;
@@ -209,7 +218,8 @@ export function buildCases(
       continue;
     }
 
-    // Interruption: a truthy marker, optionally dated by its own column or by a date in the marker.
+    // Interruption: a truthy marker, optionally dated by its own column or by a
+    // date in the marker. Without a marker column a filled date is the marker.
     let interrupted = false;
     let interruptDate: string | null = null;
     if (interruptCol) {
@@ -219,6 +229,8 @@ export function buildCases(
         const asDate = parseCaseDate(marker, "end");
         if (asDate.ok && asDate.date) interruptDate = asDate.date;
       }
+    } else if (interruptDateCol) {
+      interrupted = valueText(row.values[interruptDateCol]) !== "";
     }
     if (interrupted && interruptDateCol) {
       const d = parseCaseDate(row.values[interruptDateCol], "end");
@@ -259,6 +271,15 @@ export function buildCases(
       resultLabel = raw === "" ? null : (resultMap.get(normalizeValue(raw)) ?? null);
       if (resultLabel) {
         const d = resultDateCol ? parseCaseDate(row.values[resultDateCol], "end") : null;
+        if (d && !d.ok) {
+          issues.push({
+            sourceRow: row.sourceRow,
+            column: resultDateCol!,
+            value: d.text,
+            message: "Ogiltigt resultatdatum, slutdatum används",
+            severity: "warning",
+          });
+        }
         resultDate = d?.ok && d.date ? d.date : effEnd;
         if (!resultDate) {
           issues.push({

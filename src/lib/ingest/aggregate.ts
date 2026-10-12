@@ -11,7 +11,7 @@ import type {
   UploadChoices,
 } from "@/lib/contracts";
 import { detectDecimalSeparator, parseNumberSv, type NumberKind } from "@/lib/core/num-sv";
-import { valueContainsPersonnummer } from "@/lib/core/pnr";
+import { columnContainsPersonnummer } from "@/lib/core/pnr";
 import { companyResolver, globalIssue, periodResolver } from "./row-context";
 import { valueText, type WorkingTable } from "./working";
 
@@ -30,7 +30,7 @@ export interface AggregateResult {
   facts: FactDraft[];
   issues: ParseIssue[];
   skipped: SkippedRow[];
-  /** Rows that contributed to at least one fact. */
+  /** Source rows that contributed to at least one fact (counted once after unpivot). */
   rowsUsed: number;
 }
 
@@ -49,11 +49,11 @@ export function roundSum(x: number): number {
   return Object.is(r, -0) ? 0 : r;
 }
 
-/** Throw PersonalDataError if any value in the given columns contains a personnummer. */
+/** Throw PersonalDataError if any of the given columns holds personnummer (see columnContainsPersonnummer). */
 export function assertNoPersonnummer(table: WorkingTable, columns: string[]): void {
   for (const column of columns) {
-    for (const row of table.rows) {
-      if (valueContainsPersonnummer(row.values[column])) throw new PersonalDataError(column);
+    if (columnContainsPersonnummer(table.rows.map((row) => row.values[column]))) {
+      throw new PersonalDataError(column);
     }
   }
 }
@@ -99,6 +99,13 @@ export function aggregateTable(
 ): AggregateResult {
   const issues: ParseIssue[] = [];
   const skipped: SkippedRow[] = [];
+  // After unpivot several working rows share a source row; report it once.
+  const skippedRows = new Set<number>();
+  const skip = (sourceRow: number, detail: string) => {
+    if (skippedRows.has(sourceRow)) return;
+    skippedRows.add(sourceRow);
+    skipped.push({ sourceRow, reason: "unparseable", detail });
+  };
   const kept = config.columns.filter((m) => m.keep !== false);
 
   const present = (m: ColumnMapping): boolean => {
@@ -143,13 +150,7 @@ export function aggregateTable(
   const companyOf = companyResolver(config.company, table, choices.company, issues);
   const monthOf = periodResolver(config.period, table, choices.month, issues);
   if (!companyOf || !monthOf) {
-    for (const row of table.rows) {
-      skipped.push({
-        sourceRow: row.sourceRow,
-        reason: "unparseable",
-        detail: "Bolag eller månad saknas",
-      });
-    }
+    for (const row of table.rows) skip(row.sourceRow, "Bolag eller månad saknas");
     return { facts: [], issues, skipped, rowsUsed: 0 };
   }
 
@@ -187,16 +188,16 @@ export function aggregateTable(
   const dimsInOrder = [...dimensions].sort((a, b) =>
     compareStrings(a.dimensionKey!, b.dimensionKey!),
   );
-  let rowsUsed = 0;
+  const usedRows = new Set<number>();
   for (const row of table.rows) {
     const month = monthOf(row);
     if (!month.ok) {
-      skipped.push({ sourceRow: row.sourceRow, reason: "unparseable", detail: month.detail });
+      skip(row.sourceRow, month.detail);
       continue;
     }
     const company = companyOf(row);
     if (!company.ok) {
-      skipped.push({ sourceRow: row.sourceRow, reason: "unparseable", detail: company.detail });
+      skip(row.sourceRow, company.detail);
       continue;
     }
 
@@ -243,7 +244,7 @@ export function aggregateTable(
       add(counter.metricKey, company.value, month.value, dims, dimsKey, 1, row.sourceRow);
       contributed = true;
     }
-    if (contributed) rowsUsed++;
+    if (contributed) usedRows.add(row.sourceRow);
   }
 
   const facts: FactDraft[] = [...groups.values()].map((g) => ({
@@ -254,5 +255,5 @@ export function aggregateTable(
     value: roundSum(g.value),
     sourceRows: [...g.rows].sort((a, b) => a - b),
   }));
-  return { facts: sortFacts(facts), issues, skipped, rowsUsed };
+  return { facts: sortFacts(facts), issues, skipped, rowsUsed: usedRows.size };
 }

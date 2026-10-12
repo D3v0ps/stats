@@ -40,18 +40,15 @@ function scoreDelimiter(text: string, delimiter: CsvDelimiter): DelimiterScore {
 
 /**
  * Pick the delimiter that splits most rows into the same number of fields
- * (quotes respected). Ties go to more fields, then to ";" before tab before ",".
+ * (quotes respected). Ties go to ";" before tab before ",": a comma is the
+ * Swedish decimal sign and appears in names ("Andersson, Anna"), so extra
+ * fields from splitting on it are no evidence.
  */
 export function sniffDelimiter(text: string): CsvDelimiter {
   let best: DelimiterScore = { delimiter: ";", consistent: 0, fields: 0 };
   for (const d of CSV_DELIMITERS) {
     const s = scoreDelimiter(text, d);
-    if (
-      s.consistent > best.consistent ||
-      (s.consistent === best.consistent && s.fields > best.fields)
-    ) {
-      best = s;
-    }
+    if (s.consistent > best.consistent) best = s;
   }
   return best.delimiter;
 }
@@ -65,9 +62,14 @@ function toCell(value: string): RawCell {
   return value === "" ? EMPTY_CELL : { v: value, w: value, t: "s" };
 }
 
+/** Excel's first-line delimiter hint ("sep=;"), written by some CSV exports. */
+const SEP_HINT = /^sep=([;,\t])[ \t]*(?:\r\n|\n|\r|$)/i;
+
 /** Parse decoded CSV text into string cells. Never throws; malformed quotes keep what was read. */
 export function parseCsv(text: string, delimiter?: CsvDelimiter): CsvResult {
-  const d = delimiter ?? sniffDelimiter(text);
+  const hint = SEP_HINT.exec(text);
+  if (hint) text = text.slice(hint[0].length);
+  const d = delimiter ?? (hint?.[1] as CsvDelimiter | undefined) ?? sniffDelimiter(text);
   const parsed = Papa.parse<string[]>(text, {
     delimiter: d,
     header: false,

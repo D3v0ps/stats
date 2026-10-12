@@ -84,6 +84,15 @@ export function containsPersonnummer(text: string): boolean {
   return false;
 }
 
+/** Written instead of a personnummer in texts that leave the browser (reports, file names). */
+export const PNR_PLACEHOLDER = "ÅÅMMDD-XXXX";
+
+/** Replace every valid personnummer/samordningsnummer in a text with PNR_PLACEHOLDER. */
+export function redactPersonnummer(text: string): string {
+  if (!/\d{6}/.test(text)) return text;
+  return text.replace(PNR_SCAN, (m) => (isPersonnummer(m) ? PNR_PLACEHOLDER : m));
+}
+
 /** containsPersonnummer for any cell value (numbers are checked as digit strings). */
 export function valueContainsPersonnummer(value: unknown): boolean {
   if (typeof value === "string") return containsPersonnummer(value);
@@ -91,6 +100,47 @@ export function valueContainsPersonnummer(value: unknown): boolean {
     return containsPersonnummer(String(value));
   }
   return false;
+}
+
+/**
+ * A 9-digit integer as "0" + digits: Excel drops the leading zero when a
+ * 10-digit personnummer of someone born 2000–2009 lands in a number cell.
+ */
+function zeroPadded(value: unknown): string | null {
+  if (typeof value === "number") {
+    return Number.isInteger(value) && value >= 1e8 && value < 1e9 ? `0${value}` : null;
+  }
+  if (typeof value === "string") {
+    const t = value.trim();
+    return /^\d{9}$/.test(t) ? `0${t}` : null;
+  }
+  return null;
+}
+
+const isZeroLostPersonnummer = (value: unknown): boolean => {
+  const padded = zeroPadded(value);
+  return padded !== null && isPersonnummer(padded);
+};
+
+/** Share of non-empty values that must be personnummer before a column counts as one. */
+const PNR_SHARE = 0.3;
+
+/**
+ * True when a column holds personnummer: any value with a 10/12-digit
+ * personnummer, or >= 30 % of the values being 9-digit numbers that are
+ * personnummer with the leading zero restored. The share keeps 9-digit id
+ * columns, where an occasional value passes the check by chance, usable.
+ */
+export function columnContainsPersonnummer(values: Iterable<unknown>): boolean {
+  let nonEmpty = 0;
+  let zeroLost = 0;
+  for (const v of values) {
+    if (v === null || v === undefined || (typeof v === "string" && v.trim() === "")) continue;
+    if (valueContainsPersonnummer(v)) return true;
+    nonEmpty++;
+    if (isZeroLostPersonnummer(v)) zeroLost++;
+  }
+  return zeroLost > 0 && zeroLost / nonEmpty >= PNR_SHARE;
 }
 
 // ---- Column classification -------------------------------------------------
@@ -160,7 +210,8 @@ function ratio(samples: string[], test: (s: string) => boolean): number {
 /**
  * Classify a column as personal data from its header and sample values.
  * - pnr: header keyword, or >= 30 % of non-empty samples are personnummer
- *   (values win over the header: "Anställnings-id" holding personnummer is pnr)
+ *   (also 9-digit ones that lost their leading zero in Excel; values win over
+ *   the header: "Anställnings-id" holding personnummer is pnr)
  * - email/phone/address: header keyword or >= 50 % of samples match
  * - name: header keyword, or a person-ish header ("Konsult") with name-like values
  * - birthdate: header keyword only
@@ -170,8 +221,8 @@ export function detectPersonalColumn(header: string, samples: string[]): Persona
   const h = normalizeHeader(header);
   const values = samples.map((s) => String(s).trim()).filter((s) => s !== "");
 
-  const pnrShare = ratio(values, containsPersonnummer);
-  if (pnrShare >= 0.3) return { kind: "pnr", confidence: Math.max(0.8, pnrShare) };
+  const pnrShare = ratio(values, (s) => containsPersonnummer(s) || isZeroLostPersonnummer(s));
+  if (pnrShare >= PNR_SHARE) return { kind: "pnr", confidence: Math.max(0.8, pnrShare) };
 
   const headerRule = HEADER_RULES.find((rule) => rule.re.test(h));
   if (headerRule?.kind === "pnr") return { kind: "pnr", confidence: headerRule.confidence };

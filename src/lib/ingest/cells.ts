@@ -61,6 +61,32 @@ export function classifyCell(cell: RawCell | undefined | null): CellClass {
   }
 }
 
+/**
+ * The number a cell shows, for layout checks such as "is this row the sum of
+ * the rows above": numeric cells as stored, text cells parsed as Swedish
+ * numbers (amount, percent or hours). Dates, ambiguous text and other text give null.
+ */
+export function cellNumber(cell: RawCell | undefined | null): number | null {
+  if (!cell) return null;
+  if (cell.t === "n") return typeof cell.v === "number" && Number.isFinite(cell.v) ? cell.v : null;
+  if (cell.t !== "s") return null;
+  const text = cellText(cell);
+  // Dates never parse as numbers except YYYYMM(DD) digit runs, which callers treat as labels.
+  if (!/\d/.test(text)) return null;
+  for (const kind of ["amount", "percent", "hours"] as const) {
+    const r = parseNumberSv(text, kind);
+    if (r.ok && r.value !== null) return r.value;
+  }
+  return null;
+}
+
+/** Digits after the decimal sign in a cell's text ("1 234,50" -> 2); 0 for stored numbers. */
+export function shownDecimals(cell: RawCell | undefined | null): number {
+  if (!cell || cell.t !== "s") return 0;
+  const m = /[.,](\d+)\s*\D*$/.exec(cellText(cell));
+  return m ? m[1]!.length : 0;
+}
+
 /** Excel-style column letter: 0 -> A, 26 -> AA. */
 export function columnLetter(index: number): string {
   let n = index + 1;

@@ -7,6 +7,7 @@ import {
   type UploadChoices,
 } from "@/lib/contracts";
 import { PersonalDataError, aggregateTable, roundSum } from "./aggregate";
+import { applySteps } from "./pipeline";
 import type { CellValue, WorkingTable } from "./working";
 
 function table(columns: string[], rows: CellValue[][]): WorkingTable {
@@ -105,6 +106,36 @@ describe("aggregateTable – grouping", () => {
 
   it("never puts ignored columns into facts", () => {
     expect(JSON.stringify(r.facts)).not.toMatch(/kommentar|"x"/);
+  });
+
+  it("counts used source rows once when steps (unpivot) produced several rows per source row", () => {
+    const wide = applySteps(
+      table(
+        ["kund", "datum", "jan", "feb"],
+        [
+          ["Acme", "2026-09-01", 1, 2],
+          ["Beta", "2026-09-01", 3, null],
+        ],
+      ),
+      [{ op: "unpivot", columns: ["jan", "feb"], nameColumn: "typ", valueColumn: "timmar" }],
+      { aliases: {} },
+    ).table;
+    const u = aggregateTable(wide, base, noChoices);
+    expect(wide.rows).toHaveLength(3);
+    expect(u.rowsUsed).toBe(2);
+    const noPeriod = aggregateTable(
+      { ...wide, rows: wide.rows.map((r) => ({ ...r, values: { ...r.values, datum: null } })) },
+      base,
+      noChoices,
+    );
+    expect(noPeriod.skipped).toEqual([
+      { sourceRow: 2, reason: "unparseable", detail: "Datum/period saknas" },
+      { sourceRow: 3, reason: "unparseable", detail: "Datum/period saknas" },
+    ]);
+    expect(u.facts.find((f) => f.metricKey === "timmar" && f.dims.kund === "Acme")).toMatchObject({
+      value: 3,
+      sourceRows: [2],
+    });
   });
 });
 
@@ -353,6 +384,15 @@ describe("aggregateTable – validation and personal data", () => {
     }
     const numericPnr = table(["datum", "id", "v"], [["2026-09-01", "1001", 1212121212]]);
     expect(() => aggregateTable(numericPnr, cfg, noChoices)).toThrow(PersonalDataError);
+    // Born 2000–2009 and stored as numbers by Excel: the leading zero is gone.
+    const zeroLost = table(
+      ["datum", "id", "v"],
+      [
+        ["2026-09-01", 501019806, 1],
+        ["2026-09-01", 712249804, 1],
+      ],
+    );
+    expect(() => aggregateTable(zeroLost, cfg, noChoices)).toThrow(PersonalDataError);
   });
 
   it("ignores personnummer in removed columns", () => {

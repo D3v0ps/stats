@@ -28,7 +28,7 @@ const KIND_LABELS: Record<NumberKind, string> = {
 };
 
 /** Cell texts that mean "no value". Compared after trim + lowercase. */
-const EMPTY_MARKERS = new Set(["", "-", "–", "—", "#n/a", "n/a", "#saknas!", "#saknas"]);
+const EMPTY_MARKERS = new Set(["", "-", "–", "—", "−", "#n/a", "n/a", "#saknas!", "#saknas"]);
 
 const ZERO_WIDTH = /[​-‍⁠﻿]/g;
 /** Characters used as thousands separators: space, NBSP, narrow NBSP, thin/figure/punctuation/hair space. */
@@ -304,7 +304,7 @@ function analyze(
 
 /**
  * Parse a cell as a number of the given kind.
- * - empty, "-", "–", "—", "#N/A", "N/A" -> ok null
+ * - empty, "-", "–", "—", "−", "#N/A", "N/A" -> ok null
  * - "1 234 567,50" (space/NBSP/thin space thousands), "1.234.567,50", "1234,5", "1234.5"
  * - "1,234.50", "1.234", "1,234" -> ambiguous unless opts.decimalSeparator decides
  * - negatives: "-1", "−1", "–1", "1 200-", "(1 200)"

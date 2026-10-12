@@ -559,4 +559,13 @@ describe("unknown operations", () => {
     expect(r.table).toBe(t);
     expect(r.issues[0]!.message).toMatch(/Steg 3: okänd operation "explode"/);
   });
+
+  it("treat Object.prototype names as unknown instead of crashing", () => {
+    const t = table(["a"], [[1]]);
+    for (const op of ["toString", "constructor", "__proto__", "hasOwnProperty"]) {
+      const r = applyStep(t, { op } as unknown as Step, ctx, 0);
+      expect(r.table).toBe(t);
+      expect(r.issues[0]!.message).toMatch(/okänd operation/);
+    }
+  });
 });

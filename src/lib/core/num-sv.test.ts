@@ -14,7 +14,7 @@ function failure(input: string | number | boolean | null, kind: NumberKind = "nu
 }
 
 describe("parseNumberSv – empty markers", () => {
-  it.each(["", "   ", "-", "–", "—", "#N/A", "N/A", "n/a", "#SAKNAS!", " "])(
+  it.each(["", "   ", "-", "–", "—", "−", "#N/A", "N/A", "n/a", "#SAKNAS!", " "])(
     "%j is ok null",
     (input) => {
       expect(parseNumberSv(input, "number")).toEqual({ ok: true, value: null });

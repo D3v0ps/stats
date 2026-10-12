@@ -50,6 +50,10 @@ describe("sniffDelimiter", () => {
     expect(sniffDelimiter("single column\nonly\n")).toBe(";");
   });
 
+  it("prefers ';' even when commas inside values would give more fields", () => {
+    expect(sniffDelimiter("Andersson, Anna;8,5\nBerg, Bo;7,25\nÅberg, Åsa;6,5\n")).toBe(";");
+  });
+
   it("ignores title lines above the table", () => {
     expect(sniffDelimiter("Rapport timmar, september\n\nKund;Timmar\nAcme;8\nBeta;9\n")).toBe(";");
   });
@@ -90,6 +94,28 @@ describe("parseCsv", () => {
 
   it("never throws on unbalanced quotes", () => {
     expect(() => parseCsv('a;b\n"open;2\n')).not.toThrow();
+  });
+});
+
+describe("parseCsv – Excel's 'sep=' hint line", () => {
+  it("uses the declared delimiter and drops the hint line", () => {
+    const { rows, delimiter } = parseCsv('sep=,\nKund,Belopp\nAcme;AB,"1,5"\n');
+    expect(delimiter).toBe(",");
+    expect(rows.map((r) => r.map((c) => c.v))).toEqual([
+      ["Kund", "Belopp"],
+      ["Acme;AB", "1,5"],
+    ]);
+    expect(readWorkbook(utf8("SEP=;\r\nKund;Timmar\r\nAcme;8,5\r\n"), "x.csv")).toMatchObject({
+      delimiter: ";",
+      sheets: [
+        {
+          rows: [
+            [{ v: "Kund" }, { v: "Timmar" }],
+            [{ v: "Acme" }, { v: "8,5" }],
+          ],
+        },
+      ],
+    });
   });
 });
 
@@ -268,5 +294,46 @@ describe("readWorkbook – sie, pdf, xml", () => {
     const wb = readWorkbook(utf8(xml), "export.xls");
     expect(wb.format).toBe("xls");
     expect(wb.sheets[0]!.rows[1]![1]).toMatchObject({ v: 8.5, t: "n" });
+  });
+});
+
+describe("readWorkbook – html '.xls' with several tables", () => {
+  const html = `<html><head><meta charset="utf-8"></head><body>
+    <table><tr><td colspan="3">Timrapport MB AB september 2026</td></tr></table>
+    <table>
+      <tr><th>Kund</th><th>Timmar</th><th>Belopp</th></tr>
+      <tr><td>Acme</td><td>8,5</td><td>1&nbsp;234,50</td></tr>
+      <tr><td>Beta</td><td>7</td><td>2 000</td></tr>
+    </table></body></html>`;
+
+  it("stacks the tables into one sheet like Excel does, so a title table becomes meta lines", () => {
+    const wb = readWorkbook(utf8(html), "timmar.xls");
+    expect(wb.sheets).toHaveLength(1);
+    const rows = wb.sheets[0]!.rows;
+    expect(rows[0]!.map((c) => c.v)).toEqual(["Timrapport MB AB september 2026"]);
+    expect(rows[1]).toEqual([]);
+    expect(rows[2]!.map((c) => c.v)).toEqual(["Kund", "Timmar", "Belopp"]);
+    expect(rows[4]!.map((c) => c.v)).toEqual(["Beta", "7", "2 000"]);
+    expect(wb.sheets[0]!.merges).toEqual([{ s: { r: 0, c: 0 }, e: { r: 0, c: 2 } }]);
+  });
+
+  it("offsets merges of later tables", () => {
+    const two = `<table><tr><td>Rapport</td></tr></table><table><tr><td colspan="2">Grupp</td></tr><tr><td>a</td><td>b</td></tr></table>`;
+    const wb = readWorkbook(utf8(two), "x.xls");
+    expect(wb.sheets[0]!.merges).toEqual([{ s: { r: 2, c: 0 }, e: { r: 2, c: 1 } }]);
+  });
+});
+
+describe("readWorkbook – text that merely starts with '<'", () => {
+  it("reads a CSV whose first cell starts with '<' as CSV instead of failing as HTML", () => {
+    const wb = readWorkbook(utf8("<Kund>;Belopp\nAcme;1\nBeta;2\n"), "x.csv");
+    expect(wb.format).toBe("csv");
+    expect(wb.sheets[0]!.rows[1]!.map((c) => c.v)).toEqual(["Acme", "1"]);
+  });
+
+  it("still sniffs real HTML starting with a tag", () => {
+    expect(sniffFormat(utf8("<!DOCTYPE html><html><body>x</body></html>"))).toBe("html");
+    expect(sniffFormat(utf8("<HTML><BODY>x</BODY></HTML>"))).toBe("html");
+    expect(sniffFormat(utf8("<meta charset='utf-8'><div>x</div>"))).toBe("html");
   });
 });

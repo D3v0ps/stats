@@ -9,12 +9,14 @@ import {
   type IngestResult,
   type MetricTotal,
   type ParseIssue,
+  type ParseReport,
   type RawSheet,
   type RawWorkbook,
   type SkippedRow,
   type UploadChoices,
 } from "@/lib/contracts";
 import { canonicalJson, sha256Hex } from "@/lib/core/hash";
+import { redactPersonnummer } from "@/lib/core/pnr";
 import { aggregateTable, roundSum } from "./aggregate";
 import { buildCases } from "./cases";
 import { detectTable, detectTableWithHeaderRow, pickSheet } from "./header-detect";
@@ -102,6 +104,29 @@ function sortSkipped(list: SkippedRow[]): SkippedRow[] {
     .map((s, i) => ({ s, i }))
     .sort((a, b) => a.s.sourceRow - b.s.sourceRow || a.i - b.i)
     .map(({ s }) => s);
+}
+
+/**
+ * The report and file name are stored with the upload. Issue values and skip
+ * details quote cells, which can come from any column (also removed ones that
+ * a step touched), so personnummer are masked here as a last line of defence.
+ */
+function redactReport(report: ParseReport): ParseReport {
+  const r = redactPersonnummer;
+  return {
+    ...report,
+    skipped: report.skipped.map((s) =>
+      s.detail === undefined ? s : { ...s, detail: r(s.detail) },
+    ),
+    issues: report.issues.map((i) => ({
+      ...i,
+      column: r(i.column),
+      value: r(i.value),
+      message: r(i.message),
+    })),
+    warnings: report.warnings.map(r),
+    ...(report.sheet !== undefined ? { sheet: r(report.sheet) } : {}),
+  };
 }
 
 function listPreview(values: string[], max = 10): string {
@@ -199,12 +224,16 @@ export async function runTemplate(
     engineVersion: ENGINE_VERSION,
     datasetKey: template.datasetKey,
     scenario,
-    file: { name: workbook.fileName, sha256: ctx.fileSha256, size: ctx.fileSize },
+    file: {
+      name: redactPersonnummer(workbook.fileName),
+      sha256: ctx.fileSha256,
+      size: ctx.fileSize,
+    },
     contentHash: await factsContentHash(facts),
     companies,
     slices,
     facts,
-    report: {
+    report: redactReport({
       rowsRead: table.rows.length + table.skipped.filter((s) => s.reason !== "empty").length,
       rowsUsed,
       skipped: sortSkipped([...table.skipped, ...stepped.skipped, ...skipped]),
@@ -214,7 +243,7 @@ export async function runTemplate(
       ...(headerRow !== undefined ? { headerRow } : {}),
       ...(workbook.encoding ? { encoding: workbook.encoding } : {}),
       ...(workbook.delimiter ? { delimiter: workbook.delimiter } : {}),
-    },
+    }),
     totals,
   };
   if (config.kind === "cases") result.asOfDate = choices.asOfDate;

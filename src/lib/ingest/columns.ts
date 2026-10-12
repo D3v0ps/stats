@@ -4,7 +4,7 @@ import type { ColumnMapping, ColumnType, ColumnUsage } from "@/lib/contracts";
 import { CATALOG_DATASETS, CATALOG_METRICS, type CatalogMetric } from "@/lib/contracts/catalog";
 import { normalizeHeader, normalizeValue } from "@/lib/core/normalize";
 import { parseNumberSv } from "@/lib/core/num-sv";
-import { detectPersonalColumn, valueContainsPersonnummer } from "@/lib/core/pnr";
+import { columnContainsPersonnummer, detectPersonalColumn } from "@/lib/core/pnr";
 import { looksDate } from "./cells";
 import { columnValues, valueText, type WorkingTable } from "./working";
 
@@ -20,7 +20,7 @@ const MAX_PERSONAL_SAMPLES = 500;
 const LOW_CARDINALITY = 50;
 
 const AMOUNT_HEADER =
-  /belopp|summa|(?:^|[^\p{L}])(?:kr|sek)(?:$|[^\p{L}])|pris|lön|kostnad|intäkt|fakturerat|arvode|ersättning|budget|omsättning|moms/u;
+  /belopp|summa|(?:^|[^\p{L}])(?:kr|sek)(?:$|[^\p{L}])|pris|lön|kostnad(?!sställe)|intäkt|fakturerat|arvode|ersättning|budget|omsättning|moms/u;
 const HOURS_HEADER = /timmar|(?:^|[^\p{L}])(?:tim|h)(?:$|[^\p{L}])|hours/u;
 const PERCENT_HEADER = /%|procent|andel/u;
 
@@ -81,7 +81,9 @@ export function inferColumnType(samples: readonly unknown[], header?: string): I
 // ---- Mapping suggestions ----------------------------------------------------
 
 const ID_HEADER =
-  /(?:^|[^\p{L}])(?:id|nr|nummer|kod|code|number)(?:$|[^\p{L}])|nummer$|-id$|anställnings ?-?id|(?:^|[^\p{L}])gen(?:$|[^\p{L}])/u;
+  /(?:^|[^\p{L}])(?:id|nr|nummer|kod|code|number)(?:$|[^\p{L}])|nummer$|nr\.?$|-id$|anställnings ?-?id|(?:^|[^\p{L}])gen(?:$|[^\p{L}])/u;
+/** Headers that name a quantity, so integers below them are measures even under a dimension word. */
+const QUANTITY_HEADER = /antal|summa|totalt|(?:^|[^\p{L}])st(?:$|[^\p{L}])/u;
 
 /** Header keywords per dimension, most specific first. */
 const DIMENSION_RULES: { key: string; re: RegExp }[] = [
@@ -184,7 +186,7 @@ export function suggestMappings(table: WorkingTable, opts: SuggestOptions = {}):
     const base = { column, personal: false, keep: true };
 
     const personal = detectPersonalColumn(header, texts.slice(0, MAX_PERSONAL_SAMPLES));
-    if (personal.kind === "pnr" || values.some(valueContainsPersonnummer)) {
+    if (personal.kind === "pnr" || columnContainsPersonnummer(values)) {
       return { ...base, type: "text", usage: "ignore", personal: true, keep: false };
     }
     const inferred = inferColumnType(values.slice(0, MAX_TYPE_SAMPLES), header);
@@ -211,6 +213,16 @@ export function suggestMappings(table: WorkingTable, opts: SuggestOptions = {}):
     }
 
     const idLike = ID_HEADER.test(header);
+    const dimensionKey = suggestDimension(header, opts.datasetKey);
+    // Plain integers under a dimension word are codes (kostnadsställe 100, konto 3010), not amounts.
+    const codes =
+      dimensionKey !== undefined &&
+      inferred.type !== "text" &&
+      inferred.type !== "date" &&
+      !QUANTITY_HEADER.test(header) &&
+      values.every((v) =>
+        typeof v === "number" ? Number.isInteger(v) : /^\d+$/.test(valueText(v)),
+      );
     if (inferred.type === "date" && !idLike) {
       if (!periodTaken && datasetKind !== "cases") {
         periodTaken = true;
@@ -218,7 +230,7 @@ export function suggestMappings(table: WorkingTable, opts: SuggestOptions = {}):
       }
       return { ...base, type: "date", usage: "ignore" };
     }
-    if (inferred.type !== "text" && inferred.type !== "date" && !idLike) {
+    if (inferred.type !== "text" && inferred.type !== "date" && !idLike && !codes) {
       const metricKey = suggestMetric(header, inferred.type, opts.datasetKey);
       return {
         ...base,
@@ -229,7 +241,6 @@ export function suggestMappings(table: WorkingTable, opts: SuggestOptions = {}):
     }
     if (looksLikeCompanyColumn(header, texts)) return { ...base, type: "text", usage: "company" };
 
-    const dimensionKey = suggestDimension(header, opts.datasetKey);
     const distinct = new Set(texts.map((t) => normalizeValue(t))).size;
     const lowCardinality =
       distinct <= LOW_CARDINALITY || distinct / Math.max(1, texts.length) <= 0.5;
@@ -246,13 +257,13 @@ export function suggestMappings(table: WorkingTable, opts: SuggestOptions = {}):
 }
 
 /**
- * True when a column must stay removed: its header says personnummer or any
- * sample value contains one. The UI disables the "keep" toggle for these.
+ * True when a column must stay removed: its header says personnummer or its
+ * values hold them (columnContainsPersonnummer). The UI disables the "keep" toggle for these.
  */
 export function isLockedRemoved(mapping: ColumnMapping, samples: readonly unknown[]): boolean {
   const texts = samples
     .map((v) => (typeof v === "string" ? v.trim() : typeof v === "number" ? String(v) : ""))
     .filter((s) => s !== "");
   if (detectPersonalColumn(mapping.column, texts).kind === "pnr") return true;
-  return samples.some(valueContainsPersonnummer);
+  return columnContainsPersonnummer(samples);
 }

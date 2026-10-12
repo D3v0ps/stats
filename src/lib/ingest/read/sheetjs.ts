@@ -118,11 +118,33 @@ export function readBinaryWorkbook(bytes: Uint8Array): SheetJsResult {
 }
 
 /**
+ * Several HTML tables become one sheet, stacked with an empty row between
+ * them, as Excel shows such a file. A report title in its own table then sits
+ * above the data table as meta lines instead of being picked as "the sheet".
+ */
+function stackSheets(sheets: RawSheet[]): RawSheet[] {
+  if (sheets.length <= 1) return sheets;
+  const rows: RawCell[][] = [];
+  const merges: CellRange[] = [];
+  for (const sheet of sheets) {
+    if (sheet.rows.length === 0) continue;
+    if (rows.length > 0) rows.push([]);
+    const offset = rows.length;
+    rows.push(...sheet.rows);
+    for (const m of sheet.merges) {
+      merges.push({ s: { r: m.s.r + offset, c: m.s.c }, e: { r: m.e.r + offset, c: m.e.c } });
+    }
+  }
+  return [{ name: sheets[0]!.name, hidden: false, rows, merges }];
+}
+
+/**
  * HTML tables saved as ".xls". raw:true keeps every cell as the text shown:
  * SheetJS would otherwise read "8,5" as 85 and guess US dates.
  */
 export function readHtmlWorkbook(html: string): SheetJsResult {
-  return toResult(XLSX.read(html, { ...BASE_OPTS, type: "string", raw: true }));
+  const result = toResult(XLSX.read(html, { ...BASE_OPTS, type: "string", raw: true }));
+  return { ...result, sheets: stackSheets(result.sheets) };
 }
 
 /** Excel 2003 SpreadsheetML: typed cells, so no raw mode. */

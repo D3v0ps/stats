@@ -260,6 +260,81 @@ describe("buildCases – dates and edge cases", () => {
     });
   });
 
+  it("reads negative marker texts ('Inget avbrott', 'Nej, fullföljt') as not interrupted", () => {
+    const cfg = config({
+      groupBy: [],
+      resultColumn: undefined,
+      metrics: { interrupted: "avbrott", ended: "avslutade" },
+    });
+    const r = buildCases(
+      table(COLUMNS, [
+        ["K1", "KROM", "2026-08-01", "2026-09-20", "Inget avbrott"],
+        ["K2", "KROM", "2026-08-01", "2026-09-20", "Nej, fullföljt"],
+        ["K3", "KROM", "2026-08-01", "2026-09-20", "Ej aktuellt"],
+        ["K4", "KROM", "2026-08-01", "2026-09-20", "Sjukdom"],
+      ]),
+      cfg,
+      { asOfDate: "2026-09-30" },
+    );
+    expect(pivot(r.facts, "avbrott", "x")["2026-09"]).toEqual({ "-": 1 });
+    expect(pivot(r.facts, "avslutade", "x")["2026-09"]).toEqual({ "-": 4 });
+  });
+
+  it("treats a filled interruption date as an interruption when no marker column is mapped", () => {
+    const cols = ["gen", "tjänst", "start", "slut", "avbrottsdatum"];
+    const cfg = config({
+      groupBy: [],
+      resultColumn: undefined,
+      interruptColumn: undefined,
+      interruptDateColumn: "avbrottsdatum",
+      metrics: { active: "aktiva", ended: "avslutade", interrupted: "avbrott" },
+    });
+    const r = buildCases(
+      table(cols, [
+        ["K1", "KROM", "2026-08-01", "2026-12-31", "2026-09-10"],
+        ["K2", "KROM", "2026-08-01", "2026-12-31", null],
+      ]),
+      cfg,
+      { asOfDate: "2026-09-30" },
+    );
+    expect(pivot(r.facts, "avbrott", "x")).toEqual({
+      "2026-08": { "-": 0 },
+      "2026-09": { "-": 1 },
+    });
+    expect(pivot(r.facts, "aktiva", "x")).toEqual({ "2026-08": { "-": 2 }, "2026-09": { "-": 1 } });
+    expect(r.issues).toEqual([]);
+  });
+
+  it("warns about an unreadable result date and falls back to the effective end", () => {
+    const cols = ["gen", "tjänst", "start", "slut", "resultat", "resultatdatum"];
+    const cfg = config({
+      groupBy: [],
+      interruptColumn: undefined,
+      resultDateColumn: "resultatdatum",
+      metrics: { results: "resultat" },
+    });
+    const r = buildCases(
+      table(cols, [["K1", "KROM", "2026-08-01", "2026-09-20", "Arbete", "snart"]]),
+      cfg,
+      { asOfDate: "2026-09-30" },
+    );
+    expect(
+      r.facts.filter((f) => f.month === "2026-09").map((f) => [f.dims.resultattyp, f.value]),
+    ).toEqual([
+      ["Arbete", 1],
+      ["Studier", 0],
+    ]);
+    expect(r.issues).toEqual([
+      {
+        sourceRow: 2,
+        column: "resultatdatum",
+        value: "snart",
+        message: "Ogiltigt resultatdatum, slutdatum används",
+        severity: "warning",
+      },
+    ]);
+  });
+
   it("computes average tenure over active cases and weights the total", () => {
     const cols = ["gen", "tjänst", "start", "slut"];
     const cfg = config({
@@ -367,6 +442,47 @@ describe("buildCases – validation and personal data", () => {
     expect(JSON.stringify(r)).not.toContain("GEN9");
   });
 
+  it("never groups by a removed column (keep: false), so its values stay in the browser", () => {
+    const cfg = config(
+      {
+        groupBy: ["tjänst", "handläggare"],
+        endColumn: undefined,
+        interruptColumn: undefined,
+        resultColumn: undefined,
+        metrics: { started: "nya" },
+      },
+      {
+        columns: [
+          {
+            column: "tjänst",
+            type: "text",
+            usage: "dimension",
+            dimensionKey: "verksamhet",
+            personal: false,
+            keep: true,
+          },
+          {
+            column: "handläggare",
+            type: "text",
+            usage: "dimension",
+            dimensionKey: "konsult",
+            personal: true,
+            keep: false,
+          },
+          { column: "start", type: "date", usage: "case_start", personal: false, keep: true },
+        ],
+      },
+    );
+    const r = buildCases(
+      table(["gen", "tjänst", "start", "handläggare"], [["G1", "KROM", "2026-09-01", "Anna Ek"]]),
+      cfg,
+      { asOfDate: "2026-09-30" },
+    );
+    expect(r.facts[0]!.dims).toEqual({ verksamhet: "KROM" });
+    expect(r.issues.map((i) => i.column)).toEqual(["handläggare"]);
+    expect(JSON.stringify(r)).not.toContain("Anna");
+  });
+
   it("throws PersonalDataError when a group-by column holds personnummer", () => {
     const cfg = config({
       groupBy: ["tjänst"],
@@ -379,6 +495,19 @@ describe("buildCases – validation and personal data", () => {
         asOfDate: "2026-09-30",
       }),
     ).toThrow(PersonalDataError);
+  });
+
+  it("throws PersonalDataError for personnummer that Excel stored as 9-digit numbers", () => {
+    const cfg = config({
+      groupBy: ["tjänst"],
+      interruptColumn: undefined,
+      resultColumn: undefined,
+      metrics: { started: "nya" },
+    });
+    const rows = [501019806, 712249804, 307159806].map((n) => ["K", n, "2026-09-01"]);
+    expect(() => buildCases(table(COLUMNS, rows), cfg, { asOfDate: "2026-09-30" })).toThrow(
+      PersonalDataError,
+    );
   });
 
   it("allows personnummer in the key column but never outputs it", () => {

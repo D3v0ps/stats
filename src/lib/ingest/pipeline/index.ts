@@ -17,7 +17,10 @@ export function applyStep(
   ctx: StepContext,
   index = 0,
 ): StepResult {
-  const impl = STEP_IMPLEMENTATIONS[step.op] as StepFn<StepOp> | undefined;
+  // Own properties only: "toString" or "constructor" must not resolve to Object.prototype.
+  const impl = Object.hasOwn(STEP_IMPLEMENTATIONS, step.op)
+    ? (STEP_IMPLEMENTATIONS[step.op] as StepFn<StepOp>)
+    : undefined;
   if (!impl) {
     const op = (step as { op?: unknown }).op;
     return skip(table, [

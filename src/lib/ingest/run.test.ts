@@ -243,6 +243,37 @@ describe("runTemplate – table template on an Intelliplan-style xlsx", () => {
     ).rejects.toThrow(PersonalDataError);
   });
 
+  it("never puts personnummer into the parse report or the file name", async () => {
+    const cfg = timmarTemplate.config;
+    if (cfg.kind !== "table") throw new Error("unreachable");
+    const noisy: ImportTemplate = {
+      ...timmarTemplate,
+      config: {
+        ...cfg,
+        steps: [
+          ...cfg.steps,
+          // Steps may touch removed columns; their issues must not carry the values.
+          { op: "clean", column: "personnummer", as: "number" },
+          { op: "lookup", column: "personnummer", dimension: "konsult" },
+        ],
+      },
+    };
+    const wb = readWorkbook(bytes, "lönelista 121212-1212.xlsx");
+    const r = await runTemplate(
+      wb,
+      noisy,
+      { company: "MBAB" },
+      { aliases, fileSha256: "0".repeat(64), fileSize: 1 },
+    );
+    expect(r.report.issues.length).toBeGreaterThan(0);
+    expect(r.report.warnings.join("\n")).toMatch(/Okända värden för konsult/);
+    const json = JSON.stringify(r);
+    expect(json).not.toContain("121212");
+    expect(json).not.toContain("701063");
+    expect(r.file.name).toBe("lönelista ÅÅMMDD-XXXX.xlsx");
+    expect(r.report.issues[0]!.value).toBe("ÅÅMMDD-XXXX");
+  });
+
   it("honours a user-picked header row", async () => {
     const wb = readWorkbook(bytes, "x.xlsx");
     const r = await runTemplate(

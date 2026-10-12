@@ -135,6 +135,24 @@ describe("suggestMappings", () => {
     expect(y[0]!.dimensionKey).toBe("ort");
   });
 
+  it("maps numeric codes under a dimension or number header to dimensions, not measures", () => {
+    const m = suggestMappings(
+      table(
+        ["kostnadsställe", "konto", "kundnr", "belopp"],
+        [
+          [100, 3010, 50123, "1 200"],
+          [200, 4010, 50124, "900"],
+          [100, 3010, 50125, "300"],
+        ],
+      ),
+      { datasetKey: "budget" },
+    );
+    expect(m[0]).toMatchObject({ usage: "dimension", dimensionKey: "kostnadsstalle" });
+    expect(m[1]).toMatchObject({ usage: "dimension", dimensionKey: "kontogrupp" });
+    expect(m[2]).toMatchObject({ usage: "dimension" });
+    expect(m[3]).toMatchObject({ usage: "measure", type: "amount" });
+  });
+
   it("finds a company column", () => {
     const x = suggestMappings(
       table(

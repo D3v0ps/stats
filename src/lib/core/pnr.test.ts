@@ -1,10 +1,13 @@
 import { describe, expect, it } from "vitest";
 import {
+  PNR_PLACEHOLDER,
+  columnContainsPersonnummer,
   containsPersonnummer,
   detectPersonalColumn,
   isOrgNr,
   isPersonnummer,
   luhnValid,
+  redactPersonnummer,
   valueContainsPersonnummer,
 } from "./pnr";
 
@@ -202,5 +205,51 @@ describe("detectPersonalColumn", () => {
     expect(detectPersonalColumn("Timmar", ["8,5", "7"]).kind).toBeNull();
     expect(detectPersonalColumn("Verksamhet", ["KROM", "ROM2"]).kind).toBeNull();
     expect(detectPersonalColumn("Datum", ["2026-09-30"]).kind).toBeNull();
+  });
+});
+
+// Born 2000–2009: Excel turns "0501019806" typed into a number cell into 501019806.
+const ZERO_LOST = [501019806, 712249804, 307159806];
+
+describe("personnummer that lost their leading zero in Excel", () => {
+  it("detects a column of 9-digit numbers that are personnummer once zero-padded", () => {
+    const d = detectPersonalColumn("Kolumn F", ZERO_LOST.map(String));
+    expect(d.kind).toBe("pnr");
+  });
+
+  it("flags such a column for the aggregation guard, numbers or digit strings", () => {
+    expect(columnContainsPersonnummer(ZERO_LOST)).toBe(true);
+    expect(columnContainsPersonnummer(ZERO_LOST.map(String))).toBe(true);
+    expect(columnContainsPersonnummer([null, "", 8.5, ...ZERO_LOST])).toBe(true);
+  });
+
+  it("does not flag 9-digit id columns where only a stray value pads to a valid number", () => {
+    const ids = Array.from({ length: 30 }, (_, i) => 100000000 + i * 7919);
+    expect(columnContainsPersonnummer([...ids, ZERO_LOST[0]])).toBe(false);
+    expect(
+      detectPersonalColumn("Ordernummer", [...ids, ZERO_LOST[0]!].map(String)).kind,
+    ).toBeNull();
+  });
+
+  it("keeps the single-value check for 10- and 12-digit forms", () => {
+    expect(columnContainsPersonnummer(["1", "2", "3", "4", PNR])).toBe(true);
+    expect(columnContainsPersonnummer(["1001", "1002", 46295])).toBe(false);
+    expect(columnContainsPersonnummer([])).toBe(false);
+  });
+});
+
+describe("redactPersonnummer", () => {
+  it("masks every personnummer and samordningsnummer in a text", () => {
+    expect(redactPersonnummer(`"${PNR}" är inte ett tal`)).toBe(
+      `"${PNR_PLACEHOLDER}" är inte ett tal`,
+    );
+    expect(redactPersonnummer(`a ${SAMORDNING}, b 191212121212`)).toBe(
+      `a ${PNR_PLACEHOLDER}, b ${PNR_PLACEHOLDER}`,
+    );
+  });
+
+  it("leaves org numbers, dates, amounts and other digits alone", () => {
+    const text = "Org.nr 556959-9318, 2026-09-30, 1 234 567,50 kr, 12345678901";
+    expect(redactPersonnummer(text)).toBe(text);
   });
 });

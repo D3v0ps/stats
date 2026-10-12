@@ -8,6 +8,10 @@ export type ReaderKind = "zip" | "cfb" | "html" | "xml" | "sie" | "pdf" | "text"
 const HEAD_BYTES = 4096;
 const HTML_WINDOW = 2048;
 
+/** Markup at the very start; a CSV whose first cell happens to start with "<" stays text. */
+const HTML_START =
+  /^<(?:!doctype\b|!--|\?xml\b|(?:html|head|body|table|thead|tbody|tr|td|th|meta|title|style|script|link|div|span|p|br|font|center|h[1-6]|b|i|u|strong|form|pre|xml)\b)/i;
+
 function startsWith(bytes: Uint8Array, magic: number[]): boolean {
   return magic.every((b, i) => bytes[i] === b);
 }
@@ -24,6 +28,6 @@ export function sniffReader(bytes: Uint8Array): ReaderKind {
   if (/^<\?xml/i.test(head) && /urn:schemas-microsoft-com:office:spreadsheet/i.test(head)) {
     return "xml";
   }
-  if (head.startsWith("<") || /<table[\s>]/i.test(head.slice(0, HTML_WINDOW))) return "html";
+  if (HTML_START.test(head) || /<table[\s>]/i.test(head.slice(0, HTML_WINDOW))) return "html";
   return "text";
 }

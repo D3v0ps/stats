@@ -140,6 +140,19 @@ describe("detectTable – two-row headers", () => {
     expect(table.metaLines).toEqual(["Bolag: MBAB"]);
   });
 
+  it("does not treat an unmerged title row over the first column as a group header", () => {
+    const sheet = rawSheet([
+      ["Timrapport", "", "MBAB"],
+      ["Kund", "Datum", "Timmar"],
+      ["Acme", "2026-09-01", 8],
+      ["Beta", "2026-09-02", 7],
+    ]);
+    const table = detectTable(sheet);
+    expect(table.headerRows).toEqual([1]);
+    expect(table.columns.map((c) => c.header)).toEqual(["Kund", "Datum", "Timmar"]);
+    expect(table.metaLines).toEqual(["Timrapport MBAB"]);
+  });
+
   it("does not treat a full-width merged title as a group header", () => {
     const sheet = rawSheet(
       [
@@ -310,5 +323,148 @@ describe("pickSheet", () => {
     ).toBe("H");
     expect(pickSheet({ ...wb, sheets: [rawSheet([], { name: "E" })] })?.name).toBe("E");
     expect(pickSheet({ ...wb, sheets: [] })).toBeNull();
+  });
+});
+
+describe("detectTable – footers only where footers belong", () => {
+  it("keeps data rows whose status reads like a footer word ('Utskriven', 'Skapad')", () => {
+    const sheet = rawSheet([
+      ["Id", "Status", "Startdatum"],
+      ["1001", "Inskriven", "2026-01-05"],
+      ["1002", "Utskriven", "2026-02-05"],
+      ["1003", "Skapad", "2026-03-05"],
+      ["1004", "Exporterad", "2026-04-05"],
+      ["1005", "Sida 1 Reklam AB", "2026-05-05"],
+      ["1006", "Inskriven", "2026-06-05"],
+    ]);
+    const table = detectTable(sheet);
+    expect(table.rows.map((r) => r.sourceRow)).toEqual([2, 3, 4, 5, 6, 7]);
+    expect(table.skipped).toEqual([]);
+  });
+
+  it("still skips narrow print lines between pages and page markers in wide rows", () => {
+    const sheet = rawSheet([
+      ["Kund", "Timmar"],
+      ["Acme", "8,5"],
+      ["Utskrivet 2026-10-01 08:15"],
+      ["Utskrivet 2026-10-01", "Sida 1 av 2"],
+      ["Kund", "Timmar"],
+      ["Beta", "7"],
+      ["Utskrivet 2026-10-01", "Sida 2 av 2"],
+    ]);
+    const table = detectTable(sheet);
+    expect(table.rows.map((r) => r.sourceRow)).toEqual([2, 6]);
+    expect(table.skipped.map((s) => [s.sourceRow, s.reason])).toEqual([
+      [3, "footer"],
+      [4, "footer"],
+      [5, "repeated_header"],
+      [7, "footer"],
+    ]);
+  });
+});
+
+describe("detectTable – sum rows recognised by their numbers", () => {
+  it("skips an unlabeled grand total row at the end of the table", () => {
+    const sheet = rawSheet([
+      ["Kund", "Timmar", "Belopp"],
+      ["Acme", 8, 100],
+      ["Beta", 7, 200],
+      ["Gamma", 5, 300.5],
+      [null, 20, 600.5],
+      [],
+      ["Utskrivet 2026-10-01"],
+    ]);
+    const table = detectTable(sheet);
+    expect(table.rows.map((r) => r.sourceRow)).toEqual([2, 3, 4]);
+    expect(table.skipped.map((s) => [s.sourceRow, s.reason])).toEqual([
+      [5, "sum_row"],
+      [6, "empty"],
+      [7, "footer"],
+    ]);
+  });
+
+  it("skips an unlabeled total in a text CSV with rounded display values", () => {
+    const sheet = rawSheet([
+      ["Kund", "Datum", "Belopp"],
+      ["Acme", "2026-09-01", "1 200,25"],
+      ["Beta", "2026-09-02", "333,33"],
+      ["Gamma", "2026-09-03", "333,33"],
+      ["", "", "1 866,92"],
+    ]);
+    const table = detectTable(sheet);
+    expect(table.rows.map((r) => r.sourceRow)).toEqual([2, 3, 4]);
+    expect(table.skipped).toEqual([
+      { sourceRow: 5, reason: "sum_row", detail: "Summa av raderna ovan" },
+    ]);
+  });
+
+  it("recognises an unlabeled grand total under labelled subtotals", () => {
+    const sheet = rawSheet([
+      ["Kund", "Timmar"],
+      ["Acme", 8],
+      ["Beta", 2],
+      ["Summa MBAB", 10],
+      ["Gamma", 4],
+      ["Delta", 1.5],
+      ["Summa MBR", 5.5],
+      ["", 15.5],
+    ]);
+    const table = detectTable(sheet);
+    expect(table.rows.map((r) => r.sourceRow)).toEqual([2, 3, 5, 6]);
+    expect(table.skipped.map((s) => [s.sourceRow, s.reason])).toEqual([
+      [4, "sum_row"],
+      [7, "sum_row"],
+      [8, "sum_row"],
+    ]);
+  });
+
+  it("keeps an unlabeled last row whose numbers are not the sum", () => {
+    const sheet = rawSheet([
+      ["Kund", "Timmar"],
+      ["Acme", 8],
+      ["", 7],
+      ["", 5],
+    ]);
+    expect(detectTable(sheet).rows.map((r) => r.sourceRow)).toEqual([2, 3, 4]);
+  });
+
+  it("keeps a last row that has a date even when its number equals the sum", () => {
+    const sheet = rawSheet([
+      ["Datum", "Timmar"],
+      ["2026-09-01", 5],
+      ["2026-09-02", 10],
+      ["2026-09-03", 15],
+    ]);
+    expect(detectTable(sheet).rows.map((r) => r.sourceRow)).toEqual([2, 3, 4]);
+  });
+
+  it("skips 'Total X' subtotals whose numbers add up, but keeps a customer named 'Total …'", () => {
+    const sheet = rawSheet([
+      ["Kund", "Anställnings id", "Timmar"],
+      ["Acme", 1001, 8],
+      ["Total Bygg AB", 1002, 7],
+      ["Total MBAB", null, 15],
+      ["Beta", 1003, 4],
+      ["Gamma", 1004, 2.5],
+      ["Sum Restart", null, 6.5],
+      ["Total", null, 21.5],
+    ]);
+    const table = detectTable(sheet);
+    expect(table.rows.map((r) => r.sourceRow)).toEqual([2, 3, 5, 6]);
+    expect(table.skipped).toEqual([
+      { sourceRow: 4, reason: "sum_row", detail: "Total MBAB" },
+      { sourceRow: 7, reason: "sum_row", detail: "Sum Restart" },
+      { sourceRow: 8, reason: "sum_row", detail: "Total" },
+    ]);
+  });
+
+  it("does not skip a 'Total …' customer row that happens to equal the rows above when it has more attributes", () => {
+    const sheet = rawSheet([
+      ["Kund", "Ort", "Timmar"],
+      ["Acme", "Malmö", 2],
+      ["Beta", "Lund", 2],
+      ["Total Bygg AB", "Ystad", 4],
+    ]);
+    expect(detectTable(sheet).rows.map((r) => r.sourceRow)).toEqual([2, 3, 4]);
   });
 });

@@ -12,7 +12,15 @@ import type {
 } from "@/lib/contracts";
 import { normalizeHeader } from "@/lib/core/normalize";
 import { similarity } from "@/lib/core/levenshtein";
-import { EMPTY_CELL, cellText, classifyCell, columnLetter, type CellClass } from "./cells";
+import {
+  EMPTY_CELL,
+  cellNumber,
+  cellText,
+  classifyCell,
+  columnLetter,
+  shownDecimals,
+  type CellClass,
+} from "./cells";
 
 export interface DetectOptions {
   /** Rows scanned for the header (default 40). */
@@ -28,6 +36,14 @@ const SUM_PREFIX = /^(?:summa|totalt|totalsumma|delsumma|subtotal)(?=$|[\s:.,\-�
 const SUM_EXACT = /^(?:total|sum)\s*:?$/i;
 const FOOTER_RE =
   /^(?:utskriv|utskrift|sida\s+\d+|page\s+\d+|\d+\s*\(\s*\d+\s*\)$|skapad|genererad|rapporten\s+(?:är\s+)?skapad|printed|exporterad|exportdatum|källa:|antal\s+rader|antal\s+poster)/i;
+/** Page markers ("Sida 1 av 3", a lone "Sida 2") identify a footer line anywhere in the table. */
+const PAGE_RE = /(?:^|\s)(?:sida|page)\s+\d+\s*(?:av|of|\/)\s*\d+(?=\s|$)|^(?:sida|page)\s+\d+$/i;
+/** Labels that may start a sum row ("Total MBAB") but also a name ("Total Bygg AB"): numbers decide. */
+const SUM_WORD = /^(?:total|sum)(?=$|[\s:.,\-–(])/i;
+/** Skip detail for a sum row recognised by its numbers alone. */
+export const SUM_OF_ROWS_DETAIL = "Summa av raderna ovan";
+/** Most "Total …" rows checked against the rows above (bounds the work on odd files). */
+const MAX_SUM_CHECKS = 20;
 
 // ---- Grid helpers -----------------------------------------------------------
 
@@ -78,6 +94,35 @@ function firstText(row: RawCell[], cols: number[]): string | null {
   return null;
 }
 
+/** Normalized texts of a row's non-empty cells, keyed by column. */
+function rowNorms(row: RawCell[] | undefined): Map<number, string> {
+  const out = new Map<number, string>();
+  for (const c of nonEmptyCols(row)) out.set(c, normalizeHeader(cellText(row![c])));
+  return out;
+}
+
+/**
+ * A repeated header matches >= 80 % of the header cells. Bails out as soon as
+ * too many cells differ, so ordinary data rows cost one or two comparisons.
+ */
+function repeatsRow(row: RawCell[], ref: Map<number, string>): boolean {
+  if (ref.size === 0) return false;
+  const needed = ref.size === 1 ? 1 : Math.max(2, Math.ceil(ref.size * 0.8));
+  const allowedMisses = ref.size - needed;
+  let misses = 0;
+  for (const [c, norm] of ref) {
+    const same = norm !== "" && normalizeHeader(cellText(row[c])) === norm;
+    if (!same && ++misses > allowedMisses) return false;
+  }
+  return true;
+}
+
+/** Sum rows and footer lines: they neither confirm nor contradict a header above them. */
+function isNoiseRow(row: RawCell[], cols: number[]): boolean {
+  const first = firstText(row, cols);
+  return first !== null && (isSumLabel(first) || FOOTER_RE.test(first) || PAGE_RE.test(first));
+}
+
 function jaccard(a: string[], b: string[]): number {
   const A = new Set(a.filter((x) => x !== ""));
   const B = new Set(b.filter((x) => x !== ""));
@@ -104,6 +149,7 @@ function scoreHeaderRow(grid: RawCell[][], r: number): number {
   const uniq = new Set(cols.map((c) => normalizeHeader(cellText(row[c])))).size / cols.length;
 
   const headerSet = new Set(cols);
+  const norms = rowNorms(row);
   let maxCols = cols.length;
   let belowSum = 0;
   let belowCount = 0;
@@ -111,6 +157,8 @@ function scoreHeaderRow(grid: RawCell[][], r: number): number {
     const below = grid[i] ?? [];
     const bc = nonEmptyCols(below);
     if (bc.length === 0) continue;
+    // Paged exports repeat the header and print page footers between the pages.
+    if (repeatsRow(below, norms) || isNoiseRow(below, bc)) continue;
     belowCount++;
     maxCols = Math.max(maxCols, bc.length);
     const hasData = bc.some((c) => {
@@ -167,15 +215,123 @@ function isGroupRow(sheet: RawSheet, grid: RawCell[][], g: number, headerCols: n
   if (rowMerges.length > 0) return true;
   // Unmerged group labels span several columns, so they never sit side by side;
   // "Bolag: | MBAB" directly above the header is a meta line, not a group row.
+  // They group measures, so the first (row label) column stays empty: text
+  // there ("Timrapport | | MBAB") is a title line.
   const adjacent = rawCols.some((c, i) => i > 0 && rawCols[i - 1] === c - 1);
   const labelled = rawCols.some((c) => cellText(raw[c]).endsWith(":"));
   return (
     rawCols.length >= 2 &&
     rawCols.length < headerCols.length &&
-    rawCols.some((c) => c > minC) &&
+    rawCols.every((c) => c > minC) &&
     !adjacent &&
     !labelled
   );
+}
+
+// ---- Sum rows by their numbers -------------------------------------------------
+
+interface PendingRow {
+  r: number;
+  /** Non-empty cells in the row. */
+  width: number;
+  reason?: SkippedRow["reason"];
+  detail?: string;
+  /** Looks like a footer line; confirmed once the table's shape is known. */
+  footer?: string;
+}
+
+/** Equal within the rounding of the shown values (stored numbers: float noise only). */
+function closeTo(a: number, b: number, decimals: number, terms: number): boolean {
+  const rounding = decimals > 0 ? 0.5 * 10 ** -decimals * (terms + 1) : 0;
+  return Math.abs(a - b) <= rounding + 1e-9 * Math.max(1, Math.abs(a), Math.abs(b));
+}
+
+function findLast<T>(list: T[], before: number, test: (x: T) => boolean): number {
+  for (let i = Math.min(before, list.length) - 1; i >= 0; i--) if (test(list[i]!)) return i;
+  return -1;
+}
+
+/**
+ * Sum rows without a plain sum word: a "Total MBAB" subtotal, or an unlabeled
+ * grand total under the last data row. Such a row only counts as a sum row
+ * when every number in it equals the column sums of at least two data rows
+ * above it (since the previous sum row, or all of them) and it carries nothing
+ * else, so a customer named "Total Bygg AB" or an ordinary last row is kept.
+ */
+function markComputedSumRows(grid: RawCell[][], pending: PendingRow[]): void {
+  const cache = new Map<number, Map<number, number | null>>();
+  const num = (r: number, c: number): number | null => {
+    let row = cache.get(r);
+    if (!row) cache.set(r, (row = new Map()));
+    if (!row.has(c)) row.set(c, cellNumber(grid[r]?.[c]));
+    return row.get(c)!;
+  };
+  const isData = (p: PendingRow) => !p.reason;
+
+  /** Each listed cell of row i equals its column's sum over the data rows in [from, i). */
+  const equalsSum = (i: number, from: number, cols: number[]): boolean => {
+    const r = pending[i]!.r;
+    const rows: number[] = [];
+    for (let k = from; k < i; k++) if (isData(pending[k]!)) rows.push(pending[k]!.r);
+    if (rows.length < 2) return false;
+    // Column by column, so an ordinary row is usually rejected after one column.
+    return cols.every((c) => {
+      let sum = 0;
+      for (const rr of rows) sum += num(rr, c) ?? 0;
+      const shown = num(r, c)!;
+      if (closeTo(sum, shown, 0, rows.length)) return true;
+      let decimals = shownDecimals(grid[r]?.[c]);
+      for (const rr of rows) decimals = Math.max(decimals, shownDecimals(grid[rr]?.[c]));
+      return closeTo(sum, shown, decimals, rows.length);
+    });
+  };
+  const segmentStart = (i: number) => findLast(pending, i, (p) => p.reason === "sum_row") + 1;
+  /** The sum of its segment, or (for the last data row) of all data rows. */
+  const equalsAnySum = (i: number, cols: number[], isLast: boolean): boolean => {
+    const from = segmentStart(i);
+    return equalsSum(i, from, cols) || (isLast && from > 0 && equalsSum(i, 0, cols));
+  };
+  const last = findLast(pending, pending.length, isData);
+
+  // "Total …" / "Sum …" rows: the label plus numbers only.
+  let checks = 0;
+  pending.forEach((p, i) => {
+    if (!isData(p) || checks >= MAX_SUM_CHECKS) return;
+    const row = grid[p.r] ?? [];
+    const cols = nonEmptyCols(row);
+    const first = firstText(row, cols);
+    if (first === null || !SUM_WORD.test(first)) return;
+    const numeric = cols.filter((c) => num(p.r, c) !== null);
+    if (numeric.length === 0 || numeric.length < cols.length - 1) return;
+    checks++;
+    if (equalsAnySum(i, numeric, i === last)) {
+      p.reason = "sum_row";
+      p.detail = first;
+    }
+  });
+
+  // An unlabeled last row: numbers only, empty where the data rows have labels.
+  if (last < 0 || pending[last]!.reason) return;
+  const r = pending[last]!.r;
+  const row = grid[r] ?? [];
+  const cols = nonEmptyCols(row);
+  if (cols.length === 0 || !cols.every((c) => num(r, c) !== null)) return;
+  const labelCols = new Set<number>();
+  for (let k = last - 1, seen = 0; k >= 0 && seen < LOOKAHEAD_ROWS * 2; k--) {
+    const p = pending[k]!;
+    if (!isData(p)) continue;
+    seen++;
+    for (const c of nonEmptyCols(grid[p.r])) {
+      const cell = grid[p.r]![c];
+      const kind = classifyCell(cell);
+      if (kind === "date" || (kind === "text" && /^\p{L}/u.test(cellText(cell)))) labelCols.add(c);
+    }
+  }
+  if (labelCols.size === 0 || cols.some((c) => labelCols.has(c))) return;
+  if (equalsAnySum(last, cols, true)) {
+    pending[last]!.reason = "sum_row";
+    pending[last]!.detail = SUM_OF_ROWS_DETAIL;
+  }
 }
 
 // ---- Table building -----------------------------------------------------------
@@ -201,61 +357,61 @@ function buildTable(
   };
 
   // Rows below the header, classified.
-  const headerNorm = new Map<number, string>();
-  for (const c of headerCols) headerNorm.set(c, normalizeHeader(cellText(grid[headerRow]?.[c])));
-  const groupNorm = new Map<number, string>();
-  if (group) {
-    for (const c of nonEmptyCols(grid[headerRow - 1])) {
-      groupNorm.set(c, normalizeHeader(cellText(grid[headerRow - 1]?.[c])));
-    }
-  }
+  const headerNorm = rowNorms(grid[headerRow]);
+  const groupNorm = group ? rowNorms(grid[headerRow - 1]) : new Map<number, string>();
 
-  // A repeated header matches >= 80 % of the header cells. Bail out as soon as
-  // too many cells differ, so ordinary data rows cost one or two comparisons.
-  const repeats = (row: RawCell[], ref: Map<number, string>): boolean => {
-    if (ref.size === 0) return false;
-    const needed = ref.size === 1 ? 1 : Math.max(2, Math.ceil(ref.size * 0.8));
-    const allowedMisses = ref.size - needed;
-    let misses = 0;
-    for (const [c, norm] of ref) {
-      const same = norm !== "" && normalizeHeader(cellText(row[c])) === norm;
-      if (!same && ++misses > allowedMisses) return false;
-    }
-    return true;
-  };
-
-  type Pending = { r: number; reason?: SkippedRow["reason"]; detail?: string };
-  const pending: Pending[] = [];
+  const pending: PendingRow[] = [];
   const dataCols = new Set<number>(headerCols);
   for (let r = headerRow + 1; r < grid.length; r++) {
     const row = grid[r] ?? [];
     const cols = nonEmptyCols(row);
     if (cols.length === 0) {
-      pending.push({ r, reason: "empty" });
+      pending.push({ r, width: 0, reason: "empty" });
       continue;
     }
-    if (repeats(row, headerNorm) || (group && repeats(row, groupNorm))) {
-      pending.push({ r, reason: "repeated_header" });
+    if (repeatsRow(row, headerNorm) || (group && repeatsRow(row, groupNorm))) {
+      pending.push({ r, width: cols.length, reason: "repeated_header" });
       continue;
     }
     const first = firstText(row, cols);
     if (first && FOOTER_RE.test(first) && cols.length <= 3) {
-      pending.push({ r, reason: "footer", detail: first });
+      pending.push({ r, width: cols.length, footer: first });
       continue;
     }
     if (first && isSumLabel(first)) {
-      pending.push({ r, reason: "sum_row", detail: first });
+      pending.push({ r, width: cols.length, reason: "sum_row", detail: first });
       continue;
     }
-    pending.push({ r });
+    pending.push({ r, width: cols.length });
   }
 
-  // Trailing footer block: lone text lines after the last data row.
-  const dataCounts = pending
-    .filter((p) => !p.reason)
-    .map((p) => nonEmptyCols(grid[p.r]).length)
+  const isData = (p: PendingRow) => !p.reason && p.footer === undefined;
+  const widths = pending
+    .filter(isData)
+    .map((p) => p.width)
     .sort((a, b) => a - b);
-  const median = dataCounts.length ? dataCounts[Math.floor(dataCounts.length / 2)]! : 0;
+  const median = widths.length ? widths[Math.floor(widths.length / 2)]! : 0;
+
+  // Footer words ("Utskriven", "Skapad") are also ordinary values. Inside the
+  // table a footer must be narrower than the data rows or carry a page marker;
+  // after the last data row any footer-like line is a footer.
+  let lastData = -1;
+  pending.forEach((p, i) => {
+    if (isData(p)) lastData = i;
+  });
+  pending.forEach((p, i) => {
+    if (p.footer === undefined) return;
+    const rowText = nonEmptyCols(grid[p.r])
+      .map((c) => cellText(grid[p.r]![c]))
+      .join(" ");
+    if (i > lastData || p.width < median || PAGE_RE.test(rowText)) {
+      p.reason = "footer";
+      p.detail = p.footer;
+    }
+    delete p.footer;
+  });
+
+  // Trailing footer block: lone text lines after the last data row.
   for (let i = pending.length - 1; i >= 0; i--) {
     const p = pending[i]!;
     if (p.reason === "empty" || p.reason === "footer") continue;
@@ -267,6 +423,8 @@ function buildTable(
     p.reason = "footer";
     p.detail = cellText(row[cols[0]!]);
   }
+
+  markComputedSumRows(grid, pending);
 
   for (const p of pending) {
     if (p.reason) continue;
@@ -360,7 +518,11 @@ export function detectTable(sheet: RawSheet, opts: DetectOptions = {}): Detected
 
   const ranked = [...candidates].sort((a, b) => b.score - a.score || a.row - b.row);
   const best = ranked[0]!;
-  const second = ranked[1];
+  // A repeat of the best row (paged exports) is the same header, not a rival.
+  const bestNorms = [...rowNorms(grid[best.row]).values()].join("\u0000");
+  const second = ranked
+    .slice(1)
+    .find((c) => [...rowNorms(grid[c.row]).values()].join("\u0000") !== bestNorms);
   const margin = second ? best.score - second.score : 1;
   const confidence = Math.min(1, best.score) * (0.75 + 0.25 * Math.min(1, margin / 0.2));
   return buildTable(sheet, grid, best.row, confidence);
