@@ -150,7 +150,8 @@ const CASE_METRIC_LABELS: Record<keyof CasesConfig["metrics"], string> = {
   ended: "Avslutade",
   interrupted: "Avbrott",
   results: "Resultat",
-  tenureMonths: "Genomsnittlig tid",
+  tenureMonthsSum: "Anställningsmånader",
+  tenureMonths: "Genomsnittlig tid (används inte längre)",
 };
 
 function casesSettings(cases: CasesConfig, ctx: DescribeContext) {
