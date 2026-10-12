@@ -20,8 +20,7 @@
       "active": "anstallda_konsulter",
       "started": "nyanstallda",
       "ended": "avslutade_anstallningar",
-      "tenure": "anstallningstid"
+      "tenure_sum": "anstallningsmanader"
     }
-  },
-  "rollups": { "anstallningstid": { "weighted_by": "anstallda_konsulter" } }
+  }
 }

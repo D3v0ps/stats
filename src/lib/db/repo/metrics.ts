@@ -12,12 +12,12 @@ import type {
   MonthlyRow,
   SourceScope,
 } from "@/lib/contracts/metric-query";
-import { COMPANY_GROUP } from "@/lib/contracts/metric-query";
+import { BUDGET_METRIC_KEY, COMPANY_GROUP } from "@/lib/contracts/metric-query";
+import { budgetLeafTargets, budgetLedgerRows } from "@/lib/metrics/memory-source";
 import { formulaOperands, listAccountGroups, listMetricDefinitions } from "./catalog";
 import { fetchAll, toGroup, toNumber, unwrap, type DbClient } from "./shared";
 
-/** The budget dataset's metric used as budget for every ledger metric (per kontogrupp). */
-export const BUDGET_METRIC_KEY = "budget_belopp";
+export { BUDGET_METRIC_KEY };
 const KONTOGRUPP = "kontogrupp";
 const KOSTNADSSTALLE = "kostnadsstalle";
 
@@ -176,13 +176,15 @@ export class SupabaseMetricDataSource implements MetricDataSource {
   }
 
   /**
-   * Budget for ledger metrics: budget_belopp facts grouped by kontogrupp, whose value
-   * codes equal account group keys. Budget files carry amounts in presentation sign
-   * (revenue and costs positive), so no account-group sign is applied.
+   * Budget for ledger metrics: budget_belopp facts (SIE sign) grouped by kontogrupp, whose
+   * value codes equal account group keys. The budget of group G is the sum of the leaf
+   * groups within G's ranges times G.sign (budgetLedgerRows, the same code the in-memory
+   * reference source runs), so kostnader and resultat are derived from their parts.
    */
   private async budgetLedger(keys: string[], scope: SourceScope): Promise<LedgerMonthlyRow[]> {
-    const kontogrupp = await this.kontogruppValues();
-    const ids = [...kontogrupp].filter(([, code]) => keys.includes(code)).map(([id]) => id);
+    const [kontogrupp, groups] = await Promise.all([this.kontogruppValues(), this.accountGroups()]);
+    const leaves = budgetLeafTargets(keys, groups);
+    const ids = [...kontogrupp].filter(([, code]) => leaves.has(code)).map(([id]) => id);
     if (ids.length === 0) return [];
     const groupBy = scope.groupBy.includes(KONTOGRUPP)
       ? scope.groupBy
@@ -196,14 +198,7 @@ export class SupabaseMetricDataSource implements MetricDataSource {
         { dimension: KONTOGRUPP, valueIds: ids },
       ],
     });
-    const out: LedgerMonthlyRow[] = [];
-    for (const r of rows) {
-      const id = r.group[KONTOGRUPP];
-      const code = typeof id === "number" ? kontogrupp.get(id) : undefined;
-      if (!code || !keys.includes(code)) continue;
-      out.push({ accountGroupKey: code, month: r.month, group: r.group, value: r.value });
-    }
-    return regroupLedger(out, scope.groupBy);
+    return budgetLedgerRows(keys, rows, (id) => kontogrupp.get(id), groups, scope.groupBy);
   }
 
   async coverage(metricKeys: string[], scope: SourceScope): Promise<Record<string, string[]>> {

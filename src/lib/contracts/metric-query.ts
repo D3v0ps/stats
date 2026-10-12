@@ -60,6 +60,13 @@ export type DimFilter = z.infer<typeof DimFilterSchema>;
 /** "bolag" is a pseudo-dimension: group by company. */
 export const COMPANY_GROUP = "bolag";
 
+/**
+ * The budget dataset's metric. It is the budget of every ledger metric (per kontogrupp,
+ * whose value codes are account group keys) and is stored in bookkeeping (SIE) sign like
+ * ledger amounts: revenue negative, costs positive.
+ */
+export const BUDGET_METRIC_KEY = "budget_belopp";
+
 export const MetricQuerySchema = z.object({
   metricKeys: z.array(MetricKeySchema).min(1),
   period: PeriodSelectionSchema,

@@ -20,6 +20,7 @@ The approved plan (Swedish) is the product spec; this file is the technical cont
 | `src/components/present/`, `src/app/presentera/`, `src/app/(app)/rapporter/`                              | I               | report templates, presentation, freeze, archive                                                                                                                            |
 | `fixtures/`, `scripts/fixtures/`                                                                          | A               | synthetic test files + ground truth                                                                                                                                        |
 | `scripts/reconcile/`                                                                                      | V               | clean-room reconciliation (must not import `src/lib/ingest`)                                                                                                               |
+| `tests/integration/`, `supabase/tests/db-roundtrip.test.ts`                                               | X               | fixtures through the real ingest vs truth; SIE fixtures vs truth; SQL RPCs vs the in-memory reference over the same published data                                         |
 
 `src/lib/**` is pure isomorphic TypeScript: no DOM, no `window`, no Next imports (except `src/lib/db`).
 Phase 3 runs the same ingest code on the server.
@@ -38,6 +39,13 @@ Report: SlideSpec[] ─► resolveReport ─► ResolvedReport JSON ─► deck 
 
 ## Database schema (Postgres 17, Supabase)
 
+Hosted project: **"Ekonomi mbimpact.se"**, ref `mmiuuwrfcumcpgyleufu`, region `eu-north-1`.
+`supabase/config.toml` (project_id `mb-stats`) lets a checkout `supabase link --project-ref
+mmiuuwrfcumcpgyleufu` and `supabase db push`. Migrations are edited in place until the first
+push; after that every change is a new migration. Auth settings of the hosted project
+(signups off, minimum password length 16, `jwt_expiry` 900 s) are set in the dashboard and
+documented as comments in `config.toml`. SQL tests run on PGlite (`supabase/tests/harness.ts`).
+
 All tables in `public` have RLS enabled. Helper `private.is_app_user()` (SECURITY DEFINER,
 STABLE, `search_path = ''`) returns true when `auth.uid()` is in `public.app_users`.
 Policies: `to authenticated using ((select private.is_app_user()))` for select/insert/update.
@@ -53,7 +61,7 @@ Use built-ins only (`gen_random_uuid()`, `sha256()`); no pgcrypto.
 - `dataset_dimensions(dataset_id, dimension_id, pk(both))`
 - `dimension_values(id bigint identity pk, dimension_id, code text, label text, sort int, active bool default true, created_at, unique(dimension_id, code))`
   - `code` is the canonical normalized key (lowercased, trimmed, collapsed spaces) except `kostnadsstalle`, which is `MBAB:100` (scoped per company), and `kontogrupp`, which equals the account group key.
-  - Trigger: reject `code`/`label` that look like a Swedish personnummer/samordningsnummer (10/12 digits, valid date or day+60, Luhn). Org numbers pass (month digits > 12 rule).
+  - Trigger: reject `code`/`label` that look like a Swedish personnummer/samordningsnummer (10/12 digits, optionally `-`, `+`, a space, NBSP or narrow NBSP between date and serial, valid date or day+60, Luhn). Org numbers pass (month digits > 12 rule). Same rule as `isPersonnummer()` in `src/lib/core/pnr.ts`; `src/lib/sie/pii.ts` reuses its shapes without the Luhn check (masks more, never less).
 - `dimension_aliases(dimension_id, alias_norm text, value_id bigint references dimension_values, pk(dimension_id, alias_norm))`
 - `metrics(id smallint identity pk, key unique, name, unit check in ('st','kr','h','pct','faktor','man'), kind check in ('sum','snapshot','distinct','ledger','formula'), dataset_id null, higher_is_better bool null, decimals smallint null, description text, headline_subject text, snapshot_rollup check in ('last','avg') null, base_metric_id null, distinct_dimension_id null, account_group_key text null, formula text null, is_system bool default false)`
   - CHECK constraints per kind (e.g. distinct ⇒ base + distinct dimension; ledger ⇒ account_group_key; formula ⇒ formula and dataset null).
@@ -62,18 +70,31 @@ Use built-ins only (`gen_random_uuid()`, `sha256()`); no pgcrypto.
 - `settings(key text pk, value jsonb, updated_at)` – e.g. `deviation_threshold_pct` (25), `min_engine_version` (1).
 
 Seed (migration) mirrors `src/lib/contracts/catalog.ts` exactly (datasets, dimensions,
-dataset_dimensions, metrics, account groups) plus the two companies and the `verksamhet`
-values (ROM2, KROM, KVL, Karriärvägledning, Stöd och matchning, Bemanning).
+dataset_dimensions, metrics, account groups) plus the two companies, the `verksamhet`
+values (ROM2, KROM, KVL, Karriärvägledning, Stöd och matchning, Bemanning) and one
+`kontogrupp` value per account group (code = group key, label = group name).
+`supabase/tests/seed.test.ts` compares every field.
+
+Leaf account groups are the groups whose ranges do not strictly contain another group's
+ranges: `intakter`, `varor_ul`, `ovriga_externa`, `personal`, `avskrivningar`,
+`finansiella`, `bokslut_skatt`. `kostnader` (4000–7999) and `resultat` (3000–8999) are sums of
+leaves.
 
 ### Imports
 
 - `import_templates(id uuid pk, dataset_id, name, kind check in ('table','cases','sie'), current_version int, header_signature jsonb, sheet_hint text, created_at, updated_at)`
-- `import_template_versions(template_id, version int, config jsonb, created_at, pk(template_id, version))` – config validated client-side by `TemplateConfigSchema`.
+- `import_template_versions(template_id, version int, config jsonb, created_at, pk(template_id, version))` – config validated client-side by `TemplateConfigSchema`. Table templates may set `budgetSign` (see "Budget sign").
 - `uploads(id uuid pk, dataset_id, template_id null, template_version null, scenario check in ('utfall','budget'), file_name, file_sha256 text, file_size bigint, content_hash text, engine_version int, as_of_date date null, parse_report jsonb, totals jsonb, status check in ('staged','published','retracted','discarded'), created_at, published_at, retracted_at, retract_reason)`
   - Partial unique: `(dataset_id, file_sha256, coalesce(template_id,…), coalesce(template_version,0)) where status = 'published'` – same file + same template version cannot be published twice.
 - `upload_slices(upload_id, dataset_id, company_id, scenario, month date check (extract(day from month)=1), priority smallint default 0, is_current bool default false, pk(upload_id, company_id, scenario, month))`
   - `unique (dataset_id, company_id, scenario, month) where is_current`.
   - priority: ledger rows with `year_offset = -1` get priority -1 (a file's own year wins).
+- Staging is insert-only. `authenticated` may INSERT uploads only with `status = 'staged'`
+  (no `published_at`/`retracted_at`), slices only with `is_current = false` and only into a
+  staged upload, and facts/ledger rows only into a staged upload. There are no UPDATE or
+  DELETE grants on uploads, upload_slices, metric_values or ledger_balances; `service_role`
+  can only SELECT them. Status and `is_current` change only inside the SECURITY DEFINER RPCs
+  below.
 
 ### Facts
 
@@ -95,25 +116,25 @@ company and month (and the upload's scenario).
 - `board_reports(id uuid pk, template_id null, title, anchor_month date, snapshot jsonb, schema_version int, frozen_at timestamptz)` – trigger blocks UPDATE/DELETE; insert trigger `private.assert_snapshot_nonpersonal()` rejects snapshots whose slides group/filter by a personal dimension.
 - `share_links(id uuid pk, board_report_id, token_hash bytea unique, label, created_at, expires_at null, revoked_at null, view_count int default 0, last_viewed_at)` – phase 2.
 - `audit_log(id bigint identity pk, at timestamptz default now(), action text, entity text, entity_id text, detail jsonb)` – append-only (no update/delete grants).
-- `private.login_attempts(ip_hash text, at timestamptz, ok bool)` – only `service_role` can touch.
+- `private.login_attempts(id uuid pk, ip_hash text, at timestamptz, ok bool null)` – `ok` null = pending (counted as a failure). Only `service_role` can touch it (through the login RPCs).
 
 ### RPCs (all `search_path = ''`, fully qualified names)
 
-- `publish_upload(p_upload_id uuid) returns jsonb` – SECURITY INVOKER; `pg_advisory_xact_lock(hashtext('publish:'||dataset))`; validates status=staged, engine_version ≥ settings.min_engine_version, every fact's metric belongs to the dataset, months first-of-month, SIE company matches; marks previous current slices not current, inserts/updates this upload's slices as current (respecting priority); writes audit_log; returns summary.
-- `retract_upload(p_upload_id uuid, p_reason text)` – sets status=retracted, restores for each slice the most recent other published upload covering it (by published_at, priority) as current.
-- `discard_upload(p_upload_id uuid)` – only for staged uploads; deletes their staged facts/ledger rows (SECURITY DEFINER, checks is_app_user + status).
+- `publish_upload(p_upload_id uuid) returns jsonb` – **SECURITY DEFINER** (with `retract_upload` the only code that may flip `uploads.status` and `upload_slices.is_current`, which clients cannot write). First statement `private.assert_app_user()`; then `pg_advisory_xact_lock(hashtext('publish:'||dataset_id))` and the upload row `for update`. Validates: status = staged; `engine_version ≥ settings.min_engine_version`; the template (if any) belongs to the dataset; at least one slice; every fact's metric belongs to the dataset and is `sum`/`snapshot`; facts lie inside the upload's company×month slices; every dims value is a `dimension_values.id` of a dimension of the dataset; kostnadsställe values (facts and dim-1 ledger object rows) are scoped to the fact's company (`MBAB:100`). A slice becomes current unless the current slice has higher priority; `published_at = clock_timestamp()` taken under the lock (publish order). Writes `audit_log`; returns a summary (slices, current, kept, superseded, facts, ledger_rows).
+- `retract_upload(p_upload_id uuid, p_reason text)` – SECURITY DEFINER, same app-user check and advisory lock; only for published uploads. Releases its current slices and, per slice, makes current the upload that would be current had this one never been published (`priority desc, published_at desc, id desc`). Sets status = retracted, `retracted_at`, reason; writes `audit_log`.
+- `discard_upload(p_upload_id uuid)` – SECURITY DEFINER; only for staged uploads; deletes their staged facts/ledger rows (the only DELETE on those tables), sets status = discarded, writes `audit_log`.
 - `review_compare(p_upload_id uuid) returns jsonb` – per metric × company × month: staged total, current published total (same slice), previous-month total, deviation %.
 - `metric_monthly(p_metric_keys text[], p_company_codes text[], p_scenario text, p_from date, p_to date, p_group_by text[], p_filters jsonb) returns table(metric_key text, month date, grp jsonb, value numeric)` – SECURITY INVOKER; current facts only; group key built with `jsonb_object_agg` over requested dimension keys (no dynamic SQL); "bolag" groups by company code.
 - `metric_distinct(p_base_metric_key text, p_dimension text, p_company_codes text[], p_scenario text, p_from date, p_to date, p_group_by text[], p_filters jsonb, p_per_month bool) returns table(month date, grp jsonb, cnt bigint)` – counts distinct `dims->>p_dimension` over facts with value > 0.
 - `ledger_monthly(p_group_keys text[], p_company_codes text[], p_from date, p_to date, p_group_by text[]) returns table(group_key text, month date, grp jsonb, value numeric)` – sums `amount * sign` over account ranges; totals rows (`dim_no is null`) unless grouping by `kostnadsstalle` (then object rows for dim 1 plus an "ofördelat" remainder = total − Σ objects, with `grp = {"kostnadsstalle": null}`).
-  - Budget for ledger metrics: when scenario = 'budget' the adapter instead reads `metric_monthly(['budget_belopp'], …)` grouped by `kontogrupp` and maps `kontogrupp` value code → group key.
+  - Budget for ledger metrics: when scenario = 'budget' the adapter instead reads `metric_monthly(['budget_belopp'], …)` grouped by `kontogrupp` and applies the budget sign rule (see "Budget sign") in TypeScript (`budgetLedgerRows`, shared by `SupabaseMetricDataSource` and `MemoryMetricDataSource`).
 - `metric_coverage(p_metric_keys text[], p_company_codes text[], p_scenario text, p_from date, p_to date) returns table(metric_key text, month date)`
 - `metric_sources(p_metric_keys text[], p_company_codes text[], p_from date, p_to date) returns table(upload_id uuid, file_name text, dataset_key text, template_name text, template_version int, published_at timestamptz, months date[])`
 - `ensure_dimension_values(p_dimension text, p_labels text[]) returns table(label text, id bigint)` – creates missing values (only for `auto_create` dims unless `p_force`), resolves aliases.
 - `merge_dimension_values(p_from bigint, p_into bigint)` – rewrites dims in metric_values, adds alias, deactivates `p_from`, audit.
 - `freeze_report(p_title text, p_template_id uuid, p_anchor date, p_snapshot jsonb) returns uuid`.
 - Phase 2: `get_shared_report(p_token text) returns jsonb` (SECURITY DEFINER, granted to anon), `create_share_link`, `revoke_share_link`.
-- Login throttle: `public.login_gate(p_ip_hash text) returns jsonb {allowed bool, retry_after_s int, delay_ms int}` and `public.login_record(p_ip_hash text, p_ok bool)`. In `public` so PostgREST can reach them, but `revoke execute … from public, anon, authenticated; grant execute … to service_role` (called only from `src/lib/db/admin.ts`). They read/write `private.login_attempts`. Rules: per ip_hash 5 failures in 15 min ⇒ locked 15 min, doubling per repeated lockout (cap 24 h); > 50 failures/hour globally ⇒ `delay_ms` up to 3000 for everyone (never a hard global lock); rows older than 24 h deleted opportunistically.
+- Login throttle: `public.login_gate(p_ip_hash text) returns jsonb {allowed bool, retry_after_s int, delay_ms int, attempt_id uuid|null}` and `public.login_record(p_attempt_id uuid, p_ok bool)`. In `public` so PostgREST can reach them, but `revoke execute … from public, anon, authenticated; grant execute … to service_role` (called only through `createAdminClient()` in `src/lib/db/admin.ts` from the login action). The gate is atomic: under `pg_advisory_xact_lock(hashtext('login:'||ip_hash))` it decides and, when it allows, inserts a **pending** attempt (`ok` null) and returns its id; pending attempts count as failures, so a burst of parallel requests cannot all pass before any is recorded (the sixth gate of a burst is refused). Refused attempts are not registered. `login_record` finalizes a pending attempt exactly once with Auth's answer; an attempt that is never finalized (network trouble, crash) stays a failure (fails closed). Rules: per ip_hash 5 failures in 15 min ⇒ locked 15 min, doubling per repeated lockout within 24 h (cap 24 h), a success resets the history; > 50 failures/hour globally ⇒ `delay_ms` up to 3000 for everyone (never a hard global lock); rows older than 24 h deleted at the gate. The action fails closed when the gate errors or returns no attempt id.
 
 ## Metric semantics (tested in `src/lib/metrics`)
 
@@ -121,16 +142,61 @@ company and month (and the upload's scenario).
 - snapshot: per month add over groups/companies; over a multi-month window take the last month with data (`last`) or the average of months with data (`avg`). Never add months.
 - distinct: count distinct over the whole window and group (from `metric_distinct`), never add monthly counts. Monthly series use per-month counts.
 - ledger: monthly sums × sign; add over months.
-- formula: roll each operand up by its own rule for the same window/group, then evaluate. Division by zero → null. Operand null → null.
+- formula: roll each operand up by its own rule for the same window/group, then evaluate. Division by zero → null. Operand null → null. Averages are formulas over additive parts, never stored averages: `anstallningstid` = `anstallningsmanader / anstallda_konsulter`, where `anstallningsmanader` (snapshot, last) is the sum of tenure months of the employments active at month end (cases ingest `tenureMonthsSum`; the old per-group average `tenureMonths` is deprecated and ignored with a warning).
 - Missing month ≠ 0: a window with no data → value null, status `no_data`; partial → coverage `withData < expected`.
 - Filters/groups on a dimension not in a metric's dataset → status `not_applicable` (never a silent total).
 - Comparisons: prev_period (`previousPeriod`), prev_year (`previousYear`), budget (scenario budget for the same window). `deltaPct` relative; for `pct` units use `deltaPp`.
-- Headline: compare current vs prev_period (or prev_year if none); |deltaPct| < 2 (or |Δp.e.| < 1 for pct) = "OFÖRÄNDRAT". Templates: "{SUBJECT} ÖKAR." / "{SUBJECT} MINSKAR." / "{SUBJECT} ÄR OFÖRÄNDRAT.", subject derived from metric name + filter labels (e.g. "DELTAGARNA I KROM").
+- Headline: compare current vs prev_period (or prev_year if none); |deltaPct| < 2 (or |Δp.e.| < 1 for pct) is flat. Templates: "{SUBJECT} ÖKAR." / "{SUBJECT} MINSKAR." / "{SUBJECT} LIGGER STILLA.", subject = the metric's `headlineSubject` + filter/company phrases (e.g. "DELTAGARNA I KROM ÖKAR."), at most 60 characters. Without a comparison, and always against budget, the headline states the value ("INTÄKTERNA I MB AB: 1,5 MKR.") and the delta shows "mot budget".
+
+## Budget sign
+
+`budget_belopp` facts are stored in bookkeeping (SIE) sign, exactly like `LedgerRow.amount`:
+revenue negative, costs positive. The budget of a ledger metric with account group G is
+
+    (Σ budget_belopp facts whose kontogrupp is a leaf group with ranges inside G's ranges) × G.sign
+
+so revenue and the financial net read positive like actuals, and `kostnader` / `resultat`
+budgets are derived from the leaves (a budget line on a non-leaf kontogrupp is ignored, never
+counted twice). A ledger group without budget rows in a month is unknown (null), not 0.
+Budget files say how they write amounts with the table template's optional `budgetSign`:
+`result` (revenue +, costs −; ingest multiplies by −1), `positive` (all positive; ingest
+multiplies by the kontogrupp's account-group sign from `RunContext.accountGroupSigns`, matching
+the label by group key or name, case-insensitively; unknown groups are dropped with an error)
+or `ledger` (already SIE sign; also the default). `fixtures/files/budget_2026.xlsx` is a
+`result` budget.
 
 ## Security invariants
 
 - `proxy.ts` refreshes the session and redirects anonymous users to `/logga-in`; every protected server component and server action re-checks with `supabase.auth.getClaims()`/`getUser()` via `src/lib/db/session.ts` (`requireSession()`).
-- No personnummer anywhere server-side (client strip + DB trigger + `scripts/db/scan-pii.sql`).
+- The service-role client (`createAdminClient()`, typed `SupabaseClient<Database>`) is used only by the login action for `login_gate`/`login_record`. Server data access otherwise goes through `createSupabaseServerClient()` / `getMetricSource()` under RLS.
+- No personnummer anywhere server-side (client strip + DB trigger). Recognised with `-`, `+`, a space, NBSP or narrow NBSP between date and serial, 10 or 12 digits; organisation numbers pass.
 - Personal dimensions (`is_personal`) can be grouped/filtered in the workspace only; slide specs and frozen snapshots cannot reference them.
 - No original files stored in phase 1. No payload logging.
 - Secrets only in env: `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY`, `SUPABASE_SECRET_KEY` (server-only, login throttle), `STATS_LOGIN_EMAIL` (server-only).
+
+## UI conventions settled in review
+
+- shadcn `--accent` (focus/hover fill of menu items and options) is light grey `#E4E5E6` with
+  antracit text; red stays for `--destructive` and the brand tokens.
+- `CountUp` never shows a smaller number than the server rendered: a hydrated number is left as
+  is, a client-side mount counts up from 0 before its first paint, a changed value counts from
+  the old one; reduced motion and `[data-static]` ancestors keep it still.
+- Error pages are Swedish and brand styled: `src/app/not-found.tsx` ("Sidan finns inte", link
+  to Översikt), `src/app/error.tsx` and `src/app/global-error.tsx` (retry; the error digest at
+  most, never a message or stack trace).
+
+## Tests that tie the modules together
+
+- `tests/integration/fixtures.test.ts`: every data file in `fixtures/truth/manifest.json`
+  through `readWorkbook` → `runTemplate` (manifest template, choices, aliases) equals the truth
+  exactly (same fact keys after dropping zeros, values to 1e-6); the drifted export gives an
+  incompatible `SignatureDiff`; no personnummer in any fact or report field.
+- `tests/integration/sie.test.ts`: every `fixtures/sie` file through `ingestSie` vs
+  `fixtures/sie/truth` (result per month, per account, per kostnadsställe; unknown org →
+  company null, nothing to stage).
+- `tests/integration/budget.test.ts`: the budget truth as ledger budgets through the engine.
+- `supabase/tests/db-roundtrip.test.ts`: fixtures + one SIE file staged and published through
+  the repo functions into PGlite, then a query matrix (metrics × month/quarter/YTD/R12 ×
+  MBAB/ALL × group by none/kund/verksamhet/bolag/ort/kostnadsställe, with prev period, prev
+  year and budget) gives identical results over `SupabaseMetricDataSource` and
+  `MemoryMetricDataSource` built from the same facts.

@@ -1,7 +1,13 @@
 import { createElement } from "react";
 import { renderToStaticMarkup } from "react-dom/server";
 import { describe, expect, it } from "vitest";
-import { COUNT_UP_DURATION_MS, countUpFrame, easeOutCubic, shouldAnimateCountUp } from "./count-up";
+import {
+  COUNT_UP_DURATION_MS,
+  countUpFrame,
+  countUpStart,
+  easeOutCubic,
+  shouldAnimateCountUp,
+} from "./count-up";
 import { useCountUp } from "./use-count-up";
 import { useMediaQuery, usePrefersReducedMotion } from "./use-media-query";
 
@@ -52,6 +58,35 @@ describe("countUpFrame", () => {
   it("starts at zero", () => {
     expect(countUpFrame(999, 0)).toBe(0);
   });
+
+  it("counts from a previous value, up or down, ending on the target", () => {
+    expect(countUpFrame(150, 0, 100)).toBe(100);
+    const up = countUpFrame(150, 0.5, 100);
+    expect(up).toBeGreaterThan(100);
+    expect(up).toBeLessThan(150);
+    const down = countUpFrame(100, 0.5, 150);
+    expect(down).toBeLessThan(150);
+    expect(down).toBeGreaterThan(100);
+    expect(countUpFrame(100, 1, 150)).toBe(100);
+    expect(Number.isInteger(countUpFrame(150, 0.33, 100))).toBe(true);
+    expect(Number.isInteger(countUpFrame(150, 0.33, 99.5))).toBe(false);
+  });
+});
+
+describe("countUpStart", () => {
+  it("never animates the first run of a hydrated number (no smaller first paint)", () => {
+    expect(countUpStart({ previous: null, hydrated: true, target: 4711 })).toBeNull();
+  });
+
+  it("counts a client-side mount up from zero", () => {
+    expect(countUpStart({ previous: null, hydrated: false, target: 4711 })).toBe(0);
+  });
+
+  it("counts a changed value from the previous one and leaves an unchanged one alone", () => {
+    expect(countUpStart({ previous: 4711, hydrated: true, target: 5000 })).toBe(4711);
+    expect(countUpStart({ previous: 4711, hydrated: false, target: 4000 })).toBe(4711);
+    expect(countUpStart({ previous: 4711, hydrated: true, target: 4711 })).toBeNull();
+  });
 });
 
 describe("shouldAnimateCountUp", () => {
@@ -71,6 +106,16 @@ describe("shouldAnimateCountUp", () => {
     expect(shouldAnimateCountUp({ ...base, target: 0 })).toBe(false);
     expect(shouldAnimateCountUp({ ...base, target: Number.NaN })).toBe(false);
     expect(shouldAnimateCountUp({ ...base, target: Infinity })).toBe(false);
+  });
+
+  it("animates a change from a previous value, also towards zero", () => {
+    expect(shouldAnimateCountUp({ ...base, from: 4, target: 0 })).toBe(true);
+    expect(shouldAnimateCountUp({ ...base, from: 10, target: 10 })).toBe(false);
+    expect(shouldAnimateCountUp({ ...base, from: Number.NaN, target: 10 })).toBe(false);
+    expect(shouldAnimateCountUp({ ...base, from: 4, target: 9, reducedMotion: true })).toBe(false);
+    expect(shouldAnimateCountUp({ ...base, from: 4, target: 9, hasStaticAncestor: true })).toBe(
+      false,
+    );
   });
 
   it("has a sensible default duration", () => {

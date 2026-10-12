@@ -329,7 +329,8 @@ describe("Summa bolag comparisons", () => {
         ledgerRow("sie2", "MBR", "2026-09", 3010, -500_000),
       ],
       facts: [
-        fact("b1", "budget_belopp", "MBAB", "2026-09", 2_000_000, { kontogrupp: ID.kgIntakter }),
+        // Budget is stored in SIE sign like the ledger: revenue negative.
+        fact("b1", "budget_belopp", "MBAB", "2026-09", -2_000_000, { kontogrupp: ID.kgIntakter }),
       ],
       scenarios: { b1: "budget" },
     });
@@ -356,7 +357,7 @@ describe("headline against budget", () => {
     const src = makeSource({
       ledger: [ledgerRow("sie", "MBAB", "2026-09", 3010, -1_500_000)],
       facts: [
-        fact("b1", "budget_belopp", "MBAB", "2026-09", 1_000_000, { kontogrupp: ID.kgIntakter }),
+        fact("b1", "budget_belopp", "MBAB", "2026-09", -1_000_000, { kontogrupp: ID.kgIntakter }),
       ],
       scenarios: { b1: "budget" },
     });

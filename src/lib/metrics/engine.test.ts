@@ -394,6 +394,61 @@ describe("distinct metrics", () => {
   });
 });
 
+describe("average tenure (anstallningstid)", () => {
+  // Two orts at two companies: 2 people with 30 months in Stockholm, 1 with 6 in Göteborg.
+  const src = makeSource({
+    facts: [
+      fact("k1", "anstallda_konsulter", "MBAB", "2026-08", 1, { ort: ID.stockholm }),
+      fact("k1", "anstallningsmanader", "MBAB", "2026-08", 10, { ort: ID.stockholm }),
+      fact("k1", "anstallda_konsulter", "MBAB", "2026-09", 2, { ort: ID.stockholm }),
+      fact("k1", "anstallningsmanader", "MBAB", "2026-09", 30, { ort: ID.stockholm }),
+      fact("k2", "anstallda_konsulter", "MBR", "2026-09", 1, { ort: ID.goteborg }),
+      fact("k2", "anstallningsmanader", "MBR", "2026-09", 6, { ort: ID.goteborg }),
+    ],
+  });
+
+  it("is a formula over two snapshots that add up over groups", () => {
+    const defs = new Map(DEFS.map((d) => [d.key, d]));
+    expect(defs.get("anstallningstid")).toMatchObject({
+      kind: "formula",
+      unit: "man",
+      decimals: 1,
+      datasetKey: null,
+      formula: "anstallningsmanader / anstallda_konsulter",
+      dimensions: ["ort"],
+    });
+    expect(defs.get("anstallningsmanader")).toMatchObject({
+      kind: "snapshot",
+      snapshotRollup: "last",
+      datasetKey: "ip_konsulter",
+      higherIsBetter: null,
+      headlineSubject: "ANSTÄLLNINGSMÅNADERNA",
+    });
+  });
+
+  it("is total months ÷ active people, never an average of group averages", async () => {
+    const r = await run(src, {
+      metricKeys: ["anstallningstid"],
+      period: SEP,
+      company: "ALL",
+      groupBy: "ort",
+    });
+    expect(r.kind).toBe("formula");
+    expect(r.total.value).toBeCloseTo(36 / 3, 12);
+    expect(r.groups.map((g) => [g.label, g.value])).toEqual([
+      ["Stockholm", 15],
+      ["Göteborg", 6],
+    ]);
+    // The mean of the two group averages would be 10.5.
+    expect(r.total.value).not.toBeCloseTo((15 + 6) / 2, 3);
+  });
+
+  it("takes the last month of a quarter for both snapshots", async () => {
+    const r = await run(src, { metricKeys: ["anstallningstid"], period: Q3, company: "MBAB" });
+    expect(r.total.value).toBe(15);
+  });
+});
+
 describe("formula metrics", () => {
   const faktorFacts: MemoryFact[] = [
     fact("f1", "fakturerat_ip", "MBAB", "2026-09", 100, { kund: ID.ikea }),
@@ -693,11 +748,11 @@ describe("ledger metrics", () => {
     expect(r.total.value).toBeCloseTo((7 / 1002) * 100, 10);
   });
 
-  it("compares with budget from budget_belopp per kontogrupp", async () => {
+  it("compares with budget from budget_belopp per kontogrupp (SIE sign)", async () => {
     const s = makeSource({
       ledger: sie("2026-09"),
       facts: [
-        fact("b1", "budget_belopp", "MBAB", "2026-09", 1200, { kontogrupp: ID.kgIntakter }),
+        fact("b1", "budget_belopp", "MBAB", "2026-09", -1200, { kontogrupp: ID.kgIntakter }),
         fact("b1", "budget_belopp", "MBAB", "2026-09", 450, { kontogrupp: ID.kgPersonal }),
       ],
       scenarios: { b1: "budget" },
@@ -728,9 +783,17 @@ describe("ledger metrics", () => {
       company: "ALL",
       compare: ["budget"],
     });
+    // Derived from the budgeted leaf groups: −(−1200 + 450).
+    expect(resultat.total.compare.budget?.value).toBe(750);
+    const finansiella = await run(s, {
+      metricKeys: ["finansiella"],
+      period: SEP,
+      company: "ALL",
+      compare: ["budget"],
+    });
     // Not budgeted (no kontogrupp rows) is unknown, not a budget of 0.
-    expect(resultat.total.compare.budget?.value).toBeNull();
-    expect(resultat.total.compare.budget?.delta).toBeNull();
+    expect(finansiella.total.compare.budget?.value).toBeNull();
+    expect(finansiella.total.compare.budget?.delta).toBeNull();
   });
 });
 
@@ -1419,11 +1482,11 @@ describe("review regressions", () => {
         ledgerRow("sie", "MBAB", "2026-09", 3010, -700, { objectValueId: ID.ks100 }),
       ],
       facts: [
-        fact("b1", "budget_belopp", "MBAB", "2026-09", 800, {
+        fact("b1", "budget_belopp", "MBAB", "2026-09", -800, {
           kontogrupp: ID.kgIntakter,
           kostnadsstalle: ID.ks100,
         }),
-        fact("b1", "budget_belopp", "MBAB", "2026-09", 100, { kontogrupp: ID.kgIntakter }),
+        fact("b1", "budget_belopp", "MBAB", "2026-09", -100, { kontogrupp: ID.kgIntakter }),
       ],
       scenarios: { b1: "budget" },
     });

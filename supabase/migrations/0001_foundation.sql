@@ -68,9 +68,10 @@ end;
 $$;
 
 -- True when the text contains a Swedish personnummer or samordningsnummer:
--- YYMMDD[-+]NNNN, YYYYMMDD[-+]NNNN or the same without separator, where the date
--- exists (day + 60 for samordningsnummer) and the last ten digits pass Luhn.
--- Organisation numbers have month digits >= 20 and never match.
+-- YYMMDD[sep]NNNN or YYYYMMDD[sep]NNNN, where sep is "-", "+", a space, a no-break space
+-- or a narrow no-break space, or nothing; the date exists (day + 60 for
+-- samordningsnummer) and the last ten digits pass Luhn. Mirrors isPersonnummer() in
+-- src/lib/core/pnr.ts. Organisation numbers have month digits >= 20 and never match.
 create or replace function private.contains_personnummer(p_text text)
 returns boolean
 language plpgsql
@@ -97,7 +98,7 @@ begin
     return false;
   end if;
   for v_match in
-    select m from regexp_matches(p_text, '(?<![0-9])([0-9]{6}|[0-9]{8})[-+]?([0-9]{4})(?![0-9])', 'g') as m
+    select m from regexp_matches(p_text, '(?<![0-9])([0-9]{6}|[0-9]{8})[-+ \u00a0\u202f]?([0-9]{4})(?![0-9])', 'g') as m
   loop
     v_date := v_match[1];
     if length(v_date) = 8 then

@@ -35,6 +35,13 @@ export interface RunContext {
   fileSize: number;
   /** 0-based header row picked by the user, overriding detection. */
   headerRow?: number;
+  /**
+   * Account group key -> sign (revenue -1), from the account groups in settings. Budget
+   * templates with budgetSign "positive" need it to store budget_belopp in SIE sign.
+   */
+  accountGroupSigns?: Record<string, 1 | -1>;
+  /** Account group key -> name, so kontogrupp labels may name the group instead of its key. */
+  accountGroupNames?: Record<string, string>;
 }
 
 export interface LoadOptions {
@@ -167,7 +174,10 @@ export async function runTemplate(
   let totals: MetricTotal[];
   let scenario: IngestResult["scenario"];
   if (config.kind === "table") {
-    const r = aggregateTable(stepped.table, config, choices);
+    const r = aggregateTable(stepped.table, config, choices, {
+      accountGroupSigns: ctx.accountGroupSigns,
+      accountGroupNames: ctx.accountGroupNames,
+    });
     ({ facts, issues, skipped, rowsUsed } = r);
     totals = sumTotals(facts);
     scenario = config.scenario ?? "utfall";

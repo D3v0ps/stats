@@ -195,34 +195,29 @@ describe("SupabaseMetricDataSource", () => {
       expect(rpcCalls(calls, "ledger_monthly")).toEqual([]);
     });
 
-    it("reads budget from budget_belopp by kontogrupp", async () => {
+    it("reads budget from budget_belopp by kontogrupp, in SIE sign times the group sign", async () => {
       const tables = catalogTables();
       const kontogruppDim = tables.dimensions!.find((d) => d.key === "kontogrupp")!.id;
       const idOf = (code: string) =>
         tables.dimension_values!.find((v) => v.dimension_id === kontogruppDim && v.code === code)!
           .id as number;
+      const budgetRow = (bolag: string, kontogrupp: string, value: number) => ({
+        metric_key: "budget_belopp",
+        month: "2026-07-01",
+        grp: { bolag, kontogrupp: idOf(kontogrupp) },
+        value,
+      });
       const { ds, calls } = source({
         tables,
         rpc: {
           metric_monthly: () => [
-            {
-              metric_key: "budget_belopp",
-              month: "2026-07-01",
-              grp: { bolag: "MBAB", kontogrupp: idOf("intakter") },
-              value: 1000,
-            },
-            {
-              metric_key: "budget_belopp",
-              month: "2026-07-01",
-              grp: { bolag: "MBR", kontogrupp: idOf("intakter") },
-              value: 500,
-            },
-            {
-              metric_key: "budget_belopp",
-              month: "2026-07-01",
-              grp: { bolag: "MBAB", kontogrupp: idOf("personal") },
-              value: 400,
-            },
+            budgetRow("MBAB", "intakter", -1000),
+            budgetRow("MBR", "intakter", -500),
+            budgetRow("MBAB", "personal", 400),
+            budgetRow("MBAB", "ovriga_externa", 100),
+            budgetRow("MBAB", "finansiella", 20),
+            // A non-leaf line is not added on top of its parts.
+            budgetRow("MBAB", "kostnader", 999),
           ],
         },
       });
@@ -239,6 +234,20 @@ describe("SupabaseMetricDataSource", () => {
         p_filters: [{ dimension: "kontogrupp", valueIds: [idOf("intakter"), idOf("personal")] }],
       });
       expect(rpcCalls(calls, "ledger_monthly")).toEqual([]);
+
+      const derived = await ds.ledger(
+        ["kostnader", "resultat"],
+        scope({ scenario: "budget", groupBy: ["bolag"] }),
+      );
+      expect(derived).toEqual([
+        { accountGroupKey: "kostnader", month: "2026-07", group: { bolag: "MBAB" }, value: 500 },
+        { accountGroupKey: "resultat", month: "2026-07", group: { bolag: "MBAB" }, value: 480 },
+        { accountGroupKey: "resultat", month: "2026-07", group: { bolag: "MBR" }, value: 500 },
+      ]);
+      const derivedPayload = rpcCalls(calls, "metric_monthly")[1]?.payload as {
+        p_filters: { valueIds: number[] }[];
+      };
+      expect(derivedPayload.p_filters[0]?.valueIds).not.toContain(idOf("kostnader"));
     });
   });
 

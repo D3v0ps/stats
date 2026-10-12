@@ -59,8 +59,11 @@ async function attemptLogin(formData: FormData): Promise<Outcome> {
     console.error("[login] service-role client unavailable; login refused.");
     return "rejected";
   }
-  const hash = ipHash(clientIp(await headers()), env.env.loginEmail);
+  // login_gate registers the attempt it lets through as pending (counted as a failure), so
+  // parallel requests cannot all slip past the gate before any of them is recorded.
+  let attemptId: string | null = null;
   if (admin) {
+    const hash = ipHash(clientIp(await headers()), env.env.loginEmail);
     const gate = await admin.rpc("login_gate", { p_ip_hash: hash });
     if (gate.error) {
       // Fail closed: without the throttle nobody gets to guess.
@@ -70,6 +73,7 @@ async function attemptLogin(formData: FormData): Promise<Outcome> {
     const decision = gateDecision(gate.data);
     await sleep(decision.delayMs);
     if (!decision.allowed) return "rejected";
+    attemptId = decision.attemptId;
   }
 
   const supabase = await createSupabaseServerClient();
@@ -79,9 +83,10 @@ async function attemptLogin(formData: FormData): Promise<Outcome> {
   });
   const ok = error === null;
 
-  // Only answers from the Auth server count as attempts; network trouble is not a guess.
-  if (admin && (ok || isAuthApiError(error))) {
-    const record = await admin.rpc("login_record", { p_ip_hash: hash, p_ok: ok });
+  // Only answers from the Auth server finalize the attempt. Anything else (network trouble)
+  // leaves it pending, where it keeps counting as a failure: the throttle fails closed.
+  if (attemptId !== null && admin && (ok || isAuthApiError(error))) {
+    const record = await admin.rpc("login_record", { p_attempt_id: attemptId, p_ok: ok });
     if (record.error)
       console.error(`[login] login_record failed (${record.error.code ?? "unknown"})`);
   }
@@ -142,7 +147,8 @@ export async function logout(): Promise<void> {
 
 /**
  * Sign out every device by revoking all refresh tokens of the shared account. Other devices keep
- * their current access token until it expires (JWT lifetime, default one hour).
+ * their current access token until it expires (JWT lifetime: 15 minutes in the hosted project,
+ * see supabase/config.toml).
  */
 export async function logoutEverywhere(): Promise<void> {
   const session = await getSessionOrNull();

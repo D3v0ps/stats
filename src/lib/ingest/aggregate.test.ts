@@ -6,7 +6,13 @@ import {
   type TableTemplateConfig,
   type UploadChoices,
 } from "@/lib/contracts";
-import { PersonalDataError, aggregateTable, roundSum } from "./aggregate";
+import {
+  PersonalDataError,
+  aggregateTable,
+  applyBudgetSign,
+  resolveAccountGroupKey,
+  roundSum,
+} from "./aggregate";
 import { applySteps } from "./pipeline";
 import type { CellValue, WorkingTable } from "./working";
 
@@ -337,6 +343,134 @@ describe("aggregateTable – period and company", () => {
     expect(
       aggregateTable(table(["v"], [[1]]), cfg, { month: "2026-09" }).issues[0]!.message,
     ).toMatch(/Bolag är inte valt/);
+  });
+});
+
+describe("aggregateTable – budget sign", () => {
+  const SIGNS: Record<string, 1 | -1> = {
+    intakter: -1,
+    personal: 1,
+    kostnader: 1,
+    finansiella: -1,
+  };
+  const NAMES = {
+    intakter: "Intäkter",
+    personal: "Personalkostnader",
+    finansiella: "Finansiella poster",
+  };
+  const budget = (budgetSign?: "result" | "positive" | "ledger") =>
+    config({
+      columns: [
+        { column: "post", type: "text", usage: "dimension", dimensionKey: "kontogrupp" },
+        { column: "datum", type: "date", usage: "period" },
+        { column: "belopp", type: "amount", usage: "measure", metricKey: "budget_belopp" },
+      ],
+      scenario: "budget",
+      ...(budgetSign ? { budgetSign } : {}),
+    });
+  const values = (r: ReturnType<typeof aggregateTable>) =>
+    Object.fromEntries(r.facts.map((f) => [f.dims.kontogrupp, f.value]));
+
+  it("negates a result budget (revenue +, costs −) into SIE sign", () => {
+    const t = table(
+      ["post", "datum", "belopp"],
+      [
+        ["intakter", "2026-01", "1 000"],
+        ["personal", "2026-01", "-400"],
+        ["finansiella", "2026-01", "-20"],
+      ],
+    );
+    const r = aggregateTable(t, budget("result"), noChoices);
+    expect(values(r)).toEqual({ intakter: -1000, personal: 400, finansiella: 20 });
+    expect(r.issues).toEqual([]);
+  });
+
+  it("multiplies an all-positive budget by the account group's sign, by key or name", () => {
+    const t = table(
+      ["post", "datum", "belopp"],
+      [
+        ["Intäkter", "2026-01", 1000],
+        ["PERSONAL", "2026-01", 400],
+        ["  finansiella  poster ", "2026-01", 20],
+      ],
+    );
+    const r = aggregateTable(t, budget("positive"), noChoices, {
+      accountGroupSigns: SIGNS,
+      accountGroupNames: NAMES,
+    });
+    expect(values(r)).toEqual({
+      Intäkter: -1000,
+      PERSONAL: 400,
+      // valueText trims the cell; the inner double space is matched by normalizeValue.
+      "finansiella  poster": -20,
+    });
+    expect(r.issues).toEqual([]);
+    expect(r.rowsUsed).toBe(3);
+  });
+
+  it("leaves ledger-sign budgets (and templates without the setting) alone", () => {
+    const t = table(["post", "datum", "belopp"], [["intakter", "2026-01", -1000]]);
+    expect(values(aggregateTable(t, budget("ledger"), noChoices))).toEqual({ intakter: -1000 });
+    expect(values(aggregateTable(t, budget(), noChoices))).toEqual({ intakter: -1000 });
+  });
+
+  it("drops amounts of unknown account groups with an error instead of guessing a sign", () => {
+    const t = table(
+      ["post", "datum", "belopp"],
+      [
+        ["intakter", "2026-01", 1000],
+        ["Övrigt", "2026-01", 5],
+        ["Övrigt", "2026-02", 6],
+      ],
+    );
+    const r = aggregateTable(t, budget("positive"), noChoices, { accountGroupSigns: SIGNS });
+    expect(values(r)).toEqual({ intakter: -1000 });
+    expect(r.issues).toEqual([
+      expect.objectContaining({ sourceRow: 3, column: "post", value: "Övrigt", severity: "error" }),
+    ]);
+    expect(r.rowsUsed).toBe(1);
+  });
+
+  it("refuses an all-positive budget without account group signs or a kontogrupp column", () => {
+    const t = table(["post", "datum", "belopp"], [["intakter", "2026-01", 1000]]);
+    const noSigns = aggregateTable(t, budget("positive"), noChoices);
+    expect(noSigns.facts).toEqual([]);
+    expect(noSigns.issues[0]?.message).toMatch(/tecken saknas/);
+
+    const noGroup = config({
+      columns: [
+        { column: "datum", type: "date", usage: "period" },
+        { column: "belopp", type: "amount", usage: "measure", metricKey: "budget_belopp" },
+      ],
+      budgetSign: "positive",
+    });
+    const r = aggregateTable(table(["datum", "belopp"], [["2026-01", 1000]]), noGroup, noChoices, {
+      accountGroupSigns: SIGNS,
+    });
+    expect(r.facts).toEqual([]);
+    expect(r.issues[0]?.message).toMatch(/kolumn för kontogrupp/);
+  });
+
+  it("only touches budget_belopp", () => {
+    const facts = [
+      {
+        metricKey: "timmar",
+        company: "MBAB" as const,
+        month: "2026-01",
+        dims: {},
+        value: 8,
+        sourceRows: [2],
+      },
+    ];
+    expect(applyBudgetSign(facts, "result").facts).toEqual(facts);
+    expect(applyBudgetSign(facts, "positive").facts).toEqual(facts);
+  });
+
+  it("resolves account group labels by key or name, case-insensitively", () => {
+    expect(resolveAccountGroupKey("INTAKTER", SIGNS)).toBe("intakter");
+    expect(resolveAccountGroupKey("intäkter", SIGNS, NAMES)).toBe("intakter");
+    expect(resolveAccountGroupKey("Intäkter", SIGNS)).toBeNull();
+    expect(resolveAccountGroupKey("okänd", SIGNS, NAMES)).toBeNull();
   });
 });
 

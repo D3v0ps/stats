@@ -903,7 +903,7 @@ export type Database = {
         Returns: Json;
       };
       login_record: {
-        Args: { p_ip_hash: string; p_ok: boolean };
+        Args: { p_attempt_id: string; p_ok: boolean };
         Returns: undefined;
       };
       merge_dimension_values: {

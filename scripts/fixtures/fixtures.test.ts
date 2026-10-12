@@ -429,7 +429,7 @@ describe("truth", () => {
       expect(metric?.datasetKey).toBe(e.datasetKey);
       expect(e.companies).toContain(f.company);
       expect(Number.isFinite(f.value)).toBe(true);
-      if (f.value === 0) expect(f.metricKey).toBe("anstallningstid");
+      expect(f.value).not.toBe(0);
       for (const dim of Object.keys(f.dims)) expect(dataset?.dimensions).toContain(dim);
       // Every fact of a metric carries the same mapped dimensions.
       const dimSet = Object.keys(f.dims).sort().join(",");
@@ -517,8 +517,11 @@ describe("truth", () => {
         .filter((f) => f.metricKey === "anstallda_konsulter")
         .map((f) => factKey({ ...f, metricKey: "" })),
     );
-    const tenure = konsulter.filter((f) => f.metricKey === "anstallningstid");
-    expect(new Set(tenure.map((f) => factKey({ ...f, metricKey: "" })))).toEqual(active);
+    // Summed tenure months exist only where someone is active (average tenure is a formula).
+    const tenure = konsulter.filter((f) => f.metricKey === "anstallningsmanader");
+    expect(tenure.length).toBeGreaterThan(0);
+    for (const f of tenure) expect(active.has(factKey({ ...f, metricKey: "" }))).toBe(true);
+    expect(konsulter.some((f) => f.metricKey === "anstallningstid")).toBe(false);
     expect(konsulter[0]?.month).toBe("2023-01");
   });
 

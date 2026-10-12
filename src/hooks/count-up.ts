@@ -8,13 +8,34 @@ export function easeOutCubic(t: number): number {
 }
 
 /**
- * The value to show at `progress` (0..1) of the animation from 0 to `target`. Integer targets
- * only show integers so counts never flash decimals; the end is always exactly `target`.
+ * The value to show at `progress` (0..1) of the animation from `from` (default 0) to
+ * `target`. Between integers only integers are shown so counts never flash decimals; the
+ * end is always exactly `target`.
  */
-export function countUpFrame(target: number, progress: number): number {
-  if (progress >= 1 || !Number.isFinite(target)) return target;
-  const value = target * easeOutCubic(progress);
-  return Number.isInteger(target) ? Math.round(value) : value;
+export function countUpFrame(target: number, progress: number, from = 0): number {
+  if (progress >= 1 || !Number.isFinite(target) || !Number.isFinite(from)) return target;
+  const value = from + (target - from) * easeOutCubic(progress);
+  return Number.isInteger(target) && Number.isInteger(from) ? Math.round(value) : value;
+}
+
+export interface CountUpStartInput {
+  /** The value the element settled on last time; null before the first run. */
+  previous: number | null;
+  /** The element came from server HTML (hydration), so its number is already on screen. */
+  hydrated: boolean;
+  target: number;
+}
+
+/**
+ * Where an animation towards `target` starts, or null for none. The first run after
+ * hydration never animates: the server already painted the real number and counting from
+ * 0 would make the first paint after hydration smaller than the server's. A fresh mount on
+ * the client (navigation) counts up from 0 before its first paint. Later value changes
+ * count from the previous value.
+ */
+export function countUpStart({ previous, hydrated, target }: CountUpStartInput): number | null {
+  if (previous === null) return hydrated ? null : 0;
+  return previous === target ? null : previous;
 }
 
 export interface CountUpPolicyInput {
@@ -24,13 +45,16 @@ export interface CountUpPolicyInput {
   hasStaticAncestor: boolean;
   reducedMotion: boolean;
   target: number;
+  /** Start value of the animation (default 0). */
+  from?: number;
 }
 
 /**
- * Animate only when nothing asks for a still picture. Zero has nothing to count and
- * non-finite values are shown as they are.
+ * Animate only when nothing asks for a still picture and there is a distance to cover
+ * (counting from 0 to 0 shows nothing); non-finite values are shown as they are.
  */
 export function shouldAnimateCountUp(input: CountUpPolicyInput): boolean {
   if (input.isStatic || input.hasStaticAncestor || input.reducedMotion) return false;
-  return Number.isFinite(input.target) && input.target !== 0;
+  const from = input.from ?? 0;
+  return Number.isFinite(input.target) && Number.isFinite(from) && input.target !== from;
 }

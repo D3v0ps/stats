@@ -613,7 +613,6 @@ def recompute_cases(cfg: dict[str, Any], sheets: list[Sheet], ctx: Context, info
     rows: list[dict[str, Any]] = []
     for month in month_range(first, last):
         me = month_end(month)
-        tenure: dict[str, list[float]] = defaultdict(list)
         for c in cases:
             dims = c["dims"]
             gone = c["end"] is not None and (c["end"] < me or (c["interrupted"] and c["end"] <= me))
@@ -625,8 +624,8 @@ def recompute_cases(cfg: dict[str, Any], sheets: list[Sheet], ctx: Context, info
 
             if active:
                 emit(metrics.get("active"), 1.0)
-                if metrics.get("tenure"):
-                    tenure[dims].append((me - c["start"]).days / AVG_DAYS_PER_MONTH)
+                # Summed tenure months (the average is a formula: sum / active).
+                emit(metrics.get("tenure_sum"), (me - c["start"]).days / AVG_DAYS_PER_MONTH)
             if month_of(c["start"]) == month:
                 emit(metrics.get("started"), 1.0)
             if c["end"] is not None and month_of(c["end"]) == month:
@@ -637,16 +636,6 @@ def recompute_cases(cfg: dict[str, Any], sheets: list[Sheet], ctx: Context, info
                 with_result = json.loads(dims)
                 with_result["resultattyp"] = c["result"]
                 emit(metrics.get("results"), 1.0, dims_key(with_result))
-        for dims, values in tenure.items():
-            rows.append(
-                {
-                    "metricKey": metrics["tenure"],
-                    "company": company,
-                    "month": month,
-                    "dims": dims,
-                    "value": sum(values) / len(values),
-                }
-            )
     return facts_from_rows(rows)
 
 
@@ -782,11 +771,8 @@ def aggregate(facts: list[Fact], level: str | None, cfg: dict[str, Any], display
 
     Groups match case-insensitively; `display` collects a readable label per group key.
     """
-    rollups = cfg.get("rollups", {})
     canon = [(f, canonical_dims(f, cfg)) for f in facts]
-    index = {(f["metricKey"], f["company"], f["month"], dims_key(d)): float(f["value"]) for f, d in canon}
     sums: dict[Key, float] = defaultdict(float)
-    weights: dict[Key, float] = defaultdict(float)
     for f, dims in canon:
         if level is None:
             group, shown = "", ""
@@ -798,14 +784,8 @@ def aggregate(facts: list[Fact], level: str | None, cfg: dict[str, Any], display
             group = norm(shown)
         display.setdefault(group, shown)
         key = (f["metricKey"], f["company"], f["month"], group)
-        rollup = rollups.get(f["metricKey"])
-        if rollup:
-            w = index.get((rollup["weighted_by"], f["company"], f["month"], dims_key(dims)), 0.0)
-            sums[key] += float(f["value"]) * w
-            weights[key] += w
-        else:
-            sums[key] += float(f["value"])
-    return {k: (v / weights[k] if weights[k] else 0.0) if k in weights else v for k, v in sums.items()}
+        sums[key] += float(f["value"])
+    return dict(sums)
 
 
 def compare(
@@ -943,7 +923,10 @@ def selftest() -> int:
         levels: list[str | None] = [None, *sorted({d for f in truth for d in f["dims"]}), "all"]
         problems = []
         for level in levels:
-            diffs, compared, _ = compare(file_facts, truth, cfg, level, 1e-6)
+            # Truth values are rounded to 6 decimals per fact, so a sum over a level's facts
+            # may drift by half a millionth per fact (summed tenure months have decimals).
+            tolerance = 1e-6 if level == "all" else 1e-5
+            diffs, compared, _ = compare(file_facts, truth, cfg, level, tolerance)
             if diffs:
                 problems.append(f"nivå/level {level or 'total'}: {len(diffs)} avvikelser/differences")
                 print_report(f"{file} (nivå/level {level or 'total'})", level, diffs[:20], compared, 0)

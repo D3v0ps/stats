@@ -33,30 +33,56 @@ function isRealDate(year: number, month: number, day: number): boolean {
   return day <= new Date(Date.UTC(year, month, 0)).getUTCDate();
 }
 
-const PNR_RE = /^(\d{2})?(\d{2})(\d{2})(\d{2})[-+]?(\d{4})$/;
+/**
+ * Characters allowed between the birth date and the serial: "-", "+" (100 years or
+ * older), a space, a no-break space or a narrow no-break space ("811218 9876", as typed
+ * in forms or produced by number formatting).
+ */
+export const PNR_SEPARATORS = "-+ \u00A0\u202F";
+const SEP = `[${PNR_SEPARATORS}]`;
+
+const PNR_RE = new RegExp(`^(\\d{2})?(\\d{2})(\\d{2})(\\d{2})${SEP}?(\\d{4})$`);
+
+export interface PersonnummerParts {
+  /** "19"/"20" (or anything else) for 12-digit forms; undefined for 10 digits. */
+  century: string | undefined;
+  yy: string;
+  mm: string;
+  dd: string;
+  serial: string;
+}
+
+/** Split a personnummer-shaped string (no other text around it) into its parts. */
+export function personnummerParts(input: string): PersonnummerParts | null {
+  const m = PNR_RE.exec(input.trim());
+  if (!m) return null;
+  return { century: m[1], yy: m[2]!, mm: m[3]!, dd: m[4]!, serial: m[5]! };
+}
 
 /**
- * Personnummer or samordningsnummer: YYMMDD-NNNN, YYMMDD+NNNN, YYMMDDNNNN,
- * YYYYMMDD-NNNN or YYYYMMDDNNNN. The date must exist (day + 60 for
- * samordningsnummer) and the last ten digits must pass Luhn. Organisation
- * numbers have month digits >= 20 and are therefore never matched.
+ * The birth date exists (day + 60 for samordningsnummer) and a written century is
+ * 18, 19 or 20. Organisation numbers fail here: their month digits are 20 or more.
  */
-export function isPersonnummer(input: string): boolean {
-  const m = PNR_RE.exec(input.trim());
-  if (!m) return false;
-  const century = m[1];
-  const yy = m[2]!;
-  const mm = m[3]!;
-  const dd = m[4]!;
-  const serial = m[5]!;
-  if (century !== undefined && !["18", "19", "20"].includes(century)) return false;
-  const month = Number(mm);
-  let day = Number(dd);
+export function hasValidBirthDate(p: PersonnummerParts): boolean {
+  if (p.century !== undefined && !["18", "19", "20"].includes(p.century)) return false;
+  const month = Number(p.mm);
+  let day = Number(p.dd);
   if (day > 60) day -= 60;
   // Without a century the leap-day check must accept either century.
-  const years = century ? [Number(century + yy)] : [1900 + Number(yy), 2000 + Number(yy)];
-  if (!years.some((y) => isRealDate(y, month, day))) return false;
-  return luhnValid(`${yy}${mm}${dd}${serial}`);
+  const years = p.century ? [Number(p.century + p.yy)] : [1900 + Number(p.yy), 2000 + Number(p.yy)];
+  return years.some((y) => isRealDate(y, month, day));
+}
+
+/**
+ * Personnummer or samordningsnummer: YYMMDD-NNNN, YYMMDD+NNNN, YYMMDD NNNN, YYMMDDNNNN,
+ * YYYYMMDD-NNNN, YYYYMMDD NNNN or YYYYMMDDNNNN (a no-break space counts as a space). The
+ * date must exist (day + 60 for samordningsnummer) and the last ten digits must pass
+ * Luhn. Organisation numbers have month digits >= 20 and are therefore never matched.
+ */
+export function isPersonnummer(input: string): boolean {
+  const p = personnummerParts(input);
+  if (!p || !hasValidBirthDate(p)) return false;
+  return luhnValid(`${p.yy}${p.mm}${p.dd}${p.serial}`);
 }
 
 /**
@@ -72,12 +98,18 @@ export function isOrgNr(input: string): boolean {
 }
 
 // Digit runs that could be a personnummer, allowing the usual separators.
-const PNR_SCAN = /(?<!\d)(?:\d{6}|\d{8})[-+]?\d{4}(?!\d)/g;
+const PNR_SCAN_SOURCE = `(?<!\\d)(?:\\d{6}|\\d{8})${SEP}?\\d{4}(?!\\d)`;
+
+/** A fresh global regex finding personnummer-shaped digit runs (no date or Luhn check). */
+export function personnummerScanner(): RegExp {
+  return new RegExp(PNR_SCAN_SOURCE, "g");
+}
+
+const PNR_SCAN = personnummerScanner();
 
 /** True when the text contains at least one valid personnummer/samordningsnummer. */
 export function containsPersonnummer(text: string): boolean {
   if (!/\d{6}/.test(text)) return false;
-  PNR_SCAN.lastIndex = 0;
   for (const m of text.matchAll(PNR_SCAN)) {
     if (isPersonnummer(m[0])) return true;
   }

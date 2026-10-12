@@ -253,3 +253,53 @@ describe("redactPersonnummer", () => {
     expect(redactPersonnummer(text)).toBe(text);
   });
 });
+
+describe("personnummer written with a space", () => {
+  // 811218-9876 passes Luhn; Skatteverket's 121212-1212 likewise.
+  const SPACED = [
+    "811218 9876",
+    "19811218 9876",
+    "811218 9876",
+    "19811218 9876",
+    "811218 9876",
+    "121212 1212",
+  ];
+
+  it.each(SPACED)("%j is a personnummer", (s) => {
+    expect(isPersonnummer(s)).toBe(true);
+    expect(containsPersonnummer(`Anna Andersson ${s} Malmö`)).toBe(true);
+    expect(valueContainsPersonnummer(s)).toBe(true);
+    expect(redactPersonnummer(`Lön ${s} sep`)).toBe(`Lön ${PNR_PLACEHOLDER} sep`);
+  });
+
+  it.each([
+    "811218 9877", // Luhn
+    "811218  9876", // two spaces
+    "8112 18 9876", // space inside the date
+    "811318 9876", // month 13
+    "21811218 9876", // century 21
+  ])("%j is not a personnummer", (s) => {
+    expect(isPersonnummer(s)).toBe(false);
+  });
+
+  it("still accepts organisation numbers and never takes them for personnummer", () => {
+    expect(isOrgNr("556959-9318")).toBe(true);
+    expect(isOrgNr("5592089071")).toBe(true);
+    for (const org of ["556959 9318", "559208 9071", "Org.nr: 556959 9318"]) {
+      expect(containsPersonnummer(org), org).toBe(false);
+      expect(redactPersonnummer(org)).toBe(org);
+    }
+  });
+
+  it("does not see personnummer in dates, times and thousands-separated numbers", () => {
+    expect(containsPersonnummer("Utskrivet 2026-10-01 08:12")).toBe(false);
+    expect(containsPersonnummer("12 345 678 kr")).toBe(false);
+    expect(containsPersonnummer("1 212 121 212")).toBe(false);
+    expect(containsPersonnummer("811218 98765")).toBe(false);
+  });
+
+  it("blocks a column that holds spaced personnummer", () => {
+    expect(columnContainsPersonnummer(["1001", "811218 9876", "1003"])).toBe(true);
+    expect(detectPersonalColumn("Id", ["811218 9876", "121212 1212"]).kind).toBe("pnr");
+  });
+});

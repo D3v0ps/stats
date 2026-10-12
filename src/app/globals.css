@@ -116,8 +116,9 @@
   --secondary-foreground: #1e252b;
   --muted: #e4e5e6;
   --muted-foreground: #494e52;
-  --accent: #ff0c01;
-  --accent-foreground: #ffffff;
+  /* shadcn's hover/focus fill for menu items and options: calm grey, never brand red. */
+  --accent: #e4e5e6;
+  --accent-foreground: #1e252b;
   --destructive: #ff0c01;
   --border: #e4e5e6;
   /* Form field outlines need 3:1 against white (WCAG 1.4.11); #E4E5E6 would be ~1.2:1. */

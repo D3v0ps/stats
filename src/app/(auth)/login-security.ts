@@ -51,25 +51,34 @@ const LoginGateSchema = z.object({
   allowed: z.boolean(),
   retry_after_s: z.number().int().nonnegative(),
   delay_ms: z.number().int().nonnegative(),
+  attempt_id: z.string().uuid().nullable(),
 });
 
-export interface GateDecision {
-  allowed: boolean;
-  delayMs: number;
-}
+export type GateDecision =
+  | {
+      allowed: true;
+      delayMs: number;
+      /** The pending attempt login_gate registered; finalize it with login_record. */
+      attemptId: string;
+    }
+  | { allowed: false; delayMs: number; attemptId: null };
+
+const CLOSED: GateDecision = { allowed: false, delayMs: 0, attemptId: null };
 
 /**
  * Interpret public.login_gate's jsonb. Anything unexpected fails closed (no attempt allowed).
- * An attempt is allowed only when the gate says so and no lockout time remains.
+ * An attempt is allowed only when the gate says so, no lockout time remains and the gate
+ * registered the attempt (an attempt_id to finalize), so every tried password is counted.
  */
 export function gateDecision(raw: unknown): GateDecision {
   const parsed = LoginGateSchema.safeParse(raw);
-  if (!parsed.success) return { allowed: false, delayMs: 0 };
-  const { allowed, retry_after_s, delay_ms } = parsed.data;
-  return {
-    allowed: allowed && retry_after_s === 0,
-    delayMs: Math.min(delay_ms, MAX_GATE_DELAY_MS),
-  };
+  if (!parsed.success) return CLOSED;
+  const { allowed, retry_after_s, delay_ms, attempt_id } = parsed.data;
+  const delayMs = Math.min(delay_ms, MAX_GATE_DELAY_MS);
+  if (!allowed || retry_after_s !== 0 || attempt_id === null) {
+    return { allowed: false, delayMs, attemptId: null };
+  }
+  return { allowed: true, delayMs, attemptId: attempt_id };
 }
 
 export type ThrottleMode = "rpc" | "skip" | "refuse";

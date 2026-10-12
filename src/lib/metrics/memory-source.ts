@@ -1,7 +1,8 @@
 // In-memory MetricDataSource: the TypeScript reference implementation of the SQL
 // RPC semantics (metric_monthly, metric_distinct, ledger_monthly, metric_coverage,
-// metric_sources) plus the ledger-budget mapping done by the Supabase adapter.
-// Tests use it directly; the database module cross-checks its RPCs against it.
+// metric_sources) plus the ledger-budget mapping (budgetLedgerRows, shared with the
+// Supabase adapter). Tests use it directly; supabase/tests/db-roundtrip.test.ts checks
+// that the SQL RPCs and this reference give identical engine results.
 //
 // "Current" mirrors upload_slices: every (upload, dataset, company, scenario, month)
 // that has rows (or is listed in `slices`) is a slice candidate. Among the current
@@ -11,6 +12,7 @@
 import type { CompanyCode, Scenario } from "@/lib/contracts/domain";
 import type { FactRow } from "@/lib/contracts/import-payload";
 import {
+  BUDGET_METRIC_KEY,
   COMPANY_GROUP,
   type AccountGroup,
   type DimFilter,
@@ -24,8 +26,7 @@ import {
 import { compareMonths } from "@/lib/core/month";
 import { parseFormula, referencedKeys } from "./formula";
 
-/** The budget dataset's metric that serves as budget for every ledger metric. */
-export const BUDGET_METRIC_KEY = "budget_belopp";
+export { BUDGET_METRIC_KEY };
 const KONTOGRUPP = "kontogrupp";
 const KOSTNADSSTALLE = "kostnadsstalle";
 
@@ -426,14 +427,16 @@ export class MemoryMetricDataSource implements MetricDataSource {
   }
 
   /**
-   * Ledger budget: budget_belopp facts (scenario budget) grouped by kontogrupp, whose
-   * value codes are account group keys. Budget amounts are already in presentation
-   * sign, so no account-group sign is applied.
+   * Ledger budget: budget_belopp facts (scenario budget, SIE sign) grouped by kontogrupp,
+   * whose value codes are account group keys, turned into account-group budgets by
+   * budgetLedgerRows (leaf groups within the group's ranges, times its sign).
    */
   private async budgetLedger(keys: string[], scope: SourceScope): Promise<LedgerMonthlyRow[]> {
+    const groups = this.input.accountGroups ?? [];
+    const leaves = budgetLeafTargets(keys, groups);
     const codes = this.input.codes?.[KONTOGRUPP] ?? this.input.labels?.[KONTOGRUPP] ?? {};
     const ids = Object.entries(codes)
-      .filter(([, code]) => keys.includes(code))
+      .filter(([, code]) => leaves.has(code))
       .map(([id]) => Number(id));
     if (ids.length === 0) return [];
     const groupBy = scope.groupBy.includes(KONTOGRUPP)
@@ -448,19 +451,7 @@ export class MemoryMetricDataSource implements MetricDataSource {
         { dimension: KONTOGRUPP, valueIds: ids },
       ],
     });
-    const sums = new Map<string, LedgerMonthlyRow>();
-    for (const r of rows) {
-      const id = r.group[KONTOGRUPP];
-      const code = typeof id === "number" ? codes[id] : undefined;
-      if (code === undefined || !keys.includes(code)) continue;
-      const group: Group = {};
-      for (const k of scope.groupBy) group[k] = r.group[k] ?? null;
-      const sumId = `${code}|${r.month}|${JSON.stringify(group)}`;
-      const row = sums.get(sumId);
-      if (row) row.value += r.value;
-      else sums.set(sumId, { accountGroupKey: code, month: r.month, group, value: r.value });
-    }
-    return [...sums.values()];
+    return budgetLedgerRows(keys, rows, (id) => codes[id], groups, scope.groupBy);
   }
 
   // ---- lineage -------------------------------------------------------------
@@ -485,6 +476,103 @@ export class MemoryMetricDataSource implements MetricDataSource {
     }
     return def.datasetKey ? [def.datasetKey] : [];
   }
+}
+
+// ---- ledger budget (shared with src/lib/db/repo/metrics.ts) ------------------
+
+type AccountRange = AccountGroup["ranges"][number];
+
+/** True when every account in `inner` lies in the union of the `outer` ranges. */
+export function rangesCover(outer: readonly AccountRange[], inner: readonly AccountRange[]) {
+  const sorted = [...outer].sort((a, b) => a.from - b.from);
+  return inner.every((range) => {
+    let next = range.from;
+    for (const o of sorted) {
+      if (o.from > next) break;
+      if (o.to >= next) next = o.to + 1;
+      if (next > range.to) return true;
+    }
+    return next > range.to;
+  });
+}
+
+/**
+ * Account groups whose ranges do not strictly contain another group's ranges (intakter,
+ * varor_ul, ovriga_externa, personal, avskrivningar, finansiella, bokslut_skatt in the
+ * seeded catalog; kostnader and resultat are sums of them). Groups without ranges are
+ * neither leaves nor contained in anything.
+ */
+export function leafAccountGroups(groups: readonly AccountGroup[]): AccountGroup[] {
+  const ranged = groups.filter((g) => g.ranges.length > 0);
+  return ranged.filter(
+    (g) =>
+      !ranged.some(
+        (o) =>
+          o.key !== g.key && rangesCover(g.ranges, o.ranges) && !rangesCover(o.ranges, g.ranges),
+      ),
+  );
+}
+
+/**
+ * Which leaf groups make up the budget of each requested group: leaf key -> requested
+ * group keys whose ranges contain the leaf's ranges (a leaf group budgets itself).
+ */
+export function budgetLeafTargets(
+  keys: readonly string[],
+  groups: readonly AccountGroup[],
+): Map<string, string[]> {
+  const byKey = new Map(groups.map((g) => [g.key, g]));
+  const leaves = leafAccountGroups(groups);
+  const out = new Map<string, string[]>();
+  for (const key of new Set(keys)) {
+    const target = byKey.get(key);
+    if (!target || target.ranges.length === 0) continue;
+    for (const leaf of leaves) {
+      if (!rangesCover(target.ranges, leaf.ranges)) continue;
+      const list = out.get(leaf.key) ?? [];
+      list.push(key);
+      out.set(leaf.key, list);
+    }
+  }
+  return out;
+}
+
+/**
+ * Account-group budgets from budget_belopp rows grouped (at least) by kontogrupp. The
+ * facts are in SIE sign like ledger amounts, so the budget of group G is
+ * (Σ facts of the leaf groups within G's ranges) × G.sign, exactly as ledger_monthly
+ * treats actual amounts. Rows of non-leaf kontogrupp values (a budget line for
+ * "kostnader") are ignored so nothing is counted twice.
+ */
+export function budgetLedgerRows(
+  keys: readonly string[],
+  rows: readonly MonthlyRow[],
+  codeOf: (kontogruppValueId: number) => string | undefined,
+  groups: readonly AccountGroup[],
+  groupBy: readonly string[],
+): LedgerMonthlyRow[] {
+  const targets = budgetLeafTargets(keys, groups);
+  const signs = new Map(groups.map((g) => [g.key, g.sign]));
+  const sums = new Map<string, LedgerMonthlyRow>();
+  for (const r of rows) {
+    const id = r.group[KONTOGRUPP];
+    const leaf = typeof id === "number" ? codeOf(id) : undefined;
+    for (const target of (leaf !== undefined && targets.get(leaf)) || []) {
+      const group: Group = {};
+      for (const k of groupBy) group[k] = r.group[k] ?? null;
+      const value = r.value * (signs.get(target) ?? 1);
+      const sumId = `${target}|${r.month}|${JSON.stringify(group)}`;
+      const row = sums.get(sumId);
+      if (row) row.value += value;
+      else sums.set(sumId, { accountGroupKey: target, month: r.month, group, value });
+    }
+  }
+  return [...sums.values()].sort(
+    (a, b) =>
+      a.accountGroupKey.localeCompare(b.accountGroupKey) ||
+      compareMonths(a.month, b.month) ||
+      JSON.stringify(a.group).localeCompare(JSON.stringify(b.group)),
+  );
 }
 
 function sliceKey(datasetKey: string, company: string, scenario: Scenario, month: string) {
