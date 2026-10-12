@@ -21,7 +21,9 @@ export function SettingsNav() {
             <li key={s.slug} className="shrink-0">
               <Link
                 href={s.href}
-                aria-current={current ? "page" : undefined}
+                // "page" on the section itself; a sub-page (one dimension, one template) only
+                // lies within the section.
+                aria-current={current ? (pathname === s.href ? "page" : "true") : undefined}
                 data-testid={`settings-nav-${s.slug}`}
                 className={cn(
                   "flex items-center gap-2 rounded-full px-4 py-2 text-sm whitespace-nowrap transition-colors focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none lg:rounded-lg lg:px-3",

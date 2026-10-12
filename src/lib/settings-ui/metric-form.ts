@@ -80,6 +80,19 @@ export function metricFormIssues(
   return { name, key, formula, valid: !name && !key && (formula?.ok ?? true) };
 }
 
+/**
+ * The formula errors to show: an empty formula in a fresh form is not shouted about until the
+ * user submits (the save button still refuses it).
+ */
+export function shownFormulaErrors(
+  issues: Pick<MetricFormIssues, "formula">,
+  formula: string,
+  submitted: boolean,
+): string[] {
+  const errors = issues.formula?.errors ?? [];
+  return submitted || formula.trim() !== "" ? errors : [];
+}
+
 function decimalsOf(state: MetricFormState): number | null {
   return state.decimals === "" ? null : Number(state.decimals);
 }

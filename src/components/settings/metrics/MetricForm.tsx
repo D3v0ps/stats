@@ -18,6 +18,7 @@ import {
   headlinePreview,
   initialMetricForm,
   metricFormIssues,
+  shownFormulaErrors,
   toCreateInput,
   toUpdateInput,
   type MetricFormState,
@@ -39,7 +40,8 @@ import {
   withWageUplift,
   type Direction,
 } from "@/lib/settings-ui/metrics";
-import { Field, NativeSelect, Notice, describedBy } from "../ui";
+import { cn } from "@/lib/utils";
+import { ERROR_TEXT, Field, NativeSelect, Notice, describedBy } from "../ui";
 import { useSettingsAction } from "../use-settings-action";
 
 export interface MetricFormProps {
@@ -58,6 +60,7 @@ export function MetricForm({ metric, definitions, dimensionLabels, onDone }: Met
   const isFormula = !metric || metric.kind === "formula";
   const [state, setState] = useState<MetricFormState>(() => initialMetricForm(metric));
   const [keyTouched, setKeyTouched] = useState(false);
+  const [toInsert, setToInsert] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [wageText, setWageText] = useState(() => {
     const pct = wageUpliftPct(state.formula);
@@ -140,7 +143,7 @@ export function MetricForm({ metric, definitions, dimensionLabels, onDone }: Met
     }
   }
 
-  const formulaErrors = issues.formula?.errors ?? [];
+  const formulaErrors = shownFormulaErrors(issues, state.formula, submitted);
   const nameError = submitted ? issues.name : null;
   const keyError = mode === "create" && (submitted || keyTouched) ? issues.key : null;
 
@@ -234,6 +237,7 @@ export function MetricForm({ metric, definitions, dimensionLabels, onDone }: Met
             onChange={(e) => set("description", e.target.value)}
             maxLength={500}
             rows={2}
+            data-testid="metric-description"
           />
         </Field>
 
@@ -319,23 +323,41 @@ export function MetricForm({ metric, definitions, dimensionLabels, onDone }: Met
                 data-testid="metric-formula"
               />
             </Field>
-            <div className="flex flex-col gap-1.5 sm:flex-row sm:items-center sm:gap-3">
+            {/* Pick, then press the button: inserting on change would fire on every arrow key
+                in a closed select (Windows), filling the formula while browsing the list. */}
+            <div className="flex flex-col gap-1.5">
               <label htmlFor={`${id}-insert`} className="text-xs text-muted-foreground">
-                Infoga mått
+                Infoga mått vid markören
               </label>
-              <NativeSelect
-                id={`${id}-insert`}
-                value=""
-                onChange={(e) => e.target.value && insertMetric(e.target.value)}
-                className="sm:max-w-xs"
-              >
-                <option value="">Välj ett mått…</option>
-                {insertable.map((d) => (
-                  <option key={d.key} value={d.key}>
-                    {d.name} ({d.key})
-                  </option>
-                ))}
-              </NativeSelect>
+              <div className="flex gap-2">
+                <NativeSelect
+                  id={`${id}-insert`}
+                  value={toInsert}
+                  onChange={(e) => setToInsert(e.target.value)}
+                  className="sm:max-w-xs"
+                  data-testid="metric-insert-select"
+                >
+                  <option value="">Välj ett mått…</option>
+                  {insertable.map((d) => (
+                    <option key={d.key} value={d.key}>
+                      {d.name} ({d.key})
+                    </option>
+                  ))}
+                </NativeSelect>
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  disabled={toInsert === ""}
+                  onClick={() => {
+                    insertMetric(toInsert);
+                    setToInsert("");
+                  }}
+                  data-testid="metric-insert"
+                >
+                  Infoga
+                </Button>
+              </div>
             </div>
             <div
               id={`${id}-formula-status`}
@@ -343,10 +365,7 @@ export function MetricForm({ metric, definitions, dimensionLabels, onDone }: Met
               className="flex flex-col gap-2 text-sm"
             >
               {formulaErrors.length > 0 ? (
-                <ul
-                  className="flex flex-col gap-1 font-medium text-rod"
-                  data-testid="formula-errors"
-                >
+                <ul className={cn(ERROR_TEXT, "flex flex-col gap-1")} data-testid="formula-errors">
                   {formulaErrors.map((e) => (
                     <li key={e}>{e}</li>
                   ))}

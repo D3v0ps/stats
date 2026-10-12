@@ -38,6 +38,7 @@ import { errorMessage, fail, ok, type ActionResult } from "@/lib/settings-ui/act
 import {
   checkSingleAlias,
   importOperations,
+  importSummary,
   planAliasImport,
   type PlanContext,
 } from "@/lib/settings-ui/alias-import";
@@ -240,13 +241,10 @@ export async function applyAliasImportAction(
     if (ops.relabels.length > 0) await relabelDimensionValues(db, ops.relabels);
     if (ops.creates.length > 0) await createDimensionValues(db, data.dimensionKey, ops.creates);
 
-    const summary =
-      plan.applicable === 0
-        ? "Inget att ändra."
-        : `${formatNumber(plan.applicable)} ${plan.applicable === 1 ? "ändring" : "ändringar"} sparade.`;
-    const flagged =
-      plan.flagged > 0 ? ` ${formatNumber(plan.flagged)} rader behöver rättas i filen.` : "";
-    return ok(`${summary}${flagged}`, { applied: plan.applicable, flagged: plan.flagged });
+    return ok(importSummary(plan.applicable, plan.flagged), {
+      applied: plan.applicable,
+      flagged: plan.flagged,
+    });
   });
 }
 

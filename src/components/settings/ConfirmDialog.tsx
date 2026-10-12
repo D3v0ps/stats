@@ -48,7 +48,9 @@ export function ConfirmDialog({
         className="sm:max-w-md data-[size=default]:sm:max-w-md"
       >
         <AlertDialogHeader>
-          <AlertDialogTitle>{title}</AlertDialogTitle>
+          <AlertDialogTitle className="text-base font-medium tracking-[0.08em] uppercase">
+            {title}
+          </AlertDialogTitle>
           <AlertDialogDescription asChild>
             <div className="flex flex-col gap-2">{description}</div>
           </AlertDialogDescription>

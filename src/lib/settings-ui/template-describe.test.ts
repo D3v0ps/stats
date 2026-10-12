@@ -152,6 +152,7 @@ describe("describeTemplate", () => {
         resultMap: { arbete: "Arbete" },
         groupBy: ["verksamhet"],
         metrics: { active: "aktiva_deltagare" },
+        fromMonth: "2025-03",
       },
       company: { kind: "fixed", company: "MBR" },
     });
@@ -166,6 +167,7 @@ describe("describeTemplate", () => {
       { label: "Resultatvärden", value: "”arbete” = Arbete" },
       { label: "Grupperas på", value: "”verksamhet”" },
       { label: "Mått", value: "Aktiva vid månadens slut → Aktiva deltagare" },
+      { label: "Första månad", value: "mars 2025" },
     ]);
   });
 

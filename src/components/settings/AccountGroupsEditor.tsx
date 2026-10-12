@@ -17,7 +17,7 @@ import {
   type RangeDraft,
 } from "@/lib/settings-ui/account-groups";
 import { ConfirmDialog } from "./ConfirmDialog";
-import { Field, NativeSelect, Notice, SettingsCard } from "./ui";
+import { ERROR_TEXT, Field, NativeSelect, Notice, SettingsCard, describedBy } from "./ui";
 import { useSettingsAction } from "./use-settings-action";
 
 export interface AccountGroupsEditorProps {
@@ -99,6 +99,7 @@ function AccountGroupCard({
             onChange={(e) => setName(e.target.value)}
             maxLength={80}
             aria-invalid={nameError ? true : undefined}
+            aria-describedby={describedBy(`${id}-name`, { error: nameError })}
             data-testid="account-group-name"
           />
         </Field>
@@ -177,7 +178,7 @@ function AccountGroupCard({
         </Button>
         <div aria-live="polite" className="flex flex-col gap-1 text-xs">
           {check.errors.map((e) => (
-            <p key={e} className="font-medium text-rod">
+            <p key={e} className={ERROR_TEXT}>
               {e}
             </p>
           ))}

@@ -1,7 +1,7 @@
 "use client";
 
 import { Plus, X } from "lucide-react";
-import { useId, useState, type FormEvent, type KeyboardEvent } from "react";
+import { useId, useRef, useState, type FormEvent, type KeyboardEvent, type RefObject } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { normalizeValue } from "@/lib/core/normalize";
@@ -34,17 +34,31 @@ export function ValueItem({
   const [alias, setAlias] = useState("");
   const [addingAlias, setAddingAlias] = useState(false);
   const showCode = row.code !== normalizeValue(row.label);
+  const renameButton = useRef<HTMLButtonElement>(null);
+  const aliasButton = useRef<HTMLButtonElement>(null);
+
+  // The inline forms replace the button that opened them; give focus back to that button when
+  // they close, so keyboard users do not land at the top of the page.
+  const refocus = (button: RefObject<HTMLButtonElement | null>) =>
+    requestAnimationFrame(() => button.current?.focus());
+
+  function stopEditing() {
+    setEditing(false);
+    setLabel(row.label);
+    refocus(renameButton);
+  }
+
+  function stopAddingAlias() {
+    setAddingAlias(false);
+    setAlias("");
+    refocus(aliasButton);
+  }
 
   function saveLabel(event: FormEvent) {
     event.preventDefault();
     const next = label.trim();
-    if (next === "" || next === row.label) {
-      setEditing(false);
-      setLabel(row.label);
-      return;
-    }
-    setEditing(false);
-    onRename(next);
+    stopEditing();
+    if (next !== "" && next !== row.label) onRename(next);
   }
 
   function cancelOnEscape(event: KeyboardEvent, reset: () => void) {
@@ -58,8 +72,7 @@ export function ValueItem({
     event.preventDefault();
     const next = alias.trim();
     if (next === "") return;
-    setAlias("");
-    setAddingAlias(false);
+    stopAddingAlias();
     onAddAlias(next);
   }
 
@@ -79,12 +92,7 @@ export function ValueItem({
                 id={`${id}-label`}
                 value={label}
                 onChange={(e) => setLabel(e.target.value)}
-                onKeyDown={(e) =>
-                  cancelOnEscape(e, () => {
-                    setEditing(false);
-                    setLabel(row.label);
-                  })
-                }
+                onKeyDown={(e) => cancelOnEscape(e, stopEditing)}
                 maxLength={200}
                 autoFocus
                 className="w-64 max-w-full"
@@ -93,15 +101,7 @@ export function ValueItem({
               <Button type="submit" size="sm" data-testid="value-label-save">
                 Spara
               </Button>
-              <Button
-                type="button"
-                size="sm"
-                variant="ghost"
-                onClick={() => {
-                  setEditing(false);
-                  setLabel(row.label);
-                }}
-              >
+              <Button type="button" size="sm" variant="ghost" onClick={stopEditing}>
                 Avbryt
               </Button>
             </form>
@@ -125,6 +125,7 @@ export function ValueItem({
         <div className="flex flex-wrap gap-2">
           {!editing ? (
             <Button
+              ref={renameButton}
               size="sm"
               variant="outline"
               disabled={disabled}
@@ -199,12 +200,7 @@ export function ValueItem({
               id={`${id}-alias`}
               value={alias}
               onChange={(e) => setAlias(e.target.value)}
-              onKeyDown={(e) =>
-                cancelOnEscape(e, () => {
-                  setAddingAlias(false);
-                  setAlias("");
-                })
-              }
+              onKeyDown={(e) => cancelOnEscape(e, stopAddingAlias)}
               placeholder="Annan stavning eller kod"
               maxLength={200}
               autoFocus
@@ -214,20 +210,13 @@ export function ValueItem({
             <Button type="submit" size="sm" data-testid="value-alias-save">
               Lägg till
             </Button>
-            <Button
-              type="button"
-              size="sm"
-              variant="ghost"
-              onClick={() => {
-                setAddingAlias(false);
-                setAlias("");
-              }}
-            >
+            <Button type="button" size="sm" variant="ghost" onClick={stopAddingAlias}>
               Avbryt
             </Button>
           </form>
         ) : (
           <Button
+            ref={aliasButton}
             size="xs"
             variant="ghost"
             disabled={disabled}

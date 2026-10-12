@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { newPasswordError, passwordChangeError } from "./password";
+import { newPasswordError, newPasswordIssue, passwordChangeError } from "./password";
 
 describe("newPasswordError", () => {
   const good = "korrekt häst batteri";
@@ -12,6 +12,12 @@ describe("newPasswordError", () => {
     expect(newPasswordError("kort", "kort")).toMatch(/minst 16/);
     expect(newPasswordError(good, `${good}x`)).toBe("Lösenorden är inte lika.");
     expect(newPasswordError(` ${good}`, ` ${good}`)).toMatch(/mellanslag/);
+  });
+
+  it("names the field each problem belongs to", () => {
+    expect(newPasswordIssue("kort", "kort")?.field).toBe("new");
+    expect(newPasswordIssue(good, "annat")?.field).toBe("repeat");
+    expect(newPasswordIssue(good, good)).toBeNull();
   });
 
   it("limits the length in bytes (bcrypt uses 72)", () => {

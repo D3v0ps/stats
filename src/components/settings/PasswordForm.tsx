@@ -9,7 +9,7 @@ import { createSupabaseBrowserClient } from "@/lib/db/client-browser";
 import { formatNumber } from "@/lib/core/format-sv";
 import {
   MIN_PASSWORD_LENGTH,
-  newPasswordError,
+  newPasswordIssue,
   passwordChangeError,
 } from "@/lib/settings-ui/password";
 import { Field, SettingsCard, describedBy } from "./ui";
@@ -25,13 +25,14 @@ export function PasswordForm() {
   const [visible, setVisible] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [pending, startTransition] = useTransition();
-  const error = newPasswordError(password, repeat);
-  const shownError = submitted ? error : null;
+  const issue = newPasswordIssue(password, repeat);
+  const newError = submitted && issue?.field === "new" ? issue.message : null;
+  const repeatError = submitted && issue?.field === "repeat" ? issue.message : null;
 
   function submit(event: FormEvent) {
     event.preventDefault();
     setSubmitted(true);
-    if (error) return;
+    if (issue) return;
     startTransition(async () => {
       try {
         const supabase = createSupabaseBrowserClient();
@@ -43,7 +44,9 @@ export function PasswordForm() {
         setPassword("");
         setRepeat("");
         setSubmitted(false);
-        toast.success("Lösenordet är bytt. Alla måste nu logga in med det nya lösenordet.");
+        toast.success(
+          "Lösenordet är bytt. Nästa inloggning, på alla enheter, görs med det nya lösenordet.",
+        );
       } catch (e) {
         toast.error(passwordChangeError(e));
       }
@@ -61,6 +64,7 @@ export function PasswordForm() {
         <Field
           id={`${id}-new`}
           label="Nytt lösenord"
+          error={newError}
           hint={`Minst ${formatNumber(MIN_PASSWORD_LENGTH)} tecken. En mening med flera ord är lätt att komma ihåg och svår att gissa. (${formatNumber(password.length)} tecken)`}
         >
           <div className="flex gap-2">
@@ -72,7 +76,8 @@ export function PasswordForm() {
               autoComplete="new-password"
               minLength={MIN_PASSWORD_LENGTH}
               required
-              aria-describedby={describedBy(`${id}-new`, { hint: true })}
+              aria-invalid={newError ? true : undefined}
+              aria-describedby={describedBy(`${id}-new`, { hint: true, error: newError })}
               data-testid="password-new"
             />
             <Button
@@ -87,7 +92,7 @@ export function PasswordForm() {
             </Button>
           </div>
         </Field>
-        <Field id={`${id}-repeat`} label="Upprepa nytt lösenord" error={shownError}>
+        <Field id={`${id}-repeat`} label="Upprepa nytt lösenord" error={repeatError}>
           <Input
             id={`${id}-repeat`}
             type={visible ? "text" : "password"}
@@ -95,8 +100,8 @@ export function PasswordForm() {
             onChange={(e) => setRepeat(e.target.value)}
             autoComplete="new-password"
             required
-            aria-invalid={shownError ? true : undefined}
-            aria-describedby={describedBy(`${id}-repeat`, { error: shownError })}
+            aria-invalid={repeatError ? true : undefined}
+            aria-describedby={describedBy(`${id}-repeat`, { error: repeatError })}
             data-testid="password-repeat"
           />
         </Field>

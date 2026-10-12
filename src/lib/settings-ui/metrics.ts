@@ -80,6 +80,8 @@ export function groupMetrics(
 
 // ---- Formula checks --------------------------------------------------------------
 
+export const EMPTY_FORMULA = "Skriv en formel.";
+
 export interface FormulaCheck {
   ok: boolean;
   /** Swedish messages, empty when ok. */
@@ -100,6 +102,11 @@ export function checkFormula(
   formula: string,
 ): FormulaCheck {
   const source = formula.trim();
+  if (source === "") {
+    // validateFormulas would name the metric key ("Måttet x saknar formel"); a new metric's
+    // key may still be a placeholder, so say it plainly.
+    return { ok: false, errors: [EMPTY_FORMULA], referenced: [], dimensions: [] };
+  }
   const candidate: MetricDefinition = {
     ...(definitions.find((d) => d.key === key) ?? {
       key,
@@ -128,7 +135,7 @@ export function checkFormula(
   const referenced = refs
     .map((k) => byKey.get(k))
     .filter((d): d is MetricDefinition => d !== undefined && d.key !== key);
-  if (errors.length === 0 && refs.length === 0 && source !== "") {
+  if (errors.length === 0 && refs.length === 0) {
     errors.push("Formeln måste använda minst ett mått.");
   }
   const dimensions =
@@ -151,8 +158,11 @@ export const WAGE_METRIC_KEY = "lonekostnad";
 export const MAX_WAGE_UPLIFT_PCT = 300;
 
 const NUMBER = String.raw`(\d+(?:\.\d+)?)`;
+// "lonekostnad * 1.31" or "1.31 * lonekostnad", but not right after "/": "x / lonekostnad * 1.31"
+// is (x / lonekostnad) * 1.31, which scales the whole ratio instead of the wage cost.
+const NOT_AFTER_DIVISION = String.raw`(?<!\/\s*)`;
 const WAGE_FACTOR = new RegExp(
-  String.raw`\b${WAGE_METRIC_KEY}\s*\*\s*${NUMBER}(?![\d.])|(?<![\w.])${NUMBER}\s*\*\s*${WAGE_METRIC_KEY}\b`,
+  String.raw`${NOT_AFTER_DIVISION}\b${WAGE_METRIC_KEY}\s*\*\s*${NUMBER}(?![\d.])|${NOT_AFTER_DIVISION}(?<![\w.])${NUMBER}\s*\*\s*${WAGE_METRIC_KEY}\b`,
 );
 const WAGE_REF = new RegExp(String.raw`\b${WAGE_METRIC_KEY}\b`, "g");
 

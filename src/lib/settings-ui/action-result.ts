@@ -52,3 +52,13 @@ export function errorMessage(error: unknown): string {
   }
   return GENERIC_ERROR;
 }
+
+/**
+ * True for the rejection a server action produces when it calls redirect() (an expired session
+ * sends the user to /logga-in) or notFound(). The router is already navigating, so the caller
+ * should stay quiet instead of reporting a network error.
+ */
+export function isNavigationError(error: unknown): boolean {
+  const digest = (error as { digest?: unknown } | null)?.digest;
+  return typeof digest === "string" && /^NEXT_(REDIRECT|HTTP_ERROR_FALLBACK);/.test(digest);
+}

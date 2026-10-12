@@ -6,6 +6,12 @@ import { cn } from "@/lib/utils";
 
 export const CARD = "rounded-card bg-card p-5 shadow-soft md:p-6";
 
+/**
+ * Error text: antracit with a red rule, like the login form. Small red text on white fails the
+ * contrast requirement (red is for highlights and large text only).
+ */
+export const ERROR_TEXT = "border-l-2 border-rod pl-2 font-medium text-antracit";
+
 export function SettingsCard({ className, children, ...props }: ComponentPropsWithoutRef<"div">) {
   return (
     <div className={cn(CARD, className)} {...props}>
@@ -37,7 +43,7 @@ export function Field({ id, label, hint, error, className, children }: FieldProp
         </p>
       ) : null}
       {error ? (
-        <p id={`${id}-error`} role="alert" className="text-xs font-medium text-rod">
+        <p id={`${id}-error`} role="alert" className={cn(ERROR_TEXT, "text-xs")}>
           {error}
         </p>
       ) : null}

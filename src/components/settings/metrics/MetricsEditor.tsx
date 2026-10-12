@@ -26,10 +26,20 @@ export interface MetricsEditorProps {
 }
 
 export function MetricsEditor({ definitions, datasets, dimensionLabels }: MetricsEditorProps) {
+  // `editing` outlives `open`, so the sheet keeps its content (and title) while it animates
+  // out; `session` gives every opening a fresh form, even for the same metric.
   const [editing, setEditing] = useState<string | null>(null);
+  const [open, setOpen] = useState(false);
+  const [session, setSession] = useState(0);
   const groups = useMemo(() => groupMetrics(definitions, datasets), [definitions, datasets]);
   const metric =
     editing && editing !== NEW ? (definitions.find((d) => d.key === editing) ?? null) : null;
+
+  function openEditor(key: string) {
+    setEditing(key);
+    setSession((n) => n + 1);
+    setOpen(true);
+  }
 
   return (
     <div className="flex flex-col gap-6">
@@ -38,7 +48,7 @@ export function MetricsEditor({ definitions, datasets, dimensionLabels }: Metric
           {formatNumber(definitions.length)} mått. Nyckeln (till exempel <code>timmar</code>)
           används i formler och kan inte ändras.
         </p>
-        <Button onClick={() => setEditing(NEW)} data-testid="metric-new">
+        <Button onClick={() => openEditor(NEW)} data-testid="metric-new">
           <Plus aria-hidden="true" />
           Nytt formelmått
         </Button>
@@ -51,13 +61,13 @@ export function MetricsEditor({ definitions, datasets, dimensionLabels }: Metric
           </Heading>
           <ul className="divide-y divide-border">
             {group.metrics.map((m) => (
-              <MetricRow key={m.key} metric={m} onEdit={() => setEditing(m.key)} />
+              <MetricRow key={m.key} metric={m} onEdit={() => openEditor(m.key)} />
             ))}
           </ul>
         </SettingsCard>
       ))}
 
-      <Sheet open={editing !== null} onOpenChange={(open) => !open && setEditing(null)}>
+      <Sheet open={open} onOpenChange={setOpen}>
         <SheetContent
           side="right"
           showCloseButton={false}
@@ -65,11 +75,11 @@ export function MetricsEditor({ definitions, datasets, dimensionLabels }: Metric
         >
           {editing !== null && (editing === NEW || metric) ? (
             <MetricForm
-              key={editing}
+              key={`${editing}:${session}`}
               metric={metric}
               definitions={definitions}
               dimensionLabels={dimensionLabels}
-              onDone={() => setEditing(null)}
+              onDone={() => setOpen(false)}
             />
           ) : null}
         </SheetContent>

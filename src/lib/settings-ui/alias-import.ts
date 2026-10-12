@@ -9,6 +9,7 @@
 //            (anställnings-id -> namn for konsult). Unknown values are created with Från as
 //            code for auto_create dimensions.
 import type { DetectedTable, RawCell } from "@/lib/contracts/workbook";
+import { formatNumber } from "@/lib/core/format-sv";
 import { containsPersonnummer } from "@/lib/core/pnr";
 import { normalizeValue } from "@/lib/core/normalize";
 import type { AliasInput, UnknownPolicy, ValueInput } from "./dimensions";
@@ -23,6 +24,11 @@ export const MODE_LABELS: Record<AliasImportMode, string> = {
 /** Most pairs one import may apply (keeps the server action bounded). */
 export const MAX_IMPORT_PAIRS = 5000;
 export const MAX_LABEL_LENGTH = 200;
+/**
+ * Request budget per server action call. Next.js refuses action bodies over 1 MB, so a long
+ * list is sent in several calls (each one re-planned on fresh data by the server).
+ */
+export const IMPORT_BATCH_BYTES = 512 * 1024;
 
 export interface ImportPair {
   /** 1-based row in the file. */
@@ -176,6 +182,16 @@ function planAlias(pair: ImportPair, ctx: PlanContext, lookup: Lookup) {
   const fromNorm = normalizeValue(pair.from);
   const target = lookup.resolve(pair.to);
   if (target === undefined) {
+    // Creating Till and pointing an active value's own name or code at it would send future
+    // files to the new value while the old one keeps its history: the data would split.
+    const own = lookup.aliasTarget(fromNorm) === undefined ? lookup.ownValue(fromNorm) : undefined;
+    if (own !== undefined && lookup.active(own)) {
+      return {
+        status: "conflict" as const,
+        valueId: null,
+        message: `${q(pair.from)} är ett eget värde. Byt namn på det i stället (”byt visningsnamn”).`,
+      };
+    }
     return canCreateValues(ctx)
       ? {
           status: "create_and_alias" as const,
@@ -342,6 +358,51 @@ export function importOperations(plan: ImportPlan): ImportOperations {
   return ops;
 }
 
+/** Split pairs into consecutive batches whose JSON stays under maxBytes (UTF-8). */
+export function batchPairs(
+  pairs: readonly ImportPair[],
+  maxBytes: number = IMPORT_BATCH_BYTES,
+): ImportPair[][] {
+  const encoder = new TextEncoder();
+  const batches: ImportPair[][] = [];
+  // An array's JSON is "[" + items joined by "," + "]": one byte per item plus one.
+  const EMPTY = 1;
+  let current: ImportPair[] = [];
+  let size = EMPTY;
+  for (const p of pairs) {
+    const bytes = encoder.encode(JSON.stringify(p)).length + 1;
+    if (current.length > 0 && size + bytes > maxBytes) {
+      batches.push(current);
+      current = [];
+      size = EMPTY;
+    }
+    current.push(p);
+    size += bytes;
+  }
+  if (current.length > 0) batches.push(current);
+  return batches;
+}
+
+/** "12 ändringar sparade. 3 rader behöver rättas i filen." */
+export function importSummary(applied: number, flagged: number): string {
+  const summary =
+    applied === 0
+      ? "Inget att ändra."
+      : `${formatNumber(applied)} ${applied === 1 ? "ändring" : "ändringar"} sparade.`;
+  const rest =
+    flagged === 0
+      ? ""
+      : ` ${formatNumber(flagged)} ${flagged === 1 ? "rad behöver" : "rader behöver"} rättas i filen.`;
+  return `${summary}${rest}`;
+}
+
+/** The error of a batch that failed after earlier batches were saved. */
+export function partialImportError(error: string, applied: number): string {
+  if (applied === 0) return error;
+  const what = `${formatNumber(applied)} ${applied === 1 ? "ändring" : "ändringar"}`;
+  return `${error} ${what} sparades innan felet. Läs in filen igen för att spara resten.`;
+}
+
 export type SingleAliasStatus = "add" | "move" | "unchanged" | "conflict" | "invalid";
 
 /** The rules of planAliasImport for one alias typed by hand for a known value. */
@@ -412,6 +473,11 @@ export function extractPairs(
     pairs.push({ row: r.sourceRow, from: a, to: b });
   }
   return { pairs, emptyRows };
+}
+
+/** Swedish error when the chosen columns cannot form pairs, or null. */
+export function columnChoiceError(fromColumn: number, toColumn: number): string | null {
+  return fromColumn === toColumn ? "Välj två olika kolumner för Från och Till." : null;
 }
 
 /** Default mode: konsult maps ids to names; everything else adds aliases. */

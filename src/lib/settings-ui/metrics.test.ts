@@ -77,7 +77,11 @@ describe("checkFormula", () => {
       d.key === "sjukfranvaro" ? { ...d, formula: "faktor + 1" } : d,
     );
     expect(checkFormula(looped, "faktor", "sjukfranvaro * 2").errors[0]).toMatch(/faktor → /);
-    expect(checkFormula(defs, "faktor", "").errors[0]).toMatch(/saknar formel/);
+    expect(checkFormula(defs, "faktor", "  ").errors).toEqual(["Skriv en formel."]);
+    // Never the placeholder key of a metric that is still being created.
+    expect(checkFormula(defs, "nytt_formelmatt_utkast", "").errors.join(" ")).not.toMatch(
+      /nytt_formelmatt_utkast/,
+    );
     expect(checkFormula(defs, "faktor", "2 * 3").errors).toEqual([
       "Formeln måste använda minst ett mått.",
     ]);
@@ -99,6 +103,16 @@ describe("wage uplift", () => {
     expect(wageUpliftPct("fakturerat_ip / lonekostnad")).toBe(0);
     expect(wageUpliftPct("timmar / konsulter")).toBeNull();
     expect(usesWageCost("lonekostnad_extra / 2")).toBe(false);
+  });
+
+  it("only treats a multiplier bound to the wage cost as the uplift", () => {
+    // (fakturerat_ip / lonekostnad) * 1.31 scales the ratio, not the wage cost.
+    expect(wageUpliftPct("fakturerat_ip / lonekostnad * 1.31")).toBe(0);
+    expect(wageUpliftPct("fakturerat_ip / 1.31 * lonekostnad")).toBe(0);
+    expect(wageUpliftPct("(lonekostnad * 1.2) + fakturerat_ip")).toBe(20);
+    expect(withWageUplift("fakturerat_ip / lonekostnad * 1.31", 31)).toBe(
+      "fakturerat_ip / (lonekostnad * 1.31) * 1.31",
+    );
   });
 
   it("formats the multiplier", () => {

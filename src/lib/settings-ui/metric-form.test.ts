@@ -4,6 +4,7 @@ import {
   headlinePreview,
   initialMetricForm,
   metricFormIssues,
+  shownFormulaErrors,
   toCreateInput,
   toUpdateInput,
 } from "./metric-form";
@@ -57,6 +58,18 @@ describe("metric form", () => {
     expect(
       metricFormIssues({ ...base, key: "ok_key", formula: "" }, "create", defs, true).valid,
     ).toBe(false);
+  });
+
+  it("waits with the empty-formula error until the form is submitted", () => {
+    const fresh = initialMetricForm(null);
+    const issues = metricFormIssues(fresh, "create", defs, true);
+    expect(issues.valid).toBe(false);
+    expect(shownFormulaErrors(issues, fresh.formula, false)).toEqual([]);
+    expect(shownFormulaErrors(issues, fresh.formula, true)).toEqual(["Skriv en formel."]);
+    const typed = { ...fresh, formula: "timmar /" };
+    expect(
+      shownFormulaErrors(metricFormIssues(typed, "create", defs, true), typed.formula, false),
+    ).toHaveLength(1);
   });
 
   it("builds inputs the action schemas accept", () => {

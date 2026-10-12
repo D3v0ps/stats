@@ -46,7 +46,10 @@ export function ThresholdForm({ value, defaultValue }: { value: number; defaultV
               onChange={(e) => setText(e.target.value)}
               className="num w-28"
               aria-invalid={error && text.trim() !== "" ? true : undefined}
-              aria-describedby={describedBy(`${id}-pct`, { hint: true, error })}
+              aria-describedby={describedBy(`${id}-pct`, {
+                hint: true,
+                error: text.trim() === "" ? null : error,
+              })}
               data-testid="review-threshold"
             />
             <span aria-hidden="true" className="text-sm text-muted-foreground">

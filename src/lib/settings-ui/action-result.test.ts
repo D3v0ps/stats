@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { GENERIC_ERROR, errorMessage, fail, ok } from "./action-result";
+import { GENERIC_ERROR, errorMessage, fail, isNavigationError, ok } from "./action-result";
 import { SETTINGS_SECTIONS, activeSection, sectionBySlug } from "./sections";
 
 describe("action results", () => {
@@ -34,6 +34,16 @@ describe("action results", () => {
     expect(errorMessage(new Error("fetch failed"))).toBe(GENERIC_ERROR);
     expect(errorMessage("boom")).toBe(GENERIC_ERROR);
     expect(errorMessage({ name: "ZodError", message: "[...]" })).toBe("Ogiltiga uppgifter.");
+  });
+});
+
+describe("isNavigationError", () => {
+  it("recognizes redirect and not-found rejections from server actions", () => {
+    expect(isNavigationError({ digest: "NEXT_REDIRECT;push;/logga-in;307;" })).toBe(true);
+    expect(isNavigationError({ digest: "NEXT_HTTP_ERROR_FALLBACK;404" })).toBe(true);
+    expect(isNavigationError(new TypeError("Failed to fetch"))).toBe(false);
+    expect(isNavigationError({ digest: "1234567" })).toBe(false);
+    expect(isNavigationError(null)).toBe(false);
   });
 });
 

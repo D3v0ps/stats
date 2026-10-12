@@ -2,12 +2,16 @@ import { describe, expect, it } from "vitest";
 import type { DetectedTable, RawCell } from "@/lib/contracts/workbook";
 import { cellText } from "@/lib/ingest";
 import {
+  batchPairs,
   canCreateValues,
   checkSingleAlias,
+  columnChoiceError,
   cleanText,
   defaultMode,
   extractPairs,
   importOperations,
+  importSummary,
+  partialImportError,
   planAliasImport,
   type PlanContext,
 } from "./alias-import";
@@ -98,6 +102,30 @@ describe("planAliasImport – alias mode", () => {
     expect(plan.applicable).toBe(2);
   });
 
+  it("never creates a new target for an active value's own name (that would split its data)", () => {
+    const plan = planAliasImport(
+      [pair(2, "Bo Berg", "Bo Bergström"), pair(3, "1001", "Anna Andersson")],
+      "alias",
+      konsult,
+    );
+    expect(plan.rows.map((r) => [r.status, r.valueId])).toEqual([
+      ["conflict", null],
+      ["conflict", null],
+    ]);
+    expect(plan.rows[0]?.message).toBe(
+      "”Bo Berg” är ett eget värde. Byt namn på det i stället (”byt visningsnamn”).",
+    );
+    expect(importOperations(plan).createTargets).toEqual([]);
+    // An inactive value's code may still be repointed at a new value (what a merge leaves).
+    const withInactive: PlanContext = {
+      ...konsult,
+      values: [...konsult.values, { id: 12, code: "1003", label: "1003", sort: 0, active: false }],
+    };
+    expect(
+      planAliasImport([pair(2, "1003", "Cia Dahl")], "alias", withInactive).rows[0],
+    ).toMatchObject({ status: "create_and_alias" });
+  });
+
   it("cleans whitespace before planning", () => {
     const plan = planAliasImport([pair(2, "  K-300 ", " IKEA ")], "alias", kund);
     expect(plan.rows[0]).toMatchObject({ from: "K-300", to: "IKEA", status: "add_alias" });
@@ -176,6 +204,36 @@ describe("importOperations", () => {
   });
 });
 
+describe("sending an import", () => {
+  it("splits long lists into batches under the request budget, order kept", () => {
+    const pairs = Array.from({ length: 50 }, (_, i) =>
+      pair(i + 2, `K-${i}`, "Ett ganska långt kundnamn AB"),
+    );
+    const batches = batchPairs(pairs, 1000);
+    expect(batches.length).toBeGreaterThan(1);
+    expect(batches.flat()).toEqual(pairs);
+    for (const b of batches) {
+      expect(new TextEncoder().encode(JSON.stringify(b)).length).toBeLessThanOrEqual(1000);
+    }
+    expect(batchPairs(pairs.slice(0, 3))).toHaveLength(1);
+    expect(batchPairs([])).toEqual([]);
+    // A single pair over the budget still goes alone rather than being dropped.
+    expect(batchPairs([pair(2, "x".repeat(50), "y")], 10)).toHaveLength(1);
+  });
+
+  it("summarizes the result in Swedish", () => {
+    expect(importSummary(0, 0)).toBe("Inget att ändra.");
+    expect(importSummary(1, 0)).toBe("1 ändring sparade.");
+    expect(partialImportError("Behörighet saknas.", 0)).toBe("Behörighet saknas.");
+    expect(partialImportError("Behörighet saknas.", 500)).toBe(
+      "Behörighet saknas. 500 ändringar sparades innan felet. Läs in filen igen för att spara resten.",
+    );
+    expect(importSummary(1200, 1)).toBe(
+      "1\u00a0200 ändringar sparade. 1 rad behöver rättas i filen.",
+    );
+  });
+});
+
 describe("checkSingleAlias", () => {
   it("adds, moves, keeps and refuses aliases like the bulk planner", () => {
     expect(checkSingleAlias("K-200", 2, kund).status).toBe("add");
@@ -220,6 +278,11 @@ describe("file helpers", () => {
       pair(1, "Namn", "Anställnings-id"),
     );
     expect(extractPairs(table, 0, 5, { cellText }).pairs).toEqual([]);
+  });
+
+  it("refuses the same column as both Från and Till", () => {
+    expect(columnChoiceError(0, 0)).toBe("Välj två olika kolumner för Från och Till.");
+    expect(columnChoiceError(0, 1)).toBeNull();
   });
 
   it("picks the default mode and cleans text", () => {

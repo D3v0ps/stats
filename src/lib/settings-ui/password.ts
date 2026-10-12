@@ -5,17 +5,33 @@ export const MIN_PASSWORD_LENGTH = 16;
 /** Supabase Auth hashes with bcrypt, which only uses the first 72 bytes. */
 export const MAX_PASSWORD_BYTES = 72;
 
-/** Swedish error for the two fields, or null when the new password can be saved. */
-export function newPasswordError(password: string, repeat: string): string | null {
+export interface PasswordIssue {
+  /** The field the message belongs to (it is shown under, and marks, that field). */
+  field: "new" | "repeat";
+  message: string;
+}
+
+/** What is wrong with the two fields, or null when the new password can be saved. */
+export function newPasswordIssue(password: string, repeat: string): PasswordIssue | null {
+  const onNew = (message: string): PasswordIssue => ({ field: "new", message });
   if (password.length < MIN_PASSWORD_LENGTH) {
-    return `Lösenordet måste ha minst ${MIN_PASSWORD_LENGTH} tecken.`;
+    return onNew(`Lösenordet måste ha minst ${MIN_PASSWORD_LENGTH} tecken.`);
   }
   if (new TextEncoder().encode(password).length > MAX_PASSWORD_BYTES) {
-    return `Lösenordet får vara högst ${MAX_PASSWORD_BYTES} tecken (å, ä och ö räknas som två).`;
+    return onNew(
+      `Lösenordet får vara högst ${MAX_PASSWORD_BYTES} tecken (å, ä och ö räknas som två).`,
+    );
   }
-  if (password.trim() !== password) return "Lösenordet får inte börja eller sluta med mellanslag.";
-  if (password !== repeat) return "Lösenorden är inte lika.";
+  if (password.trim() !== password) {
+    return onNew("Lösenordet får inte börja eller sluta med mellanslag.");
+  }
+  if (password !== repeat) return { field: "repeat", message: "Lösenorden är inte lika." };
   return null;
+}
+
+/** Swedish error for the two fields, or null when the new password can be saved. */
+export function newPasswordError(password: string, repeat: string): string | null {
+  return newPasswordIssue(password, repeat)?.message ?? null;
 }
 
 interface AuthErrorLike {

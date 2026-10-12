@@ -8,22 +8,28 @@ import { Button } from "@/components/ui/button";
 import type { DetectedTable, RawCell } from "@/lib/contracts/workbook";
 import { formatNumber } from "@/lib/core/format-sv";
 import { redactPersonnummer } from "@/lib/core/pnr";
+import { fail, ok, type ActionResult } from "@/lib/settings-ui/action-result";
 import {
   APPLIED_STATUSES,
   FLAGGED_STATUSES,
   MAX_IMPORT_PAIRS,
   MODE_LABELS,
   STATUS_LABELS,
+  batchPairs,
   canCreateValues,
+  columnChoiceError,
   defaultMode,
   extractPairs,
+  importSummary,
+  partialImportError,
   planAliasImport,
   type AliasImportMode,
+  type ImportPair,
   type PlanStatus,
 } from "@/lib/settings-ui/alias-import";
 import type { UnknownPolicy, ValueRow } from "@/lib/settings-ui/dimensions";
 import { cn } from "@/lib/utils";
-import { NativeSelect, Notice, SettingsCard } from "../ui";
+import { ERROR_TEXT, NativeSelect, Notice, SettingsCard } from "../ui";
 import { useSettingsAction } from "../use-settings-action";
 
 /** Files above this size are refused before reading (a lookup list is small). */
@@ -47,6 +53,27 @@ const MODE_HELP: Record<AliasImportMode, string> = {
   relabel:
     "Från ska vara ett värde som redan finns (till exempel anställnings-id). Värdet får Till som visningsnamn; koden är kvar så att importer fortsätter att hitta det.",
 };
+
+interface ImportRequest {
+  dimensionKey: string;
+  mode: AliasImportMode;
+  pairs: ImportPair[];
+}
+
+/** Sends a long list in batches (server action bodies are capped at 1 MB), one at a time. */
+async function applyInBatches(
+  request: ImportRequest,
+): Promise<ActionResult<{ applied: number; flagged: number }>> {
+  let applied = 0;
+  let flagged = 0;
+  for (const pairs of batchPairs(request.pairs)) {
+    const result = await applyAliasImportAction({ ...request, pairs });
+    if (!result.ok) return fail(partialImportError(result.error, applied));
+    applied += result.data.applied;
+    flagged += result.data.flagged;
+  }
+  return ok(importSummary(applied, flagged), { applied, flagged });
+}
 
 function statusTone(status: PlanStatus): string {
   if (APPLIED_STATUSES.has(status)) return "bg-bla-100";
@@ -90,9 +117,13 @@ export function AliasImportPanel({ dimension, rows }: AliasImportPanelProps) {
     [file, fromColumn, toColumn, headerIsData],
   );
   const tooMany = (extraction?.pairs.length ?? 0) > MAX_IMPORT_PAIRS;
+  const columnError = columnChoiceError(fromColumn, toColumn);
   const plan = useMemo(
-    () => (extraction && !tooMany ? planAliasImport(extraction.pairs, mode, context) : null),
-    [extraction, tooMany, mode, context],
+    () =>
+      extraction && !tooMany && !columnError
+        ? planAliasImport(extraction.pairs, mode, context)
+        : null,
+    [extraction, tooMany, columnError, mode, context],
   );
   const shownRows = (plan?.rows ?? []).filter(
     (r) => !onlyFlagged || FLAGGED_STATUSES.has(r.status),
@@ -150,7 +181,7 @@ export function AliasImportPanel({ dimension, rows }: AliasImportPanelProps) {
       .filter((r) => APPLIED_STATUSES.has(r.status))
       .map((r) => ({ row: r.row, from: r.from, to: r.to }));
     if (pairs.length === 0) return;
-    run(applyAliasImportAction, { dimensionKey: dimension.key, mode, pairs }, { onSuccess: reset });
+    run(applyInBatches, { dimensionKey: dimension.key, mode, pairs }, { onSuccess: reset });
   }
 
   const columns = file?.table.columns ?? [];
@@ -197,7 +228,7 @@ export function AliasImportPanel({ dimension, rows }: AliasImportPanelProps) {
         ) : null}
       </div>
       {readError ? (
-        <p role="alert" className="text-sm font-medium text-rod">
+        <p role="alert" className={cn(ERROR_TEXT, "text-sm")}>
           {readError}
         </p>
       ) : null}
@@ -217,7 +248,7 @@ export function AliasImportPanel({ dimension, rows }: AliasImportPanelProps) {
               >
                 {columns.map((c, i) => (
                   <option key={c.index} value={i}>
-                    {c.header}
+                    {redactPersonnummer(c.header)}
                   </option>
                 ))}
               </NativeSelect>
@@ -234,12 +265,17 @@ export function AliasImportPanel({ dimension, rows }: AliasImportPanelProps) {
               >
                 {columns.map((c, i) => (
                   <option key={c.index} value={i}>
-                    {c.header}
+                    {redactPersonnummer(c.header)}
                   </option>
                 ))}
               </NativeSelect>
             </div>
           </div>
+          {columnError ? (
+            <p role="alert" className={cn(ERROR_TEXT, "text-sm")}>
+              {columnError}
+            </p>
+          ) : null}
           <label className="flex items-center gap-2 text-sm">
             <input
               type="checkbox"
@@ -280,7 +316,7 @@ export function AliasImportPanel({ dimension, rows }: AliasImportPanelProps) {
           </fieldset>
 
           {tooMany ? (
-            <p role="alert" className="text-sm font-medium text-rod">
+            <p role="alert" className={cn(ERROR_TEXT, "text-sm")}>
               Filen har {formatNumber(extraction.pairs.length)} rader. Högst{" "}
               {formatNumber(MAX_IMPORT_PAIRS)} per import – dela upp filen.
             </p>

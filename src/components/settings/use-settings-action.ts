@@ -5,7 +5,7 @@
 // the action fails and is replaced by fresh server data when it succeeds.
 import { useTransition } from "react";
 import { toast } from "sonner";
-import type { ActionResult } from "@/lib/settings-ui/action-result";
+import { isNavigationError, type ActionResult } from "@/lib/settings-ui/action-result";
 
 export const NETWORK_ERROR = "Kunde inte nå servern. Kontrollera anslutningen och försök igen.";
 
@@ -28,7 +28,9 @@ export function useSettingsAction() {
       let result: ActionResult<T>;
       try {
         result = await action(input);
-      } catch {
+      } catch (error) {
+        // An expired session redirects to /logga-in: the router is already on its way there.
+        if (isNavigationError(error)) return;
         toast.error(NETWORK_ERROR);
         opts.onError?.(NETWORK_ERROR);
         return;

@@ -9,6 +9,7 @@ import {
   type TemplateConfig,
 } from "@/lib/contracts/pipeline";
 import { COMPANY_FILTER_LABELS } from "@/lib/contracts/domain";
+import { formatMonthLong } from "@/lib/core/month";
 import { STEP_LABELS } from "@/lib/ingest";
 
 export interface DescribeContext {
@@ -176,7 +177,7 @@ function casesSettings(cases: CasesConfig, ctx: DescribeContext) {
     .filter(([, key]) => key)
     .map(([role, key]) => `${CASE_METRIC_LABELS[role]} → ${ctx.metricNames[key] ?? key}`);
   if (produced.length > 0) out.push({ label: "Mått", value: produced.join(", ") });
-  if (cases.fromMonth) out.push({ label: "Första månad", value: cases.fromMonth });
+  if (cases.fromMonth) out.push({ label: "Första månad", value: formatMonthLong(cases.fromMonth) });
   return out;
 }
 
