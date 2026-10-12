@@ -893,7 +893,8 @@ function specs(): FixtureSpec[] {
       ...mbabBase,
       file: "unknown_org.se",
       fnamn: "Exempelbolaget i Söderort AB",
-      orgnr: "556677-8899",
+      // Fails the Luhn check, so it can never be a real company's number.
+      orgnr: "556677-8890",
       company: null,
       years: [FY2026],
       vouchers: new Map([[0, generateYear(monthsOf(FY2026, "2026-03"), 77, mbabMonth)]]),

@@ -109,6 +109,8 @@ export interface SieFile {
   /** First MAX_ISSUES problems; issueCount has the total. */
   issues: SieIssue[];
   issueCount: number;
+  /** Distinct lines with at least one issue. */
+  issueLineCount: number;
 }
 
 const MAX_ISSUES = 500;
@@ -223,10 +225,16 @@ export function parseSie(input: string): SieFile {
     recordCount: 0,
     issues: [],
     issueCount: 0,
+    issueLineCount: 0,
   };
 
+  const issueLines = new Set<number>();
   const issue = (lineNo: number, label: string, message: string, value?: string) => {
     sie.issueCount++;
+    if (!issueLines.has(lineNo)) {
+      issueLines.add(lineNo);
+      sie.issueLineCount++;
+    }
     if (sie.issues.length < MAX_ISSUES) {
       sie.issues.push(
         value === undefined ? { lineNo, label, message } : { lineNo, label, message, value },

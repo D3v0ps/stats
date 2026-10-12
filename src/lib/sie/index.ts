@@ -14,6 +14,7 @@ import { buildChecks, resolveCompany } from "./checks";
 import { decodeSie } from "./decode";
 import { fromOre, isResultAccount, toLedger, toOre } from "./ledger";
 import { parseSie, type SieFile } from "./parse";
+import { containsPersonnummer, maskPersonnummer } from "./pii";
 import { sha256Hex } from "./sha256";
 
 export { buildChecks, normalizeOrgNr, resolveCompany } from "./checks";
@@ -28,6 +29,7 @@ export {
   type LedgerResult,
   type PsaldoMode,
 } from "./ledger";
+export { containsPersonnummer, isPersonalDimension, maskPersonnummer } from "./pii";
 export {
   parseSie,
   type SieFile,
@@ -43,7 +45,10 @@ export const SIE_DATASET_KEY = "fx_bokforing";
 export const SIE_TOTAL_METRIC = "resultat";
 
 export interface IngestSieOptions {
-  /** SIE dimensions kept as object rows (template setting; default [1] = kostnadsställe). */
+  /**
+   * SIE dimensions kept as object rows (template setting; default [1] = kostnadsställe).
+   * Personal dimensions (7 = Anställd, or named like one) are always left out.
+   */
   objectDims?: number[];
 }
 
@@ -69,7 +74,7 @@ export function canonicalLedger(rows: LedgerRow[]): string {
 
 function ledgerAccounts(sie: SieFile, company: CompanyCode): LedgerAccount[] {
   return Object.entries(sie.konto)
-    .map(([account, name]) => ({ company, account: Number(account), name }))
+    .map(([account, name]) => ({ company, account: Number(account), name: maskPersonnummer(name) }))
     .filter((a) => isResultAccount(a.account))
     .sort((a, b) => a.account - b.account);
 }
@@ -83,7 +88,9 @@ function ledgerObjects(
   const out = new Map<string, LedgerObject>();
   for (const dimNo of objectDims) {
     for (const [code, name] of Object.entries(sie.objekt[dimNo] ?? {})) {
-      out.set(`${dimNo}|${code}`, { company, dimNo, code, name });
+      // Same rule as the rows: blank codes and personnummer never become objects.
+      if (code.trim() === "" || containsPersonnummer(code)) continue;
+      out.set(`${dimNo}|${code}`, { company, dimNo, code, name: maskPersonnummer(name) });
     }
   }
   // Objects used in rows but never declared still need a value to map to.
@@ -101,14 +108,13 @@ export async function ingestSie(
   fileName: string,
   opts: IngestSieOptions = {},
 ): Promise<IngestResult> {
-  const objectDims = opts.objectDims ?? [1];
   const decoded = decodeSie(bytes);
   const sie = parseSie(decoded.text);
   const company = resolveCompany(sie.orgnr);
   // Rows carry a company code. For an unknown org number the checks are still
   // computed (with a provisional tag) but no rows, slices or totals are returned,
   // so nothing can be staged under the wrong company.
-  const ledger = toLedger(sie, company ?? "MBAB", { objectDims });
+  const ledger = toLedger(sie, company ?? "MBAB", { objectDims: opts.objectDims ?? [1] });
   const checks = buildChecks({ sie, decoded, ledger });
   const rows = company ? ledger.rows : [];
 
@@ -139,10 +145,11 @@ export async function ingestSie(
       value: fromOre(t.ore),
     }));
 
+  // Issue values quote the file; the report is stored with the upload.
   const issues: ParseIssue[] = sie.issues.map((i) => ({
     sourceRow: i.lineNo,
     column: i.label,
-    value: i.value ?? "",
+    value: maskPersonnummer(i.value ?? ""),
     message: i.message,
     severity: "warning",
   }));
@@ -162,7 +169,8 @@ export async function ingestSie(
     engineVersion: ENGINE_VERSION,
     datasetKey: SIE_DATASET_KEY,
     scenario: "utfall",
-    file: { name: fileName, sha256: fileSha, size: bytes.byteLength },
+    // The name is stored with the upload; people name files after people.
+    file: { name: maskPersonnummer(fileName), sha256: fileSha, size: bytes.byteLength },
     contentHash,
     companies: company ? [company] : [],
     slices,
@@ -170,7 +178,7 @@ export async function ingestSie(
     ledger: {
       rows,
       accounts: company ? ledgerAccounts(sie, company) : [],
-      objects: company ? ledgerObjects(sie, company, objectDims, rows) : [],
+      objects: company ? ledgerObjects(sie, company, ledger.diagnostics.objectDims, rows) : [],
       checks,
     },
     report: {

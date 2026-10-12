@@ -138,3 +138,20 @@ describe("tokenizeSie", () => {
     expect(lines[0]).toMatchObject({ kind: "record", label: "#FLAGGA" });
   });
 });
+
+describe("review fixes", () => {
+  it("only opens a block at the end of a #VER line", () => {
+    const r = tokenizeLine("#TRANS 3041 {} -100.00 {", 3);
+    expect(r.lines.map((l) => l.kind)).toEqual(["record"]);
+    expect(r.issues.map((i) => i.message)).toEqual(["Objektlistan saknar }"]);
+  });
+
+  it("ignores the DOS end-of-file character", () => {
+    const { lines, issues } = tokenizeSie("#FLAGGA 0\r\n#SIETYP 4\r\n\u001a");
+    expect(issues).toEqual([]);
+    expect(lines.map((l) => l.kind)).toEqual(["record", "record"]);
+    expect(tokenizeSie("#SIETYP 4\u001a").lines).toEqual([
+      { kind: "record", lineNo: 1, label: "#SIETYP", fields: [t("4")] },
+    ]);
+  });
+});

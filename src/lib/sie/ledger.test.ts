@@ -382,3 +382,71 @@ describe("#VER/#TRANS fallback", () => {
     expect(r.diagnostics.vouchersWithoutDate).toBe(1);
   });
 });
+
+describe("review fixes", () => {
+  it("ignores #PSALDO periods outside the year's #RAR so years never share a month", () => {
+    const text = [
+      "#RAR 0 20260101 20261231",
+      "#RAR -1 20250101 20251231",
+      "#RES 0 3041 -100.00",
+      "#RES -1 3041 -40.00",
+      "#PSALDO 0 202512 3041 {} -999.00",
+      "#PSALDO 0 202601 3041 {} -100.00",
+      '#PSALDO 0 202701 3041 {1 "100"} -5.00',
+      "#PSALDO -1 202512 3041 {} -40.00",
+    ].join("\n");
+    const r = toLedger(parseSie(text), "MBAB");
+    expect(r.rows.map((x) => [x.yearOffset, x.month, x.amount])).toEqual([
+      [0, "2026-01", -100],
+      [-1, "2025-12", -40],
+    ]);
+    expect(r.diagnostics.psaldoOutsideYear).toBe(2);
+    const keys = r.rows.map((x) => `${x.month}|${x.account}|${x.dimNo}|${x.objectCode}`);
+    expect(new Set(keys).size).toBe(keys.length);
+  });
+
+  it("keeps #PSALDO periods when the year has no #RAR", () => {
+    const r = toLedger(parseSie("#PSALDO 0 202601 3041 {} -100.00"), "MBAB");
+    expect(r.rows.map((x) => [x.month, x.amount])).toEqual([["2026-01", -100]]);
+    expect(r.diagnostics.psaldoOutsideYear).toBe(0);
+  });
+
+  it("does not claim an assumption when movement and cumulative read the same", () => {
+    // A January export without #RES: every series has a single period.
+    const sie = parseSie(
+      [
+        "#RAR 0 20260101 20261231",
+        "#PSALDO 0 202601 3041 {} -100.00",
+        '#PSALDO 0 202601 3041 {1 "100"} -60.00',
+        "#PSALDO 0 202601 5010 {} 40.00",
+      ].join("\n"),
+    );
+    const r = toLedger(sie, "MBAB");
+    expect(r.psaldoMode).toBe("movement");
+    expect(r.diagnostics.psaldoModeAssumed).toBe(false);
+    // Leading zero periods do not make the readings differ either.
+    const zeros = parseSie(
+      ["#PSALDO 0 202601 3041 {} 0.00", "#PSALDO 0 202602 3041 {} -100.00"].join("\n"),
+    );
+    expect(toLedger(zeros, "MBAB").diagnostics.psaldoModeAssumed).toBe(false);
+  });
+
+  it("drops objects whose code is empty instead of emitting a blank object", () => {
+    const sie = parseSie(
+      [
+        "#RAR 0 20260101 20261231",
+        "#PSALDO 0 202601 3041 {} -100.00",
+        '#PSALDO 0 202601 3041 {1 ""} -100.00',
+      ].join("\n"),
+    );
+    expect(toLedger(sie, "MBAB").rows.map((x) => [x.dimNo, x.objectCode])).toEqual([[null, null]]);
+    const trans = parseSie(
+      ['#VER A 1 20260105 "x"', "{", '#TRANS 3041 {1 ""} -1.00', "#TRANS 1930 {} 1.00", "}"].join(
+        "\n",
+      ),
+    );
+    expect(toLedger(trans, "MBAB").rows.map((x) => [x.dimNo, x.objectCode])).toEqual([
+      [null, null],
+    ]);
+  });
+});

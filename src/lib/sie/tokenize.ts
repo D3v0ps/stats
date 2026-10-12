@@ -57,7 +57,8 @@ function readBare(s: string, start: number, stops: string): { value: string; end
  */
 export function tokenizeLine(raw: string, lineNo: number): TokenizeResult {
   const issues: TokenizeIssue[] = [];
-  const s = raw.replace(/^[ \t﻿]+|[ \t]+$/g, "");
+  // A leading BOM, surrounding blanks and the DOS end-of-file mark (Ctrl-Z) are not content.
+  const s = raw.replace(/^[ \t﻿]+|[ \t\u001a]+$/g, "");
   if (s === "") return { lines: [], issues };
   if (s === "{") return { lines: [{ kind: "blockStart", lineNo }], issues };
   if (s === "}") return { lines: [{ kind: "blockEnd", lineNo }], issues };
@@ -80,7 +81,7 @@ export function tokenizeLine(raw: string, lineNo: number): TokenizeResult {
       i = q.end;
     } else if (c === "{") {
       const close = findListEnd(s, i + 1);
-      if (close === -1 && s.slice(i + 1).trim() === "") {
+      if (close === -1 && label === "#VER" && s.slice(i + 1).trim() === "") {
         // "#VER A 1 20260105 "Text" {" – some writers open the block on the #VER line.
         trailingBlockStart = true;
         break;

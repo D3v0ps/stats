@@ -2,9 +2,12 @@
 // it covers, the monthly result, and whether the monthly amounts reconcile with
 // the file's own #RES balances. Warnings are Swedish (shown in the review step).
 import { COMPANIES, type CompanyCode, type LedgerRow, type SieChecks } from "@/lib/contracts";
+import { formatDateSv } from "@/lib/core/format-sv";
+import { dateToMonth, formatMonthLong } from "@/lib/core/month";
 import type { DecodedSie } from "./decode";
 import { fromOre, isResultAccount, toOre, type LedgerResult } from "./ledger";
 import type { SieFile } from "./parse";
+import { containsPersonnummer, maskPersonnummer } from "./pii";
 
 export interface BuildChecksInput {
   sie: SieFile;
@@ -12,11 +15,17 @@ export interface BuildChecksInput {
   ledger: LedgerResult;
 }
 
-/** "556959-9318", "5569599318" or "165569599318" -> "556959-9318". Other input is trimmed. */
+/**
+ * "556959-9318", "5569599318", "165569599318" or the VAT number
+ * "SE556959931801" -> "556959-9318". Other input is trimmed.
+ */
 export function normalizeOrgNr(raw: string | null | undefined): string | null {
   if (!raw) return null;
   let digits = raw.replace(/\D/g, "");
   if (digits.length === 12 && digits.startsWith("16")) digits = digits.slice(2);
+  else if (digits.length === 12 && /^\s*SE/i.test(raw) && digits.endsWith("01")) {
+    digits = digits.slice(0, 10);
+  }
   if (digits.length === 10) return `${digits.slice(0, 6)}-${digits.slice(6)}`;
   return raw.trim() || null;
 }
@@ -32,6 +41,15 @@ function plural(n: number, one: string, many: string): string {
   return `${n} ${n === 1 ? one : many}`;
 }
 
+/** "a", "a och b", "a, b och c" */
+function joinSv(items: string[]): string {
+  return items.length <= 1
+    ? (items[0] ?? "")
+    : `${items.slice(0, -1).join(", ")} och ${items.at(-1) ?? ""}`;
+}
+
+const YEAR_LABELS: Record<number, string> = { 0: "innevarande", [-1]: "föregående" };
+
 /** Σ öre of the totals rows per month (current year only). */
 function currentYearTotals(rows: LedgerRow[]): Map<string, number> {
   const perMonth = new Map<string, number>();
@@ -44,13 +62,19 @@ function currentYearTotals(rows: LedgerRow[]): Map<string, number> {
 
 export function buildChecks({ sie, decoded, ledger }: BuildChecksInput): SieChecks {
   const warnings: string[] = [...decoded.warnings];
-  const orgNr = normalizeOrgNr(sie.orgnr);
+  // A sole trader's #ORGNR is a personnummer, which must never be kept or shown.
+  const orgNrIsPersonnummer = sie.orgnr !== null && containsPersonnummer(sie.orgnr);
+  const orgNr = orgNrIsPersonnummer ? null : normalizeOrgNr(sie.orgnr);
   const company = resolveCompany(orgNr);
   const known = (Object.keys(COMPANIES) as CompanyCode[])
     .map((c) => `${COMPANIES[c].shortName} ${COMPANIES[c].orgNr}`)
     .join(", ");
 
-  if (!orgNr) {
+  if (orgNrIsPersonnummer) {
+    warnings.push(
+      "#ORGNR ser ut som ett personnummer och har tagits bort. Filen hör inte till något av bolagen och kan inte publiceras.",
+    );
+  } else if (!orgNr) {
     warnings.push(`Filen saknar #ORGNR. Bolaget kan inte avgöras (${known}).`);
   } else if (!company) {
     warnings.push(
@@ -67,8 +91,10 @@ export function buildChecks({ sie, decoded, ledger }: BuildChecksInput): SieChec
   else if (sie.sietyp !== "4")
     warnings.push(`Filen är SIE typ ${sie.sietyp}; SIE typ 4 förväntas.`);
 
-  if (sie.issueCount > 0) {
-    warnings.push(`${plural(sie.issueCount, "rad", "rader")} kunde inte tolkas och hoppades över.`);
+  if (sie.issueLineCount > 0) {
+    warnings.push(
+      `${plural(sie.issueLineCount, "rad", "rader")} innehöll fel och lästes inte in helt.`,
+    );
   }
   const unknown = Object.entries(sie.unknownLabels).sort(([a], [b]) => (a < b ? -1 : 1));
   if (unknown.length > 0) {
@@ -83,6 +109,24 @@ export function buildChecks({ sie, decoded, ledger }: BuildChecksInput): SieChec
       `${plural(diag.multiObjectRowsIgnored, "#PSALDO-rad", "#PSALDO-rader")} med flera objekt ignorerades.`,
     );
   }
+  if (diag.psaldoOutsideYear > 0) {
+    warnings.push(
+      `${plural(diag.psaldoOutsideYear, "#PSALDO-rad", "#PSALDO-rader")} ligger utanför sitt räkenskapsår och togs inte med.`,
+    );
+  }
+  if (diag.personalDimsIgnored.length > 0) {
+    const dims = diag.personalDimsIgnored.map((d) =>
+      sie.dim[d] ? `${d} (${sie.dim[d]})` : `${d}`,
+    );
+    warnings.push(
+      `${dims.length === 1 ? "Dimension" : "Dimensionerna"} ${joinSv(dims)} innehåller personer och togs inte med.`,
+    );
+  }
+  if (diag.personnummerObjectsIgnored > 0) {
+    warnings.push(
+      `${diag.personnummerObjectsIgnored} objekt med personnummer som kod togs inte med; beloppen räknas som ofördelade.`,
+    );
+  }
   if (ledger.psaldoMode === "cumulative") {
     warnings.push("#PSALDO innehåller ackumulerade saldon; de har räknats om till månadsbelopp.");
   }
@@ -92,9 +136,11 @@ export function buildChecks({ sie, decoded, ledger }: BuildChecksInput): SieChec
     );
   }
   if (ledger.usedTransFallback) {
-    const years = diag.years.filter((y) => y.source === "trans").map((y) => y.yearNo);
+    const years = diag.years
+      .filter((y) => y.source === "trans")
+      .map((y) => YEAR_LABELS[y.yearNo] ?? `år ${y.yearNo}`);
     warnings.push(
-      `Filen saknar #PSALDO för resultatkontona (år ${years.join(", ")}); ` +
+      `Filen saknar #PSALDO för resultatkontona (${joinSv(years)} räkenskapsår); ` +
         "månadsbeloppen har beräknats från verifikationerna.",
     );
   }
@@ -125,6 +171,20 @@ export function buildChecks({ sie, decoded, ledger }: BuildChecksInput): SieChec
   const resultYtd = fromOre(-months.reduce((acc, m) => acc + (totals.get(m) ?? 0), 0));
   if (months.length === 0) {
     warnings.push("Filen innehåller inga belopp på resultatkonton (3000–8999) för innevarande år.");
+  }
+  // Months from the export month on were not closed: their slices would replace
+  // complete data with partial figures until the next export.
+  if (sie.gen) {
+    const genMonth = dateToMonth(sie.gen.date);
+    const open = [...new Set(ledger.rows.map((r) => r.month))].filter((m) => m >= genMonth).sort();
+    if (open.length > 0) {
+      const one = open.length === 1;
+      warnings.push(
+        `Filen innehåller belopp för ${joinSv(open.map(formatMonthLong))}, som inte var ` +
+          `${one ? "avslutad" : "avslutade"} när filen skapades (${formatDateSv(sie.gen.date)}). ` +
+          `Siffrorna för ${one ? "den månaden" : "de månaderna"} kan vara ofullständiga.`,
+      );
+    }
   }
 
   // Σ monthly movements per account vs #RES 0.
@@ -182,15 +242,17 @@ export function buildChecks({ sie, decoded, ledger }: BuildChecksInput): SieChec
 
   return {
     orgNr,
-    companyName: sie.fnamn,
+    companyName: sie.fnamn === null ? null : maskPersonnummer(sie.fnamn),
     company,
     encoding: decoded.encoding,
-    declaredFormat: decoded.declaredFormat,
+    declaredFormat:
+      decoded.declaredFormat === null ? null : maskPersonnummer(decoded.declaredFormat),
     fiscalYears: sie.rar.map(({ yearNo, start, end }) => ({ yearNo, start, end })),
     resultPerMonth,
     resultYtd,
     resCheck: { ok: mismatches.length === 0, mismatches },
     usedTransFallback: ledger.usedTransFallback,
-    warnings,
+    // Warnings quote file content (object codes, #FORMAT, org numbers).
+    warnings: warnings.map(maskPersonnummer),
   };
 }

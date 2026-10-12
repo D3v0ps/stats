@@ -160,9 +160,9 @@ describe("ingestSie specifics", () => {
     const r = await ingest("unknown_org.se");
     const truth = readSieTruth("unknown_org.se");
     expect(r.ledger?.checks.company).toBeNull();
-    expect(r.ledger?.checks.orgNr).toBe("556677-8899");
+    expect(r.ledger?.checks.orgNr).toBe("556677-8890");
     expect(r.ledger?.checks.companyName).toBe("Exempelbolaget i Söderort AB");
-    expect(r.ledger?.checks.warnings[0]).toMatch(/556677-8899 hör inte till något av bolagen/);
+    expect(r.ledger?.checks.warnings[0]).toMatch(/556677-8890 hör inte till något av bolagen/);
     expect(r.ledger?.rows).toEqual([]);
     expect(r.ledger?.checks.resultPerMonth.map((m) => [m.month, ore(m.result)])).toEqual(
       Object.entries(truth.years["0"]?.resultPerMonth ?? {}).map(([m, v]) => [m, ore(v)]),

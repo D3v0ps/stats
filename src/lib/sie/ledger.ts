@@ -7,6 +7,7 @@
 import type { CompanyCode, LedgerRow } from "@/lib/contracts";
 import { dateToMonth } from "@/lib/core/month";
 import type { SieFile, SieFiscalYear, SiePeriodBalance, SieTrans } from "./parse";
+import { containsPersonnummer, isPersonalDimension } from "./pii";
 
 export const RESULT_ACCOUNT_MIN = 3000;
 export const RESULT_ACCOUNT_MAX = 8999;
@@ -23,7 +24,10 @@ const TOLERANCE_ORE = 100;
 export type PsaldoMode = "movement" | "cumulative" | "none";
 
 export interface LedgerOptions {
-  /** SIE dimension numbers kept as object rows (1 = kostnadsställe). */
+  /**
+   * SIE dimension numbers kept as object rows (1 = kostnadsställe). Personal
+   * dimensions (7 = Anställd, or a #DIM named like one) are never kept.
+   */
   objectDims?: number[];
 }
 
@@ -39,7 +43,18 @@ export interface LedgerDiagnostics {
   multiObjectRowsIgnored: number;
   /** #PSALDO rows with one object in a dimension outside objectDims; ignored. */
   otherDimRowsIgnored: number;
-  /** True when #RES could not tell movement from cumulative and movement was assumed. */
+  /** #PSALDO rows whose period lies outside their year's #RAR; ignored. */
+  psaldoOutsideYear: number;
+  /** The object dimensions actually used (objectDims minus personal dimensions). */
+  objectDims: number[];
+  /** Requested dimensions dropped because their objects are people. */
+  personalDimsIgnored: number[];
+  /** Distinct objects (dim:code) dropped because the code is a personnummer. */
+  personnummerObjectsIgnored: number;
+  /**
+   * True when #RES could not tell movement from cumulative and movement was
+   * assumed although the two readings give different months.
+   */
   psaldoModeAssumed: boolean;
   /** Transactions whose transdate lies outside the voucher's fiscal year (voucher date used). */
   transDateOutsideYear: number;
@@ -114,7 +129,7 @@ class Accumulator {
 /** The series a #PSALDO line feeds, or null when the line is ignored (counted in diag). */
 function classify(
   p: SiePeriodBalance,
-  objectDims: ReadonlySet<number>,
+  objects: ObjectFilter,
   diag: LedgerDiagnostics,
 ): SeriesKey | null {
   const [first, ...rest] = p.objects;
@@ -123,11 +138,54 @@ function classify(
     diag.multiObjectRowsIgnored++;
     return null;
   }
-  if (!objectDims.has(first[0])) {
+  if (!objects.dims.has(first[0])) {
     diag.otherDimRowsIgnored++;
     return null;
   }
+  if (!objects.keep(first[0], first[1])) return null;
   return { account: p.account, dimNo: first[0], objectCode: first[1] };
+}
+
+/**
+ * Which objects may become rows: dimensions in objectDims, never personal ones,
+ * never blank codes and never codes that are personnummer (those amounts stay
+ * in the total and show up as "ofördelat").
+ */
+interface ObjectFilter {
+  dims: ReadonlySet<number>;
+  keep(dimNo: number, code: string): boolean;
+}
+
+function objectFilter(sie: SieFile, requested: number[], diag: LedgerDiagnostics): ObjectFilter {
+  const dims = new Set<number>();
+  for (const d of requested) {
+    if (isPersonalDimension(d, sie.dim[d])) {
+      if (!diag.personalDimsIgnored.includes(d)) diag.personalDimsIgnored.push(d);
+    } else {
+      dims.add(d);
+    }
+  }
+  diag.objectDims = [...dims].sort((a, b) => a - b);
+  diag.personalDimsIgnored.sort((a, b) => a - b);
+  const personnummer = new Set<string>();
+  return {
+    dims,
+    keep(dimNo, code) {
+      if (code.trim() === "") return false;
+      if (!containsPersonnummer(code)) return true;
+      const key = `${dimNo}:${code}`;
+      if (!personnummer.has(key)) {
+        personnummer.add(key);
+        diag.personnummerObjectsIgnored++;
+      }
+      return false;
+    },
+  };
+}
+
+/** True when a #PSALDO period belongs to the year (always true without a #RAR for it). */
+function periodInYear(period: string, year: SieFiscalYear | undefined): boolean {
+  return year === undefined || (period >= year.start.slice(0, 7) && period <= year.end.slice(0, 7));
 }
 
 /**
@@ -145,20 +203,34 @@ export function detectPsaldoMode(
   votes: { movement: number; cumulative: number };
 } {
   const votes = { movement: 0, cumulative: 0 };
+  // Both readings give the same months when every series is zero before its last period.
+  let readingsDiffer = false;
   for (const yearNo of yearNos) {
+    const year = sie.rar.find((r) => r.yearNo === yearNo);
     const res = new Map<number, number>();
     for (const r of sie.res) if (r.yearNo === yearNo) res.set(r.account, toOre(r.amount));
-    const perAccount = new Map<number, Map<string, number>>();
+    const perSeries = new Map<
+      string,
+      { account: number; total: boolean; periods: Map<string, number> }
+    >();
     for (const p of sie.psaldo) {
-      if (p.yearNo !== yearNo || p.objects.length > 0 || !isResultAccount(p.account)) continue;
-      const periods = perAccount.get(p.account) ?? new Map<string, number>();
-      periods.set(p.period, (periods.get(p.period) ?? 0) + toOre(p.amount));
-      perAccount.set(p.account, periods);
+      if (p.yearNo !== yearNo || !isResultAccount(p.account) || !periodInYear(p.period, year)) {
+        continue;
+      }
+      const k = `${p.account}|${p.objects.map(([d, c]) => `${d}:${c}`).join(";")}`;
+      const s = perSeries.get(k) ?? {
+        account: p.account,
+        total: p.objects.length === 0,
+        periods: new Map<string, number>(),
+      };
+      s.periods.set(p.period, (s.periods.get(p.period) ?? 0) + toOre(p.amount));
+      perSeries.set(k, s);
     }
-    for (const [account, periods] of perAccount) {
-      const target = res.get(account);
-      if (target === undefined) continue;
+    for (const { account, total, periods } of perSeries.values()) {
       const sorted = [...periods.entries()].sort(([a], [b]) => cmp(a, b));
+      if (sorted.slice(0, -1).some(([, v]) => v !== 0)) readingsDiffer = true;
+      const target = res.get(account);
+      if (!total || target === undefined) continue;
       const sum = sorted.reduce((acc, [, v]) => acc + v, 0);
       const last = sorted.at(-1)?.[1] ?? 0;
       const sumOk = Math.abs(sum - target) < TOLERANCE_ORE;
@@ -168,7 +240,7 @@ export function detectPsaldoMode(
     }
   }
   if (votes.movement === 0 && votes.cumulative === 0) {
-    return { mode: "movement", assumed: true, votes };
+    return { mode: "movement", assumed: readingsDiffer, votes };
   }
   return {
     mode: votes.cumulative > votes.movement ? "cumulative" : "movement",
@@ -181,15 +253,21 @@ function psaldoRows(
   sie: SieFile,
   yearNo: number,
   mode: "movement" | "cumulative",
-  objectDims: ReadonlySet<number>,
+  objects: ObjectFilter,
   diag: LedgerDiagnostics,
 ): Accumulator {
   const acc = new Accumulator();
+  const year = sie.rar.find((r) => r.yearNo === yearNo);
   // series key -> period -> öre (duplicate lines for one period are added)
   const series = new Map<string, { key: SeriesKey; periods: Map<string, number> }>();
   for (const p of sie.psaldo) {
     if (p.yearNo !== yearNo || !isResultAccount(p.account)) continue;
-    const key = classify(p, objectDims, diag);
+    if (!periodInYear(p.period, year)) {
+      // Would land in a month of another fiscal year and be counted twice there.
+      diag.psaldoOutsideYear++;
+      continue;
+    }
+    const key = classify(p, objects, diag);
     if (!key) continue;
     const k = `${key.account}|${key.dimNo ?? ""}|${key.objectCode ?? ""}`;
     const s = series.get(k) ?? { key, periods: new Map<string, number>() };
@@ -216,7 +294,7 @@ function inYear(date: string, year: SieFiscalYear | undefined): boolean {
 function transRows(
   sie: SieFile,
   year: SieFiscalYear | undefined,
-  objectDims: ReadonlySet<number>,
+  objects: ObjectFilter,
   diag: LedgerDiagnostics,
 ): { acc: Accumulator; vouchers: number } {
   const acc = new Accumulator();
@@ -238,8 +316,9 @@ function transRows(
       acc.add(month, { account: t.account, dimNo: null, objectCode: null }, ore);
       const seenDims = new Set<number>();
       for (const [dimNo, code] of t.objects) {
-        if (!objectDims.has(dimNo) || seenDims.has(dimNo)) continue;
+        if (!objects.dims.has(dimNo) || seenDims.has(dimNo)) continue;
         seenDims.add(dimNo);
+        if (!objects.keep(dimNo, code)) continue;
         acc.add(month, { account: t.account, dimNo, objectCode: code }, ore);
       }
     }
@@ -266,16 +345,20 @@ export function toLedger(
   company: CompanyCode,
   opts: LedgerOptions = {},
 ): LedgerResult {
-  const objectDims = new Set(opts.objectDims ?? [1]);
   const diag: LedgerDiagnostics = {
     years: [],
     multiObjectRowsIgnored: 0,
     otherDimRowsIgnored: 0,
+    psaldoOutsideYear: 0,
+    objectDims: [],
+    personalDimsIgnored: [],
+    personnummerObjectsIgnored: 0,
     psaldoModeAssumed: false,
     transDateOutsideYear: 0,
     vouchersWithoutDate: sie.ver.filter((v) => v.date === null).length,
     vouchersOutsideYears: 0,
   };
+  const objects = objectFilter(sie, opts.objectDims ?? [1], diag);
 
   const psaldoYears = LEDGER_YEARS.map((y) => y.yearNo).filter((yearNo) =>
     sie.psaldo.some((p) => p.yearNo === yearNo && isResultAccount(p.account)),
@@ -293,11 +376,7 @@ export function toLedger(
   for (const { yearNo, yearOffset } of LEDGER_YEARS) {
     if (psaldoMode !== "none" && psaldoYears.includes(yearNo)) {
       rows.push(
-        ...psaldoRows(sie, yearNo, psaldoMode, objectDims, diag).rows(
-          company,
-          yearOffset,
-          "psaldo",
-        ),
+        ...psaldoRows(sie, yearNo, psaldoMode, objects, diag).rows(company, yearOffset, "psaldo"),
       );
       diag.years.push({ yearNo, yearOffset, source: "psaldo" });
       continue;
@@ -308,7 +387,7 @@ export function toLedger(
       diag.years.push({ yearNo, yearOffset, source: "none" });
       continue;
     }
-    const { acc, vouchers } = transRows(sie, year, objectDims, diag);
+    const { acc, vouchers } = transRows(sie, year, objects, diag);
     if (vouchers === 0) {
       diag.years.push({ yearNo, yearOffset, source: "none" });
       continue;
