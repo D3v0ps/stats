@@ -1,0 +1,528 @@
+#FLAGGA 0
+#FORMAT PC8
+#SIETYP 4
+#PROGRAM "MB Stats testgenerator" "1.0"
+#GEN 20261005 "Syntetisk"
+#FNAMN "Miljonbemanning Restart AB"
+#ORGNR 559208-9071
+#RAR 0 20260101 20261231
+#RAR -1 20250101 20251231
+#KPTYP EUBAS97
+#VALUTA SEK
+#KONTO 1510 "Kundfordringar"
+#KTYP 1510 T
+#KONTO 1930 "F”retagskonto/checkkonto/aff„rskonto"
+#KTYP 1930 T
+#KONTO 2440 "Leverant”rsskulder"
+#KTYP 2440 S
+#KONTO 2640 "Ing†ende moms"
+#KTYP 2640 S
+#KONTO 2710 "Personalskatt"
+#KTYP 2710 S
+#KONTO 2731 "Avr„kning lagstadgade sociala avgifter"
+#KTYP 2731 S
+#KONTO 3050 "F”rs„ljning tj„nster till Arbetsf”rmedlingen, momsfri"
+#KTYP 3050 I
+#KONTO 5010 "Lokalhyra"
+#KTYP 5010 K
+#KONTO 5410 "F”rbrukningsinventarier"
+#KTYP 5410 K
+#KONTO 5460 "F”rbrukningsmaterial"
+#KTYP 5460 K
+#KONTO 6110 "Kontorsmateriel"
+#KTYP 6110 K
+#KONTO 6540 "IT-tj„nster \"molnet\""
+#KTYP 6540 K
+#KONTO 7210 "L”ner till tj„nstem„n"
+#KTYP 7210 K
+#KONTO 7510 "Arbetsgivaravgifter 31,42 %"
+#KTYP 7510 K
+#KONTO 8410 "R„ntekostnader f”r l†ngfristiga skulder"
+#KTYP 8410 K
+#SRU 3050 7410
+#DIM 1 "Kostnadsst„lle"
+#OBJEKT 1 "8" "Overhead kostnader"
+#OBJEKT 1 "410" "KROM"
+#OBJEKT 1 "420" "Rusta och matcha"
+#IB 0 1510 1225672.57
+#IB 0 1930 2607768.85
+#IB 0 2440 -474326.97
+#IB 0 2710 -1332598.96
+#UB 0 1510 2084183.41
+#UB 0 1930 3680994.48
+#UB 0 2440 -780669.06
+#UB 0 2710 -2255323.88
+#IB -1 1510 400000.00
+#IB -1 1930 650000.00
+#IB -1 2440 -80000.00
+#IB -1 2710 -60000.00
+#UB -1 1510 1225672.57
+#UB -1 1930 2607768.85
+#UB -1 2440 -474326.97
+#UB -1 2710 -1332598.96
+#RES 0 3050 -4097501.58
+#RES 0 5010 198000.00
+#RES 0 5460 15020.66
+#RES 0 6110 26818.04
+#RES 0 6540 9834.97
+#RES 0 7210 3077749.76
+#RES 0 7510 966400.57
+#RES 0 8410 6140.27
+#RES -1 3050 -5763871.61
+#RES -1 5010 264000.00
+#RES -1 5460 22191.17
+#RES -1 6110 29270.40
+#RES -1 7210 4241996.50
+#RES -1 7510 1332835.29
+#RES -1 8410 11032.65
+#VER "D" "1" 20260101 "Hyra januari" 20260101
+{
+   #TRANS 5010 {"1" "8"} 22000.00
+   #TRANS 2640 {} 5500.00
+   #TRANS 2440 {} -27500.00
+}
+#VER "D" "2" 20260103 "Leverant”rsfaktura f”rbrukning" 20260103
+{
+   #TRANS 6110 {} 3638.25 20251231 "Periodiserad"
+   #TRANS 5460 {"1" "410"} 1308.36 20251231
+   #TRANS 2640 {} 1236.65
+   #TRANS 2440 {} -6183.26
+}
+#VER "L" "1" 20260125 "L”n januari" 20260125
+{
+   #TRANS 7210 {"1" "410"} 173685.90 20260131
+   #TRANS 7210 {"1" "420"} 91637.36 20260131
+   #TRANS 7210 {"1" "8"} 67847.03 20260131
+   #TRANS 7510 {"1" "410"} 54572.11 20260131
+   #TRANS 7510 {"1" "420"} 28792.46 20260131
+   #TRANS 7510 {"1" "8"} 21317.54 20260131
+   #TRANS 2710 {} -99951.09
+   #TRANS 2731 {} -104682.11
+   #TRANS 1930 {} -233219.20
+}
+#VER "B" "1" 20260131 "Faktura Arbetsf”rmedlingen KROM januari" 20260131
+{
+   #TRANS 1510 {} 287752.95
+   #TRANS 3050 {"1" "410"} -287752.95
+}
+#VER "B" "2" 20260131 "Faktura Arbetsf”rmedlingen Rusta och matcha januari" 20260131
+{
+   #TRANS 1510 {} 148685.09
+   #TRANS 3050 {"1" "420"} -148685.09
+}
+#VER "C" "1" 20260120 "Inbetalning Arbetsf”rmedlingen" 20260120
+{
+   #TRANS 1930 {} 313962.22
+   #TRANS 1510 {} -313962.22
+}
+#VER "A" "1" 20260131 "R„nta" 20260131
+{
+   #TRANS 8410 {} 406.76
+   #TRANS 1930 {} -406.76
+}
+#VER "D" "3" 20260201 "Hyra februari" 20260201
+{
+   #TRANS 5010 {"1" "8"} 22000.00
+   #TRANS 2640 {} 5500.00
+   #TRANS 2440 {} -27500.00
+}
+#VER "D" "4" 20260203 "Leverant”rsfaktura f”rbrukning" 20260203
+{
+   #TRANS 6110 {} 2918.49 20260131 "Periodiserad"
+   #TRANS 5460 {"1" "410"} 583.22 20260131
+   #TRANS 2640 {} 875.43
+   #TRANS 2440 {} -4377.14
+}
+#VER "L" "2" 20260225 "L”n februari" 20260225
+{
+   #TRANS 7210 {"1" "410"} 214632.67 20260228
+   #TRANS 7210 {"1" "420"} 80426.38 20260228
+   #TRANS 7210 {"1" "8"} 63929.34 20260228
+   #TRANS 7510 {"1" "410"} 67437.58 20260228
+   #TRANS 7510 {"1" "420"} 25269.97 20260228
+   #TRANS 7510 {"1" "8"} 20086.60 20260228
+   #TRANS 2710 {} -107696.52
+   #TRANS 2731 {} -112794.15
+   #TRANS 1930 {} -251291.87
+}
+#VER "B" "3" 20260228 "Faktura Arbetsf”rmedlingen KROM februari" 20260228
+{
+   #TRANS 1510 {} 403315.45
+   #TRANS 3050 {"1" "410"} -403315.45
+}
+#VER "B" "4" 20260228 "Faktura Arbetsf”rmedlingen Rusta och matcha februari" 20260228
+{
+   #TRANS 1510 {} 157185.04
+   #TRANS 3050 {"1" "420"} -157185.04
+}
+#VER "C" "2" 20260220 "Inbetalning Arbetsf”rmedlingen" 20260220
+{
+   #TRANS 1930 {} 478199.81
+   #TRANS 1510 {} -478199.81
+}
+#VER "A" "2" 20260228 "R„nta" 20260228
+{
+   #TRANS 8410 {} 302.57
+   #TRANS 1930 {} -302.57
+}
+#VER "D" "5" 20260301 "Hyra mars" 20260301
+{
+   #TRANS 5010 {"1" "8"} 22000.00
+   #TRANS 2640 {} 5500.00
+   #TRANS 2440 {} -27500.00
+}
+#VER "D" "6" 20260303 "Leverant”rsfaktura f”rbrukning" 20260303
+{
+   #TRANS 6110 {} 3241.09 20260228 "Periodiserad"
+   #TRANS 5460 {"1" "410"} 1724.04 20260228
+   #TRANS 2640 {} 1241.28
+   #TRANS 2440 {} -6206.41
+}
+#VER "L" "3" 20260325 "L”n mars" 20260325
+{
+   #TRANS 7210 {"1" "410"} 161320.00 20260331
+   #TRANS 7210 {"1" "420"} 77697.67 20260331
+   #TRANS 7210 {"1" "8"} 59930.04 20260331
+   #TRANS 7510 {"1" "410"} 50686.74 20260331
+   #TRANS 7510 {"1" "420"} 24412.61 20260331
+   #TRANS 7510 {"1" "8"} 18830.02 20260331
+   #TRANS 2710 {} -89684.31
+   #TRANS 2731 {} -93929.37
+   #TRANS 1930 {} -209263.40
+}
+#VER "B" "5" 20260331 "Faktura Arbetsf”rmedlingen KROM mars" 20260331
+{
+   #TRANS 1510 {} 353718.39
+   #TRANS 3050 {"1" "410"} -353718.39
+}
+#VER "B" "6" 20260331 "Faktura Arbetsf”rmedlingen Rusta och matcha mars" 20260331
+{
+   #TRANS 1510 {} 141885.21
+   #TRANS 3050 {"1" "420"} -141885.21
+}
+#VER "C" "3" 20260320 "Inbetalning Arbetsf”rmedlingen" 20260320
+{
+   #TRANS 1930 {} 388101.51
+   #TRANS 1510 {} -388101.51
+}
+#VER "A" "3" 20260331 "R„nta" 20260331
+{
+   #TRANS 8410 {} 444.55
+   #TRANS 1930 {} -444.55
+}
+#VER "A" "4" 20260310 "R„ttelse kontorsmaterial" 20260310
+{
+   #TRANS 1930 {} -1500.00
+   #TRANS 6110 {} 1000.00
+   #RTRANS 6110 {} 500.00 "" "Tillagd rad"
+   #TRANS 6110 {} 500.00 "" "Tillagd rad"
+}
+#VER "D" "7" 20260401 "Hyra april" 20260401
+{
+   #TRANS 5010 {"1" "8"} 22000.00
+   #TRANS 2640 {} 5500.00
+   #TRANS 2440 {} -27500.00
+}
+#VER "D" "8" 20260403 "Leverant”rsfaktura f”rbrukning" 20260403
+{
+   #TRANS 6110 {} 2720.07 20260331 "Periodiserad"
+   #TRANS 5460 {"1" "410"} 2971.77 20260331
+   #TRANS 2640 {} 1422.96
+   #TRANS 2440 {} -7114.80
+}
+#VER "L" "4" 20260425 "L”n april" 20260425
+{
+   #TRANS 7210 {"1" "410"} 169978.81 20260430
+   #TRANS 7210 {"1" "420"} 84803.83 20260430
+   #TRANS 7210 {"1" "8"} 64234.49 20260430
+   #TRANS 7510 {"1" "410"} 53407.34 20260430
+   #TRANS 7510 {"1" "420"} 26645.36 20260430
+   #TRANS 7510 {"1" "8"} 20182.48 20260430
+   #TRANS 2710 {} -95705.14
+   #TRANS 2731 {} -100235.18
+   #TRANS 1930 {} -223311.99
+}
+#VER "B" "7" 20260430 "Faktura Arbetsf”rmedlingen KROM april" 20260430
+{
+   #TRANS 1510 {} 292645.44
+   #TRANS 3050 {"1" "410"} -292645.44
+}
+#VER "B" "8" 20260430 "Faktura Arbetsf”rmedlingen Rusta och matcha april" 20260430
+{
+   #TRANS 1510 {} 115631.48
+   #TRANS 3050 {"1" "420"} -115631.48
+}
+#VER "C" "4" 20260420 "Inbetalning Arbetsf”rmedlingen" 20260420
+{
+   #TRANS 1930 {} 320903.03
+   #TRANS 1510 {} -320903.03
+}
+#VER "A" "5" 20260430 "R„nta" 20260430
+{
+   #TRANS 8410 {} 962.83
+   #TRANS 1930 {} -962.83
+}
+#VER "D" "9" 20260430 "IT-tj„nster f”rskott" 20260430
+{
+   #TRANS 6540 {} 5493.12 20260501 "Avser n„sta m†nad"
+   #TRANS 2640 {} 1373.28
+   #TRANS 2440 {} -6866.40
+}
+#VER "A" "6" 20260416 "Omf”ring f”rbrukning" 20260416
+{
+   #TRANS 1930 {} -800.00
+   #BTRANS 5410 {} 800.00 "" "Borttagen rad"
+   #RTRANS 5460 {"1" "420"} 800.00 "" "R„tt konto"
+   #TRANS 5460 {"1" "420"} 800.00 "" "R„tt konto"
+}
+#VER "D" "10" 20260501 "Hyra maj" 20260501
+{
+   #TRANS 5010 {"1" "8"} 22000.00
+   #TRANS 2640 {} 5500.00
+   #TRANS 2440 {} -27500.00
+}
+#VER "D" "11" 20260503 "Leverant”rsfaktura f”rbrukning" 20260503
+{
+   #TRANS 6110 {} 1475.65 20260430 "Periodiserad"
+   #TRANS 5460 {"1" "410"} 1542.92 20260430
+   #TRANS 2640 {} 754.64
+   #TRANS 2440 {} -3773.21
+}
+#VER "L" "5" 20260525 "L”n maj" 20260525
+{
+   #TRANS 7210 {"1" "410"} 220495.30 20260531
+   #TRANS 7210 {"1" "420"} 83929.25 20260531
+   #TRANS 7210 {"1" "8"} 62571.03 20260531
+   #TRANS 7510 {"1" "410"} 69279.62 20260531
+   #TRANS 7510 {"1" "420"} 26370.57 20260531
+   #TRANS 7510 {"1" "8"} 19659.82 20260531
+   #TRANS 2710 {} -110098.67
+   #TRANS 2731 {} -115310.01
+   #TRANS 1930 {} -256896.91
+}
+#VER "B" "9" 20260531 "Faktura Arbetsf”rmedlingen KROM maj" 20260531
+{
+   #TRANS 1510 {} 301681.43
+   #TRANS 3050 {"1" "410"} -301681.43
+}
+#VER "B" "10" 20260531 "Faktura Arbetsf”rmedlingen Rusta och matcha maj" 20260531
+{
+   #TRANS 1510 {} 107026.29
+   #TRANS 3050 {"1" "420"} -107026.29
+}
+#VER "C" "5" 20260520 "Inbetalning Arbetsf”rmedlingen" 20260520
+{
+   #TRANS 1930 {} 401789.03
+   #TRANS 1510 {} -401789.03
+}
+#VER "A" "7" 20260531 "R„nta" 20260531
+{
+   #TRANS 8410 {} 528.07
+   #TRANS 1930 {} -528.07
+}
+#VER "A" "8" 20260512 "R„ttelse l”n" 20260512
+{
+   #TRANS 1930 {} -2000.00
+   #RTRANS 7210 {"1" "410"} 2000.00 20260512 "Tillagd"
+   #TRANS 7210 {"1" "410"} 2000.00 20260512 "Tillagd"
+}
+#VER "D" "12" 20260601 "Hyra juni" 20260601
+{
+   #TRANS 5010 {"1" "8"} 22000.00
+   #TRANS 2640 {} 5500.00
+   #TRANS 2440 {} -27500.00
+}
+#VER "D" "13" 20260603 "Leverant”rsfaktura f”rbrukning" 20260603
+{
+   #TRANS 6110 {} 1385.51 20260531 "Periodiserad"
+   #TRANS 5460 {"1" "410"} 1192.20 20260531
+   #TRANS 2640 {} 644.43
+   #TRANS 2440 {} -3222.14
+}
+#VER "L" "6" 20260625 "L”n juni" 20260625
+{
+   #TRANS 7210 {"1" "410"} 187483.67 20260630
+   #TRANS 7210 {"1" "420"} 100493.01 20260630
+   #TRANS 7210 {"1" "8"} 57734.76 20260630
+   #TRANS 7510 {"1" "410"} 58907.37 20260630
+   #TRANS 7510 {"1" "420"} 31574.90 20260630
+   #TRANS 7510 {"1" "8"} 18140.26 20260630
+   #TRANS 2710 {} -103713.43
+   #TRANS 2731 {} -108622.53
+   #TRANS 1930 {} -241998.01
+}
+#VER "B" "11" 20260630 "Faktura Arbetsf”rmedlingen KROM juni" 20260630
+{
+   #TRANS 1510 {} 291305.99
+   #TRANS 3050 {"1" "410"} -291305.99
+}
+#VER "B" "12" 20260630 "Faktura Arbetsf”rmedlingen Rusta och matcha juni" 20260630
+{
+   #TRANS 1510 {} 146693.92
+   #TRANS 3050 {"1" "420"} -146693.92
+}
+#VER "C" "6" 20260620 "Inbetalning Arbetsf”rmedlingen" 20260620
+{
+   #TRANS 1930 {} 339267.42
+   #TRANS 1510 {} -339267.42
+}
+#VER "A" "9" 20260630 "R„nta" 20260630
+{
+   #TRANS 8410 {} 802.97
+   #TRANS 1930 {} -802.97
+}
+#VER "A" "10" 20260610 "R„ttelse kontorsmaterial" 20260610
+{
+   #TRANS 1930 {} -1500.00
+   #TRANS 6110 {} 1000.00
+   #RTRANS 6110 {} 500.00 "" "Tillagd rad"
+   #TRANS 6110 {} 500.00 "" "Tillagd rad"
+}
+#VER "D" "14" 20260701 "Hyra juli" 20260701
+{
+   #TRANS 5010 {"1" "8"} 22000.00
+   #TRANS 2640 {} 5500.00
+   #TRANS 2440 {} -27500.00
+}
+#VER "D" "15" 20260703 "Leverant”rsfaktura f”rbrukning" 20260703
+{
+   #TRANS 6110 {} 3673.28 20260630 "Periodiserad"
+   #TRANS 5460 {"1" "410"} 2192.42 20260630
+   #TRANS 2640 {} 1466.43
+   #TRANS 2440 {} -7332.13
+}
+#VER "L" "7" 20260725 "L”n juli" 20260725
+{
+   #TRANS 7210 {"1" "410"} 230267.18 20260731
+   #TRANS 7210 {"1" "420"} 71790.51 20260731
+   #TRANS 7210 {"1" "8"} 56653.25 20260731
+   #TRANS 7510 {"1" "410"} 72349.95 20260731
+   #TRANS 7510 {"1" "420"} 22556.58 20260731
+   #TRANS 7510 {"1" "8"} 17800.45 20260731
+   #TRANS 2710 {} -107613.28
+   #TRANS 2731 {} -112706.98
+   #TRANS 1930 {} -251097.66
+}
+#VER "B" "13" 20260731 "Faktura Arbetsf”rmedlingen KROM juli" 20260731
+{
+   #TRANS 1510 {} 256702.27
+   #TRANS 3050 {"1" "410"} -256702.27
+}
+#VER "B" "14" 20260731 "Faktura Arbetsf”rmedlingen Rusta och matcha juli" 20260731
+{
+   #TRANS 1510 {} 108682.66
+   #TRANS 3050 {"1" "420"} -108682.66
+}
+#VER "C" "7" 20260720 "Inbetalning Arbetsf”rmedlingen" 20260720
+{
+   #TRANS 1930 {} 300648.15
+   #TRANS 1510 {} -300648.15
+}
+#VER "A" "11" 20260731 "R„nta" 20260731
+{
+   #TRANS 8410 {} 906.61
+   #TRANS 1930 {} -906.61
+}
+#VER "D" "16" 20260731 "IT-tj„nster f”rskott" 20260731
+{
+   #TRANS 6540 {} 4341.85 20260801 "Avser n„sta m†nad"
+   #TRANS 2640 {} 1085.46
+   #TRANS 2440 {} -5427.31
+}
+#VER "D" "17" 20260801 "Hyra augusti" 20260801
+{
+   #TRANS 5010 {"1" "8"} 22000.00
+   #TRANS 2640 {} 5500.00
+   #TRANS 2440 {} -27500.00
+}
+#VER "D" "18" 20260803 "Leverant”rsfaktura f”rbrukning" 20260803
+{
+   #TRANS 6110 {} 2965.72 20260731 "Periodiserad"
+   #TRANS 5460 {"1" "410"} 1240.22 20260731
+   #TRANS 2640 {} 1051.49
+   #TRANS 2440 {} -5257.43
+}
+#VER "L" "8" 20260825 "L”n augusti" 20260825
+{
+   #TRANS 7210 {"1" "410"} 210645.50 20260831
+   #TRANS 7210 {"1" "420"} 106508.98 20260831
+   #TRANS 7210 {"1" "8"} 58414.23 20260831
+   #TRANS 7510 {"1" "410"} 66184.82 20260831
+   #TRANS 7510 {"1" "420"} 33465.12 20260831
+   #TRANS 7510 {"1" "8"} 18353.75 20260831
+   #TRANS 2710 {} -112670.61
+   #TRANS 2731 {} -118003.69
+   #TRANS 1930 {} -262898.10
+}
+#VER "B" "15" 20260831 "Faktura Arbetsf”rmedlingen KROM augusti" 20260831
+{
+   #TRANS 1510 {} 375094.04
+   #TRANS 3050 {"1" "410"} -375094.04
+}
+#VER "B" "16" 20260831 "Faktura Arbetsf”rmedlingen Rusta och matcha augusti" 20260831
+{
+   #TRANS 1510 {} 109932.42
+   #TRANS 3050 {"1" "420"} -109932.42
+}
+#VER "C" "8" 20260820 "Inbetalning Arbetsf”rmedlingen" 20260820
+{
+   #TRANS 1930 {} 342938.98
+   #TRANS 1510 {} -342938.98
+}
+#VER "A" "12" 20260831 "R„nta" 20260831
+{
+   #TRANS 8410 {} 834.16
+   #TRANS 1930 {} -834.16
+}
+#VER "A" "13" 20260816 "Omf”ring f”rbrukning" 20260816
+{
+   #TRANS 1930 {} -800.00
+   #BTRANS 5410 {} 800.00 "" "Borttagen rad"
+   #RTRANS 5460 {"1" "420"} 800.00 "" "R„tt konto"
+   #TRANS 5460 {"1" "420"} 800.00 "" "R„tt konto"
+}
+#VER "D" "19" 20260901 "Hyra september" 20260901
+{
+   #TRANS 5010 {"1" "8"} 22000.00
+   #TRANS 2640 {} 5500.00
+   #TRANS 2440 {} -27500.00
+}
+#VER "D" "20" 20260903 "Leverant”rsfaktura f”rbrukning" 20260903
+{
+   #TRANS 6110 {} 1799.98 20260831 "Periodiserad"
+   #TRANS 5460 {"1" "410"} 665.51 20260831
+   #TRANS 2640 {} 616.37
+   #TRANS 2440 {} -3081.86
+}
+#VER "L" "9" 20260925 "L”n september" 20260925
+{
+   #TRANS 7210 {"1" "410"} 175169.07 20260930
+   #TRANS 7210 {"1" "420"} 78555.07 20260930
+   #TRANS 7210 {"1" "8"} 64915.43 20260930
+   #TRANS 7510 {"1" "410"} 55038.12 20260930
+   #TRANS 7510 {"1" "420"} 24682.00 20260930
+   #TRANS 7510 {"1" "8"} 20396.43 20260930
+   #TRANS 2710 {} -95591.87
+   #TRANS 2731 {} -100116.55
+   #TRANS 1930 {} -223047.70
+}
+#VER "B" "17" 20260930 "Faktura Arbetsf”rmedlingen KROM september" 20260930
+{
+   #TRANS 1510 {} 400439.55
+   #TRANS 3050 {"1" "410"} -400439.55
+}
+#VER "B" "18" 20260930 "Faktura Arbetsf”rmedlingen Rusta och matcha september" 20260930
+{
+   #TRANS 1510 {} 99123.96
+   #TRANS 3050 {"1" "420"} -99123.96
+}
+#VER "C" "9" 20260920 "Inbetalning Arbetsf”rmedlingen" 20260920
+{
+   #TRANS 1930 {} 353180.59
+   #TRANS 1510 {} -353180.59
+}
+#VER "A" "14" 20260930 "R„nta" 20260930
+{
+   #TRANS 8410 {} 951.75
+   #TRANS 1930 {} -951.75
+}
