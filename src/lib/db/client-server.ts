@@ -2,15 +2,16 @@
 // request; never share it. RLS applies (the user's JWT is used, not the service role).
 import { createServerClient } from "@supabase/ssr";
 import type { SupabaseClient } from "@supabase/supabase-js";
+import type { Database } from "./types";
 import { cookies } from "next/headers";
 import { getPublicEnv } from "./env";
 
-export async function createSupabaseServerClient(): Promise<SupabaseClient> {
+export async function createSupabaseServerClient(): Promise<SupabaseClient<Database>> {
   // cookies() first: it opts the route into dynamic rendering before the environment is read,
   // so builds without Supabase variables never try to prerender authenticated pages.
   const cookieStore = await cookies();
   const env = getPublicEnv();
-  return createServerClient(env.supabaseUrl, env.supabasePublishableKey, {
+  return createServerClient<Database>(env.supabaseUrl, env.supabasePublishableKey, {
     cookies: {
       getAll() {
         return cookieStore.getAll();
