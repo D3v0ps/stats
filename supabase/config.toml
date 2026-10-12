@@ -30,8 +30,12 @@ enabled = true
 site_url = "http://localhost:3000"
 additional_redirect_urls = []
 # Auth settings of the hosted project, set in the dashboard (Authentication -> Sign In /
-# Providers and -> Sessions). They are documented here instead of set, so a `supabase config
-# push` never changes the production login by accident; uncomment to manage them from here.
+# Providers and -> Sessions). They are documented here, not managed from this file.
+#
+# Do NOT run `supabase config push` against the hosted project while they are comments: keys
+# left out of this file take the CLI defaults (sign-ups on, 6-character passwords, 1-hour
+# tokens), so a push would weaken the production login. `supabase link` and `supabase db push`
+# never change auth settings. To manage auth from here, uncomment every value below first.
 #
 # One shared account (STATS_LOGIN_EMAIL), created by hand; nobody can sign up:
 # enable_signup = false
@@ -40,5 +44,6 @@ additional_redirect_urls = []
 # The shared password is long:
 # minimum_password_length = 16
 #
+# E-mail sign-ups are also off (Authentication -> Sign In / Providers -> Email):
 # [auth.email]
 # enable_signup = false

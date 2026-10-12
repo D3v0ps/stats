@@ -106,13 +106,18 @@ export function factKey(f: Pick<FactDraft, "metricKey" | "company" | "month" | "
 }
 
 /**
- * Facts keyed by (metric, company, month, dims) without zero values: the truth omits value-0
- * facts while the cases ingest writes explicit zeros, and a missing key means 0 for both.
+ * Facts keyed by (metric, company, month, dims). With `dropZeros`, value-0 facts are left
+ * out: the truth omits them while the cases ingest writes explicit zeros (a count of nobody),
+ * and a missing key means 0 for both. Table ingest never writes zeros the truth lacks, so it
+ * is compared with every fact kept.
  */
-export function nonZeroFacts(facts: readonly TruthFact[]): Map<string, number> {
+export function factMap(
+  facts: readonly TruthFact[],
+  { dropZeros }: { dropZeros: boolean },
+): Map<string, number> {
   const out = new Map<string, number>();
   for (const f of facts) {
-    if (f.value === 0) continue;
+    if (dropZeros && f.value === 0) continue;
     const key = factKey(f);
     if (out.has(key)) throw new Error(`Duplicate fact ${key}`);
     out.set(key, f.value);

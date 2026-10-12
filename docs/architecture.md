@@ -44,7 +44,10 @@ Hosted project: **"Ekonomi mbimpact.se"**, ref `mmiuuwrfcumcpgyleufu`, region `e
 mmiuuwrfcumcpgyleufu` and `supabase db push`. Migrations are edited in place until the first
 push; after that every change is a new migration. Auth settings of the hosted project
 (signups off, minimum password length 16, `jwt_expiry` 900 s) are set in the dashboard and
-documented as comments in `config.toml`. SQL tests run on PGlite (`supabase/tests/harness.ts`).
+documented as comments in `config.toml`; never run `supabase config push` against the hosted
+project while they are comments, because keys missing from the file take the CLI defaults
+(signups on, 6-character passwords, 1-hour tokens). SQL tests run on PGlite
+(`supabase/tests/harness.ts`).
 
 All tables in `public` have RLS enabled. Helper `private.is_app_user()` (SECURITY DEFINER,
 STABLE, `search_path = ''`) returns true when `auth.uid()` is in `public.app_users`.
@@ -189,8 +192,14 @@ or `ledger` (already SIE sign; also the default). `fixtures/files/budget_2026.xl
 
 - `tests/integration/fixtures.test.ts`: every data file in `fixtures/truth/manifest.json`
   through `readWorkbook` → `runTemplate` (manifest template, choices, aliases) equals the truth
-  exactly (same fact keys after dropping zeros, values to 1e-6); the drifted export gives an
-  incompatible `SignatureDiff`; no personnummer in any fact or report field.
+  exactly (same fact keys, values to 1e-6; only the explicit zeros of cases files are dropped,
+  since the truth omits zeros); the drifted export gives an incompatible `SignatureDiff`; no
+  personnummer (not even one with a wrong check digit) in any fact or report field, while the
+  raw timmar, konsulter and deltagare files do hold them.
+- `tests/integration/personnummer.test.ts`: personnummer written with a space, NBSP or narrow
+  NBSP are refused in a stored column and kept out of every output of a removed one.
+- `tests/integration/supabase-config.test.ts`: `supabase/config.toml` names `mb-stats`, keeps
+  the hosted auth settings as comments (with the `config push` warning) and holds no secrets.
 - `tests/integration/sie.test.ts`: every `fixtures/sie` file through `ingestSie` vs
   `fixtures/sie/truth` (result per month, per account, per kostnadsställe; unknown org →
   company null, nothing to stage).

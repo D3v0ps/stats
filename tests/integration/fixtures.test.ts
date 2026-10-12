@@ -1,15 +1,17 @@
 // Every synthetic fixture file through the app's real ingest (readWorkbook -> runTemplate with
 // the manifest's template, choices and aliases) against the independently computed truth.
 import { describe, expect, it } from "vitest";
-import type { IngestResult } from "@/lib/contracts";
+import type { IngestResult, RawWorkbook } from "@/lib/contracts";
 import { containsPersonnummer } from "@/lib/core/pnr";
 import { diffSignature, headerSignature, loadTable, readWorkbook } from "@/lib/ingest";
+// The SIE module's check: every personnummer shape with a real birth date, no Luhn check.
+import { containsPersonnummer as looksLikePersonnummer } from "@/lib/sie";
 import {
   factKey,
+  factMap,
   ingestFixture,
   manifestEntries,
   manifestEntry,
-  nonZeroFacts,
   readFixture,
   readTruth,
   templatesOf,
@@ -17,6 +19,15 @@ import {
 
 const TOLERANCE = 1e-6;
 const dataFiles = manifestEntries().filter((e) => e.kind !== "reference");
+
+/** Every cell of a workbook as text (display text where the file has one). */
+function cellTexts(workbook: RawWorkbook): string[] {
+  return workbook.sheets.flatMap((sheet) =>
+    sheet.rows.flatMap((row) =>
+      row.map((cell) => cell.w ?? (cell.v === null ? "" : String(cell.v))),
+    ),
+  );
+}
 
 /** Every string anywhere in a value (object keys included). */
 function strings(value: unknown, out: string[] = []): string[] {
@@ -43,8 +54,13 @@ describe("fixtures through runTemplate equal the truth", () => {
 
     it("produces exactly the truth's facts (same keys, values to 1e-6)", async () => {
       const facts = (await ingest()).flatMap((r) => r.facts);
-      const app = nonZeroFacts(facts);
-      const truth = nonZeroFacts(readTruth(entry));
+      const truthFacts = readTruth(entry);
+      expect(truthFacts.filter((f) => f.value === 0)).toEqual([]);
+      // Only the cases ingest writes zeros (a month with nobody active); table files must
+      // produce exactly the truth's keys.
+      const dropZeros = entry.kind === "cases";
+      const app = factMap(facts, { dropZeros });
+      const truth = factMap(truthFacts, { dropZeros });
       expect(truth.size).toBeGreaterThan(0);
 
       const missing = [...truth.keys()].filter((k) => !app.has(k));
@@ -82,9 +98,20 @@ describe("fixtures through runTemplate equal the truth", () => {
           r.file.name,
         ];
         expect(texts.filter((t) => containsPersonnummer(t))).toEqual([]);
+        // Not even a personnummer-shaped number with a wrong check digit gets through.
+        expect(texts.filter((t) => looksLikePersonnummer(t))).toEqual([]);
         expect(r.report.issues.filter((i) => i.severity === "error")).toEqual([]);
       }
     });
+  });
+
+  it("reads files that do hold personnummer, so the check above is not vacuous", () => {
+    const withPnr = dataFiles
+      .filter((e) =>
+        cellTexts(readWorkbook(readFixture(e.file), e.file)).some((t) => containsPersonnummer(t)),
+      )
+      .map((e) => e.datasetKey);
+    expect(new Set(withPnr)).toEqual(new Set(["ip_timmar", "ip_konsulter", "wb_deltagare"]));
   });
 });
 
