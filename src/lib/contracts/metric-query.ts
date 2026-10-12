@@ -37,6 +37,8 @@ export interface MetricDefinition {
   accountGroupKey?: string | null;
   /** formula: e.g. "fakturerat / lonekostnad", "sjuktimmar / (timmar + sjuktimmar) * 100". */
   formula?: string | null;
+  /** Definite-form subject for generated headlines, e.g. "DELTAGARNA", "RESULTATET". */
+  headlineSubject?: string | null;
   /** Dimension keys available for grouping/filtering (from the dataset). Formula: intersection of operands. */
   dimensions: string[];
 }

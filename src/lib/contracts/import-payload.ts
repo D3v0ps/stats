@@ -108,8 +108,11 @@ export interface IngestResult {
   contentHash: string;
   asOfDate?: string;
   companies: z.infer<typeof CompanyCodeSchema>[];
-  /** Covered months per company. */
-  slices: { company: z.infer<typeof CompanyCodeSchema>; month: string }[];
+  /**
+   * Covered months per company. priority < 0 marks lower-precedence data (e.g. previous-year
+   * rows inside a SIE file); a slice's own file (priority 0) always wins over them.
+   */
+  slices: { company: z.infer<typeof CompanyCodeSchema>; month: string; priority?: number }[];
   facts: FactDraft[];
   ledger?: {
     rows: LedgerRow[];
@@ -133,7 +136,15 @@ export const UploadCreateSchema = z.object({
   contentHash: z.string().regex(/^[0-9a-f]{64}$/),
   engineVersion: z.number().int().positive(),
   asOfDate: IsoDateSchema.nullable(),
-  slices: z.array(z.object({ company: CompanyCodeSchema, month: MonthSchema })).min(1),
+  slices: z
+    .array(
+      z.object({
+        company: CompanyCodeSchema,
+        month: MonthSchema,
+        priority: z.number().int().max(0).default(0),
+      }),
+    )
+    .min(1),
   parseReport: z.unknown(),
   totals: z.unknown(),
 });

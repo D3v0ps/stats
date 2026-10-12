@@ -28,6 +28,8 @@ export interface CatalogMetric {
   higherIsBetter: boolean | null;
   decimals: number | null;
   description: string;
+  /** Definite-form subject for generated headlines ("DELTAGARNA ÖKAR."). */
+  headlineSubject: string;
   snapshotRollup?: SnapshotRollup;
   baseMetricKey?: string;
   distinctDimension?: string;
@@ -141,6 +143,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Attesterade och exporterade timmar.",
+    headlineSubject: "TIMMARNA",
   },
   {
     key: "pass",
@@ -151,6 +154,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Antal arbetade pass.",
+    headlineSubject: "PASSEN",
   },
   {
     key: "konsulter",
@@ -161,6 +165,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Unika konsulter (räknas på anställnings-id) med timmar i perioden.",
+    headlineSubject: "KONSULTERNA",
     baseMetricKey: "timmar",
     distinctDimension: "konsult",
   },
@@ -173,6 +178,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: false,
     decimals: 0,
     description: "Timmar med sjukfrånvaro.",
+    headlineSubject: "SJUKTIMMARNA",
   },
   {
     key: "sjukpass",
@@ -183,6 +189,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: false,
     decimals: 0,
     description: "Antal pass med sjukfrånvaro.",
+    headlineSubject: "SJUKPASSEN",
   },
   {
     key: "fakturerat_ip",
@@ -193,6 +200,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Fakturerat belopp enligt fakturaunderlaget.",
+    headlineSubject: "FAKTURERINGEN",
   },
   {
     key: "lonekostnad",
@@ -203,6 +211,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: false,
     decimals: 0,
     description: "Lönekostnad enligt löneunderlaget.",
+    headlineSubject: "LÖNEKOSTNADEN",
   },
   {
     key: "anstallda_konsulter",
@@ -213,6 +222,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Konsulter med aktiv anställning vid månadens slut.",
+    headlineSubject: "ANTALET ANSTÄLLDA",
     snapshotRollup: "last",
   },
   {
@@ -224,6 +234,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Anställningar som startat under perioden.",
+    headlineSubject: "NYANSTÄLLNINGARNA",
   },
   {
     key: "avslutade_anstallningar",
@@ -234,6 +245,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: false,
     decimals: 0,
     description: "Anställningar som avslutats under perioden.",
+    headlineSubject: "AVSLUTEN",
   },
   {
     key: "anstallningstid",
@@ -244,6 +256,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 1,
     description: "Snittlängd för aktiva anställningar vid månadens slut.",
+    headlineSubject: "ANSTÄLLNINGSTIDEN",
     snapshotRollup: "last",
   },
   // AF-program – Workbuster
@@ -256,6 +269,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Deltagare utan avbrott med pågående placering vid månadens slut.",
+    headlineSubject: "DELTAGARNA",
     snapshotRollup: "last",
   },
   {
@@ -267,6 +281,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Deltagare som startat under perioden.",
+    headlineSubject: "NYA DELTAGARE",
   },
   {
     key: "avslutade_deltagare",
@@ -277,6 +292,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: null,
     decimals: 0,
     description: "Deltagare som avslutat under perioden.",
+    headlineSubject: "AVSLUTEN",
   },
   {
     key: "avbrott_deltagare",
@@ -287,6 +303,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: false,
     decimals: 0,
     description: "Deltagare med avbrott under perioden.",
+    headlineSubject: "AVBROTTEN",
   },
   {
     key: "resultat_deltagare",
@@ -297,6 +314,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Avslutade deltagare med resultat arbete eller studier.",
+    headlineSubject: "RESULTATEN",
   },
   {
     key: "af_intakt",
@@ -307,6 +325,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Ersättning från Arbetsförmedlingen enligt ordrarna.",
+    headlineSubject: "AF-ERSÄTTNINGEN",
   },
   // Ekonomi – Fortnox
   {
@@ -318,6 +337,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Konto 3000–3999.",
+    headlineSubject: "INTÄKTERNA",
     accountGroupKey: "intakter",
   },
   {
@@ -329,6 +349,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: false,
     decimals: 0,
     description: "Konto 4000–4999.",
+    headlineSubject: "UL-KOSTNADERNA",
     accountGroupKey: "varor_ul",
   },
   {
@@ -340,6 +361,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: false,
     decimals: 0,
     description: "Konto 5000–6999.",
+    headlineSubject: "DE EXTERNA KOSTNADERNA",
     accountGroupKey: "ovriga_externa",
   },
   {
@@ -351,6 +373,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: false,
     decimals: 0,
     description: "Konto 7000–7699.",
+    headlineSubject: "PERSONALKOSTNADERNA",
     accountGroupKey: "personal",
   },
   {
@@ -362,6 +385,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: false,
     decimals: 0,
     description: "Konto 7700–7899.",
+    headlineSubject: "AVSKRIVNINGARNA",
     accountGroupKey: "avskrivningar",
   },
   {
@@ -373,6 +397,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: false,
     decimals: 0,
     description: "Konto 4000–7999.",
+    headlineSubject: "KOSTNADERNA",
     accountGroupKey: "kostnader",
   },
   {
@@ -384,6 +409,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Konto 8000–8799, netto.",
+    headlineSubject: "FINANSNETTOT",
     accountGroupKey: "finansiella",
   },
   {
@@ -395,6 +421,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Periodens resultat, konto 3000–8999.",
+    headlineSubject: "RESULTATET",
     accountGroupKey: "resultat",
   },
   {
@@ -406,6 +433,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Kundfakturor exkl. moms enligt Fortnox.",
+    headlineSubject: "FAKTURERINGEN",
   },
   {
     key: "budget_belopp",
@@ -416,6 +444,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: null,
     decimals: 0,
     description: "Budgeterat belopp per kontogrupp. Används som budget för bokföringsmåtten.",
+    headlineSubject: "BUDGETEN",
   },
   // Formler (kvot av summor)
   {
@@ -427,6 +456,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 2,
     description: "Fakturerat ÷ lönekostnad. Lönepåslaget ändras i formeln.",
+    headlineSubject: "FAKTORN",
     formula: "fakturerat_ip / (lonekostnad * 1.0)",
   },
   {
@@ -438,6 +468,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: false,
     decimals: 1,
     description: "Sjuktimmar ÷ (fakturerade timmar + sjuktimmar).",
+    headlineSubject: "SJUKFRÅNVARON",
     formula: "sjuktimmar / (timmar + sjuktimmar) * 100",
   },
   {
@@ -449,6 +480,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: false,
     decimals: 2,
     description: "Sjukpass ÷ konsulter i arbete.",
+    headlineSubject: "SJUKPASSEN PER KONSULT",
     formula: "sjukpass / konsulter",
   },
   {
@@ -460,6 +492,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 1,
     description: "Fakturerade timmar ÷ konsulter i arbete.",
+    headlineSubject: "TIMMARNA PER KONSULT",
     formula: "timmar / konsulter",
   },
   {
@@ -471,6 +504,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 0,
     description: "Fakturerat (Intelliplan) ÷ konsulter i arbete.",
+    headlineSubject: "FAKTURERINGEN PER KONSULT",
     formula: "fakturerat_ip / konsulter",
   },
   {
@@ -482,6 +516,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 1,
     description: "Resultat ÷ intäkter.",
+    headlineSubject: "MARGINALEN",
     formula: "resultat / intakter * 100",
   },
   {
@@ -493,6 +528,7 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     higherIsBetter: true,
     decimals: 1,
     description: "Till arbete eller studier ÷ avslutade deltagare.",
+    headlineSubject: "ANDELEN TILL ARBETE ELLER STUDIER",
     formula: "resultat_deltagare / avslutade_deltagare * 100",
   },
 ];

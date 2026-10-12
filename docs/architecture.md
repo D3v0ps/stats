@@ -55,7 +55,7 @@ Use built-ins only (`gen_random_uuid()`, `sha256()`); no pgcrypto.
   - `code` is the canonical normalized key (lowercased, trimmed, collapsed spaces) except `kostnadsstalle`, which is `MBAB:100` (scoped per company), and `kontogrupp`, which equals the account group key.
   - Trigger: reject `code`/`label` that look like a Swedish personnummer/samordningsnummer (10/12 digits, valid date or day+60, Luhn). Org numbers pass (month digits > 12 rule).
 - `dimension_aliases(dimension_id, alias_norm text, value_id bigint references dimension_values, pk(dimension_id, alias_norm))`
-- `metrics(id smallint identity pk, key unique, name, unit check in ('st','kr','h','pct','faktor','man'), kind check in ('sum','snapshot','distinct','ledger','formula'), dataset_id null, higher_is_better bool null, decimals smallint null, description text, snapshot_rollup check in ('last','avg') null, base_metric_id null, distinct_dimension_id null, account_group_key text null, formula text null, is_system bool default false)`
+- `metrics(id smallint identity pk, key unique, name, unit check in ('st','kr','h','pct','faktor','man'), kind check in ('sum','snapshot','distinct','ledger','formula'), dataset_id null, higher_is_better bool null, decimals smallint null, description text, headline_subject text, snapshot_rollup check in ('last','avg') null, base_metric_id null, distinct_dimension_id null, account_group_key text null, formula text null, is_system bool default false)`
   - CHECK constraints per kind (e.g. distinct ⇒ base + distinct dimension; ledger ⇒ account_group_key; formula ⇒ formula and dataset null).
 - `account_groups(key text pk, name, sign smallint check in (1,-1), sort int)`
 - `account_group_ranges(id identity pk, group_key references account_groups, from_account int, to_account int, check from<=to)`
@@ -113,7 +113,7 @@ company and month (and the upload's scenario).
 - `merge_dimension_values(p_from bigint, p_into bigint)` – rewrites dims in metric_values, adds alias, deactivates `p_from`, audit.
 - `freeze_report(p_title text, p_template_id uuid, p_anchor date, p_snapshot jsonb) returns uuid`.
 - Phase 2: `get_shared_report(p_token text) returns jsonb` (SECURITY DEFINER, granted to anon), `create_share_link`, `revoke_share_link`.
-- Login throttle (service_role only): `private.login_gate(p_ip_hash text) returns jsonb {allowed bool, retry_after_s int, delay_ms int}`, `private.login_record(p_ip_hash text, p_ok bool)`.
+- Login throttle: `public.login_gate(p_ip_hash text) returns jsonb {allowed bool, retry_after_s int, delay_ms int}` and `public.login_record(p_ip_hash text, p_ok bool)`. In `public` so PostgREST can reach them, but `revoke execute … from public, anon, authenticated; grant execute … to service_role` (called only from `src/lib/db/admin.ts`). They read/write `private.login_attempts`. Rules: per ip_hash 5 failures in 15 min ⇒ locked 15 min, doubling per repeated lockout (cap 24 h); > 50 failures/hour globally ⇒ `delay_ms` up to 3000 for everyone (never a hard global lock); rows older than 24 h deleted opportunistically.
 
 ## Metric semantics (tested in `src/lib/metrics`)
 
