@@ -1,0 +1,38 @@
+{
+  "name": "Workbuster – deltagare",
+  "kind": "cases",
+  "header": ["GEN-nummer", "Startdatum"],
+  "columns": {
+    "key": ["GEN-nummer", "Referensnummer"],
+    "start": ["Startdatum"],
+    "end": ["Slutdatum"],
+    "avbrott": ["Avbrott"],
+    "resultat": ["Resultat"],
+    "resultatdatum": ["Resultatdatum"],
+    "tjanst": ["Tjänst"],
+    "ort": ["Ort", "Leveransområde"]
+  },
+  "company": { "filename_regex": "_(MBAB|MBR)[_.]" },
+  "dims": { "verksamhet": "tjanst", "ort": "ort" },
+  "cases": {
+    "key": "key",
+    "start": "start",
+    "end": "end",
+    "interrupt": "avbrott",
+    "result": "resultat",
+    "result_date": "resultatdatum",
+    "result_map": { "arbete": "Arbete", "studier": "Studier" },
+    "from_month": "2025-01",
+    "to_month": {
+      "meta_regex": "export från workbuster (\\d{4}-\\d{2}-\\d{2})",
+      "offset_months": -1
+    },
+    "metrics": {
+      "active": "aktiva_deltagare",
+      "started": "nya_deltagare",
+      "ended": "avslutade_deltagare",
+      "interrupted": "avbrott_deltagare",
+      "results": "resultat_deltagare"
+    }
+  }
+}

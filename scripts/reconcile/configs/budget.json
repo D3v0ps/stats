@@ -1,0 +1,33 @@
+{
+  "name": "Budget (brett format / wide)",
+  "kind": "wide",
+  "sheets": { "MB AB": "MBAB", "MB Restart": "MBR" },
+  "header": ["Jan", "Dec"],
+  "wide": {
+    "label_column": ["Post", "Konto", "Rad"],
+    "months": ["jan", "feb", "mar", "apr", "maj", "jun", "jul", "aug", "sep", "okt", "nov", "dec"],
+    "year": { "filename_regex": "(\\d{4})" },
+    "rows": {
+      "Intäkter": "intakter",
+      "Varor och underleverantörer": "varor_ul",
+      "Övriga externa kostnader": "ovriga_externa",
+      "Personalkostnader": "personal",
+      "Avskrivningar": "avskrivningar",
+      "Finansiella poster": "finansiella"
+    },
+    "ignore_rows": ["Rörelseresultat", "Resultat efter finansiella poster"],
+    "negate": true,
+    "metric": "budget_belopp",
+    "dim": "kontogrupp"
+  },
+  "compare_aliases": {
+    "kontogrupp": {
+      "Intäkter": "intakter",
+      "Varor och underleverantörer": "varor_ul",
+      "Övriga externa kostnader": "ovriga_externa",
+      "Personalkostnader": "personal",
+      "Avskrivningar": "avskrivningar",
+      "Finansiella poster": "finansiella"
+    }
+  }
+}

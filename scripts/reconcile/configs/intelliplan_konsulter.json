@@ -1,0 +1,27 @@
+{
+  "name": "Intelliplan – konsultlista",
+  "kind": "cases",
+  "header": ["Anställnings id", "Startdatum"],
+  "columns": {
+    "key": ["Anställnings id", "Anställningsid"],
+    "start": ["Startdatum"],
+    "end": ["Slutdatum"],
+    "enhet": ["Organisationsenhet"]
+  },
+  "company": { "filename_regex": "_(MBAB|MBR)[_.]" },
+  "dims": { "ort": { "column": "enhet", "regex": "([^/]+)$" } },
+  "cases": {
+    "key": "key",
+    "start": "start",
+    "end": "end",
+    "from_month": "earliest_start",
+    "to_month": { "meta_regex": "utdrag:\\s*(\\d{4}-\\d{2}-\\d{2})", "offset_months": -1 },
+    "metrics": {
+      "active": "anstallda_konsulter",
+      "started": "nyanstallda",
+      "ended": "avslutade_anstallningar",
+      "tenure": "anstallningstid"
+    }
+  },
+  "rollups": { "anstallningstid": { "weighted_by": "anstallda_konsulter" } }
+}

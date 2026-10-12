@@ -1,0 +1,29 @@
+{
+  "name": "Intelliplan – fakturerat och lön",
+  "kind": "table",
+  "header": ["Kund", "Fakturerat belopp"],
+  "columns": {
+    "kund": ["Kund"],
+    "anst_id": ["Anställnings id", "Anställningsid"],
+    "fakturerat": ["Fakturerat belopp", "Fakturerat"],
+    "lon": ["Lönekostnad"]
+  },
+  "skip": [{ "label": "summarad / sum row", "column": "kund", "regex": "^(summa|totalt)\\b" }],
+  "fill_down": ["kund"],
+  "exclude": [
+    {
+      "label": "testkund / test customer",
+      "column": "kund",
+      "equals": "Miljonbemanning Presentation (Stockholm)"
+    }
+  ],
+  "company": { "filename_regex": "_(MBAB|MBR)[_.]" },
+  "period": { "meta_regex": "period:\\s*(\\d{4}-\\d{2})-\\d{2}" },
+  "aliases": { "kund": { "Postnord": "PostNord AB" } },
+  "dims": { "kund": "kund", "konsult": "anst_id" },
+  "metrics": [
+    { "key": "fakturerat_ip", "sum": "fakturerat" },
+    { "key": "lonekostnad", "sum": "lon" }
+  ],
+  "compare_aliases": { "kund": { "Postnord": "PostNord AB" } }
+}

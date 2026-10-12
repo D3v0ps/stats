@@ -1,0 +1,3663 @@
+[
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-01",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-01",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-01",
+    "dims": { "ort": "Uppsala" },
+    "value": 2
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-02",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-02",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-02",
+    "dims": { "ort": "Uppsala" },
+    "value": 2
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-03",
+    "dims": { "ort": "Kungsängen" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-03",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-03",
+    "dims": { "ort": "Södertälje" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-03",
+    "dims": { "ort": "Uppsala" },
+    "value": 2
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-04",
+    "dims": { "ort": "Kungsängen" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-04",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-04",
+    "dims": { "ort": "Södertälje" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-04",
+    "dims": { "ort": "Uppsala" },
+    "value": 2
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-05",
+    "dims": { "ort": "Kungsängen" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-05",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-05",
+    "dims": { "ort": "Södertälje" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-05",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-06",
+    "dims": { "ort": "Kungsängen" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-06",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-06",
+    "dims": { "ort": "Södertälje" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-06",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-07",
+    "dims": { "ort": "Kungsängen" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-07",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-07",
+    "dims": { "ort": "Södertälje" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-07",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-08",
+    "dims": { "ort": "Kungsängen" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-08",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-08",
+    "dims": { "ort": "Södertälje" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-08",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-09",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-09",
+    "dims": { "ort": "Stockholm" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-09",
+    "dims": { "ort": "Södertälje" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-09",
+    "dims": { "ort": "Uppsala" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-10",
+    "dims": { "ort": "Kungsängen" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-10",
+    "dims": { "ort": "Stockholm" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-10",
+    "dims": { "ort": "Södertälje" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-10",
+    "dims": { "ort": "Uppsala" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-11",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-11",
+    "dims": { "ort": "Stockholm" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-11",
+    "dims": { "ort": "Södertälje" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-11",
+    "dims": { "ort": "Uppsala" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-12",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-12",
+    "dims": { "ort": "Stockholm" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-12",
+    "dims": { "ort": "Södertälje" },
+    "value": 6
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2023-12",
+    "dims": { "ort": "Uppsala" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-01",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-01",
+    "dims": { "ort": "Stockholm" },
+    "value": 6
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-01",
+    "dims": { "ort": "Södertälje" },
+    "value": 6
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-01",
+    "dims": { "ort": "Uppsala" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-02",
+    "dims": { "ort": "Kungsängen" },
+    "value": 2
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-02",
+    "dims": { "ort": "Stockholm" },
+    "value": 6
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-02",
+    "dims": { "ort": "Södertälje" },
+    "value": 9
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-02",
+    "dims": { "ort": "Uppsala" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-03",
+    "dims": { "ort": "Kungsängen" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-03",
+    "dims": { "ort": "Stockholm" },
+    "value": 8
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-03",
+    "dims": { "ort": "Södertälje" },
+    "value": 10
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-03",
+    "dims": { "ort": "Uppsala" },
+    "value": 2
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-04",
+    "dims": { "ort": "Kungsängen" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-04",
+    "dims": { "ort": "Stockholm" },
+    "value": 8
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-04",
+    "dims": { "ort": "Södertälje" },
+    "value": 11
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-04",
+    "dims": { "ort": "Uppsala" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-05",
+    "dims": { "ort": "Kungsängen" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-05",
+    "dims": { "ort": "Stockholm" },
+    "value": 9
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-05",
+    "dims": { "ort": "Södertälje" },
+    "value": 11
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-05",
+    "dims": { "ort": "Uppsala" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-06",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-06",
+    "dims": { "ort": "Stockholm" },
+    "value": 9
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-06",
+    "dims": { "ort": "Södertälje" },
+    "value": 10
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-06",
+    "dims": { "ort": "Uppsala" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-07",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-07",
+    "dims": { "ort": "Stockholm" },
+    "value": 8
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-07",
+    "dims": { "ort": "Södertälje" },
+    "value": 9
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-07",
+    "dims": { "ort": "Uppsala" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-08",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-08",
+    "dims": { "ort": "Stockholm" },
+    "value": 9
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-08",
+    "dims": { "ort": "Södertälje" },
+    "value": 9
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-08",
+    "dims": { "ort": "Uppsala" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-09",
+    "dims": { "ort": "Kungsängen" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-09",
+    "dims": { "ort": "Stockholm" },
+    "value": 10
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-09",
+    "dims": { "ort": "Södertälje" },
+    "value": 11
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-09",
+    "dims": { "ort": "Uppsala" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-10",
+    "dims": { "ort": "Kungsängen" },
+    "value": 6
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-10",
+    "dims": { "ort": "Stockholm" },
+    "value": 11
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-10",
+    "dims": { "ort": "Södertälje" },
+    "value": 11
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-10",
+    "dims": { "ort": "Uppsala" },
+    "value": 2
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-11",
+    "dims": { "ort": "Kungsängen" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-11",
+    "dims": { "ort": "Stockholm" },
+    "value": 13
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-11",
+    "dims": { "ort": "Södertälje" },
+    "value": 10
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-11",
+    "dims": { "ort": "Uppsala" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-12",
+    "dims": { "ort": "Kungsängen" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-12",
+    "dims": { "ort": "Stockholm" },
+    "value": 13
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-12",
+    "dims": { "ort": "Södertälje" },
+    "value": 10
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2024-12",
+    "dims": { "ort": "Uppsala" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ort": "Stockholm" },
+    "value": 15
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ort": "Södertälje" },
+    "value": 11
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ort": "Uppsala" },
+    "value": 3
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ort": "Stockholm" },
+    "value": 14
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ort": "Södertälje" },
+    "value": 13
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ort": "Uppsala" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ort": "Stockholm" },
+    "value": 14
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ort": "Södertälje" },
+    "value": 15
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ort": "Uppsala" },
+    "value": 6
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ort": "Kungsängen" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ort": "Stockholm" },
+    "value": 14
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ort": "Södertälje" },
+    "value": 13
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ort": "Uppsala" },
+    "value": 6
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ort": "Kungsängen" },
+    "value": 7
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ort": "Stockholm" },
+    "value": 12
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ort": "Södertälje" },
+    "value": 13
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ort": "Uppsala" },
+    "value": 6
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ort": "Kungsängen" },
+    "value": 8
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ort": "Stockholm" },
+    "value": 14
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ort": "Södertälje" },
+    "value": 16
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ort": "Uppsala" },
+    "value": 6
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ort": "Kungsängen" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ort": "Stockholm" },
+    "value": 14
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ort": "Södertälje" },
+    "value": 17
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ort": "Uppsala" },
+    "value": 6
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ort": "Kungsängen" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ort": "Stockholm" },
+    "value": 15
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ort": "Södertälje" },
+    "value": 17
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ort": "Uppsala" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ort": "Kungsängen" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ort": "Stockholm" },
+    "value": 13
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ort": "Södertälje" },
+    "value": 16
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ort": "Uppsala" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ort": "Kungsängen" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ort": "Stockholm" },
+    "value": 12
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ort": "Södertälje" },
+    "value": 17
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ort": "Uppsala" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ort": "Kungsängen" },
+    "value": 8
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ort": "Stockholm" },
+    "value": 11
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ort": "Södertälje" },
+    "value": 16
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ort": "Uppsala" },
+    "value": 4
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ort": "Kungsängen" },
+    "value": 8
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ort": "Stockholm" },
+    "value": 9
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ort": "Södertälje" },
+    "value": 15
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ort": "Uppsala" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ort": "Kungsängen" },
+    "value": 9
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ort": "Stockholm" },
+    "value": 13
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ort": "Södertälje" },
+    "value": 15
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ort": "Uppsala" },
+    "value": 6
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ort": "Kungsängen" },
+    "value": 7
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ort": "Stockholm" },
+    "value": 18
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ort": "Södertälje" },
+    "value": 16
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ort": "Uppsala" },
+    "value": 6
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Kungsängen" },
+    "value": 8
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Stockholm" },
+    "value": 16
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Södertälje" },
+    "value": 17
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Uppsala" },
+    "value": 7
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ort": "Kungsängen" },
+    "value": 9
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ort": "Stockholm" },
+    "value": 15
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ort": "Södertälje" },
+    "value": 18
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ort": "Uppsala" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Kungsängen" },
+    "value": 9
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Stockholm" },
+    "value": 14
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Södertälje" },
+    "value": 18
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Uppsala" },
+    "value": 5
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ort": "Kungsängen" },
+    "value": 8
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ort": "Stockholm" },
+    "value": 13
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ort": "Södertälje" },
+    "value": 18
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ort": "Uppsala" },
+    "value": 7
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ort": "Kungsängen" },
+    "value": 9
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ort": "Stockholm" },
+    "value": 13
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ort": "Södertälje" },
+    "value": 19
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ort": "Uppsala" },
+    "value": 7
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ort": "Kungsängen" },
+    "value": 7
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ort": "Stockholm" },
+    "value": 16
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ort": "Södertälje" },
+    "value": 21
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ort": "Uppsala" },
+    "value": 7
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Kungsängen" },
+    "value": 7
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Stockholm" },
+    "value": 17
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Södertälje" },
+    "value": 20
+  },
+  {
+    "metricKey": "anstallda_konsulter",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Uppsala" },
+    "value": 7
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-01",
+    "dims": { "ort": "Kungsängen" },
+    "value": 0.065708
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-01",
+    "dims": { "ort": "Södertälje" },
+    "value": 0.197125
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-01",
+    "dims": { "ort": "Uppsala" },
+    "value": 0.476386
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-02",
+    "dims": { "ort": "Kungsängen" },
+    "value": 0.985626
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-02",
+    "dims": { "ort": "Södertälje" },
+    "value": 0.919918
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-02",
+    "dims": { "ort": "Uppsala" },
+    "value": 0.887064
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-03",
+    "dims": { "ort": "Kungsängen" },
+    "value": 0.930869
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-03",
+    "dims": { "ort": "Stockholm" },
+    "value": 0.952772
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-03",
+    "dims": { "ort": "Södertälje" },
+    "value": 1.598905
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-03",
+    "dims": { "ort": "Uppsala" },
+    "value": 1.905544
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-04",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1.916496
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-04",
+    "dims": { "ort": "Stockholm" },
+    "value": 1.938398
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-04",
+    "dims": { "ort": "Södertälje" },
+    "value": 2.584531
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-04",
+    "dims": { "ort": "Uppsala" },
+    "value": 2.89117
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-05",
+    "dims": { "ort": "Kungsängen" },
+    "value": 2.934976
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-05",
+    "dims": { "ort": "Stockholm" },
+    "value": 2.956879
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-05",
+    "dims": { "ort": "Södertälje" },
+    "value": 2.924025
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-05",
+    "dims": { "ort": "Uppsala" },
+    "value": 4.172485
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-06",
+    "dims": { "ort": "Kungsängen" },
+    "value": 3.920602
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-06",
+    "dims": { "ort": "Stockholm" },
+    "value": 2.365503
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-06",
+    "dims": { "ort": "Södertälje" },
+    "value": 3.909651
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-06",
+    "dims": { "ort": "Uppsala" },
+    "value": 5.158111
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-07",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4.939083
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-07",
+    "dims": { "ort": "Stockholm" },
+    "value": 3.383984
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-07",
+    "dims": { "ort": "Södertälje" },
+    "value": 3.962218
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-07",
+    "dims": { "ort": "Uppsala" },
+    "value": 6.176591
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-08",
+    "dims": { "ort": "Kungsängen" },
+    "value": 3.659959
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-08",
+    "dims": { "ort": "Stockholm" },
+    "value": 4.402464
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-08",
+    "dims": { "ort": "Södertälje" },
+    "value": 4.980698
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-08",
+    "dims": { "ort": "Uppsala" },
+    "value": 7.195072
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-09",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4.25462
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-09",
+    "dims": { "ort": "Stockholm" },
+    "value": 3.865845
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-09",
+    "dims": { "ort": "Södertälje" },
+    "value": 5.519507
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-09",
+    "dims": { "ort": "Uppsala" },
+    "value": 3.099247
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-10",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4.490075
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-10",
+    "dims": { "ort": "Stockholm" },
+    "value": 3.852156
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-10",
+    "dims": { "ort": "Södertälje" },
+    "value": 5.342094
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-10",
+    "dims": { "ort": "Uppsala" },
+    "value": 4.117728
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-11",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4.131417
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-11",
+    "dims": { "ort": "Stockholm" },
+    "value": 4.837782
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-11",
+    "dims": { "ort": "Södertälje" },
+    "value": 6.327721
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-11",
+    "dims": { "ort": "Uppsala" },
+    "value": 5.103354
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-12",
+    "dims": { "ort": "Kungsängen" },
+    "value": 5.149897
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-12",
+    "dims": { "ort": "Stockholm" },
+    "value": 4.750719
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-12",
+    "dims": { "ort": "Södertälje" },
+    "value": 4.555784
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2023-12",
+    "dims": { "ort": "Uppsala" },
+    "value": 4.747433
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-01",
+    "dims": { "ort": "Kungsängen" },
+    "value": 6.168378
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-01",
+    "dims": { "ort": "Stockholm" },
+    "value": 4.856947
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-01",
+    "dims": { "ort": "Södertälje" },
+    "value": 5.574264
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-01",
+    "dims": { "ort": "Uppsala" },
+    "value": 5.765914
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-02",
+    "dims": { "ort": "Kungsängen" },
+    "value": 9.560575
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-02",
+    "dims": { "ort": "Stockholm" },
+    "value": 5.809719
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-02",
+    "dims": { "ort": "Södertälje" },
+    "value": 3.424139
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-02",
+    "dims": { "ort": "Uppsala" },
+    "value": 7.074606
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-03",
+    "dims": { "ort": "Kungsängen" },
+    "value": 7.096509
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-03",
+    "dims": { "ort": "Stockholm" },
+    "value": 5.195072
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-03",
+    "dims": { "ort": "Södertälje" },
+    "value": 2.766324
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-03",
+    "dims": { "ort": "Uppsala" },
+    "value": 8.903491
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-04",
+    "dims": { "ort": "Kungsängen" },
+    "value": 8.082136
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-04",
+    "dims": { "ort": "Stockholm" },
+    "value": 6.12731
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-04",
+    "dims": { "ort": "Södertälje" },
+    "value": 3.425798
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-04",
+    "dims": { "ort": "Uppsala" },
+    "value": 6.910335
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-05",
+    "dims": { "ort": "Kungsängen" },
+    "value": 9.100616
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-05",
+    "dims": { "ort": "Stockholm" },
+    "value": 6.359115
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-05",
+    "dims": { "ort": "Södertälje" },
+    "value": 4.184432
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-05",
+    "dims": { "ort": "Uppsala" },
+    "value": 7.928816
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-06",
+    "dims": { "ort": "Kungsängen" },
+    "value": 7.564682
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-06",
+    "dims": { "ort": "Stockholm" },
+    "value": 7.344741
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-06",
+    "dims": { "ort": "Södertälje" },
+    "value": 5.325667
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-06",
+    "dims": { "ort": "Uppsala" },
+    "value": 7.019849
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-07",
+    "dims": { "ort": "Kungsängen" },
+    "value": 8.583162
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-07",
+    "dims": { "ort": "Stockholm" },
+    "value": 8.62423
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-07",
+    "dims": { "ort": "Södertälje" },
+    "value": 4.672599
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-07",
+    "dims": { "ort": "Uppsala" },
+    "value": 8.03833
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-08",
+    "dims": { "ort": "Kungsängen" },
+    "value": 9.601643
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-08",
+    "dims": { "ort": "Stockholm" },
+    "value": 8.611453
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-08",
+    "dims": { "ort": "Södertälje" },
+    "value": 5.059548
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-08",
+    "dims": { "ort": "Uppsala" },
+    "value": 9.05681
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-09",
+    "dims": { "ort": "Kungsängen" },
+    "value": 8.620945
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-09",
+    "dims": { "ort": "Stockholm" },
+    "value": 8.331828
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-09",
+    "dims": { "ort": "Södertälje" },
+    "value": 4.521934
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-09",
+    "dims": { "ort": "Uppsala" },
+    "value": 10.042437
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-10",
+    "dims": { "ort": "Kungsängen" },
+    "value": 8.087611
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-10",
+    "dims": { "ort": "Stockholm" },
+    "value": 8.50028
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-10",
+    "dims": { "ort": "Södertälje" },
+    "value": 5.540414
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-10",
+    "dims": { "ort": "Uppsala" },
+    "value": 5.979466
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-11",
+    "dims": { "ort": "Kungsängen" },
+    "value": 10.625051
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-11",
+    "dims": { "ort": "Stockholm" },
+    "value": 8.046754
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-11",
+    "dims": { "ort": "Södertälje" },
+    "value": 5.641068
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-11",
+    "dims": { "ort": "Uppsala" },
+    "value": 4.785763
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-12",
+    "dims": { "ort": "Kungsängen" },
+    "value": 11.643532
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-12",
+    "dims": { "ort": "Stockholm" },
+    "value": 9.065235
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-12",
+    "dims": { "ort": "Södertälje" },
+    "value": 6.659548
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2024-12",
+    "dims": { "ort": "Uppsala" },
+    "value": 5.804244
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ort": "Kungsängen" },
+    "value": 14.628337
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ort": "Stockholm" },
+    "value": 8.767693
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ort": "Södertälje" },
+    "value": 6.773941
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ort": "Uppsala" },
+    "value": 6.078029
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ort": "Kungsängen" },
+    "value": 15.548255
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ort": "Stockholm" },
+    "value": 8.398944
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ort": "Södertälje" },
+    "value": 6.616332
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ort": "Uppsala" },
+    "value": 5.470226
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ort": "Kungsängen" },
+    "value": 16.566735
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ort": "Stockholm" },
+    "value": 8.157231
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ort": "Södertälje" },
+    "value": 6.627789
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ort": "Uppsala" },
+    "value": 4.550308
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ort": "Kungsängen" },
+    "value": 14.068172
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ort": "Stockholm" },
+    "value": 9.051335
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ort": "Södertälje" },
+    "value": 7.728321
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ort": "Uppsala" },
+    "value": 3.351129
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ort": "Kungsängen" },
+    "value": 10.88413
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ort": "Stockholm" },
+    "value": 10.283368
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ort": "Södertälje" },
+    "value": 7.354288
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ort": "Uppsala" },
+    "value": 4.36961
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ort": "Kungsängen" },
+    "value": 10.422998
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ort": "Stockholm" },
+    "value": 9.729539
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ort": "Södertälje" },
+    "value": 6.889117
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ort": "Uppsala" },
+    "value": 4.944559
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ort": "Kungsängen" },
+    "value": 12.786858
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ort": "Stockholm" },
+    "value": 10.74802
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ort": "Södertälje" },
+    "value": 7.452108
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ort": "Uppsala" },
+    "value": 5.963039
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ort": "Kungsängen" },
+    "value": 10.447639
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ort": "Stockholm" },
+    "value": 10.982067
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ort": "Södertälje" },
+    "value": 7.212465
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ort": "Uppsala" },
+    "value": 7.188501
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ort": "Kungsängen" },
+    "value": 11.433265
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ort": "Stockholm" },
+    "value": 12.914232
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ort": "Södertälje" },
+    "value": 8.176591
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ort": "Uppsala" },
+    "value": 5.724846
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ort": "Kungsängen" },
+    "value": 12.451745
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ort": "Stockholm" },
+    "value": 14.31896
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ort": "Södertälje" },
+    "value": 7.856021
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ort": "Uppsala" },
+    "value": 6.743326
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ort": "Kungsängen" },
+    "value": 8.546201
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ort": "Stockholm" },
+    "value": 15.581856
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ort": "Södertälje" },
+    "value": 8.659138
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ort": "Uppsala" },
+    "value": 7.728953
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ort": "Kungsängen" },
+    "value": 9.416838
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ort": "Stockholm" },
+    "value": 16.569473
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ort": "Södertälje" },
+    "value": 9.805886
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ort": "Uppsala" },
+    "value": 7.155647
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ort": "Kungsängen" },
+    "value": 9.319644
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ort": "Stockholm" },
+    "value": 12.338019
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ort": "Södertälje" },
+    "value": 10.824367
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ort": "Uppsala" },
+    "value": 6.86653
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ort": "Kungsängen" },
+    "value": 8.842476
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ort": "Stockholm" },
+    "value": 9.666439
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ort": "Södertälje" },
+    "value": 11.063655
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ort": "Uppsala" },
+    "value": 7.786448
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Kungsängen" },
+    "value": 8.73922
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Stockholm" },
+    "value": 10.728953
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Södertälje" },
+    "value": 11.381085
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Uppsala" },
+    "value": 6.185978
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ort": "Kungsängen" },
+    "value": 8.647958
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ort": "Stockholm" },
+    "value": 10.103765
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ort": "Södertälje" },
+    "value": 11.43509
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ort": "Uppsala" },
+    "value": 9.560575
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Kungsängen" },
+    "value": 9.44376
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Stockholm" },
+    "value": 8.863596
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Södertälje" },
+    "value": 10.951403
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Uppsala" },
+    "value": 9.895688
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ort": "Kungsängen" },
+    "value": 5.396304
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ort": "Stockholm" },
+    "value": 10.126678
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ort": "Södertälje" },
+    "value": 11.937029
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ort": "Uppsala" },
+    "value": 7.861543
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ort": "Kungsängen" },
+    "value": 5.764089
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ort": "Stockholm" },
+    "value": 10.955615
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ort": "Södertälje" },
+    "value": 12.282287
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ort": "Uppsala" },
+    "value": 8.880023
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ort": "Kungsängen" },
+    "value": 5.974773
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ort": "Stockholm" },
+    "value": 9.862423
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ort": "Södertälje" },
+    "value": 12.063753
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ort": "Uppsala" },
+    "value": 9.898504
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Kungsängen" },
+    "value": 6.847756
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Stockholm" },
+    "value": 10.250513
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Södertälje" },
+    "value": 12.537166
+  },
+  {
+    "metricKey": "anstallningstid",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Uppsala" },
+    "value": 8.082136
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2023-02",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2023-05",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2023-09",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2023-09",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2023-10",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2023-12",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-02",
+    "dims": { "ort": "Kungsängen" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-02",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-02",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-03",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-03",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-04",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-05",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-06",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-06",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-07",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-07",
+    "dims": { "ort": "Södertälje" },
+    "value": 3
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-08",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-09",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-09",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-10",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-11",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2024-11",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ort": "Uppsala" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ort": "Kungsängen" },
+    "value": 4
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ort": "Stockholm" },
+    "value": 3
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ort": "Kungsängen" },
+    "value": 3
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Stockholm" },
+    "value": 3
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ort": "Stockholm" },
+    "value": 4
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ort": "Uppsala" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Kungsängen" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ort": "Kungsängen" },
+    "value": 3
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "avslutade_anstallningar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-01",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-01",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-01",
+    "dims": { "ort": "Uppsala" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-02",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-02",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-03",
+    "dims": { "ort": "Kungsängen" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-03",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-03",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-05",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-06",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-07",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-08",
+    "dims": { "ort": "Kungsängen" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-09",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-09",
+    "dims": { "ort": "Uppsala" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-10",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-10",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-11",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-12",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-12",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2023-12",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-01",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-02",
+    "dims": { "ort": "Södertälje" },
+    "value": 5
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-03",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-03",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-03",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-04",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-04",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-04",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-05",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-05",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-06",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-06",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-07",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-08",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-08",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-09",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-09",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-09",
+    "dims": { "ort": "Södertälje" },
+    "value": 3
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-10",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-10",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-11",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-11",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2024-11",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-01",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-02",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-03",
+    "dims": { "ort": "Uppsala" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-04",
+    "dims": { "ort": "Uppsala" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ort": "Kungsängen" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-05",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ort": "Södertälje" },
+    "value": 3
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-06",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-07",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ort": "Kungsängen" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-08",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-09",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-10",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ort": "Kungsängen" },
+    "value": 3
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-11",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2025-12",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ort": "Stockholm" },
+    "value": 4
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ort": "Stockholm" },
+    "value": 5
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "ort": "Uppsala" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Stockholm" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "ort": "Uppsala" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ort": "Stockholm" },
+    "value": 3
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "ort": "Södertälje" },
+    "value": 2
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Kungsängen" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Stockholm" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Södertälje" },
+    "value": 1
+  },
+  {
+    "metricKey": "nyanstallda",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "ort": "Uppsala" },
+    "value": 1
+  }
+]

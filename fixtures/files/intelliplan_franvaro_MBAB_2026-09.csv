@@ -1,0 +1,51 @@
+Kund;Anställnings id;Konsult;Datum;Frånvaroorsak;Timmar
+Bosch;2060;"Axelsson, Kerim";2026-09-09;SJUK UNI;8,25
+Bosch;2060;"Axelsson, Kerim";2026-09-12;SJUK UNI;6,00
+Bosch;2060;"Axelsson, Kerim";2026-09-23;SJUK LO;8,25
+Bosch;2106;"Gustafsson, Oskar";2026-09-07;SJUK UNI;4,00
+Bosch;2106;"Gustafsson, Oskar";2026-09-15;SJUK LO;6,00
+Bosch;2059;"Jönsson, Hassan";2026-09-22;SJUK LO;4,00
+Bosch;2173;"Larsson, Arvid";2026-09-04;Olovlig frånvaro;4,00
+Budbee Kungsängen;2036;"Jonsson, Freja";2026-09-18;SJUK LO;7,50
+Budbee Kungsängen;2036;"Jonsson, Freja";2026-09-19;SJUK LO;7,50
+Budbee Kungsängen;2036;"Jonsson, Freja";2026-09-22;SJUK LO;8,25
+Budbee Kungsängen;2156;"Olsson, Johan";2026-09-07;SJUK LO;6,00
+Budbee Kungsängen;2156;"Olsson, Johan";2026-09-08;Olovlig frånvaro;8,00
+Budbee Södertälje;2136;"Jansson, Anna";2026-09-17;SJUK LO;4,00
+Budbee Södertälje;2136;"Jansson, Anna";2026-09-30;SJUK LO;6,00
+Budbee Södertälje;2111;"Karlsson, Tilda";2026-09-11;SJUK LO;8,25
+Budbee Södertälje;2111;"Karlsson, Tilda";2026-09-26;SJUK LO;8,25
+Budbee Södertälje;2111;"Karlsson, Tilda";2026-09-30;SJUK LO;8,25
+Budbee Södertälje;2110;"Magnusson, Tilda";2026-09-03;SJUK UNI;4,00
+Budbee Södertälje;2110;"Magnusson, Tilda";2026-09-15;SJUK LO;8,25
+Budbee Södertälje;2110;"Magnusson, Tilda";2026-09-26;SJUK UNI;6,00
+Budbee Södertälje;2110;"Magnusson, Tilda";2026-09-30;SJUK LO;6,00
+Budbee Södertälje;2128;"Mohamed, Noor";2026-09-02;SJUK LO;6,00
+Budbee Södertälje;2074;"Olsson, Maja";2026-09-07;Olovlig frånvaro;4,00
+Budbee Södertälje;2074;"Olsson, Maja";2026-09-10;SJUK LO;8,25
+Budbee Södertälje;2074;"Olsson, Maja";2026-09-25;SJUK LO;6,00
+Early Bird AB;2170;"Ali, Alva";2026-09-01;SJUK UNI;7,50
+Early Bird AB;2170;"Ali, Alva";2026-09-10;SJUK LO;8,00
+Early Bird AB;2170;"Ali, Alva";2026-09-26;SJUK LO;4,00
+Early Bird AB;2181;"Danielsson, Nadia";2026-09-15;Olovlig frånvaro;8,00
+Early Bird AB;2181;"Danielsson, Nadia";2026-09-29;SJUK UNI;6,00
+Early Bird AB;2139;"Forsberg, Leila";2026-09-18;Olovlig frånvaro;8,00
+Early Bird AB;2139;"Forsberg, Leila";2026-09-20;SJUK UNI;8,25
+Early Bird AB;2139;"Forsberg, Leila";2026-09-27;SJUK UNI;6,00
+Early Bird AB;2171;"Gustafsson, Adam";2026-09-15;SJUK LO;8,25
+Early Bird AB;2185;"Hansson, Agnes";2026-09-13;SJUK LO;4,00
+Early Bird AB;2185;"Hansson, Agnes";2026-09-14;SJUK LO;4,00
+Postnord;2123;"Mattsson, Tilda";2026-09-11;SJUK LO;8,25
+Postnord;2123;"Mattsson, Tilda";2026-09-18;SJUK LO;6,00
+PostNord AB;2169;"Jonsson, Jakob";2026-09-21;Olovlig frånvaro;8,00
+PostNord AB;2169;"Jonsson, Jakob";2026-09-29;Olovlig frånvaro;4,00
+PostNord AB;2129;"Lindqvist, Freja";2026-09-18;SJUK LO;7,50
+PostNord AB;2129;"Lindqvist, Freja";2026-09-27;SJUK LO;7,50
+PostNord AB;2129;"Lindqvist, Freja";2026-09-29;Olovlig frånvaro;4,00
+PostNord AB;2158;"Åberg, Abdi";2026-09-11;SJUK LO;6,00
+Premo;2153;"Ahmed, Omar";2026-09-03;SJUK UNI;8,00
+Premo;2176;"Hussein, Agnes";2026-09-05;SJUK UNI;8,25
+Premo;2176;"Hussein, Agnes";2026-09-07;SJUK UNI;7,50
+Premo;2176;"Hussein, Agnes";2026-09-17;SJUK LO;8,00
+PRV;2046;"Abdullahi, Ida";2026-09-12;SJUK LO;8,00
+PRV;2046;"Abdullahi, Ida";2026-09-16;SJUK LO;8,25
