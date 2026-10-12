@@ -8,7 +8,7 @@ import { monthRange } from "@/lib/core/month";
 import { PersonalDataError } from "./errors";
 import type { MemoryFact, MemoryMetricDataSource } from "./memory-source";
 import { resolveReport, resolveSlide, resolveWidget, type ResolveContext } from "./resolve";
-import { DEFS, ID, fact, makeSource, monthlyFacts } from "./test-fixtures";
+import { DEFS, ID, fact, ledgerRow, makeSource, monthlyFacts } from "./test-fixtures";
 
 /** Spaces inside formatted numbers are NBSP. */
 const s = (text: string) => text.replaceAll(" ", NBSP);
@@ -127,7 +127,8 @@ describe("resolveSlide: kpi", () => {
         highlightIndex: 11,
       },
       table: null,
-      footnote: "Summa bolag (ej eliminerat)",
+      // The +20 % is MB Restart's first month: August holds MB AB only.
+      footnote: "MB Restart saknar data för augusti 2026 · Summa bolag (ej eliminerat)",
       notes: "",
       sourceUploadIds: [],
     });
@@ -164,7 +165,8 @@ describe("resolveSlide: kpi", () => {
     expect(r.number?.formatted).toBe(s("4,4 mkr"));
     expect(r.delta).toMatchObject({ formatted: s("+193 %"), againstLabel: "mot jan–sep 2025" });
     expect(r.footnote).toBe(
-      "2 av 9 mån har data · MB Restart: 1 av 9 mån har data · Summa bolag (ej eliminerat)",
+      "2 av 9 mån har data · MB Restart: 1 av 9 mån har data · " +
+        "MB Restart saknar data för jan–sep 2025 · Summa bolag (ej eliminerat)",
     );
   });
 
@@ -251,7 +253,8 @@ describe("resolveSlide: kpi", () => {
     });
     const r = await resolveSlide(slide({ metricKey: "resultatandel" }), ctx(src));
     expect(r.number?.formatted).toBe(s("40,0 %"));
-    expect(r.footnote).toBe("MB Restart saknar data");
+    // September is MB AB only, August (the comparison) MB Restart only.
+    expect(r.footnote).toBe("MB Restart saknar data · MB AB saknar data för augusti 2026");
   });
 
   it("explains a filter the metric does not have instead of showing a total", async () => {
@@ -276,6 +279,103 @@ describe("resolveSlide: kpi", () => {
     const c = { ...ctx(), definitionsByKey: Object.fromEntries(DEFS.map((d) => [d.key, d])) };
     const r = await resolveSlide(slide({ metricKey: "aktiva_deltagare" }), c);
     expect(r.metricName).toBe("Aktiva deltagare");
+  });
+});
+
+describe("Summa bolag comparisons", () => {
+  it("flags a company with fewer months in the comparison window", async () => {
+    const src = makeSource({
+      facts: [
+        ...monthlyFacts("k1", "fakturerat_kund", "MBAB", [
+          ["2025-07", 1_000_000],
+          ["2025-08", 1_000_000],
+          ["2025-09", 1_000_000],
+          ["2026-07", 1_000_000],
+          ["2026-08", 1_000_000],
+          ["2026-09", 1_000_000],
+        ]),
+        ...monthlyFacts("k2", "fakturerat_kund", "MBR", [
+          ["2025-09", 500_000],
+          ["2026-07", 500_000],
+          ["2026-08", 500_000],
+          ["2026-09", 500_000],
+        ]),
+      ],
+    });
+    const r = await resolveSlide(
+      slide({ metricKey: "fakturerat_kund", grain: "quarter", compare: "prev_year" }),
+      ctx(src),
+    );
+    expect(r.delta?.againstLabel).toBe("mot kv 3 2025");
+    expect(r.footnote).toBe(
+      "MB Restart: 1 av 3 mån har data för kv 3 2025 · Summa bolag (ej eliminerat)",
+    );
+    const single = await resolveSlide(
+      slide({
+        metricKey: "fakturerat_kund",
+        grain: "quarter",
+        compare: "prev_year",
+        company: "MBR",
+      }),
+      ctx(src),
+    );
+    expect(single.footnote).toBe(null);
+  });
+
+  it("flags a company without budget when comparing Summa bolag with budget", async () => {
+    const src = makeSource({
+      ledger: [
+        ledgerRow("sie1", "MBAB", "2026-09", 3010, -2_000_000),
+        ledgerRow("sie2", "MBR", "2026-09", 3010, -500_000),
+      ],
+      facts: [
+        fact("b1", "budget_belopp", "MBAB", "2026-09", 2_000_000, { kontogrupp: ID.kgIntakter }),
+      ],
+      scenarios: { b1: "budget" },
+    });
+    const r = await resolveSlide(slide({ metricKey: "intakter", compare: "budget" }), ctx(src));
+    expect(r.delta).toMatchObject({ formatted: s("+25 %"), againstLabel: "mot budget" });
+    expect(r.footnote).toBe("MB Restart saknar budget · Summa bolag (ej eliminerat)");
+  });
+
+  it("does not repeat a company that has no data in the window either", async () => {
+    const src = makeSource({
+      facts: [
+        fact("k1", "fakturerat_kund", "MBAB", "2026-08", 1_000_000),
+        fact("k1", "fakturerat_kund", "MBAB", "2026-09", 1_000_000),
+        fact("k2", "fakturerat_kund", "MBR", "2026-03", 500_000),
+      ],
+    });
+    const r = await resolveSlide(slide({ metricKey: "fakturerat_kund" }), ctx(src));
+    expect(r.footnote).toBe("MB Restart saknar data · Summa bolag (ej eliminerat)");
+  });
+});
+
+describe("headline against budget", () => {
+  it("states the value instead of ÖKAR/MINSKAR, keeping the budget delta", async () => {
+    const src = makeSource({
+      ledger: [ledgerRow("sie", "MBAB", "2026-09", 3010, -1_500_000)],
+      facts: [
+        fact("b1", "budget_belopp", "MBAB", "2026-09", 1_000_000, { kontogrupp: ID.kgIntakter }),
+      ],
+      scenarios: { b1: "budget" },
+    });
+    const r = await resolveSlide(
+      slide({ metricKey: "intakter", company: "MBAB", compare: "budget" }),
+      ctx(src),
+    );
+    expect(r.headline).toBe(`INTÄKTERNA I MB AB: 1,5${NBSP}MKR.`);
+    expect(r.delta).toEqual({
+      direction: "up",
+      formatted: s("+50 %"),
+      favorable: true,
+      againstLabel: "mot budget",
+    });
+    const prev = await resolveSlide(
+      slide({ metricKey: "aktiva_deltagare", company: "MBAB", compare: "prev_year" }),
+      ctx(),
+    );
+    expect(prev.headline).toBe("DELTAGARNA I MB AB ÖKAR.");
   });
 });
 
@@ -501,6 +601,33 @@ describe("personal dimensions", () => {
     ).rejects.toThrow(
       /Rapporten får inte grupperas eller filtreras på personuppgifter \(konsult\)/,
     );
+  });
+
+  it("refuses konsult even when the caller's personal set omits it", async () => {
+    const lax = { ...ctx(), personalDimensions: new Set<string>() };
+    await expect(resolveSlide(slide({ viz: "table", groupBy: "konsult" }), lax)).rejects.toThrow(
+      PersonalDataError,
+    );
+    await expect(
+      resolveReport(
+        { name: "Styrelse", slides: [slide({ viz: "table", groupBy: "konsult" })] },
+        { ...lax, title: "Styrelserapport" },
+      ),
+    ).rejects.toThrow(PersonalDataError);
+    await expect(
+      resolveWidget(
+        widget({ metricKey: "timmar", filters: [{ dimension: "konsult", valueIds: [ID.anna] }] }),
+        { company: "ALL", grain: "month", anchor: null },
+        lax,
+      ),
+    ).rejects.toMatchObject({ name: "PersonalDataError", dimensions: ["konsult"] });
+  });
+
+  it("refuses any dimension the database marks personal", async () => {
+    const c = { ...ctx(), personalDimensions: new Set(["konsult", "uppdrag"]) };
+    await expect(
+      resolveSlide(slide({ filters: [{ dimension: "uppdrag", valueIds: [1] }] }), c),
+    ).rejects.toMatchObject({ dimensions: ["uppdrag"] });
   });
 
   it("refuses widgets unless the workspace explicitly allows personal dimensions", async () => {

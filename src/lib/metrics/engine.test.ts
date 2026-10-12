@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { MetricDefinition, MetricResult } from "@/lib/contracts/metric-query";
-import { runMetricQuery } from "./engine";
+import { resolvePeriod } from "@/lib/core/month";
+import { comparisonPlan, runMetricQuery } from "./engine";
 import { MetricConfigError } from "./errors";
 import { MemoryMetricDataSource, type MemoryFact } from "./memory-source";
 import {
@@ -493,7 +494,9 @@ describe("formula metrics", () => {
       series: "window",
     });
     expect(r.total.coverage).toEqual({ withData: 2, expected: 3 });
-    expect(r.total.value).toBeCloseTo((18 / (382 + 18)) * 100, 10);
+    // Like for like: August's timmar (no sjuktimmar that month) stays out of the ratio.
+    expect(r.total.value).toBeCloseTo((18 / (95 + 187 + 18)) * 100, 10);
+    expect(r.total.value).not.toBeCloseTo((18 / (382 + 18)) * 100, 3);
     expect(r.series?.map((p) => p.value)).toEqual([5, null, 6.5]);
   });
 
@@ -1190,5 +1193,288 @@ describe("series and lineage", () => {
     };
     await run(spy, { metricKeys: ["timmar"], period: SEP, company: "ALL", groupBy: "kund" });
     expect(calls).toEqual([["kund", [ID.ikea]]]);
+  });
+});
+
+describe("formula operands over the months they share", () => {
+  it("reads a distinct operand only over the months every operand has", async () => {
+    // ip_timmar has Jul–Sep, ip_fakturering only Jul–Aug: September's consultants must
+    // not dilute July–August's invoicing.
+    const s = makeSource({
+      facts: [
+        fact("t1", "timmar", "MBAB", "2026-07", 8, { konsult: ID.anna }),
+        fact("t1", "timmar", "MBAB", "2026-08", 8, { konsult: ID.bo }),
+        fact("t1", "timmar", "MBAB", "2026-09", 8, { konsult: ID.cecilia }),
+        fact("t1", "timmar", "MBAB", "2026-09", 8, { konsult: ID.david }),
+        fact("f1", "fakturerat_ip", "MBAB", "2026-07", 100),
+        fact("f1", "fakturerat_ip", "MBAB", "2026-08", 100),
+      ],
+    });
+    const r = await run(s, { metricKeys: ["intakt_per_konsult"], period: Q3, company: "ALL" });
+    expect(r.total.coverage).toEqual({ withData: 2, expected: 3 });
+    expect(r.total.value).toBe(100);
+  });
+
+  it("takes a snapshot operand's last month among the shared months", async () => {
+    const defs: MetricDefinition[] = [
+      ...DEFS,
+      {
+        key: "timmar_per_anstalld",
+        name: "Timmar per anställd",
+        unit: "h",
+        kind: "formula",
+        datasetKey: null,
+        higherIsBetter: true,
+        decimals: 1,
+        formula: "timmar / anstallda_konsulter",
+        dimensions: [],
+      },
+    ];
+    const s = makeSource({
+      definitions: defs,
+      facts: [
+        ...monthlyFacts("t1", "timmar", "MBAB", [
+          ["2026-07", 100],
+          ["2026-08", 300],
+        ]),
+        ...monthlyFacts("k1", "anstallda_konsulter", "MBAB", [
+          ["2026-07", 10],
+          ["2026-08", 20],
+          ["2026-09", 40],
+        ]),
+      ],
+    });
+    const r = await run(s, { metricKeys: ["timmar_per_anstalld"], period: Q3, company: "ALL" });
+    expect(r.total.value).toBe(400 / 20);
+  });
+
+  it("applies the shared months to groups and comparisons as well", async () => {
+    const s = makeSource({
+      facts: [
+        ...monthlyFacts(
+          "t1",
+          "timmar",
+          "MBAB",
+          [
+            ["2025-07", 90],
+            ["2025-08", 90],
+            ["2025-09", 90],
+            ["2026-07", 95],
+            ["2026-08", 100],
+            ["2026-09", 187],
+          ],
+          { kund: ID.ikea },
+        ),
+        ...monthlyFacts(
+          "s1",
+          "sjuktimmar",
+          "MBAB",
+          [
+            ["2025-07", 10],
+            ["2025-09", 10],
+            ["2026-07", 5],
+            ["2026-09", 13],
+          ],
+          { kund: ID.ikea },
+        ),
+      ],
+    });
+    const r = await run(s, {
+      metricKeys: ["sjukfranvaro"],
+      period: Q3,
+      company: "ALL",
+      groupBy: "kund",
+      compare: ["prev_year"],
+    });
+    const expected = (18 / (95 + 187 + 18)) * 100;
+    expect(r.total.value).toBeCloseTo(expected, 10);
+    expect(r.groups[0]?.value).toBeCloseTo(expected, 10);
+    expect(r.total.compare.prev_year?.value).toBeCloseTo((20 / (180 + 20)) * 100, 10);
+    expect(r.groups[0]?.compare.prev_year?.value).toBeCloseTo(10, 10);
+  });
+
+  it("truncates topN for formula groups without an Övriga group", async () => {
+    const s = makeSource({
+      facts: [
+        fact("f1", "fakturerat_ip", "MBAB", "2026-09", 300, { kund: ID.ikea }),
+        fact("f1", "lonekostnad", "MBAB", "2026-09", 100, { kund: ID.ikea }),
+        fact("f1", "fakturerat_ip", "MBAB", "2026-09", 200, { kund: ID.volvo }),
+        fact("f1", "lonekostnad", "MBAB", "2026-09", 100, { kund: ID.volvo }),
+        fact("f1", "fakturerat_ip", "MBAB", "2026-09", 100, { kund: ID.scania }),
+        fact("f1", "lonekostnad", "MBAB", "2026-09", 100, { kund: ID.scania }),
+      ],
+    });
+    const r = await run(s, {
+      metricKeys: ["faktor"],
+      period: SEP,
+      company: "ALL",
+      groupBy: "kund",
+      topN: 2,
+    });
+    expect(r.groups.map((g) => [g.label, g.value])).toEqual([
+      ["IKEA", 3],
+      ["Volvo", 2],
+    ]);
+    expect(r.total.value).toBe(2);
+  });
+});
+
+describe("review regressions", () => {
+  it("compares a budget query with the previous budget, not with actuals", async () => {
+    const s = makeSource({
+      facts: [
+        fact("u1", "timmar", "MBAB", "2026-08", 999),
+        fact("b1", "timmar", "MBAB", "2026-08", 100),
+        fact("b1", "timmar", "MBAB", "2026-09", 120),
+        fact("b0", "timmar", "MBAB", "2025-09", 60),
+      ],
+      scenarios: { b1: "budget", b0: "budget" },
+    });
+    const r = await run(s, {
+      metricKeys: ["timmar"],
+      period: SEP,
+      company: "ALL",
+      scenario: "budget",
+      compare: ["prev_period", "prev_year"],
+    });
+    expect(r.total.value).toBe(120);
+    expect(r.total.compare.prev_period?.value).toBe(100);
+    expect(r.total.compare.prev_year?.value).toBe(60);
+  });
+
+  it("reports lastUpdatedAt for a formula even when the source does not resolve formulas", async () => {
+    const s = makeSource({
+      facts: [
+        fact("f1", "fakturerat_ip", "MBAB", "2026-09", 1),
+        fact("f2", "lonekostnad", "MBAB", "2026-09", 1),
+      ],
+      uploadTimes: { f1: "2026-10-03T08:00:00Z", f2: "2026-10-04T08:00:00Z" },
+    });
+    const asked: string[][] = [];
+    const naive = Object.assign(Object.create(Object.getPrototypeOf(s)), s) as Source;
+    naive.lastUpdated = async (keys, scope) => {
+      asked.push(keys);
+      const out = await s.lastUpdated(keys, scope);
+      // Like a SQL source joining uploads on metric_values: a formula has no rows.
+      for (const k of keys) if (DEFS.find((d) => d.key === k)?.kind === "formula") out[k] = null;
+      return out;
+    };
+    const r = await run(naive, { metricKeys: ["faktor"], period: SEP, company: "ALL" });
+    expect(r.lastUpdatedAt).toBe("2026-10-04T08:00:00Z");
+    expect(asked).toEqual([["faktor", "fakturerat_ip", "lonekostnad"]]);
+  });
+
+  it("orders groups with equal values and labels by id, whatever the row order", async () => {
+    const labels = { ...LABELS, kund: { ...LABELS.kund, [ID.volvo]: "IKEA" } };
+    const facts = [
+      fact("t1", "timmar", "MBAB", "2026-09", 10, { kund: ID.volvo }),
+      fact("t1", "timmar", "MBAB", "2026-09", 10, { kund: ID.ikea }),
+      fact("t1", "timmar", "MBAB", "2026-09", 5, { kund: ID.scania }),
+    ];
+    for (const ordered of [facts, [...facts].reverse()]) {
+      const s = makeSource({ facts: ordered, labels });
+      const reversed = Object.assign(Object.create(Object.getPrototypeOf(s)), s) as Source;
+      reversed.monthly = async (keys, scope) => (await s.monthly(keys, scope)).reverse();
+      for (const source of [s, reversed]) {
+        const r = await run(source, {
+          metricKeys: ["timmar"],
+          period: SEP,
+          company: "ALL",
+          groupBy: "kund",
+          topN: 1,
+        });
+        expect(r.groups.map((g) => [g.id, g.value])).toEqual([
+          [ID.ikea, 10],
+          [null, 15],
+        ]);
+      }
+    }
+  });
+
+  it("puts the rest of a ledger breakdown into Övriga, Ofördelat included", async () => {
+    const s = makeSource({
+      ledger: [
+        ledgerRow("sie", "MBAB", "2026-09", 3010, -1000),
+        ledgerRow("sie", "MBAB", "2026-09", 3010, -600, { objectValueId: ID.ks100 }),
+        ledgerRow("sie", "MBAB", "2026-09", 3010, -300, { objectValueId: ID.ks200 }),
+      ],
+    });
+    const r = await run(s, {
+      metricKeys: ["intakter"],
+      period: SEP,
+      company: "ALL",
+      groupBy: "kostnadsstalle",
+      topN: 1,
+    });
+    expect(r.groups.map((g) => [g.id, g.label, g.value])).toEqual([
+      [ID.ks100, "Bemanning Stockholm", 600],
+      [null, "Övriga", 400],
+    ]);
+  });
+
+  it("splits ledger budget by kostnadsställe, unallocated budget as Ofördelat", async () => {
+    const s = makeSource({
+      ledger: [
+        ledgerRow("sie", "MBAB", "2026-09", 3010, -1000),
+        ledgerRow("sie", "MBAB", "2026-09", 3010, -700, { objectValueId: ID.ks100 }),
+      ],
+      facts: [
+        fact("b1", "budget_belopp", "MBAB", "2026-09", 800, {
+          kontogrupp: ID.kgIntakter,
+          kostnadsstalle: ID.ks100,
+        }),
+        fact("b1", "budget_belopp", "MBAB", "2026-09", 100, { kontogrupp: ID.kgIntakter }),
+      ],
+      scenarios: { b1: "budget" },
+    });
+    const r = await run(s, {
+      metricKeys: ["intakter"],
+      period: SEP,
+      company: "ALL",
+      groupBy: "kostnadsstalle",
+      compare: ["budget"],
+    });
+    expect(r.total.compare.budget?.value).toBe(900);
+    expect(r.groups.map((g) => [g.label, g.value, g.compare.budget?.value])).toEqual([
+      ["Bemanning Stockholm", 700, 800],
+      ["Ofördelat", 300, 100],
+    ]);
+  });
+});
+
+describe("comparisonPlan", () => {
+  const window = (grain: "month" | "quarter" | "ytd", anchor: string, fiscalStart = 1) =>
+    resolvePeriod({ grain, anchor }, fiscalStart);
+
+  it("returns the months each comparison reads", () => {
+    expect(comparisonPlan("prev_period", window("quarter", "2026-08"), 1)).toEqual({
+      kind: "prev_period",
+      range: { from: "2026-04", to: "2026-05", months: ["2026-04", "2026-05"] },
+      scenario: "utfall",
+      label: "kv 2 2026",
+    });
+    expect(comparisonPlan("prev_year", window("ytd", "2026-09", 5), 5)).toEqual({
+      kind: "prev_year",
+      range: {
+        from: "2025-05",
+        to: "2025-09",
+        months: ["2025-05", "2025-06", "2025-07", "2025-08", "2025-09"],
+      },
+      scenario: "utfall",
+      label: "maj–sep 2025",
+    });
+    expect(comparisonPlan("budget", window("month", "2026-09"), 1, "budget")).toEqual({
+      kind: "budget",
+      range: { from: "2026-09", to: "2026-09", months: ["2026-09"] },
+      scenario: "budget",
+      label: "budget",
+    });
+  });
+
+  it("has no previous period for YTD and keeps the query's scenario", () => {
+    expect(comparisonPlan("prev_period", window("ytd", "2026-09"), 1)).toBeNull();
+    expect(comparisonPlan("prev_period", window("month", "2026-09"), 1, "budget")?.scenario).toBe(
+      "budget",
+    );
   });
 });

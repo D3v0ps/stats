@@ -4,6 +4,7 @@ import type { MetricDefinition } from "@/lib/contracts/metric-query";
 import { catalogDefinitions } from "../catalog";
 import { FormulaSyntaxError } from "../errors";
 import {
+  MAX_FORMULA_DEPTH,
   evaluateFormula,
   formatFormula,
   parseFormula,
@@ -120,6 +121,32 @@ describe("parseFormula", () => {
     expect(syntaxError("a + * b").position).toBe(4);
     expect(syntaxError("()").position).toBe(1);
     expect(syntaxError("a )").position).toBe(2);
+  });
+});
+
+describe("parseFormula nesting limit", () => {
+  const nestedParens = (n: number) => `${"(".repeat(n)}a${")".repeat(n)}`;
+
+  it("accepts nesting up to the limit", () => {
+    expect(parseFormula(nestedParens(MAX_FORMULA_DEPTH))).toEqual({ type: "ref", key: "a" });
+    expect(evalText(`${"-".repeat(MAX_FORMULA_DEPTH)}2`)).toBe(2);
+  });
+
+  it("refuses deeper nesting with a syntax error instead of overflowing the stack", () => {
+    const e = syntaxError(nestedParens(MAX_FORMULA_DEPTH + 1));
+    expect(e.message).toBe("Formeln är för djupt nästlad (högst 64 nivåer).");
+    expect(e.position).toBe(MAX_FORMULA_DEPTH);
+    expect(syntaxError(nestedParens(20_000))).toBeInstanceOf(FormulaSyntaxError);
+    expect(syntaxError(`${"-".repeat(20_000)}a`)).toBeInstanceOf(FormulaSyntaxError);
+  });
+
+  it("is reported by validateFormulas as a syntax issue", () => {
+    const defs = catalogDefinitions().map((d) =>
+      d.key === "faktor" ? { ...d, formula: nestedParens(20_000) } : d,
+    );
+    expect(validateFormulas(defs).map((i) => [i.metricKey, i.code])).toEqual([
+      ["faktor", "syntax"],
+    ]);
   });
 });
 

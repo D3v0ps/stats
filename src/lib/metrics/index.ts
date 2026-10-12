@@ -4,11 +4,14 @@ export {
   OTHERS_LABEL,
   UNALLOCATED_LABEL,
   UNASSIGNED_LABEL,
+  comparisonPlan,
   companiesOf,
   dataRangeOf,
   isAdditiveKind,
   notApplicableDimensions,
   runMetricQuery,
+  type ComparisonPlan,
+  type DataRange,
 } from "./engine";
 export { describeDelta, makeCompareCell } from "./compare";
 export {
@@ -49,6 +52,7 @@ export {
 export { catalogAccountGroups, catalogDefinitions } from "./catalog";
 export { FormulaSyntaxError, MetricConfigError, PersonalDataError } from "./errors";
 export {
+  MAX_FORMULA_DEPTH,
   evaluateFormula,
   formatFormula,
   parseFormula,

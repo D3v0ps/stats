@@ -9,6 +9,7 @@ import {
   type CompanyCode,
   type CompanyFilter,
   type ComparisonKind,
+  type Scenario,
   type Unit,
 } from "@/lib/contracts/domain";
 import {
@@ -37,14 +38,15 @@ import {
 import { formatValue } from "@/lib/core/format-sv";
 import {
   addMonths,
+  compareMonths,
   formatMonthLong,
   formatMonthShort,
-  monthRange,
+  resolvePeriod,
   type Month,
   type PeriodGrain,
 } from "@/lib/core/month";
 import { describeDelta } from "./compare";
-import { runMetricQuery } from "./engine";
+import { comparisonPlan, dataRangeOf, runMetricQuery } from "./engine";
 import { MetricConfigError, PersonalDataError } from "./errors";
 import { parseFormula, referencedKeys } from "./formula";
 import { headlineSubjectOf, normalizeHeadline, suggestHeadline } from "./headline";
@@ -100,15 +102,27 @@ interface SlideRequest {
   notes: string;
 }
 
-/** Throws PersonalDataError when a group-by or filter uses a personal dimension. */
+/** Seeded personal dimensions (konsult): refused even when a caller's set omits them. */
+const SEEDED_PERSONAL_DIMENSIONS: ReadonlySet<string> = new Set(
+  Object.entries(SEEDED_DIMENSIONS)
+    .filter(([, d]) => d.personal)
+    .map(([key]) => key),
+);
+
+/**
+ * Throws PersonalDataError when a group-by or filter uses a personal dimension: one in
+ * `personalDimensions` (is_personal in the database) or a seeded personal dimension.
+ */
 export function assertNoPersonalDimensions(
   spec: { groupBy: string | null; filters: readonly DimFilter[] },
   personalDimensions: ReadonlySet<string>,
   context = "Bilden",
 ): void {
+  const personal = (key: string) =>
+    personalDimensions.has(key) || SEEDED_PERSONAL_DIMENSIONS.has(key);
   const found = new Set<string>();
-  if (spec.groupBy !== null && personalDimensions.has(spec.groupBy)) found.add(spec.groupBy);
-  for (const f of spec.filters) if (personalDimensions.has(f.dimension)) found.add(f.dimension);
+  if (spec.groupBy !== null && personal(spec.groupBy)) found.add(spec.groupBy);
+  for (const f of spec.filters) if (personal(f.dimension)) found.add(f.dimension);
   if (found.size > 0) throw new PersonalDataError([...found], context);
 }
 
@@ -200,53 +214,106 @@ function leafMetricKeys(
 
 /**
  * Summa bolag can silently lack a company whose upload is missing (coverage counts a
- * month when any company has data). Flag each company that has reported this metric's
- * data during the last 12 months but has fewer months in the window than the other.
+ * month when any company has data). Among the companies that have reported the data
+ * behind this metric during the last 12 months, flag one with fewer months in the window
+ * than the other, and one that has data now but fewer months in the comparison window
+ * (or budget months) than the other: that delta is not like for like.
  */
 async function missingCompanyNotes(
   result: MetricResult,
   req: SlideRequest,
   def: MetricDefinition,
   ctx: ResolveContext,
+  compareKind: ComparisonKind | null,
 ): Promise<string[]> {
   if (req.company !== "ALL" || result.status !== "ok") return [];
   const leaves = leafMetricKeys(def, ctx);
   if (leaves.length === 0) return [];
-  const windowTo = result.window.to < req.anchor ? result.window.to : req.anchor;
-  const windowMonths = new Set(monthRange(result.window.from, windowTo));
-  const lookbackFrom = addMonths(req.anchor, -12);
-  const from = result.window.from < lookbackFrom ? result.window.from : lookbackFrom;
+  const fiscalStart = await ctx.source.fiscalStartMonth();
+  const window = resolvePeriod({ grain: req.grain, anchor: req.anchor }, fiscalStart);
+  const windowMonths = dataRangeOf(window).months;
+  const plan =
+    compareKind !== null && result.total.compare[compareKind]
+      ? comparisonPlan(compareKind, window, fiscalStart)
+      : null;
+  const lookbackFrom = [
+    window.from,
+    addMonths(req.anchor, -12),
+    ...(plan?.scenario === "utfall" ? [plan.range.from] : []),
+  ].reduce((a, b) => (compareMonths(a, b) <= 0 ? a : b));
+
+  // A month counts for a company when every metric behind the number has data.
+  const monthsWithData = async (
+    company: CompanyCode,
+    scenario: Scenario,
+    from: Month,
+    to: Month,
+  ): Promise<Set<Month>> => {
+    const coverage = await ctx.source.coverage(leaves, {
+      companies: [company],
+      scenario,
+      from,
+      to,
+      groupBy: [],
+      filters: [],
+    });
+    return leaves
+      .map((k) => new Set(coverage[k] ?? []))
+      .reduce((acc, set) => new Set([...acc].filter((m) => set.has(m))));
+  };
+  const count = (months: Set<Month>, of: Month[]) => of.filter((m) => months.has(m)).length;
+
   const perCompany = await Promise.all(
     COMPANY_CODES.map(async (company) => {
-      const coverage = await ctx.source.coverage(leaves, {
-        companies: [company],
-        scenario: "utfall",
-        from,
-        to: req.anchor,
-        groupBy: [],
-        filters: [],
-      });
-      // A month counts for a company when every metric behind the number has data.
-      const months = leaves
-        .map((k) => new Set(coverage[k] ?? []))
-        .reduce((acc, set) => new Set([...acc].filter((m) => set.has(m))));
+      const [actual, budget] = await Promise.all([
+        monthsWithData(company, "utfall", lookbackFrom, req.anchor),
+        plan?.scenario === "budget"
+          ? monthsWithData(company, "budget", plan.range.from, plan.range.to)
+          : null,
+      ]);
       return {
         company,
-        reported: months.size > 0,
-        inWindow: [...months].filter((m) => windowMonths.has(m)).length,
+        label: ctx.companyLabels[company],
+        reported: actual.size > 0,
+        inWindow: count(actual, windowMonths),
+        inCompare: plan === null ? 0 : count(budget ?? actual, plan.range.months),
       };
     }),
   );
   const reporting = perCompany.filter((c) => c.reported);
-  const best = Math.max(0, ...reporting.map((c) => c.inWindow));
-  return reporting
-    .filter((c) => c.inWindow < best)
-    .map((c) => {
-      const label = ctx.companyLabels[c.company];
-      return c.inWindow === 0
-        ? `${label} saknar data`
-        : `${label}: ${c.inWindow} av ${windowMonths.size} mån har data`;
-    });
+  const notes: string[] = [];
+
+  const bestWindow = Math.max(0, ...reporting.map((c) => c.inWindow));
+  for (const c of reporting) {
+    if (c.inWindow >= bestWindow) continue;
+    notes.push(
+      c.inWindow === 0
+        ? `${c.label} saknar data`
+        : `${c.label}: ${c.inWindow} av ${windowMonths.length} mån har data`,
+    );
+  }
+
+  if (plan !== null) {
+    const bestCompare = Math.max(0, ...reporting.map((c) => c.inCompare));
+    const months = plan.range.months.length;
+    for (const c of reporting) {
+      if (c.inWindow === 0 || c.inCompare >= bestCompare) continue;
+      if (plan.scenario === "budget") {
+        notes.push(
+          c.inCompare === 0
+            ? `${c.label} saknar budget`
+            : `${c.label}: budget för ${c.inCompare} av ${months} mån`,
+        );
+      } else {
+        notes.push(
+          c.inCompare === 0
+            ? `${c.label} saknar data för ${plan.label}`
+            : `${c.label}: ${c.inCompare} av ${months} mån har data för ${plan.label}`,
+        );
+      }
+    }
+  }
+  return notes;
 }
 
 function footnoteFor(
@@ -339,7 +406,7 @@ async function resolveRequest(req: SlideRequest, ctx: ResolveContext): Promise<R
   ]);
 
   const applicable = main.status !== "not_applicable";
-  const companyNotes = await missingCompanyNotes(main, req, def, ctx);
+  const companyNotes = await missingCompanyNotes(main, req, def, ctx, compareKind);
   const cell = compareKind ? main.total.compare[compareKind] : undefined;
   const number: ResolvedNumber = {
     value: main.total.value,
@@ -436,7 +503,8 @@ async function resolveRequest(req: SlideRequest, ctx: ResolveContext): Promise<R
     ),
     companyLabel: req.company === "ALL" ? null : ctx.companyLabels[req.company],
     current: main.total.value,
-    compare: applicable ? (cell ?? null) : null,
+    // ÖKAR/MINSKAR describe a change over time; against budget the headline states the value.
+    compare: applicable && compareKind !== "budget" ? (cell ?? null) : null,
     unit: def.unit,
     decimals: def.decimals,
   });

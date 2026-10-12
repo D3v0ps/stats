@@ -56,7 +56,7 @@ interface EvalScope {
 }
 
 /** Months actually read: the window clipped at its anchor (later months have no data yet). */
-interface DataRange {
+export interface DataRange {
   from: Month;
   to: Month;
   months: Month[];
@@ -154,6 +154,21 @@ function latest(months: Iterable<Month>): Month | null {
   return best;
 }
 
+/** The most recent ISO timestamp, compared as instants. */
+function newest(timestamps: (string | null | undefined)[]): string | null {
+  let best: string | null = null;
+  for (const t of timestamps) {
+    if (t && (best === null || Date.parse(t) > Date.parse(best))) best = t;
+  }
+  return best;
+}
+
+function earliest(months: Iterable<Month>): Month | null {
+  let best: Month | null = null;
+  for (const m of months) if (best === null || compareMonths(m, best) < 0) best = m;
+  return best;
+}
+
 /** sum/ledger: add months; snapshot: last month with data or the average of months with data. */
 function rollUpAdditive(
   points: Point[],
@@ -215,6 +230,30 @@ class Evaluator {
       }
       throw e;
     }
+  }
+
+  /**
+   * The metric and, for a formula, every metric behind it (recursively). Lineage is
+   * resolved here rather than left to the source, which may know nothing about formulas.
+   */
+  lineage(def: MetricDefinition, seen = new Set<string>()): string[] {
+    if (seen.has(def.key)) return [];
+    seen.add(def.key);
+    if (def.kind !== "formula") return [def.key];
+    let operands: string[];
+    try {
+      operands = referencedKeys(this.formula(def));
+    } catch (e) {
+      if (e instanceof MetricConfigError) return [def.key];
+      throw e;
+    }
+    return [
+      def.key,
+      ...operands.flatMap((key) => {
+        const operand = this.defs.get(key);
+        return operand ? this.lineage(operand, seen) : [];
+      }),
+    ];
   }
 
   private operands(def: MetricDefinition, visiting: readonly string[]): MetricDefinition[] {
@@ -301,7 +340,10 @@ class Evaluator {
           this.companiesWithData(def, scope, range),
         ]);
         if (companies !== null) {
-          for (const p of points) companies.add(groupKey(p.group[COMPANY_GROUP] ?? null));
+          const inRange = new Set(range.months);
+          for (const p of points) {
+            if (inRange.has(p.month)) companies.add(groupKey(p.group[COMPANY_GROUP] ?? null));
+          }
         }
         const mode = def.kind === "snapshot" ? (def.snapshotRollup ?? "last") : "sum";
         return rollUpAdditive(
@@ -347,13 +389,27 @@ class Evaluator {
       case "formula": {
         const node = this.formula(def);
         const operands = this.operands(def, visiting);
-        const evals = await Promise.all(
-          operands.map((op) => this.window(op, range, scope, [...visiting, def.key])),
-        );
-        const byKey = new Map(operands.map((op, i) => [op.key, evals[i] as WindowEval]));
+        const path = [...visiting, def.key];
+        const evals = await Promise.all(operands.map((op) => this.window(op, range, scope, path)));
         let covered = new Set(range.months);
         for (const e of evals) covered = new Set([...covered].filter((m) => e.covered.has(m)));
         if (covered.size === 0) return emptyEval();
+        // Like for like: an operand with data in months another operand lacks is rolled up
+        // again over the common months only, so a ratio never divides three months of one
+        // dataset by two of another. (A distinct operand is read over the common months'
+        // span; a gap inside that span cannot be excluded from a distinct count.)
+        const common: DataRange = {
+          from: earliest(covered) as Month,
+          to: latest(covered) as Month,
+          months: range.months.filter((m) => covered.has(m)),
+        };
+        await Promise.all(
+          operands.map(async (op, i) => {
+            if ((evals[i] as WindowEval).covered.size === covered.size) return;
+            evals[i] = await this.window(op, common, scope, path);
+          }),
+        );
+        const byKey = new Map(operands.map((op, i) => [op.key, evals[i] as WindowEval]));
 
         const operand = (key: string): WindowEval => byKey.get(key) as WindowEval;
         const groups = new Map<string, GroupValue>();
@@ -438,56 +494,53 @@ class Evaluator {
   }
 }
 
-interface ComparisonPlan {
+export interface ComparisonPlan {
   kind: ComparisonKind;
+  /** Months read for the comparison (clipped like the current window). */
   range: DataRange;
   scenario: Scenario;
   label: string;
 }
 
 /**
- * Comparison windows, like for like: the previous period contributes as many leading
- * months as the current window has up to its anchor (a quarter anchored on its second
- * month compares two months with two months); the previous year is the same window a
- * year earlier, clipped at its own anchor; budget is the current window.
+ * The window a comparison reads, like for like: the previous period contributes as many
+ * leading months as the current window has up to its anchor (a quarter anchored on its
+ * second month compares two months with two months); the previous year is the same
+ * window a year earlier, clipped at its own anchor; budget is the current window. The
+ * period comparisons stay in the query's scenario (a budget query compares budgets).
+ * null for the previous period of a YTD window, which has no meaning.
  */
-function planComparisons(
-  kinds: readonly ComparisonKind[],
+export function comparisonPlan(
+  kind: ComparisonKind,
   window: PeriodWindow,
   fiscalStart: number,
-): ComparisonPlan[] {
+  scenario: Scenario = "utfall",
+): ComparisonPlan | null {
   const current = dataRangeOf(window);
-  const plans: ComparisonPlan[] = [];
-  for (const kind of new Set(kinds)) {
-    if (kind === "budget") {
-      plans.push({ kind, range: current, scenario: "budget", label: BUDGET_LABEL });
-      continue;
-    }
-    if (kind === "prev_year") {
-      const w = previousYear(window, fiscalStart);
-      const label = formatPeriodLabel(w, fiscalStart);
-      plans.push({ kind, range: dataRangeOf(w), scenario: "utfall", label });
-      continue;
-    }
-    // Previous period of a YTD window has no meaning; the comparison is omitted.
-    const w = previousPeriod(window, fiscalStart);
-    if (w === null) continue;
-    const months = w.months.slice(0, current.months.length);
-    plans.push({
-      kind,
-      range: { from: w.from, to: months.at(-1) as Month, months },
-      scenario: "utfall",
-      label: formatPeriodLabel(w, fiscalStart),
-    });
+  if (kind === "budget") {
+    return { kind, range: current, scenario: "budget", label: BUDGET_LABEL };
   }
-  return plans;
+  if (kind === "prev_year") {
+    const w = previousYear(window, fiscalStart);
+    return { kind, range: dataRangeOf(w), scenario, label: formatPeriodLabel(w, fiscalStart) };
+  }
+  const w = previousPeriod(window, fiscalStart);
+  if (w === null) return null;
+  const months = w.months.slice(0, current.months.length);
+  return {
+    kind,
+    range: { from: w.from, to: months.at(-1) as Month, months },
+    scenario,
+    label: formatPeriodLabel(w, fiscalStart),
+  };
 }
 
 function compareGroups(a: GroupCell, b: GroupCell): number {
   if (a.value === null && b.value !== null) return 1;
   if (b.value === null && a.value !== null) return -1;
   if (a.value !== null && b.value !== null && a.value !== b.value) return b.value - a.value;
-  return a.label.localeCompare(b.label, "sv");
+  // Ties are ordered by label, then id, so the topN cut never depends on row order.
+  return a.label.localeCompare(b.label, "sv") || String(a.id).localeCompare(String(b.id));
 }
 
 /** Float noise from subtracting sums must not become a phantom remainder. */
@@ -539,7 +592,9 @@ export async function runMetricQuery(
     groupBy: q.groupBy,
     filters: q.filters,
   };
-  const comparisons = planComparisons(q.compare, window, fiscalStart);
+  const comparisons = [...new Set(q.compare)]
+    .map((kind) => comparisonPlan(kind, window, fiscalStart, q.scenario))
+    .filter((plan): plan is ComparisonPlan => plan !== null);
   const seriesMonths =
     q.series === null
       ? null
@@ -547,8 +602,11 @@ export async function runMetricQuery(
         ? window.months
         : monthRange(addMonths(window.anchor, -11), window.anchor);
 
+  const lineage = new Map(metricDefs.map((def) => [def.key, evaluator.lineage(def)]));
+  const lineageKeys = [...new Set([...lineage.values()].flat())];
+
   const [lastUpdated, results] = await Promise.all([
-    source.lastUpdated(q.metricKeys, sourceScope({ ...scope, groupBy: null }, range, [])),
+    source.lastUpdated(lineageKeys, sourceScope({ ...scope, groupBy: null }, range, [])),
     Promise.all(
       metricDefs.map(async (def): Promise<MetricResult> => {
         const coverageOf = (e: WindowEval): Coverage => ({
@@ -668,7 +726,12 @@ export async function runMetricQuery(
   return {
     query: q,
     results: results.map((r) =>
-      r.status === "not_applicable" ? r : { ...r, lastUpdatedAt: lastUpdated[r.metricKey] ?? null },
+      r.status === "not_applicable"
+        ? r
+        : {
+            ...r,
+            lastUpdatedAt: newest((lineage.get(r.metricKey) ?? []).map((k) => lastUpdated[k])),
+          },
     ),
   };
 }

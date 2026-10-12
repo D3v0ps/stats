@@ -15,9 +15,25 @@ export type FormulaNode =
   | { type: "neg"; operand: FormulaNode }
   | { type: "binary"; op: BinaryOp; left: FormulaNode; right: FormulaNode };
 
+/** Nesting limit for parentheses and unary signs, so hostile input cannot exhaust the stack. */
+export const MAX_FORMULA_DEPTH = 64;
+
 export function parseFormula(source: string): FormulaNode {
   const tokens = tokenize(source);
   let index = 0;
+  let depth = 0;
+
+  const nested = <T>(at: Token, parse: () => T): T => {
+    if (++depth > MAX_FORMULA_DEPTH) {
+      throw new FormulaSyntaxError(
+        `Formeln är för djupt nästlad (högst ${MAX_FORMULA_DEPTH} nivåer).`,
+        at.pos,
+      );
+    }
+    const result = parse();
+    depth--;
+    return result;
+  };
 
   const peek = (): Token => tokens[index] as Token;
   const next = (): Token => tokens[index++] as Token;
@@ -49,11 +65,11 @@ export function parseFormula(source: string): FormulaNode {
     const t = peek();
     if (t.type === "op" && t.text === "-") {
       next();
-      return { type: "neg", operand: unary() };
+      return { type: "neg", operand: nested(t, unary) };
     }
     if (t.type === "op" && t.text === "+") {
       next();
-      return unary();
+      return nested(t, unary);
     }
     return primary();
   }
@@ -66,7 +82,7 @@ export function parseFormula(source: string): FormulaNode {
       case "ident":
         return { type: "ref", key: t.text };
       case "lparen": {
-        const inner = expr();
+        const inner = nested(t, expr);
         const close = next();
         if (close.type !== "rparen") {
           throw new FormulaSyntaxError(`Saknar ")" – hittade ${describe(close)}.`, close.pos);
