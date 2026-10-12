@@ -126,6 +126,20 @@ export function donutSlices(data: ChartData, mode: ColorMode = "css"): DonutSlic
   });
 }
 
+/**
+ * The total shown in the donut hole: the sum of the drawn (positive) slices, or null when no
+ * category has a value at all. A missing month is not 0, so it must not read "0 kr".
+ */
+export function donutTotal(data: ChartData): number | null {
+  const values = data.series[0]?.values ?? [];
+  const hasData = data.categories.some((_, index) => {
+    const v = values[index];
+    return typeof v === "number" && Number.isFinite(v);
+  });
+  if (!hasData) return null;
+  return donutSlices(data, "hex").reduce((sum, s) => sum + s.value, 0);
+}
+
 /** Rows for the visually hidden data table that accompanies every chart. */
 export function chartTableRows(data: ChartData): { label: string; values: string[] }[] {
   return data.categories.map((label, index) => ({

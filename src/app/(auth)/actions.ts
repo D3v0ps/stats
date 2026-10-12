@@ -1,7 +1,7 @@
 "use server";
 
 import { isAuthApiError } from "@supabase/supabase-js";
-import { headers } from "next/headers";
+import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { createAdminClient } from "@/lib/db/admin";
 import { createSupabaseServerClient } from "@/lib/db/client-server";
@@ -11,10 +11,12 @@ import {
   LOGIN_CONFIG_ERROR,
   LOGIN_ERROR,
   LOGIN_THROTTLE_CONFIG_ERROR,
+  LOGOUT_EVERYWHERE_FAILED_QUERY,
   LoginFormSchema,
   clientIp,
   gateDecision,
   ipHash,
+  isAuthCookieName,
   remainingDelay,
   sleep,
   throttleMode,
@@ -53,6 +55,10 @@ async function attemptLogin(formData: FormData): Promise<Outcome> {
   }
 
   const admin = mode === "rpc" ? createAdminClient() : null;
+  if (mode === "rpc" && !admin) {
+    console.error("[login] service-role client unavailable; login refused.");
+    return "rejected";
+  }
   const hash = ipHash(clientIp(await headers()), env.env.loginEmail);
   if (admin) {
     const gate = await admin.rpc("login_gate", { p_ip_hash: hash });
@@ -84,7 +90,7 @@ async function attemptLogin(formData: FormData): Promise<Outcome> {
 }
 
 /** Single-password login (useActionState). Always takes at least MIN_RESPONSE_MS. */
-export async function login(_previous: LoginState, formData: FormData): Promise<LoginState> {
+export async function login(previous: LoginState, formData: FormData): Promise<LoginState> {
   const startedAt = Date.now();
   let outcome: Outcome;
   try {
@@ -97,24 +103,51 @@ export async function login(_previous: LoginState, formData: FormData): Promise<
   }
   await sleep(remainingDelay(startedAt, Date.now()));
   if (outcome === "ok") redirect("/");
-  return { error: MESSAGES[outcome] };
+  return { error: MESSAGES[outcome], attempt: (previous?.attempt ?? 0) + 1 };
+}
+
+/** Expire the Supabase session cookies directly (they are set with path "/"). */
+async function clearAuthCookies(): Promise<void> {
+  const store = await cookies();
+  for (const { name } of store.getAll()) {
+    if (isAuthCookieName(name)) store.delete({ name, path: "/" });
+  }
+}
+
+/**
+ * Sign out with Supabase. When Auth fails (unreachable, refresh error) the client may keep the
+ * session, so this browser's cookies are cleared by hand: "Logga ut" must always log out here.
+ * Returns whether Auth confirmed the sign-out.
+ */
+async function signOut(scope: "local" | "global"): Promise<boolean> {
+  let confirmed = false;
+  try {
+    const supabase = await createSupabaseServerClient();
+    const { error } = await supabase.auth.signOut({ scope });
+    confirmed = error === null;
+    if (error) console.error(`[logout] ${scope} sign-out failed (${error.name})`);
+  } catch (error) {
+    const name = error instanceof Error ? error.name : "unknown";
+    console.error(`[logout] ${scope} sign-out failed (${name})`);
+  }
+  if (!confirmed) await clearAuthCookies();
+  return confirmed;
 }
 
 /** Sign out this browser only. */
 export async function logout(): Promise<void> {
-  if (checkPublicEnv().ok) {
-    const supabase = await createSupabaseServerClient();
-    await supabase.auth.signOut({ scope: "local" });
-  }
+  if (checkPublicEnv().ok) await signOut("local");
   redirect(LOGIN_PATH);
 }
 
-/** Sign out every device by revoking all refresh tokens of the shared account. */
+/**
+ * Sign out every device by revoking all refresh tokens of the shared account. Other devices keep
+ * their current access token until it expires (JWT lifetime, default one hour).
+ */
 export async function logoutEverywhere(): Promise<void> {
   const session = await getSessionOrNull();
-  if (session) {
-    const supabase = await createSupabaseServerClient();
-    await supabase.auth.signOut({ scope: "global" });
+  if (session && !(await signOut("global"))) {
+    redirect(`${LOGIN_PATH}?${LOGOUT_EVERYWHERE_FAILED_QUERY}`);
   }
   redirect(LOGIN_PATH);
 }

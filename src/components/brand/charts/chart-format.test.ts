@@ -9,6 +9,7 @@ import {
   chartConfigFor,
   chartTableRows,
   donutSlices,
+  donutTotal,
   formatAxisTick,
   formatChartValue,
   seriesDataKey,
@@ -128,6 +129,30 @@ describe("donutSlices", () => {
   });
 });
 
+describe("donutTotal", () => {
+  const donut = (values: (number | null)[]): ChartData => ({
+    categories: values.map((_, i) => `k${i}`),
+    series: [{ key: "v", label: "Deltagare", role: "primary", values }],
+    unit: "st",
+    highlightIndex: null,
+  });
+
+  it("adds the drawn (positive) slices", () => {
+    expect(donutTotal(donut([50, 30, null, 20]))).toBe(100);
+    expect(donutTotal(donut([3, -1, 2]))).toBe(5);
+  });
+
+  it("is zero only when real zeros were reported", () => {
+    expect(donutTotal(donut([0, null, 0]))).toBe(0);
+  });
+
+  it("is null (missing, never 0) when no category has data", () => {
+    expect(donutTotal(donut([null, null]))).toBeNull();
+    expect(donutTotal(donut([]))).toBeNull();
+    expect(donutTotal({ ...donut([1]), series: [] })).toBeNull();
+  });
+});
+
 describe("chartTableRows", () => {
   it("formats every value for the hidden data table", () => {
     expect(chartTableRows(monthly)).toEqual([
@@ -188,5 +213,21 @@ describe("chart components (server render)", () => {
     expect(html).toContain(`4,0${NBSP}mkr`);
     expect(html).toContain("Totalt");
     expect(html).toContain(`75${NBSP}%`);
+  });
+
+  it("shows a dash, not 0, in the donut hole when nothing is published", () => {
+    const html = render(
+      createElement(MbDonut, {
+        data: {
+          categories: ["MB AB", "MB Restart"],
+          series: [{ key: "v", label: "Intäkter", role: "primary", values: [null, null] }],
+          unit: "kr",
+          highlightIndex: null,
+        },
+        title: "Intäkter per bolag",
+      }),
+    );
+    expect(html).toMatch(/<span class="num[^"]*">–<\/span>/);
+    expect(html).not.toMatch(/<span class="num[^"]*">0( |&nbsp;| )kr<\/span>/);
   });
 });

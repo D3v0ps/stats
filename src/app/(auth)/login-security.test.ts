@@ -2,12 +2,16 @@ import { createHash } from "node:crypto";
 import { describe, expect, it, vi } from "vitest";
 import {
   LOGIN_ERROR,
+  LOGOUT_EVERYWHERE_FAILED_MESSAGE,
+  LOGOUT_EVERYWHERE_FAILED_QUERY,
   LoginFormSchema,
   MAX_GATE_DELAY_MS,
   MIN_RESPONSE_MS,
   clientIp,
   gateDecision,
   ipHash,
+  isAuthCookieName,
+  loginNotice,
   remainingDelay,
   sleep,
   throttleMode,
@@ -137,5 +141,38 @@ describe("LOGIN_ERROR", () => {
     expect(LOGIN_ERROR).toBe(
       "Fel lösenord, eller för många försök. Vänta en stund och försök igen.",
     );
+  });
+});
+
+describe("isAuthCookieName", () => {
+  it("matches Supabase session cookies, their chunks and the PKCE verifier", () => {
+    for (const name of [
+      "sb-abcdefgh-auth-token",
+      "sb-abcdefgh-auth-token.0",
+      "sb-abcdefgh-auth-token.12",
+      "sb-abcdefgh-auth-token-code-verifier",
+      "sb-127-auth-token",
+    ]) {
+      expect(isAuthCookieName(name), name).toBe(true);
+    }
+  });
+
+  it("leaves every other cookie alone", () => {
+    for (const name of ["auth-token", "sb-auth", "sb--auth-token", "x-sb-a-auth-token", "theme"]) {
+      expect(isAuthCookieName(name), name).toBe(false);
+    }
+  });
+});
+
+describe("loginNotice", () => {
+  it("explains a failed 'Logga ut överallt'", () => {
+    const params = Object.fromEntries(new URLSearchParams(LOGOUT_EVERYWHERE_FAILED_QUERY));
+    expect(loginNotice(params)).toBe(LOGOUT_EVERYWHERE_FAILED_MESSAGE);
+  });
+
+  it("ignores unknown or repeated flags (no reflected text)", () => {
+    expect(loginNotice({})).toBeNull();
+    expect(loginNotice({ fel: "<script>" })).toBeNull();
+    expect(loginNotice({ fel: ["utloggning", "utloggning"] })).toBeNull();
   });
 });

@@ -11,6 +11,20 @@ export const LOGIN_CONFIG_ERROR =
 export const LOGIN_THROTTLE_CONFIG_ERROR =
   "Inloggningen är avstängd: SUPABASE_SECRET_KEY saknas i produktionsmiljön, så spärren mot upprepade försök kan inte köras.";
 
+const NOTICE_PARAM = "fel";
+const LOGOUT_EVERYWHERE_FAILED = "utloggning";
+/** Query on /logga-in after "Logga ut överallt" could not revoke the other sessions. */
+export const LOGOUT_EVERYWHERE_FAILED_QUERY = `${NOTICE_PARAM}=${LOGOUT_EVERYWHERE_FAILED}`;
+export const LOGOUT_EVERYWHERE_FAILED_MESSAGE =
+  "Alla enheter kunde inte loggas ut. Den här webbläsaren är utloggad. Logga in och försök igen.";
+
+/** The notice for a known ?fel= flag on /logga-in. Anything else in the URL is ignored. */
+export function loginNotice(params: Record<string, string | string[] | undefined>): string | null {
+  return params[NOTICE_PARAM] === LOGOUT_EVERYWHERE_FAILED
+    ? LOGOUT_EVERYWHERE_FAILED_MESSAGE
+    : null;
+}
+
 /** Every response takes at least this long, so timing does not reveal why a login failed. */
 export const MIN_RESPONSE_MS = 500;
 /** Upper bound for the global slow-down requested by login_gate. */
@@ -75,6 +89,11 @@ export function throttleMode(input: {
 /** Milliseconds still to wait so the whole attempt lasts at least `minMs`. */
 export function remainingDelay(startedAt: number, now: number, minMs = MIN_RESPONSE_MS): number {
   return Math.max(0, startedAt + minMs - now);
+}
+
+/** Supabase session cookies: sb-<ref>-auth-token, its chunks (.0, .1) and the PKCE verifier. */
+export function isAuthCookieName(name: string): boolean {
+  return /^sb-.+-auth-token(?:-code-verifier)?(?:\.\d+)?$/.test(name);
 }
 
 export function sleep(ms: number): Promise<void> {

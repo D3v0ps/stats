@@ -5,7 +5,7 @@ import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/
 import { formatPercent, formatValue } from "@/lib/core/format-sv";
 import { cn } from "@/lib/utils";
 import { ChartFigure } from "./ChartFigure";
-import { donutSlices } from "./chart-format";
+import { donutSlices, donutTotal } from "./chart-format";
 import { tooltipFormatter, useChartAnimation } from "./chart-parts";
 import type { MbChartProps } from "./types";
 
@@ -31,7 +31,7 @@ export function MbDonut({
 }: MbDonutProps) {
   const animated = useChartAnimation(animate);
   const slices = donutSlices(data);
-  const total = slices.reduce((sum, s) => sum + s.value, 0);
+  const total = donutTotal(data);
   const config = Object.fromEntries(slices.map((s) => [s.key, { label: s.label, color: s.color }]));
   const pieData = slices.map((s) => ({
     key: s.key,

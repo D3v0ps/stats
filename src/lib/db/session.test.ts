@@ -1,3 +1,5 @@
+import { readFileSync, readdirSync } from "node:fs";
+import path from "node:path";
 import type { JwtPayload } from "@supabase/supabase-js";
 import { describe, expect, it } from "vitest";
 import { LOGIN_PATH, sessionFromClaims } from "./session";
@@ -49,4 +51,39 @@ describe("LOGIN_PATH", () => {
   it("is the Swedish login route", () => {
     expect(LOGIN_PATH).toBe("/logga-in");
   });
+});
+
+describe("protected routes", () => {
+  const appDir = path.resolve(import.meta.dirname, "../../app");
+  const pages = (dir: string): string[] =>
+    readdirSync(dir, { withFileTypes: true, recursive: true })
+      .filter((entry) => entry.isFile() && /^(page|layout)\.tsx$/.test(entry.name))
+      .map((entry) => path.join(entry.parentPath, entry.name));
+  const protectedFiles = [
+    ...pages(path.join(appDir, "(app)")),
+    ...pages(path.join(appDir, "designsystem")),
+  ];
+
+  it("covers the shell layout, every placeholder page and /designsystem", () => {
+    const names = protectedFiles.map((file) => path.relative(appDir, file));
+    expect(names).toEqual(
+      expect.arrayContaining([
+        path.join("(app)", "layout.tsx"),
+        path.join("(app)", "page.tsx"),
+        path.join("(app)", "utforska", "page.tsx"),
+        path.join("(app)", "ladda-upp", "page.tsx"),
+        path.join("(app)", "rapporter", "page.tsx"),
+        path.join("(app)", "installningar", "page.tsx"),
+        path.join("designsystem", "page.tsx"),
+      ]),
+    );
+  });
+
+  // The proxy is not a security boundary: each protected page/layout re-checks the session.
+  it.each(protectedFiles.map((file) => [path.relative(appDir, file), file]))(
+    "%s calls requireSession()",
+    (_name, file) => {
+      expect(readFileSync(file, "utf8")).toMatch(/await requireSession\(\)/);
+    },
+  );
 });

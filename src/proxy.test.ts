@@ -25,6 +25,7 @@ const location = (res: Response) => {
 afterEach(() => {
   vi.unstubAllEnvs();
   vi.unstubAllGlobals();
+  vi.restoreAllMocks();
 });
 
 describe("isPublicPath", () => {
@@ -175,6 +176,67 @@ describe("proxy with Supabase configured", () => {
       const res = await proxy(request("/logga-in", sessionCookie));
       expect(res.status).toBe(307);
       expect(location(res)).toBe("/");
+    });
+
+    const expiredCookie = (accessTokenValue: string) => ({
+      "sb-abcdefgh-auth-token": `base64-${b64url({
+        access_token: accessTokenValue,
+        token_type: "bearer",
+        expires_in: 3600,
+        expires_at: now - 60,
+        refresh_token: "old-refresh-token",
+        user,
+      })}`,
+    });
+
+    it("refreshes an expired session and carries the new cookies onto a redirect", async () => {
+      stubSupabaseEnv();
+      const fetchSpy = vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input instanceof Request ? input.url : input);
+        if (url.includes("/auth/v1/token?grant_type=refresh_token")) {
+          return Response.json({
+            access_token: accessToken,
+            token_type: "bearer",
+            expires_in: 3600,
+            expires_at: now + 3600,
+            refresh_token: "new-refresh-token",
+            user,
+          });
+        }
+        if (url.endsWith("/auth/v1/user")) return Response.json(user);
+        return new Response("{}", { status: 404 });
+      });
+      vi.stubGlobal("fetch", fetchSpy);
+
+      const res = await proxy(request("/logga-in", expiredCookie("expired.token.sig")));
+      expect(location(res)).toBe("/");
+      const refreshed = res.headers.getSetCookie().find((c) => c.startsWith("sb-abcdefgh"));
+      expect(refreshed).toBeDefined();
+      const value = decodeURIComponent(refreshed!.split(";")[0]!.split("=").slice(1).join("="));
+      expect(Buffer.from(value.replace(/^base64-/, ""), "base64url").toString()).toContain(
+        "new-refresh-token",
+      );
+      // Responses that set auth cookies must never be cached by a CDN.
+      expect(res.headers.get("cache-control")).toMatch(/no-store/);
+    });
+
+    it("clears a revoked session's cookies on the way to /logga-in", async () => {
+      stubSupabaseEnv();
+      // auth-js warns about the dead refresh token; Next's console patch cannot run in Vitest.
+      vi.spyOn(console, "warn").mockImplementation(() => undefined);
+      vi.stubGlobal(
+        "fetch",
+        vi.fn(async () =>
+          Response.json(
+            { code: 400, error_code: "refresh_token_not_found", msg: "Invalid Refresh Token" },
+            { status: 400 },
+          ),
+        ),
+      );
+      const res = await proxy(request("/utforska", expiredCookie("expired.token.sig")));
+      expect(location(res)).toBe("/logga-in");
+      const cleared = res.headers.getSetCookie().find((c) => c.startsWith("sb-abcdefgh"));
+      expect(cleared).toMatch(/Max-Age=0|Expires=Thu, 01 Jan 1970/i);
     });
 
     it("treats a token the Auth server rejects as signed out", async () => {

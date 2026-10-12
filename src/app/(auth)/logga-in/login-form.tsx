@@ -1,7 +1,7 @@
 "use client";
 
 import { LoaderCircle } from "lucide-react";
-import { useActionState } from "react";
+import { useActionState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -12,6 +12,12 @@ import { INITIAL_LOGIN_STATE, PASSWORD_MAX_LENGTH } from "../login-state";
 export function LoginForm() {
   const [state, formAction, pending] = useActionState(login, INITIAL_LOGIN_STATE);
   const hasError = state.error !== null;
+  const passwordRef = useRef<HTMLInputElement>(null);
+
+  // The disabled button drops focus while the attempt runs; hand it back to the (reset) field.
+  useEffect(() => {
+    if (state.error !== null) passwordRef.current?.focus();
+  }, [state]);
 
   return (
     <form action={formAction} className="flex w-full flex-col gap-5" aria-busy={pending}>
@@ -23,6 +29,7 @@ export function LoginForm() {
           Lösenord
         </Label>
         <Input
+          ref={passwordRef}
           id="password"
           name="password"
           type="password"
@@ -43,7 +50,9 @@ export function LoginForm() {
         {pending ? <LoaderCircle aria-hidden="true" className="animate-spin" /> : null}
         Logga in
       </Button>
+      {/* Keyed by attempt: a fresh alert node makes screen readers repeat an identical error. */}
       <p
+        key={state.attempt}
         id="login-error"
         role="alert"
         className={hasError ? "border-l-2 border-rod pl-3 text-sm text-white" : "sr-only"}

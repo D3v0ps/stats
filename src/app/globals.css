@@ -17,7 +17,8 @@
 @theme {
   --color-*: initial;
   --color-white: #ffffff;
-  --color-black: #000000;
+  /* Not in the palette: shadcn's black overlays (bg-black/10) become antracit tints. */
+  --color-black: #1e252b;
 
   --color-antracit: #1e252b;
   --color-antracit-300: #494e52;

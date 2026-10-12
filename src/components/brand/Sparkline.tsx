@@ -9,7 +9,11 @@ export interface SparklineProps {
   strokeWidth?: number;
   /** Accessible description; without it the sparkline is decorative (aria-hidden). */
   label?: string;
-  /** Draw-in animation. Off for frozen/print views; reduced motion disables it in CSS. */
+  /**
+   * Draw-in animation (pathLength 1 + dash offset). Off for frozen/print views; reduced motion
+   * disables it in CSS. The stroke scales with the SVG on purpose: vector-effect
+   * "non-scaling-stroke" dashes in screen units, which breaks the pathLength-based draw-in.
+   */
   animate?: boolean;
   className?: string;
 }
@@ -49,7 +53,6 @@ export function Sparkline({
           strokeWidth={strokeWidth}
           strokeLinecap="round"
           strokeLinejoin="round"
-          vectorEffect="non-scaling-stroke"
           {...(animate ? { pathLength: 1, className: "animate-draw [stroke-dasharray:1]" } : {})}
         />
       ))}

@@ -36,8 +36,10 @@ export function Heading({
     <Tag
       data-slot="heading"
       className={cn(
-        "leading-tight tracking-[0.08em] text-balance uppercase",
+        "tracking-[0.08em] text-balance uppercase",
         LEVEL_CLASS[level],
+        // After the size: tailwind-merge drops a leading-* that precedes a text-* size.
+        "leading-tight",
         accent === "underscore" &&
           "after:mt-2 after:block after:h-[3px] after:w-10 after:bg-rod after:content-['']",
         className,
