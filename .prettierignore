@@ -1,0 +1,5 @@
+pnpm-lock.yaml
+vendor/
+fixtures/files/
+src/components/ui/
+.next/
