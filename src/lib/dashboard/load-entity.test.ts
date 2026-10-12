@@ -1,5 +1,8 @@
 import { describe, expect, it } from "vitest";
 import type { UrlFilters } from "@/lib/app/filters";
+import { parseUrlFilters } from "@/lib/app/filters";
+import { parseExploreState } from "./explore-state";
+import { loadExplore } from "./load-explore";
 import { ENTITY_METRIC_ORDER, loadEntity, orderEntityMetrics } from "./load-entity";
 import { cellOf } from "./pivot";
 import { ANCHOR, DEFINITIONS, DIMENSIONS, FILTERS, T, buildSource } from "./test-data";
@@ -37,6 +40,16 @@ describe("entity page (kundkort)", () => {
     // AF and ledger metrics have no kund dimension and are not shown.
     expect(byKey.aktiva_deltagare).toBeUndefined();
     expect(byKey.resultat).toBeUndefined();
+  });
+
+  it("shows zero sick leave on the kundkort of a customer without absence", async () => {
+    // IKEA had no sick leave: 0 is an answer, the cards stay.
+    const ikea = await load("kund", T.ikea);
+    const byKey = Object.fromEntries(ikea.kpis.map((k) => [k.key, k]));
+    expect(ikea.kpis.slice(0, 10).map((k) => k.key)).toEqual(ENTITY_METRIC_ORDER.slice(0, 10));
+    expect(byKey.sjukpass?.value).toBe(0);
+    expect(byKey.sjukpass_per_konsult?.value).toBe(0);
+    expect(byKey.sjukfranvaro?.value).toBe(0);
   });
 
   it("has a 12-month hours trend against last year", async () => {
@@ -95,6 +108,59 @@ describe("entity page (kundkort)", () => {
     const missing = await load("kund", 999_999);
     expect(missing.found).toBe(false);
     expect(missing.kpis).toEqual([]);
+  });
+
+  it("breaks down by a dimension the shown metrics have", async () => {
+    // KROM only has AF figures: per ort (not per kund, which only Bemanning metrics have).
+    const krom = await load("verksamhet", T.krom);
+    expect(krom.breakdown?.dimension).toBe("ort");
+    expect(krom.breakdown?.sortedRows.map((r) => r.label)).toEqual(["Stockholm"]);
+    expect(krom.breakdown?.options.map((o) => o.key)).toEqual([
+      "bolag",
+      "ort",
+      "resultattyp",
+      "ordertyp",
+    ]);
+    // A consultant per kund (where they worked), not per frånvarotyp.
+    const anna = await load("konsult", T.anna);
+    expect(anna.breakdown?.dimension).toBe("kund");
+    expect(anna.breakdown?.sortedRows.map((r) => r.label)).toEqual(["Budbee Södertälje"]);
+    expect((await load("ort", T.stockholm)).breakdown?.dimension).toBe("verksamhet");
+  });
+
+  it("links every card and the back link to a breakdown the metric has", async () => {
+    for (const [dimension, id] of [
+      ["kund", T.budbee],
+      ["verksamhet", T.krom],
+      ["konsult", T.anna],
+      ["ort", T.stockholm],
+    ] as const) {
+      const view = await load(dimension, id);
+      for (const href of [view.exploreHref, ...view.kpis.map((k) => k.href)]) {
+        const url = new URL(href, "http://localhost");
+        const explore = await loadExplore(parseExploreState(url.searchParams), {
+          source: buildSource(),
+          definitions: DEFINITIONS,
+          dimensions: DIMENSIONS,
+          filters: parseUrlFilters(url.searchParams),
+          anchor: ANCHOR,
+        });
+        expect(
+          explore.notes.filter((n) => n.kind === "not_applicable"),
+          href,
+        ).toEqual([]);
+        expect(explore.state.filters, href).toEqual([{ dimension, valueId: id }]);
+      }
+    }
+    const krom = await load("verksamhet", T.krom);
+    // The back link opens a metric KROM has numbers for.
+    expect(krom.exploreHref).toBe(
+      `/utforska?matt=aktiva_deltagare&grupp=ort&f=verksamhet.${T.krom}`,
+    );
+    const budbee = await load("kund", T.budbee);
+    expect(budbee.kpis.find((k) => k.key === "fakturerat_kund")?.href).toBe(
+      `/utforska?matt=fakturerat_kund&grupp=bolag&f=kund.${T.budbee}`,
+    );
   });
 
   it("orders metrics with unknown keys last in catalog order", () => {

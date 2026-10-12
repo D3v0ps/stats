@@ -94,6 +94,15 @@ describe("Utforska view", () => {
     });
   });
 
+  it("names the metric a note is about when several are side by side", async () => {
+    const view = await load("matt=timmar,resultat,resultatandel&grupp=kund");
+    expect(view.notes.map((n) => n.text)).toEqual([
+      "Resultat: kund finns inte i bokföringen.",
+      "Andel till arbete eller studier: kund finns inte i Workbuster – deltagare.",
+    ]);
+    expect(view.sortedRows.map((r) => r.label)).toEqual(["Budbee Södertälje", "IKEA"]);
+  });
+
   it("adds 'Skillnad mot bokfört' so fakturerat per kund totals the books", async () => {
     const view = await load("matt=fakturerat_kund&grupp=kund", { ...FILTERS, company: "MBAB" });
     const footer = view.pivot?.footer ?? [];

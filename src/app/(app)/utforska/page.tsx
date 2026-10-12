@@ -5,8 +5,12 @@ import { ExploreError, ExploreSkeleton } from "@/components/explore/ExploreParts
 import { loadWorkspace } from "@/components/explore/workspace";
 import { FilterBarSkeleton, GlobalFilterBar } from "@/components/filters/GlobalFilterBar";
 import { PageHeader } from "@/components/shell/PageHeader";
-import { parseUrlFilters, type UrlFilters } from "@/lib/app/filters";
-import { parseExploreState, type ExploreState } from "@/lib/dashboard/explore-state";
+import { parseUrlFilters, withUrlFilters, type UrlFilters } from "@/lib/app/filters";
+import {
+  parseExploreState,
+  withExploreState,
+  type ExploreState,
+} from "@/lib/dashboard/explore-state";
 import { loadExplore } from "@/lib/dashboard/load-explore";
 import { groupMetricsByArea, selectableMetrics } from "@/lib/dashboard/metrics-meta";
 import { effectiveAnchor } from "@/lib/dashboard/period";
@@ -33,7 +37,12 @@ export default async function ExplorePage({ searchParams }: { searchParams: Sear
           <GlobalFilterBar filters={filters} />
         </Suspense>
       </div>
-      <Suspense fallback={<ExploreSkeleton />}>
+      {/* Keyed by the view: a click (sort, drill, breakdown) shows the skeleton at once instead
+          of leaving the old table in place until the new numbers arrive. */}
+      <Suspense
+        key={withExploreState(state, withUrlFilters(filters)).toString()}
+        fallback={<ExploreSkeleton />}
+      >
         <ExploreContent filters={filters} state={state} />
       </Suspense>
     </>

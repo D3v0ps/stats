@@ -237,10 +237,15 @@ export async function loadExplore(state: ExploreState, ctx: ExploreContext): Pro
     const def = defsByKey.get(r.metricKey);
     if (!def) continue;
     if (r.status === "not_applicable") {
+      const reason = notApplicableReason(def, r.notApplicable, ctx.dimensions, defsByKey);
       notes.push({
         metricKey: r.metricKey,
         kind: "not_applicable",
-        text: notApplicableReason(def, r.notApplicable, ctx.dimensions),
+        // Side by side, say which metric the note is about.
+        text:
+          metrics.length > 1
+            ? `${def.name}: ${reason.charAt(0).toLocaleLowerCase("sv-SE")}${reason.slice(1)}`
+            : reason,
       });
     } else if (r.status === "no_data") {
       notes.push({

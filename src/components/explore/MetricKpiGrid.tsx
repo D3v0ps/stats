@@ -1,6 +1,9 @@
 import { KpiCard } from "@/components/brand/KpiCard";
+import { KPI_SOURCE_BUTTON, KPI_SOURCE_FRAME } from "@/components/widgets/grid-classes";
+import { SourcePopover } from "@/components/widgets/SourcePopover";
 import type { Unit } from "@/lib/contracts/domain";
 import type { FormatOptions } from "@/lib/core/format-sv";
+import type { SourceQuery } from "@/lib/dashboard/load-dashboard";
 import type { PivotDelta } from "@/lib/dashboard/pivot";
 import { cn } from "@/lib/utils";
 
@@ -16,6 +19,8 @@ export interface MetricKpi {
   footnote?: string | null;
   href?: string;
   lastUpdatedAt?: string | null;
+  /** Adds the Källa button (uploads behind the number). */
+  sourceQuery?: SourceQuery;
 }
 
 export function kpiFormatOptions(unit: Unit, decimals: number | null): FormatOptions {
@@ -40,7 +45,7 @@ export function MetricKpiGrid({
           <div
             key={k.key}
             data-testid={testId ? `${testId}-${k.key}` : undefined}
-            className="min-w-0"
+            className={cn("min-w-0", k.sourceQuery && KPI_SOURCE_FRAME)}
           >
             <KpiCard
               className="h-full"
@@ -56,6 +61,13 @@ export function MetricKpiGrid({
               href={k.href}
               actionLabel={k.href ? `${k.title}: utforska` : undefined}
             />
+            {k.sourceQuery ? (
+              <SourcePopover
+                query={k.sourceQuery}
+                subject={k.title}
+                className={KPI_SOURCE_BUTTON}
+              />
+            ) : null}
           </div>
         ))}
       </div>

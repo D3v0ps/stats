@@ -62,5 +62,13 @@ export function itemClass(block: LayoutBlock, index: number): string {
     .join(" ");
 }
 
+/**
+ * A KPI card with a Källa button in its bottom-right corner: the card keeps room for the button
+ * (KpiCard has no actions slot, so the button sits on top of it).
+ */
+export const KPI_SOURCE_FRAME =
+  "relative h-full [&_[data-slot=kpi-card]:not(:has(>footer))]:pb-14 [&_[data-slot=kpi-card]>footer]:pr-16";
+export const KPI_SOURCE_BUTTON = "absolute right-3 bottom-3 md:right-4 md:bottom-4";
+
 /** Card frame shared by chart widgets and Utforska panels (18 px radius, soft shadow). */
 export const CARD = "rounded-card bg-card p-5 shadow-soft md:p-6";

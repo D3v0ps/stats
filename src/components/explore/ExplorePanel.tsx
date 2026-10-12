@@ -38,6 +38,7 @@ export function exploreKpis(view: ExploreView): MetricKpi[] {
             ? `${withData} av ${expected} mån har data`
             : null,
         lastUpdatedAt: r.lastUpdatedAt,
+        sourceQuery: { ...view.sourceQuery, metricKeys: [def.key] },
       },
     ];
   });

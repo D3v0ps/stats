@@ -14,7 +14,8 @@ export function ExportCsvButton({ csv, fileName }: { csv: string; fileName: stri
     document.body.appendChild(a);
     a.click();
     a.remove();
-    URL.revokeObjectURL(url);
+    // Revoking in the same task can cancel the download in some browsers.
+    setTimeout(() => URL.revokeObjectURL(url), 1000);
   };
   return (
     <Button

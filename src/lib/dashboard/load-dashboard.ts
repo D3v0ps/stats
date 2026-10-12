@@ -189,8 +189,10 @@ async function categoryLinks(
   const idByLabel = new Map<string, number | string | null>();
   for (const g of result.groups) if (!idByLabel.has(g.label)) idByLabel.set(g.label, g.id);
   const urlFilters = { ...ctx.filters, company };
-  return labels.map((label) => {
-    const id = idByLabel.get(label) ?? null;
+  return labels.map((label, i) => {
+    // Same query, same order: match by position so two values with one label keep their ids.
+    const same = result.groups[i];
+    const id = (same?.label === label ? same.id : idByLabel.get(label)) ?? null;
     if (id === null) return { label, href: null };
     if (groupBy === COMPANY_GROUP) {
       const code = id as CompanyCode;
@@ -284,8 +286,13 @@ export async function loadWidget(spec: WidgetSpec, ctx: DashboardContext): Promi
   const defs = definitionMap(ctx.definitions);
   const def = defs.get(spec.metricKey);
   const company = spec.company ?? ctx.filters.company;
-  const fiscalStart = await ctx.source.fiscalStartMonth();
-  const range = widgetRange(spec, ctx, fiscalStart);
+  let range: { from: Month; to: Month };
+  try {
+    range = widgetRange(spec, ctx, await ctx.source.fiscalStartMonth());
+  } catch {
+    // The widget below fails the same way and shows its error; Källa still gets a range.
+    range = { from: ctx.anchor, to: ctx.anchor };
+  }
   const base: LoadedWidget = {
     spec,
     status: "ok",

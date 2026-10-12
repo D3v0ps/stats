@@ -13,10 +13,14 @@ export function csvNumber(value: number | null | undefined, decimals = 0): strin
   return formatNumber(value, decimals).replaceAll(NBSP, "").replaceAll(MINUS, "-");
 }
 
+const FORMULA_START = /^[=+\-@\t\r]/;
+const PLAIN_NUMBER = /^-?\d+(?:,\d+)?$/;
+
 /** Quote a field when it contains the separator, a quote or a line break. */
 export function csvField(value: string): string {
-  // A leading = + - @ would make Excel evaluate the cell as a formula.
-  const safe = /^[=+@]/.test(value) || /^-[^\d]/.test(value) ? `'${value}` : value;
+  // Excel evaluates a cell starting with = + - @ (or a tab/CR) as a formula ("-1+cmd|…" too);
+  // only plain numbers such as "-1234,5" may start with a minus.
+  const safe = FORMULA_START.test(value) && !PLAIN_NUMBER.test(value) ? `'${value}` : value;
   return /[";\r\n]/.test(safe) ? `"${safe.replaceAll('"', '""')}"` : safe;
 }
 

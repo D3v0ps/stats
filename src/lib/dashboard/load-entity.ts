@@ -2,6 +2,7 @@
 // every metric that supports the dimension, filtered to the value, with a 12-month trend, a
 // breakdown by the next dimension and comparisons. Works for any dimension (verksamhet, ort,
 // kostnadsställe, uppdrag, konsult). Pure orchestration over a MetricDataSource.
+import type { UrlFilters } from "@/lib/app/filters";
 import { COMPANY_FILTER_LABELS } from "@/lib/contracts/domain";
 import {
   COMPANY_GROUP,
@@ -14,12 +15,14 @@ import type { ChartData } from "@/lib/contracts/slides";
 import { addMonths } from "@/lib/core/month";
 import { FOOTNOTE_COMPANY_SUM, runMetricQuery } from "@/lib/metrics";
 import { buildCsv } from "./csv";
-import { DRILL_CHAIN, suggestNextDimension } from "./drill";
-import { entityHref, exploreHref, toggleSort, type SortState } from "./explore-state";
+import { DRILL_CHAIN, entityBreakdown } from "./drill";
+import { MONTH_GROUP, entityHref, exploreHref, toggleSort, type SortState } from "./explore-state";
 import type { ExploreContext, ExploreRowLinks } from "./load-explore";
 import type { SourceQuery } from "./load-dashboard";
 import {
+  definitionMap,
   dimensionLabelOf,
+  metricArea,
   selectableMetrics,
   supportedDimensions,
   type DimensionMeta,
@@ -259,8 +262,19 @@ export async function loadEntity(input: EntityInput, ctx: ExploreContext): Promi
         ),
   ]);
   const label = labels[valueId];
-  const supported = supportedDimensions(metrics);
-  const nextDefault = suggestNextDimension(dimension, supported, new Set([dimension]));
+  // Utforska filtered to the value, broken down by what these metrics can show next (per
+  // month when nothing is left); never by a dimension the metrics lack.
+  const exploreLink = (defs: readonly MetricDefinition[], filters: UrlFilters = ctx.filters) =>
+    exploreHref(
+      {
+        metrics: defs.map((m) => m.key),
+        filters: drillPath,
+        groupBy:
+          entityBreakdown(dimension, supportedDimensions(defs)) ??
+          (filters.company === "ALL" ? COMPANY_GROUP : MONTH_GROUP),
+      },
+      filters,
+    );
   const base: EntityView = {
     found: label !== undefined,
     dimension,
@@ -280,18 +294,23 @@ export async function loadEntity(input: EntityInput, ctx: ExploreContext): Promi
       from: addMonths(ctx.anchor, -11),
       to: ctx.anchor,
     },
-    exploreHref: exploreHref(
-      { metrics: metrics.slice(0, 1).map((m) => m.key), filters: drillPath, groupBy: nextDefault },
-      ctx.filters,
-    ),
+    exploreHref: exploreLink(metrics.slice(0, 1)),
   };
   if (!main || label === undefined) return base;
   const results = main.results;
 
-  // Metrics the entity never had (a WB program has no hours) are left out, unless that would
-  // leave nothing to show.
+  // Areas the entity never appears in (a WB program has no hours) are left out, unless that
+  // would leave nothing to show. Within an area every metric stays: a customer without sick
+  // leave shows 0 sjukpass rather than no card.
   const active = results.map(hasActivity);
-  const shown = active.some(Boolean) ? active : results.map(() => true);
+  const defsByKey = definitionMap(ctx.definitions);
+  const areas = metrics.map((m) => metricArea(m, defsByKey));
+  const activeAreas = new Set(areas.filter((_, i) => active[i]));
+  const shown = activeAreas.size > 0 ? areas.map((a) => activeAreas.has(a)) : areas.map(() => true);
+  const shownMetrics = metrics.filter((_, i) => shown[i]);
+  // Breakdowns follow the metrics the page shows (an AF program has no customers).
+  const supported = supportedDimensions(shownMetrics);
+  const nextDefault = entityBreakdown(dimension, supported);
   const kpis: EntityKpi[] = results.flatMap((r, i) => {
     const def = metrics[i] as MetricDefinition;
     if (!shown[i]) return [];
@@ -311,10 +330,7 @@ export async function loadEntity(input: EntityInput, ctx: ExploreContext): Promi
             ? `${withData} av ${expected} mån har data`
             : null,
         lastUpdatedAt: r.lastUpdatedAt,
-        href: exploreHref(
-          { metrics: [def.key], filters: drillPath, groupBy: nextDefault },
-          ctx.filters,
-        ),
+        href: exploreLink([def]),
         status: r.status,
       },
     ];
@@ -339,11 +355,8 @@ export async function loadEntity(input: EntityInput, ctx: ExploreContext): Promi
       : ((nextDefault && breakdownKeys.includes(nextDefault) ? nextDefault : breakdownKeys[0]) ??
         null);
   const breakdownMetrics = breakdownDim
-    ? metrics
-        .filter(
-          (m, i) =>
-            active[i] && (breakdownDim === COMPANY_GROUP || m.dimensions.includes(breakdownDim)),
-        )
+    ? shownMetrics
+        .filter((m) => breakdownDim === COMPANY_GROUP || m.dimensions.includes(breakdownDim))
         .slice(0, ENTITY_BREAKDOWN_METRICS)
     : [];
 
@@ -418,14 +431,10 @@ export async function loadEntity(input: EntityInput, ctx: ExploreContext): Promi
     for (const row of pivot?.rows ?? []) {
       const drill =
         row.drill?.kind === "company"
-          ? exploreHref(
-              {
-                metrics: breakdownMetrics.map((m) => m.key),
-                filters: drillPath,
-                groupBy: nextDefault,
-              },
-              { ...ctx.filters, company: row.drill.company as "MBAB" | "MBR" },
-            )
+          ? exploreLink(breakdownMetrics, {
+              ...ctx.filters,
+              company: row.drill.company as "MBAB" | "MBR",
+            })
           : null;
       rowLinks[row.key] = {
         drill,
@@ -466,10 +475,11 @@ export async function loadEntity(input: EntityInput, ctx: ExploreContext): Promi
     kpis,
     trend,
     comparison: comparisonPivot(
-      metrics.filter((_, i) => shown[i]),
+      shownMetrics,
       results.filter((_, i) => shown[i]),
     ),
     breakdown,
     footnotes,
+    exploreHref: exploreLink(shownMetrics.slice(0, 1)),
   };
 }

@@ -5,9 +5,9 @@ import { EntityPanel } from "@/components/explore/EntityPanel";
 import { ExploreError, ExploreSkeleton } from "@/components/explore/ExploreParts";
 import { loadWorkspace } from "@/components/explore/workspace";
 import { FilterBarSkeleton, GlobalFilterBar } from "@/components/filters/GlobalFilterBar";
-import { parseUrlFilters, type UrlFilters } from "@/lib/app/filters";
+import { parseUrlFilters, withUrlFilters, type UrlFilters } from "@/lib/app/filters";
 import { DimensionKeySchema } from "@/lib/contracts/domain";
-import { parseExploreState } from "@/lib/dashboard/explore-state";
+import { parseExploreState, withExploreState } from "@/lib/dashboard/explore-state";
 import { loadEntity, type EntityInput, type EntityView } from "@/lib/dashboard/load-entity";
 import { effectiveAnchor } from "@/lib/dashboard/period";
 import { requireSession } from "@/lib/db/session";
@@ -38,8 +38,9 @@ export default async function EntityPage({
   const filters = parseUrlFilters(sp);
   const state = parseExploreState(sp);
   const input: EntityInput = { dimension, valueId, breakdown: state.groupBy, sort: state.sort };
+  const viewKey = `${dimension}/${valueId}?${withExploreState(state, withUrlFilters(filters))}`;
   return (
-    <Suspense fallback={<ExploreSkeleton />}>
+    <Suspense key={viewKey} fallback={<ExploreSkeleton />}>
       <EntityContent input={input} filters={filters} />
     </Suspense>
   );

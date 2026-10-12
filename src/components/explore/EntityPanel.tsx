@@ -79,6 +79,7 @@ export function EntityPanel({ view, sort, filterBar }: EntityPanelProps) {
             footnote: k.footnote,
             href: k.href,
             lastUpdatedAt: k.lastUpdatedAt,
+            sourceQuery: { ...view.sourceQuery, metricKeys: [k.key] },
           }))}
         />
       )}
@@ -152,6 +153,7 @@ export function EntityPanel({ view, sort, filterBar }: EntityPanelProps) {
             sortLinks={{}}
             sort={null}
             caption={`Jämförelser för ${view.label}`}
+            muteUnlinked={false}
             testId="entity-compare"
           />
         </ChartCard>

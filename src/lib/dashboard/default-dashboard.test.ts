@@ -185,6 +185,14 @@ describe("loading dashboard widgets", () => {
     ).toBe("/utforska?bolag=MBAB&matt=timmar&grupp=verksamhet");
   });
 
+  it("never throws when the data source fails: the card shows an error", async () => {
+    const source = buildSource();
+    source.fiscalStartMonth = () => Promise.reject(new Error("Databasen svarar inte"));
+    const loaded = await loadWidget(DEFAULT_DASHBOARD.widgets[0]!, ctx(source));
+    expect(loaded).toMatchObject({ status: "error", error: "Kunde inte beräkna widgeten." });
+    expect(loaded.sourceQuery).toMatchObject({ from: ANCHOR, to: ANCHOR });
+  });
+
   it("refuses personal breakdowns on the dashboard and reports unknown metrics", async () => {
     const personal = await loadWidget(
       { ...DEFAULT_DASHBOARD.widgets[0]!, viz: "bar", groupBy: "konsult" },

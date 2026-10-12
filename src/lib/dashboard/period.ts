@@ -26,18 +26,31 @@ export type AnchorHint =
   | { kind: "incomplete"; text: string; detail: string }
   | null;
 
+/** Months whose key-metric coverage the hint looks at: two years up to the anchor or today. */
+export function hintCoverageRange(anchor: Month, lastClosed: Month): { from: Month; to: Month } {
+  return {
+    from: addMonths(anchor, -23),
+    to: compareMonths(anchor, lastClosed) >= 0 ? anchor : lastClosed,
+  };
+}
+
 /**
  * The hint under the month picker: the default month that is complete gets "senaste kompletta
- * månad"; a month where a key metric lacks data gets "ofullständig" with what is missing.
+ * månad"; a month where a key metric lacks data gets "ofullständig" with what is missing. A key
+ * metric the selected company never reports (MB Restart has no Intelliplan hours) is not
+ * missing, or that company's months could never be complete.
  */
 export function anchorHint(input: {
   anchor: Month;
   defaultAnchor: { month: Month; complete: boolean };
-  /** Coverage of the key metrics for the anchor month (metric key -> months). */
+  /** Coverage of the key metrics over hintCoverageRange (metric key -> months). */
   coverage: Record<string, string[]>;
   metricNames: Record<string, string>;
 }): AnchorHint {
-  const missing = KEY_METRICS.filter((k) => !(input.coverage[k] ?? []).includes(input.anchor));
+  const missing = KEY_METRICS.filter((k) => {
+    const months = input.coverage[k] ?? [];
+    return months.length > 0 && !months.includes(input.anchor);
+  });
   if (missing.length > 0) {
     const names = missing.map((k) => input.metricNames[k] ?? k);
     return {

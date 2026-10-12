@@ -15,6 +15,8 @@ export interface PivotTableProps {
   caption: string;
   /** Accessible name of the entity link, e.g. "Kundkort". */
   entityLabel?: string;
+  /** Rows without a link (Övriga, (saknas)) are muted; off for tables of metric names. */
+  muteUnlinked?: boolean;
   testId?: string;
 }
 
@@ -126,6 +128,7 @@ export function PivotTable({
   sort,
   caption,
   entityLabel = "Öppna",
+  muteUnlinked = true,
   testId = "pivot",
 }: PivotTableProps) {
   return (
@@ -159,6 +162,9 @@ export function PivotTable({
         <tbody>
           {rows.map((row) => {
             const links = rowLinks[row.key];
+            // Without a drill-down (entity pages) the label itself opens the entity page.
+            const labelHref = links?.drill ?? links?.entity ?? null;
+            const separateEntity = Boolean(links?.drill && links.entity);
             return (
               <tr
                 key={row.key}
@@ -174,11 +180,11 @@ export function PivotTable({
                   )}
                 >
                   <span className="flex items-center gap-2">
-                    {links?.drill ? (
+                    {labelHref ? (
                       <Link
-                        href={links.drill}
-                        scroll={false}
-                        data-testid={`${testId}-drill`}
+                        href={labelHref}
+                        scroll={links?.drill ? false : undefined}
+                        data-testid={`${testId}-${links?.drill ? "drill" : "entity"}`}
                         className="max-w-[16rem] truncate rounded after:absolute after:inset-0 after:content-[''] hover:underline hover:underline-offset-4 focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
                       >
                         {row.label}
@@ -187,13 +193,13 @@ export function PivotTable({
                       <span
                         className={cn(
                           "max-w-[16rem] truncate",
-                          !links?.entity && "text-muted-foreground",
+                          muteUnlinked && "text-muted-foreground",
                         )}
                       >
                         {row.label}
                       </span>
                     )}
-                    {links?.entity ? (
+                    {separateEntity && links?.entity ? (
                       <Link
                         href={links.entity}
                         aria-label={`${entityLabel}: ${row.label}`}

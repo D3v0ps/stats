@@ -5,6 +5,7 @@ import { kpiFormatOptions } from "@/components/explore/MetricKpiGrid";
 import type { LoadedWidget } from "@/lib/dashboard/load-dashboard";
 import { cn } from "@/lib/utils";
 import { ChartCard } from "./ChartCard";
+import { KPI_SOURCE_BUTTON, KPI_SOURCE_FRAME } from "./grid-classes";
 import { SourcePopover } from "./SourcePopover";
 import { ToplistBars } from "./ToplistBars";
 import { kpiFootnote, kpiSparkline, widgetSubtitle, widgetTitle } from "./widget-text";
@@ -34,7 +35,10 @@ export function WidgetRenderer({ widget, lastUpdatedAt }: WidgetRendererProps) {
   if (spec.viz === "kpi") {
     return (
       <div
-        className="relative h-full [&_[data-slot=kpi-card]:not(:has(>footer))]:pb-14 [&_[data-slot=kpi-card]>footer]:pr-16 [&_[data-slot=sparkline]]:w-20 @7xl:[&_[data-slot=sparkline]]:w-24"
+        className={cn(
+          KPI_SOURCE_FRAME,
+          "[&_[data-slot=sparkline]]:w-20 @7xl:[&_[data-slot=sparkline]]:w-24",
+        )}
         data-testid={testId}
       >
         <KpiCard
@@ -51,11 +55,7 @@ export function WidgetRenderer({ widget, lastUpdatedAt }: WidgetRendererProps) {
           href={widget.href}
           actionLabel={`${title}: utforska`}
         />
-        <SourcePopover
-          query={widget.sourceQuery}
-          subject={title}
-          className="absolute right-3 bottom-3 md:right-4 md:bottom-4"
-        />
+        <SourcePopover query={widget.sourceQuery} subject={title} className={KPI_SOURCE_BUTTON} />
       </div>
     );
   }

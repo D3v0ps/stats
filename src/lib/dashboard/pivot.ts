@@ -118,7 +118,8 @@ function coverageCell(cell: ValueCell): PivotCell {
   return {
     raw: expected === 0 ? null : withData / expected,
     text: `${withData}/${expected} mån`,
-    csv: `${withData}/${expected}`,
+    // "1/3" would turn into a date in Excel.
+    csv: `${withData} av ${expected}`,
   };
 }
 

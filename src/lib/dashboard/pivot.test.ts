@@ -169,8 +169,8 @@ describe("pivot table", () => {
       "Månader med data",
     ]);
     expect(csv.rows).toEqual([
-      ["Budbee", "201", "11,4", "1/1"],
-      ["Totalt", "201", "11,4", "1/1"],
+      ["Budbee", "201", "11,4", "1 av 1"],
+      ["Totalt", "201", "11,4", "1 av 1"],
     ]);
   });
 

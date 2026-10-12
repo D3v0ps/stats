@@ -4,6 +4,7 @@ import {
   buildBreadcrumbs,
   defaultBreakdown,
   drillInto,
+  entityBreakdown,
   suggestNextDimension,
   usedDimensions,
 } from "./drill";
@@ -50,6 +51,25 @@ describe("next breakdown suggestion", () => {
     expect(usedDimensions("MBR", [{ dimension: "kund", valueId: 1 }])).toEqual(
       new Set(["kund", "bolag"]),
     );
+  });
+});
+
+describe("entity page breakdown", () => {
+  it("takes the next chain level the metrics have", () => {
+    expect(entityBreakdown("kund", IP_TIMMAR)).toBe("uppdrag");
+    expect(entityBreakdown("uppdrag", IP_TIMMAR)).toBe("konsult");
+    expect(entityBreakdown("verksamhet", IP_TIMMAR)).toBe("kund");
+  });
+
+  it("falls back to the broadest level the metrics have, then other dimensions", () => {
+    // A consultant per kund, not per frånvarotyp; a city per verksamhet.
+    expect(entityBreakdown("konsult", [...IP_TIMMAR, "franvarotyp"])).toBe("kund");
+    expect(entityBreakdown("ort", DELTAGARE)).toBe("verksamhet");
+    // An AF program has no customers: per ort.
+    expect(entityBreakdown("verksamhet", DELTAGARE)).toBe("ort");
+    expect(entityBreakdown("kostnadsstalle", LEDGER)).toBeNull();
+    expect(entityBreakdown("kund", ["kund"])).toBeNull();
+    expect(entityBreakdown("kostnadsstalle", ["kostnadsstalle", "kontogrupp"])).toBeNull();
   });
 });
 

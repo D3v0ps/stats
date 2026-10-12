@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { anchorHint, effectiveAnchor, monthOptions } from "./period";
+import { anchorHint, effectiveAnchor, hintCoverageRange, monthOptions } from "./period";
 
 const NAMES = {
   resultat: "Resultat",
@@ -38,7 +38,11 @@ describe("period helpers", () => {
     const hint = anchorHint({
       anchor: "2026-09",
       defaultAnchor: { month: "2026-09", complete: false },
-      coverage: { resultat: [], aktiva_deltagare: ["2026-09"], timmar: [] },
+      coverage: {
+        resultat: ["2026-08"],
+        aktiva_deltagare: ["2026-08", "2026-09"],
+        timmar: ["2026-07", "2026-08"],
+      },
       metricNames: NAMES,
     });
     expect(hint).toEqual({
@@ -46,6 +50,22 @@ describe("period helpers", () => {
       text: "Ofullständig",
       detail: "Saknar data för september 2026: Resultat, Fakturerade timmar.",
     });
+  });
+
+  it("ignores key metrics the company never reports", () => {
+    // MB Restart has no Intelliplan hours: its months are complete without them.
+    const coverage = { resultat: ["2026-09"], aktiva_deltagare: ["2026-09"], timmar: [] };
+    expect(
+      anchorHint({
+        anchor: "2026-09",
+        defaultAnchor: { month: "2026-09", complete: true },
+        coverage,
+        metricNames: NAMES,
+      }),
+    ).toEqual({ kind: "latest_complete", text: "Senaste kompletta månad" });
+    expect(hintCoverageRange("2026-09", "2026-09")).toEqual({ from: "2024-10", to: "2026-09" });
+    // An older month also looks at what the company reported since.
+    expect(hintCoverageRange("2025-03", "2026-09")).toEqual({ from: "2023-04", to: "2026-09" });
   });
 
   it("shows nothing for another complete month", () => {

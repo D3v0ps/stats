@@ -67,10 +67,30 @@ describe("metric metadata", () => {
       "Kund finns inte i bokföringen.",
     );
     expect(notApplicableReason(def("aktiva_deltagare"), ["kund", "uppdrag"], dims)).toBe(
-      "Kund och Uppdrag finns inte i Workbuster – deltagare.",
+      "Kund och uppdrag finns inte i Workbuster – deltagare.",
     );
     expect(notApplicableReason(def("faktor"), ["ort"], dims)).toBe(
       "Ort finns inte i alla delar av faktor.",
+    );
+  });
+
+  it("names the operand sources of a formula that lack the dimension", () => {
+    const dims = SEEDED_DIMENSION_META;
+    expect(notApplicableReason(def("resultatandel"), ["kund"], dims, MAP)).toBe(
+      "Kund finns inte i Workbuster – deltagare.",
+    );
+    expect(notApplicableReason(def("faktor"), ["ort"], dims, MAP)).toBe(
+      "Ort finns inte i Intelliplan – fakturerat och lön.",
+    );
+    // Only the operand without verksamhet is named.
+    expect(notApplicableReason(def("sjukfranvaro"), ["verksamhet"], dims, MAP)).toBe(
+      "Verksamhet finns inte i Intelliplan – frånvaro.",
+    );
+    expect(notApplicableReason(def("resultatmarginal"), ["kund"], dims, MAP)).toBe(
+      "Kund finns inte i bokföringen.",
+    );
+    expect(notApplicableReason(def("sjukpass_per_konsult"), ["ort"], dims, MAP)).toBe(
+      "Ort finns inte i Intelliplan – frånvaro och Intelliplan – timmar och pass.",
     );
   });
 

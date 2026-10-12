@@ -18,6 +18,11 @@ describe("csv export", () => {
     expect(csvField("=SUM(A1)")).toBe("'=SUM(A1)");
     expect(csvField("-12")).toBe("-12");
     expect(csvField("-cmd")).toBe("'-cmd");
+    expect(csvField("-1234,5")).toBe("-1234,5");
+    expect(csvField("-1+1+cmd|' /C calc'!A0")).toBe("'-1+1+cmd|' /C calc'!A0");
+    expect(csvField("@SUM(A1)")).toBe("'@SUM(A1)");
+    expect(csvField("\t=1")).toBe("'\t=1");
+    expect(csvField("+46 8 123")).toBe("'+46 8 123");
   });
 
   it("starts with a BOM, separates with semicolons and ends lines with CRLF", () => {

@@ -47,6 +47,24 @@ export function suggestNextDimension(
   return null;
 }
 
+/** Entity pages without a next chain level: the broadest level that says something new. */
+const ENTITY_FALLBACK = ["kund", "verksamhet", "uppdrag", "kostnadsstalle"] as const;
+
+/**
+ * Breakdown for the page of one dimension value: the next chain level the metrics have
+ * (kund → uppdrag), else the broadest chain level they have (a consultant per kund, a city per
+ * verksamhet), else another of their dimensions (KROM per ort). null when nothing is left.
+ */
+export function entityBreakdown(dimension: string, supported: readonly string[]): string | null {
+  const ok = (d: string) => d !== dimension && supported.includes(d) && !NOT_SUGGESTED.has(d);
+  const chain: string[] = DRILL_CHAIN.filter((d) => d !== COMPANY_GROUP);
+  const at = chain.indexOf(dimension);
+  const next = at >= 0 ? chain.slice(at + 1).find(ok) : undefined;
+  return (
+    next ?? ENTITY_FALLBACK.find(ok) ?? supported.find((d) => ok(d) && !chain.includes(d)) ?? null
+  );
+}
+
 /** Dimensions already fixed by the drill path (bolag counts when a company is chosen). */
 export function usedDimensions(
   company: CompanyFilter,

@@ -10,6 +10,7 @@ import { SEEDED_DIMENSION_META, type DimensionMeta } from "@/lib/dashboard/metri
 import {
   anchorHint,
   effectiveAnchor,
+  hintCoverageRange,
   monthOptions,
   type AnchorHint,
   type MonthOption,
@@ -59,8 +60,7 @@ export async function loadFilterBarData(
   const coverage = await ws.source.coverage([...KEY_METRICS], {
     companies: filters.company === "ALL" ? ["MBAB", "MBR"] : [filters.company],
     scenario: "utfall",
-    from: anchor,
-    to: anchor,
+    ...hintCoverageRange(anchor, ws.lastClosed),
     groupBy: [],
     filters: [],
   });

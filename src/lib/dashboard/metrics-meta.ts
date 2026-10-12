@@ -127,18 +127,49 @@ export function dimensionLabelOf(key: string, dimensions: readonly DimensionMeta
   );
 }
 
+/** "a", "a och b", "a, b och c". */
+function joinSv(parts: readonly string[]): string {
+  return parts.length <= 1
+    ? (parts[0] ?? "")
+    : `${parts.slice(0, -1).join(", ")} och ${parts.at(-1)}`;
+}
+
+/**
+ * Where a formula's missing dimensions are missing: the sources of the operands that lack
+ * them ("Kund finns inte i Workbuster – deltagare." for Andel till arbete eller studier).
+ */
+function formulaSourcePhrase(
+  def: MetricDefinition,
+  dimensionKeys: readonly string[],
+  defs: DefMap | undefined,
+): string {
+  if (!defs) return sourcePhrase(def);
+  const phrases: string[] = [];
+  for (const key of leafMetricKeys(def.key, defs)) {
+    const leaf = defs.get(key);
+    if (!leaf || dimensionKeys.every((d) => leaf.dimensions.includes(d))) continue;
+    const phrase = sourcePhrase(leaf);
+    if (!phrases.includes(phrase)) phrases.push(phrase);
+  }
+  return phrases.length > 0 ? joinSv(phrases) : sourcePhrase(def);
+}
+
 /** "Kund finns inte i bokföringen." / "Ort finns inte i Intelliplan – timmar och pass." */
 export function notApplicableReason(
   def: MetricDefinition,
   dimensionKeys: readonly string[],
   dimensions: readonly DimensionMeta[],
+  /** All definitions: names the operand sources of a formula instead of the formula. */
+  defs?: DefMap,
 ): string {
-  const labels = dimensionKeys.map((k) => dimensionLabelOf(k, dimensions));
-  const subject =
-    labels.length <= 1
-      ? (labels[0] ?? "Uppdelningen")
-      : `${labels.slice(0, -1).join(", ")} och ${labels.at(-1)}`;
-  return `${subject} finns inte i ${sourcePhrase(def)}.`;
+  const labels = dimensionKeys.map((k, i) => {
+    const label = dimensionLabelOf(k, dimensions);
+    return i === 0 ? label : label.toLocaleLowerCase("sv-SE");
+  });
+  const subject = labels.length === 0 ? "Uppdelningen" : joinSv(labels);
+  const source =
+    def.kind === "formula" ? formulaSourcePhrase(def, dimensionKeys, defs) : sourcePhrase(def);
+  return `${subject} finns inte i ${source}.`;
 }
 
 /** Personal dimensions (konsult): from the database flags plus the seeded ones. */
