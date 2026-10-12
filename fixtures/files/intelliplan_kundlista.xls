@@ -1,0 +1,22 @@
+<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<title>Kundlista</title>
+</head>
+<body>
+<table border="1">
+<tr><th>Kundnummer</th><th>Kundnamn</th><th>Arbetsst&auml;lle</th></tr>
+<tr><td x:num>1001</td><td>Budbee S&ouml;dert&auml;lje</td><td>Terminal S&ouml;dert&auml;lje&nbsp;</td></tr>
+<tr><td x:num>1002</td><td>Budbee Kungsängen</td><td>Kungsängen hub&nbsp;</td></tr>
+<tr><td x:num>1003</td><td>Early Bird AB</td><td>Bromma&nbsp;</td></tr>
+<tr><td x:num>1003</td><td>Early Bird AB</td><td>V&auml;stberga&nbsp;</td></tr>
+<tr><td x:num>1004</td><td>PRV</td><td>Stockholm&nbsp;</td></tr>
+<tr><td x:num>1005</td><td>Bosch</td><td>Lager Tumba&nbsp;</td></tr>
+<tr><td x:num>1006</td><td>Premo</td><td>Arlanda&nbsp;</td></tr>
+<tr><td x:num>1007</td><td>PostNord AB</td><td>Rosersberg&nbsp;</td></tr>
+<tr><td x:num>1007</td><td>PostNord AB</td><td>&Aring;rsta&nbsp;</td></tr>
+<tr><td x:num>1008</td><td>Postnord</td><td>V&auml;stberga&nbsp;</td></tr>
+<tr><td x:num>1099</td><td>Miljonbemanning Presentation (Stockholm)</td><td>Kontoret&nbsp;</td></tr>
+</table>
+</body>
+</html>

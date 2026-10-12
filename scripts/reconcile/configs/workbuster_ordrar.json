@@ -1,0 +1,18 @@
+{
+  "name": "Workbuster – ordrar",
+  "kind": "table",
+  "header": ["Ordertyp", "Belopp"],
+  "columns": {
+    "nr": ["Ordernummer"],
+    "tjanst": ["Tjänst"],
+    "typ": ["Ordertyp"],
+    "belopp": ["Belopp"],
+    "datum": ["Datum"],
+    "ort": ["Ort"]
+  },
+  "skip": [{ "label": "summarad / sum row", "column": "nr", "regex": "^(summa|totalt)\\b" }],
+  "company": { "filename_regex": "_(MBAB|MBR)[_.]" },
+  "period": { "column": "datum" },
+  "dims": { "verksamhet": "tjanst", "ordertyp": "typ", "ort": "ort" },
+  "metrics": [{ "key": "af_intakt", "sum": "belopp" }]
+}

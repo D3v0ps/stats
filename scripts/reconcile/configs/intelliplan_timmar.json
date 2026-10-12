@@ -1,0 +1,40 @@
+{
+  "name": "Intelliplan – timmar och pass",
+  "kind": "table",
+  "header": ["Kund", "Anställnings id"],
+  "columns": {
+    "kund": ["Kund"],
+    "uppdrag": ["Uppdrag"],
+    "anst_id": ["Anställnings id", "Anställningsid", "Anst.id"],
+    "datum": ["Datum"],
+    "timmar": ["Timmar", "Antal timmar"],
+    "status": ["Status"]
+  },
+  "skip": [
+    { "label": "summarad / sum row", "column": "kund", "regex": "^(totalt|summa)\\b" },
+    { "label": "sidfot / footer", "column": "kund", "regex": "^(utskrivet|sida \\d+)" }
+  ],
+  "exclude": [
+    {
+      "label": "testkund / test customer",
+      "column": "kund",
+      "equals": "Miljonbemanning Presentation (Stockholm)"
+    },
+    { "label": "obemannat pass / unstaffed shift", "column": "anst_id", "empty": true },
+    { "label": "makulerat / cancelled", "column": "status", "equals": "Makulerad" }
+  ],
+  "company": { "filename_regex": "_(MBAB|MBR)[_.]" },
+  "period": { "column": "datum" },
+  "aliases": { "kund": { "Postnord": "PostNord AB" } },
+  "dims": {
+    "kund": "kund",
+    "uppdrag": "uppdrag",
+    "konsult": "anst_id",
+    "verksamhet": { "const": "Bemanning" }
+  },
+  "metrics": [
+    { "key": "timmar", "sum": "timmar" },
+    { "key": "pass", "count_rows": true }
+  ],
+  "compare_aliases": { "kund": { "Postnord": "PostNord AB" } }
+}

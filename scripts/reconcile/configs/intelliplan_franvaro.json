@@ -1,0 +1,28 @@
+{
+  "name": "Intelliplan – frånvaro",
+  "kind": "table",
+  "header": ["Kund", "Frånvaroorsak"],
+  "columns": {
+    "kund": ["Kund"],
+    "anst_id": ["Anställnings id", "Anställningsid"],
+    "datum": ["Datum"],
+    "orsak": ["Frånvaroorsak", "Orsak"],
+    "timmar": ["Timmar"]
+  },
+  "exclude": [
+    {
+      "label": "olovlig frånvaro (inget sjukmått) / unauthorised absence",
+      "column": "orsak",
+      "equals": "Olovlig frånvaro"
+    }
+  ],
+  "company": { "filename_regex": "_(MBAB|MBR)[_.]" },
+  "period": { "column": "datum" },
+  "aliases": { "kund": { "Postnord": "PostNord AB" } },
+  "dims": { "kund": "kund", "konsult": "anst_id", "franvarotyp": "orsak" },
+  "metrics": [
+    { "key": "sjuktimmar", "sum": "timmar" },
+    { "key": "sjukpass", "count_rows": true }
+  ],
+  "compare_aliases": { "kund": { "Postnord": "PostNord AB" } }
+}

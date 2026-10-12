@@ -1,0 +1,1010 @@
+[
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 14000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 4500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -2773000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 375000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "kontogrupp": "personal" },
+    "value": 2066000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-01",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 153000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 14000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 4500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -2823000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 376000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "kontogrupp": "personal" },
+    "value": 2103000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-02",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 155000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 14000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 4500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -3093000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 382000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "kontogrupp": "personal" },
+    "value": 2304000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-03",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 170000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 14000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 4500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -2949000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 379000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "kontogrupp": "personal" },
+    "value": 2197000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-04",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 162000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 14000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 4500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -3104000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 382000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "kontogrupp": "personal" },
+    "value": 2312000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-05",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 171000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 14000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 4500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -3150000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 383000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "kontogrupp": "personal" },
+    "value": 2347000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-06",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 173000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 14000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 4500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -2317000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 366000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "kontogrupp": "personal" },
+    "value": 1726000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-07",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 127000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 14000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 4500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -2631000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 373000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "kontogrupp": "personal" },
+    "value": 1960000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-08",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 145000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 14000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 4500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -3078000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 382000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "kontogrupp": "personal" },
+    "value": 2293000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 169000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-10",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 14000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-10",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 4500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-10",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -3220000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-10",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 384000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-10",
+    "dims": { "kontogrupp": "personal" },
+    "value": 2399000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-10",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 177000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-11",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 14000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-11",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 4500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-11",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -3244000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-11",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 385000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-11",
+    "dims": { "kontogrupp": "personal" },
+    "value": 2417000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-11",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 178000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-12",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 14000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-12",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 4500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-12",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -3051000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-12",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 381000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-12",
+    "dims": { "kontogrupp": "personal" },
+    "value": 2273000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBAB",
+    "month": "2026-12",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 168000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 3500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 900
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -1184000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 241000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "kontogrupp": "personal" },
+    "value": 746000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-01",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 36000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 3500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 900
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -1200000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 241000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "kontogrupp": "personal" },
+    "value": 756000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-02",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 36000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 3500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 900
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -1227000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 242000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "kontogrupp": "personal" },
+    "value": 773000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-03",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 37000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 3500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 900
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -1164000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 240000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "kontogrupp": "personal" },
+    "value": 733000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-04",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 35000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 3500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 900
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -1153000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 240000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "kontogrupp": "personal" },
+    "value": 726000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-05",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 35000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 3500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 900
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -1118000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 239000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "kontogrupp": "personal" },
+    "value": 704000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-06",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 34000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 3500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 900
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -836000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 230000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "kontogrupp": "personal" },
+    "value": 527000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-07",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 25000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 3500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 900
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -1041000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 236000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "kontogrupp": "personal" },
+    "value": 656000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-08",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 31000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 3500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 900
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -1254000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 243000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "kontogrupp": "personal" },
+    "value": 790000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-09",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 38000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-10",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 3500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-10",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 900
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-10",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -1221000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-10",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 242000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-10",
+    "dims": { "kontogrupp": "personal" },
+    "value": 769000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-10",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 37000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-11",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 3500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-11",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 900
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-11",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -1256000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-11",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 243000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-11",
+    "dims": { "kontogrupp": "personal" },
+    "value": 791000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-11",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 38000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-12",
+    "dims": { "kontogrupp": "avskrivningar" },
+    "value": 3500
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-12",
+    "dims": { "kontogrupp": "finansiella" },
+    "value": 900
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-12",
+    "dims": { "kontogrupp": "intakter" },
+    "value": -1138000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-12",
+    "dims": { "kontogrupp": "ovriga_externa" },
+    "value": 239000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-12",
+    "dims": { "kontogrupp": "personal" },
+    "value": 717000
+  },
+  {
+    "metricKey": "budget_belopp",
+    "company": "MBR",
+    "month": "2026-12",
+    "dims": { "kontogrupp": "varor_ul" },
+    "value": 34000
+  }
+]

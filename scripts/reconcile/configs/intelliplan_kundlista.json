@@ -1,0 +1,11 @@
+{
+  "name": "Intelliplan – kundlista (referensdata, inga fakta / reference data, no facts)",
+  "kind": "reference",
+  "header": ["Kundnummer", "Kundnamn"],
+  "columns": {
+    "nr": ["Kundnummer"],
+    "namn": ["Kundnamn"],
+    "arbetsstalle": ["Arbetsställe"]
+  },
+  "expect_min_rows": 1
+}

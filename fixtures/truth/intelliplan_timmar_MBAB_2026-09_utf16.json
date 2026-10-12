@@ -1,0 +1,1274 @@
+[
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2036",
+      "kund": "Budbee Kungsängen",
+      "uppdrag": "5201 - Sortering kväll",
+      "verksamhet": "Bemanning"
+    },
+    "value": 9
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2046",
+      "kund": "PRV",
+      "uppdrag": "5401 - Administratör",
+      "verksamhet": "Bemanning"
+    },
+    "value": 11
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2051",
+      "kund": "Budbee Kungsängen",
+      "uppdrag": "5201 - Sortering kväll",
+      "verksamhet": "Bemanning"
+    },
+    "value": 7
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2059",
+      "kund": "Bosch",
+      "uppdrag": "5502 - Lagerarbetare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 8
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2060",
+      "kund": "Bosch",
+      "uppdrag": "5502 - Lagerarbetare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 10
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2074",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5102 - Terminalarbetare natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 5
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2093",
+      "kund": "Early Bird AB",
+      "uppdrag": "5302 - Packning",
+      "verksamhet": "Bemanning"
+    },
+    "value": 4
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2095",
+      "kund": "PostNord AB",
+      "uppdrag": "5701 - Paketsortering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 10
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2102",
+      "kund": "Bosch",
+      "uppdrag": "5502 - Lagerarbetare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 13
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2106",
+      "kund": "Bosch",
+      "uppdrag": "5501 - Montering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 9
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2110",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5102 - Terminalarbetare natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 12
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2111",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5101 - Terminalarbetare dag",
+      "verksamhet": "Bemanning"
+    },
+    "value": 8
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2111",
+      "kund": "PostNord AB",
+      "uppdrag": "5702 - Brevsortering helg",
+      "verksamhet": "Bemanning"
+    },
+    "value": 2
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2114",
+      "kund": "Budbee Kungsängen",
+      "uppdrag": "5201 - Sortering kväll",
+      "verksamhet": "Bemanning"
+    },
+    "value": 12
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2117",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5102 - Terminalarbetare natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 4
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2120",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5101 - Terminalarbetare dag",
+      "verksamhet": "Bemanning"
+    },
+    "value": 1
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2120",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 1
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2123",
+      "kund": "PostNord AB",
+      "uppdrag": "5702 - Brevsortering helg",
+      "verksamhet": "Bemanning"
+    },
+    "value": 13
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2127",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 8
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2128",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5101 - Terminalarbetare dag",
+      "verksamhet": "Bemanning"
+    },
+    "value": 7
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2129",
+      "kund": "PostNord AB",
+      "uppdrag": "5701 - Paketsortering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 3
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2130",
+      "kund": "PostNord AB",
+      "uppdrag": "5702 - Brevsortering helg",
+      "verksamhet": "Bemanning"
+    },
+    "value": 10
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2135",
+      "kund": "Early Bird AB",
+      "uppdrag": "5301 - Tidningsbud natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 14
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2136",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5101 - Terminalarbetare dag",
+      "verksamhet": "Bemanning"
+    },
+    "value": 6
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2136",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 7
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2139",
+      "kund": "Early Bird AB",
+      "uppdrag": "5301 - Tidningsbud natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 6
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2143",
+      "kund": "Bosch",
+      "uppdrag": "5502 - Lagerarbetare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 2
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2143",
+      "kund": "PostNord AB",
+      "uppdrag": "5702 - Brevsortering helg",
+      "verksamhet": "Bemanning"
+    },
+    "value": 3
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2153",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 4
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2155",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 7
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2156",
+      "kund": "Budbee Kungsängen",
+      "uppdrag": "5201 - Sortering kväll",
+      "verksamhet": "Bemanning"
+    },
+    "value": 7
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2156",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 6
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2158",
+      "kund": "PostNord AB",
+      "uppdrag": "5701 - Paketsortering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 13
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2159",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5102 - Terminalarbetare natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 9
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2159",
+      "kund": "PostNord AB",
+      "uppdrag": "5702 - Brevsortering helg",
+      "verksamhet": "Bemanning"
+    },
+    "value": 3
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2164",
+      "kund": "Early Bird AB",
+      "uppdrag": "5301 - Tidningsbud natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 9
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2169",
+      "kund": "PostNord AB",
+      "uppdrag": "5701 - Paketsortering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 6
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2170",
+      "kund": "Early Bird AB",
+      "uppdrag": "5301 - Tidningsbud natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 8
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2171",
+      "kund": "Early Bird AB",
+      "uppdrag": "5301 - Tidningsbud natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 13
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2172",
+      "kund": "Bosch",
+      "uppdrag": "5501 - Montering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 12
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2173",
+      "kund": "Bosch",
+      "uppdrag": "5501 - Montering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 10
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2174",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5101 - Terminalarbetare dag",
+      "verksamhet": "Bemanning"
+    },
+    "value": 2
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2174",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 7
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2175",
+      "kund": "Early Bird AB",
+      "uppdrag": "5301 - Tidningsbud natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 8
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2176",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 12
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2179",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5101 - Terminalarbetare dag",
+      "verksamhet": "Bemanning"
+    },
+    "value": 12
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2180",
+      "kund": "Budbee Kungsängen",
+      "uppdrag": "5201 - Sortering kväll",
+      "verksamhet": "Bemanning"
+    },
+    "value": 4
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2181",
+      "kund": "Early Bird AB",
+      "uppdrag": "5302 - Packning",
+      "verksamhet": "Bemanning"
+    },
+    "value": 4
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2181",
+      "kund": "PostNord AB",
+      "uppdrag": "5701 - Paketsortering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 2
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2182",
+      "kund": "Budbee Kungsängen",
+      "uppdrag": "5201 - Sortering kväll",
+      "verksamhet": "Bemanning"
+    },
+    "value": 7
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2185",
+      "kund": "Early Bird AB",
+      "uppdrag": "5302 - Packning",
+      "verksamhet": "Bemanning"
+    },
+    "value": 13
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2186",
+      "kund": "Early Bird AB",
+      "uppdrag": "5301 - Tidningsbud natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 10
+  },
+  {
+    "metricKey": "pass",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2187",
+      "kund": "PostNord AB",
+      "uppdrag": "5702 - Brevsortering helg",
+      "verksamhet": "Bemanning"
+    },
+    "value": 6
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2036",
+      "kund": "Budbee Kungsängen",
+      "uppdrag": "5201 - Sortering kväll",
+      "verksamhet": "Bemanning"
+    },
+    "value": 78
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2046",
+      "kund": "PRV",
+      "uppdrag": "5401 - Administratör",
+      "verksamhet": "Bemanning"
+    },
+    "value": 64
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2051",
+      "kund": "Budbee Kungsängen",
+      "uppdrag": "5201 - Sortering kväll",
+      "verksamhet": "Bemanning"
+    },
+    "value": 57.25
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2059",
+      "kund": "Bosch",
+      "uppdrag": "5502 - Lagerarbetare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 51.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2060",
+      "kund": "Bosch",
+      "uppdrag": "5502 - Lagerarbetare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 72
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2074",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5102 - Terminalarbetare natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 43.75
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2093",
+      "kund": "Early Bird AB",
+      "uppdrag": "5302 - Packning",
+      "verksamhet": "Bemanning"
+    },
+    "value": 28.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2095",
+      "kund": "PostNord AB",
+      "uppdrag": "5701 - Paketsortering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 86
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2102",
+      "kund": "Bosch",
+      "uppdrag": "5502 - Lagerarbetare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 89
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2106",
+      "kund": "Bosch",
+      "uppdrag": "5501 - Montering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 70.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2110",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5102 - Terminalarbetare natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 100.75
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2111",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5101 - Terminalarbetare dag",
+      "verksamhet": "Bemanning"
+    },
+    "value": 64
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2111",
+      "kund": "PostNord AB",
+      "uppdrag": "5702 - Brevsortering helg",
+      "verksamhet": "Bemanning"
+    },
+    "value": 12
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2114",
+      "kund": "Budbee Kungsängen",
+      "uppdrag": "5201 - Sortering kväll",
+      "verksamhet": "Bemanning"
+    },
+    "value": 100.25
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2117",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5102 - Terminalarbetare natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 34
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2120",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5101 - Terminalarbetare dag",
+      "verksamhet": "Bemanning"
+    },
+    "value": 8
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2120",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 7.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2123",
+      "kund": "PostNord AB",
+      "uppdrag": "5702 - Brevsortering helg",
+      "verksamhet": "Bemanning"
+    },
+    "value": 90.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2127",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 64
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2128",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5101 - Terminalarbetare dag",
+      "verksamhet": "Bemanning"
+    },
+    "value": 50
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2129",
+      "kund": "PostNord AB",
+      "uppdrag": "5701 - Paketsortering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 23.75
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2130",
+      "kund": "PostNord AB",
+      "uppdrag": "5702 - Brevsortering helg",
+      "verksamhet": "Bemanning"
+    },
+    "value": 65.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2135",
+      "kund": "Early Bird AB",
+      "uppdrag": "5301 - Tidningsbud natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 120.75
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2136",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5101 - Terminalarbetare dag",
+      "verksamhet": "Bemanning"
+    },
+    "value": 47.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2136",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 54
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2139",
+      "kund": "Early Bird AB",
+      "uppdrag": "5301 - Tidningsbud natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 50.25
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2143",
+      "kund": "Bosch",
+      "uppdrag": "5502 - Lagerarbetare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 15.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2143",
+      "kund": "PostNord AB",
+      "uppdrag": "5702 - Brevsortering helg",
+      "verksamhet": "Bemanning"
+    },
+    "value": 17.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2153",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 32.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2155",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 50
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2156",
+      "kund": "Budbee Kungsängen",
+      "uppdrag": "5201 - Sortering kväll",
+      "verksamhet": "Bemanning"
+    },
+    "value": 62.75
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2156",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 45
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2158",
+      "kund": "PostNord AB",
+      "uppdrag": "5701 - Paketsortering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 112
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2159",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5102 - Terminalarbetare natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 76.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2159",
+      "kund": "PostNord AB",
+      "uppdrag": "5702 - Brevsortering helg",
+      "verksamhet": "Bemanning"
+    },
+    "value": 22.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2164",
+      "kund": "Early Bird AB",
+      "uppdrag": "5301 - Tidningsbud natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 79
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2169",
+      "kund": "PostNord AB",
+      "uppdrag": "5701 - Paketsortering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 49.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2170",
+      "kund": "Early Bird AB",
+      "uppdrag": "5301 - Tidningsbud natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 69.25
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2171",
+      "kund": "Early Bird AB",
+      "uppdrag": "5301 - Tidningsbud natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 113.25
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2172",
+      "kund": "Bosch",
+      "uppdrag": "5501 - Montering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 92.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2173",
+      "kund": "Bosch",
+      "uppdrag": "5501 - Montering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 74
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2174",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5101 - Terminalarbetare dag",
+      "verksamhet": "Bemanning"
+    },
+    "value": 12
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2174",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 54.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2175",
+      "kund": "Early Bird AB",
+      "uppdrag": "5301 - Tidningsbud natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 67
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2176",
+      "kund": "Premo",
+      "uppdrag": "5601 - Truckförare",
+      "verksamhet": "Bemanning"
+    },
+    "value": 90
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2179",
+      "kund": "Budbee Södertälje",
+      "uppdrag": "5101 - Terminalarbetare dag",
+      "verksamhet": "Bemanning"
+    },
+    "value": 87
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2180",
+      "kund": "Budbee Kungsängen",
+      "uppdrag": "5201 - Sortering kväll",
+      "verksamhet": "Bemanning"
+    },
+    "value": 36.25
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2181",
+      "kund": "Early Bird AB",
+      "uppdrag": "5302 - Packning",
+      "verksamhet": "Bemanning"
+    },
+    "value": 28.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2181",
+      "kund": "PostNord AB",
+      "uppdrag": "5701 - Paketsortering",
+      "verksamhet": "Bemanning"
+    },
+    "value": 16
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2182",
+      "kund": "Budbee Kungsängen",
+      "uppdrag": "5201 - Sortering kväll",
+      "verksamhet": "Bemanning"
+    },
+    "value": 59
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2185",
+      "kund": "Early Bird AB",
+      "uppdrag": "5302 - Packning",
+      "verksamhet": "Bemanning"
+    },
+    "value": 95.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2186",
+      "kund": "Early Bird AB",
+      "uppdrag": "5301 - Tidningsbud natt",
+      "verksamhet": "Bemanning"
+    },
+    "value": 80.5
+  },
+  {
+    "metricKey": "timmar",
+    "company": "MBAB",
+    "month": "2026-09",
+    "dims": {
+      "konsult": "2187",
+      "kund": "PostNord AB",
+      "uppdrag": "5702 - Brevsortering helg",
+      "verksamhet": "Bemanning"
+    },
+    "value": 45.5
+  }
+]
