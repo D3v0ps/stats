@@ -114,7 +114,10 @@ class Sheet:
 
 
 def read_workbook(path: Path) -> list[Sheet]:
-    data = path.read_bytes()
+    try:
+        data = path.read_bytes()
+    except OSError as exc:
+        raise ReconcileError(f"Kan inte läsa filen / cannot read file {path}: {exc.strerror or exc}") from exc
     if data.startswith(b"PK\x03\x04"):
         return read_xlsx(path)
     if data.startswith(b"\xd0\xcf\x11\xe0\xa1\xb1\x1a\xe1"):
@@ -165,9 +168,32 @@ def decode_text(data: bytes) -> str:
         return data.decode("cp1252")
 
 
+def sniff_delimiter(lines: list[str]) -> str:
+    """The delimiter that splits the most lines into the same number of fields.
+
+    Title lines above the header have no delimiter and are ignored; a comma inside quoted
+    names ("Efternamn, Förnamn") appears on fewer lines than the real delimiter.
+    """
+    best: tuple[tuple[int, int, int], str] | None = None
+    for rank, candidate in enumerate([";", "\t", ","]):
+        counts = [n for n in (line.count(candidate) for line in lines) if n > 0]
+        if not counts:
+            continue
+        fields, lines_with = Counter(counts).most_common(1)[0]
+        score = (lines_with, fields, -rank)
+        if best is None or score > best[0]:
+            best = (score, candidate)
+    return best[1] if best else ";"
+
+
 def read_csv(text: str) -> Sheet:
-    first = next((line for line in text.splitlines() if line.strip()), "")
-    delimiter = max(["\t", ";", ","], key=first.count)
+    lines = [line for line in text.splitlines() if line.strip()]
+    hint = re.fullmatch(r"\s*sep=(.)\s*", lines[0], re.IGNORECASE) if lines else None
+    if hint:  # Excel's "sep=;" first line names the delimiter and is not data
+        delimiter = hint.group(1)
+        text = re.sub(r"^\s*sep=.[ \t]*(\r?\n|$)", "", text, count=1, flags=re.IGNORECASE)
+    else:
+        delimiter = sniff_delimiter(lines[:50])
     rows = [
         [cell if cell.strip() else None for cell in row]
         for row in csv.reader(io.StringIO(text), delimiter=delimiter)
@@ -396,10 +422,12 @@ class Context:
 
 
 def resolve_company(cfg: dict[str, Any], ctx: Context, sheet_company: str | None = None) -> str:
-    if ctx.company:
-        return ctx.company
+    # A sheet mapped to a company in the config (budget: one sheet per company) wins over
+    # --company, which is meant for single-company files whose name does not say it.
     if sheet_company:
         return sheet_company
+    if ctx.company:
+        return ctx.company
     spec = cfg.get("company", {})
     if "fixed" in spec:
         return spec["fixed"]
@@ -981,6 +1009,12 @@ def main(argv: list[str] | None = None) -> int:
         return run_cli(args)
     except ReconcileError as exc:
         print(f"FEL / ERROR: {exc}", file=sys.stderr)
+        return 2
+    except KeyError as exc:
+        print(f"FEL / ERROR: konfigurationen saknar / config is missing {exc}", file=sys.stderr)
+        return 2
+    except Exception as exc:  # noqa: BLE001 - exit 1 must only ever mean "differences found"
+        print(f"FEL / ERROR: {type(exc).__name__}: {exc}", file=sys.stderr)
         return 2
 
 

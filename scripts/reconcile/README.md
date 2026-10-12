@@ -33,17 +33,21 @@ timmar       MBAB           2026-09      PostNord AB     540,75  548,75     -8
 AVVIKELSER / DIFFERENCES: 1 av / of 14
 ```
 
-Slutkod 0 = inga avvikelser, 1 = avvikelser, 2 = fel (filen gick inte att läsa, kolumn saknas,
-okänd budgetrad …).
+Slutkod 0 = inga avvikelser, 1 = avvikelser, 2 = fel (filen saknas eller gick inte att läsa,
+kolumn saknas, ofullständig konfiguration, okänd budgetrad …). Ett fel ger aldrig slutkod 1, så
+ett skript som kör avstämningen kan lita på att 1 betyder "siffrorna skiljer sig".
 
-| Flagga                       | Betydelse                                                                          |
-| ---------------------------- | ---------------------------------------------------------------------------------- |
-| `--tolerance`                | tillåten skillnad per rad (standard 0,01)                                          |
-| `--dim <nyckel>`             | jämför även per dimension (`kund`, `ort`, `verksamhet` …) eller `all` (alla dims)  |
-| `--company`                  | bolag när filnamnet inte innehåller `_MBAB_`/`_MBR_`                               |
-| `--month`                    | månad för filer utan datumkolumn (t.ex. fakturaunderlaget)                         |
-| `--from-month`, `--to-month` | jämför bara dessa månader (och styr månadsintervallet för deltagar-/konsultlistor) |
-| `--all`                      | visa alla rader, inte bara avvikelserna                                            |
+CSV-filer: avgränsaren gissas från de rader som delas upp likadant (titelrader ovanför rubriken
+stör inte), och Excels `sep=;`-rad överst används om den finns.
+
+| Flagga                       | Betydelse                                                                           |
+| ---------------------------- | ----------------------------------------------------------------------------------- |
+| `--tolerance`                | tillåten skillnad per rad (standard 0,01)                                           |
+| `--dim <nyckel>`             | jämför även per dimension (`kund`, `ort`, `verksamhet` …) eller `all` (alla dims)   |
+| `--company`                  | bolag när filnamnet inte innehåller `_MBAB_`/`_MBR_` (budgetens blad behåller sina) |
+| `--month`                    | månad för filer utan datumkolumn (t.ex. fakturaunderlaget)                          |
+| `--from-month`, `--to-month` | jämför bara dessa månader (och styr månadsintervallet för deltagar-/konsultlistor)  |
+| `--all`                      | visa alla rader, inte bara avvikelserna                                             |
 
 ## Så stäms Karims riktiga filer av
 

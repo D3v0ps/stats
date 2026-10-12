@@ -1,4 +1,4 @@
-import { execFileSync } from "node:child_process";
+import { execFileSync, spawnSync } from "node:child_process";
 import { existsSync, mkdtempSync, readFileSync, readdirSync, rmSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
@@ -54,7 +54,8 @@ interface Entry {
   aliases: Record<string, Record<string, string>>;
   templates: unknown[];
   sameTruthAs?: string;
-  drift?: { fromTemplateOf: string; added: string[]; removed: string[] };
+  delimiter?: string;
+  drift?: { fromTemplateOf: string; added: string[]; removed: string[]; compatible: boolean };
   reconcileConfig: string;
   counts: Record<string, number>;
 }
@@ -107,6 +108,69 @@ function headerCells(e: Entry, sheet?: SheetLayout): string[] {
   const first = text.split(/\r?\n/)[0] ?? "";
   return first.split(first.includes("\t") ? "\t" : ";").map(normalizeHeader);
 }
+
+function decodeText(e: Entry): string {
+  const bytes = readFileSync(join(FILES, e.file));
+  return e.encoding === "utf-16le"
+    ? new TextDecoder("utf-16le").decode(bytes.subarray(2))
+    : new TextDecoder(e.encoding === "windows-1252" ? "windows-1252" : "utf-8").decode(bytes);
+}
+
+/** Data cells of one column (by normalized header), every sheet; raw values, blanks dropped. */
+function columnValues(file: string, header: string): unknown[] {
+  const e = entry(file);
+  const out: unknown[] = [];
+  if (e.format === "xlsx") {
+    for (const layout of e.layout as SheetLayout[]) {
+      const rows = readSheetRows(file, layout.sheet);
+      const col = (rows[layout.headerRow - 1] ?? []).map(normalizeHeader).indexOf(header);
+      if (col < 0) continue;
+      for (const row of rows.slice(layout.firstDataRow - 1, layout.lastDataRow)) {
+        const v = row[col];
+        if (v !== undefined && v !== null && v !== "") out.push(v);
+      }
+    }
+    return out;
+  }
+  const lines = decodeText(e)
+    .split(/\r?\n/)
+    .filter((l) => l !== "");
+  const delimiter = e.delimiter ?? ";";
+  const col = (lines[0] ?? "").split(delimiter).map(normalizeHeader).indexOf(header);
+  if (col < 0) return out;
+  for (const line of lines.slice(1)) {
+    const v = line.split(delimiter)[col];
+    if (v) out.push(v);
+  }
+  return out;
+}
+
+/** Swedish personnummer check: real calendar date and Luhn over YYMMDDNNN + check digit. */
+function isValidPersonnummer(pnr: string): boolean {
+  const m = /^(\d{2})?(\d{2})(\d{2})(\d{2})-(\d{3})(\d)$/.exec(pnr);
+  if (!m) return false;
+  const [, century = "19", yy, mm, dd, serial, check] = m;
+  const date = new Date(`${century}${yy}-${mm}-${dd}T00:00:00Z`);
+  if (Number.isNaN(date.getTime()) || date.getUTCDate() !== Number(dd)) return false;
+  const digits = `${yy}${mm}${dd}${serial}${check}`;
+  let sum = 0;
+  for (let i = 0; i < digits.length; i++) {
+    let d = Number(digits[i]) * (i % 2 === 0 ? 2 : 1);
+    if (d > 9) d -= 9;
+    sum += d;
+  }
+  return sum % 10 === 0;
+}
+
+const PNR_FILES: [file: string, count: number][] = [
+  ["intelliplan_timmar_MBAB_2026-09.xlsx", 300],
+  ["intelliplan_timmar_MBAB_2026-08.xlsx", 300],
+  ["intelliplan_timmar_MBAB_2026-09_andrad.xlsx", 300],
+  ["intelliplan_timmar_MBAB_2026-09_utf16.csv", 300],
+  ["intelliplan_konsulter_MBAB.xlsx", 150],
+  ["workbuster_deltagare_MBAB.xlsx", 300],
+  ["workbuster_deltagare_MBR.xlsx", 200],
+];
 
 describe("fixture files", () => {
   it("contains exactly the expected files, each listed once in the manifest", () => {
@@ -197,6 +261,146 @@ describe("fixture files", () => {
     const wb = XLSX.read(readFileSync(join(FILES, "budget_2026.xlsx")), { type: "buffer" });
     expect(wb.SheetNames).toEqual(["MB AB", "MB Restart"]);
     expect(wb.Sheets["MB AB"]?.N6?.f).toBe("SUM(B6:M6)");
+  });
+
+  it.each(PNR_FILES)(
+    "%s: every personnummer is checksum-valid and from the reserved test series",
+    (file, atLeast) => {
+      const values = columnValues(file, "personnummer").map(String);
+      expect(values.length).toBeGreaterThanOrEqual(atLeast);
+      for (const pnr of values) {
+        expect(isValidPersonnummer(pnr), pnr).toBe(true);
+        // Födelsenummer 980-999: the series of Skatteverket's published test personnummer,
+        // never assigned to a real person (random serials would hit real people's numbers).
+        expect(Number(pnr.slice(-4, -1)), pnr).toBeGreaterThanOrEqual(980);
+      }
+    },
+  );
+
+  it("isValidPersonnummer accepts valid numbers and rejects bad dates and checksums", () => {
+    expect(isValidPersonnummer("19121212-1212")).toBe(true);
+    expect(isValidPersonnummer("121212-1212")).toBe(true);
+    expect(isValidPersonnummer("19121212-1213")).toBe(false);
+    expect(isValidPersonnummer("19120230-1212")).toBe(false);
+  });
+
+  it("timmar xlsx: title block names the company and its org nr", () => {
+    const rows = readSheetRows("intelliplan_timmar_MBAB_2026-08.xlsx");
+    expect(String(rows[0]?.[0])).toMatch(/^Tidrapport/);
+    expect(String(rows[1]?.[0])).toBe("Period: 2026-08-01 - 2026-08-31");
+    expect(rows[2]?.[0]).toBe("Miljonbemanning AB");
+    expect(rows[2]?.[2]).toBe("Org.nr: 556959-9318");
+    const ids = columnValues("intelliplan_timmar_MBAB_2026-09.xlsx", "anställnings id");
+    expect(ids.some((v) => typeof v === "number")).toBe(true);
+    expect(ids.some((v) => typeof v === "string")).toBe(true);
+  });
+
+  it("utf16 csv: tab-separated, every value text, Swedish hours and day/month dates", () => {
+    const hours = columnValues("intelliplan_timmar_MBAB_2026-09_utf16.csv", "timmar").map(String);
+    expect(hours.length).toBe(entry("intelliplan_timmar_MBAB_2026-09_utf16.csv").counts.shiftRows);
+    expect(hours.some((h) => /^\d+,\d+$/.test(h))).toBe(true);
+    expect(hours.some((h) => / h$/.test(h))).toBe(true);
+    const dates = columnValues("intelliplan_timmar_MBAB_2026-09_utf16.csv", "datum").map(String);
+    expect(dates.some((d) => /^\d{1,2}\/9 2026$/.test(d))).toBe(true);
+    expect(dates.some((d) => /^2026-09-\d{2}$/.test(d))).toBe(true);
+  });
+
+  it("frånvaro csv: Swedish decimals, quoted names, all three causes", () => {
+    const e = entry("intelliplan_franvaro_MBAB_2026-09.csv");
+    const text = decodeText(e);
+    expect(text.split("\r\n")[0]).toBe("Kund;Anställnings id;Konsult;Datum;Frånvaroorsak;Timmar");
+    const hours = columnValues(e.file, "timmar").map(String);
+    expect(hours.length).toBe(e.counts.absenceRows);
+    for (const h of hours) expect(h).toMatch(/^\d+,\d{2}$/);
+    expect(new Set(columnValues(e.file, "frånvaroorsak"))).toEqual(
+      new Set(["SJUK LO", "SJUK UNI", "Olovlig frånvaro"]),
+    );
+    expect(text).toMatch(/;"[^";]+, [^";]+";/);
+  });
+
+  it("fakturering xlsx: grouped customers and amounts written as '12 345,50 kr' text", () => {
+    const e = entry("intelliplan_fakturering_MBAB_2026-09.xlsx");
+    const billed = columnValues(e.file, "fakturerat belopp");
+    const asText = billed.filter((v): v is string => typeof v === "string");
+    expect(asText.length).toBe(e.counts.amountsAsText);
+    for (const t of asText) expect(t).toMatch(/^\d{1,3}([ \u00a0]\d{3})*,\d{2} kr$/);
+    expect(asText.some((t) => t.includes("\u00a0"))).toBe(true);
+    expect(asText.some((t) => / \d{3},/.test(t))).toBe(true);
+    const labels = readSheetRows(e.file).map((r) => String(r[0] ?? ""));
+    expect(labels.filter((k) => k.startsWith("Summa ")).length).toBe(e.counts.groups);
+    expect(labels[labels.length - 1]).toBe("Totalt");
+    // The customer is written on a group's first line only (the template needs fill_down).
+    const kunder = columnValues(e.file, "kund");
+    expect(kunder.length).toBeLessThan(e.counts.lineRows ?? 0);
+  });
+
+  it("konsultlista: employments 2023-2026, empty Slutdatum for active, current employment forms", () => {
+    const file = "intelliplan_konsulter_MBAB.xlsx";
+    const rows = readSheetRows(file);
+    const layout = (entry(file).layout as SheetLayout[])[0];
+    if (!layout) throw new Error("no layout");
+    const data = rows.slice(layout.firstDataRow - 1, layout.lastDataRow);
+    expect(data.length).toBe(entry(file).counts.rows);
+    const years = new Set(
+      columnValues(file, "startdatum").map((v) =>
+        typeof v === "number" ? XLSX.SSF.parse_date_code(v).y : Number(String(v).slice(0, 4)),
+      ),
+    );
+    expect([...years].sort()).toEqual([2023, 2024, 2025, 2026]);
+    expect(data.filter((r) => r[6] === undefined || r[6] === null).length).toBeGreaterThan(0);
+    // "Allmän visstidsanställning" was replaced by "Särskild visstidsanställning" (LAS, 2022-10-01).
+    const forms = new Set(columnValues(file, "anställningsform"));
+    expect(forms).toEqual(
+      new Set([
+        "Särskild visstidsanställning",
+        "Tillsvidareanställning",
+        "Behovsanställning",
+        "Provanställning",
+      ]),
+    );
+  });
+
+  it.each(["MBAB", "MBR"])(
+    "workbuster deltagare %s: export date meta line and coded columns",
+    (c) => {
+      const file = `workbuster_deltagare_${c}.xlsx`;
+      const rows = readSheetRows(file);
+      const layout = (entry(file).layout as SheetLayout[])[0];
+      expect(layout?.headerRow).toBe(4);
+      expect(String(rows[0]?.[0])).toBe("Export från Workbuster 2026-10-05 06:30");
+      const tjanster = new Set(columnValues(file, "tjänst"));
+      const allowed = ["ROM2", "KROM", "KVL", "Karriärvägledning", "Stöd och matchning"];
+      for (const t of tjanster) expect(allowed).toContain(t);
+      expect(tjanster.size).toBe(4);
+      const avbrott = columnValues(file, "avbrott").map(String);
+      for (const a of avbrott) expect(a.toLowerCase()).toBe("ja");
+      expect(avbrott.length).toBe(entry(file).counts.interrupted);
+      const resultat = new Set(columnValues(file, "resultat").map((v) => String(v).toLowerCase()));
+      expect(resultat).toEqual(new Set(["arbete", "studier"]));
+      expect(columnValues(file, "gen-nummer").every((g) => /^GEN\d{6}$/.test(String(g)))).toBe(
+        true,
+      );
+    },
+  );
+
+  it("workbuster ordrar: three order types, credits and amounts as text", () => {
+    const file = "workbuster_ordrar_MBAB.xlsx";
+    expect(new Set(columnValues(file, "ordertyp"))).toEqual(
+      new Set(["Grundersättning", "Periodersättning", "Resultatersättning"]),
+    );
+    const amounts = columnValues(file, "belopp");
+    expect(amounts.some((v) => typeof v === "number" && v < 0)).toBe(true);
+    expect(amounts.filter((v) => typeof v === "string").length).toBe(
+      entry(file).counts.amountsAsText,
+    );
+  });
+
+  it("fortnox: negative credit notes and two customer records for PostNord", () => {
+    const file = "fortnox_kundforsaljning_MBAB_2026.xlsx";
+    const net = columnValues(file, "belopp exkl. moms").map(Number);
+    expect(net.filter((v) => v < 0).length).toBe(entry(file).counts.creditNotes);
+    const kunder = new Set(columnValues(file, "kund"));
+    for (const k of ["PostNord AB", "Postnord", "Arbetsförmedlingen"]) expect(kunder).toContain(k);
   });
 
   it("kundlista .xls is an HTML table with entity-encoded åäö", () => {
@@ -376,6 +580,7 @@ describe("templates in the manifest", () => {
 
   it("the drifted file differs from the v1 signature by one rename and one new column", () => {
     const e = entry("intelliplan_timmar_MBAB_2026-09_andrad.xlsx");
+    expect(e.drift?.compatible).toBe(false);
     const v1 = ImportTemplateSchema.parse(entry(e.drift?.fromTemplateOf ?? "").templates[0]);
     const now = headerCells(e);
     expect(now.filter((h) => !v1.headerSignature.includes(h)).sort()).toEqual(
@@ -386,6 +591,30 @@ describe("templates in the manifest", () => {
 });
 
 describe("generator", () => {
+  it("stays independent of the app: no imports from src/lib/ingest or src/lib/sie", () => {
+    // Every quoted path into the app's source must point at src/lib/core.
+    const generator = readFileSync(join(ROOT, "scripts/fixtures/generate.ts"), "utf8");
+    const appPaths = [...generator.matchAll(/["'`](?:@|\.\.\/\.\.\/src|src)\/lib\/([\w-]+)/g)];
+    expect(appPaths.length).toBeGreaterThan(0);
+    for (const [path, dir] of appPaths) expect(dir, path).toBe("core");
+    // The reconciler is Python: only standard library and pandas imports, no path tricks.
+    const reconcile = readFileSync(join(ROOT, "scripts/reconcile/reconcile.py"), "utf8");
+    const imports = [...reconcile.matchAll(/^(?:from|import)\s+([\w.]+)/gm)].map((m) => m[1]);
+    expect(imports).toContain("pandas");
+    for (const name of imports) expect(name).not.toMatch(/^(src|lib|ingest|sie)\b/);
+    expect(reconcile).not.toContain("sys.path");
+  });
+
+  it("refuses --out without a directory instead of writing into the working directory", () => {
+    const r = spawnSync(
+      process.execPath,
+      ["--experimental-strip-types", "--no-warnings", "scripts/fixtures/generate.ts", "--out"],
+      { cwd: ROOT, encoding: "utf8" },
+    );
+    expect(r.status).not.toBe(0);
+    expect(r.stderr).toContain("--out");
+  });
+
   it("regenerates byte-identical files and truth", { timeout: 120_000 }, () => {
     const out = mkdtempSync(join(tmpdir(), "mb-fixtures-"));
     try {

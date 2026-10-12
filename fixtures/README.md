@@ -3,7 +3,10 @@
 Synthetic, deliberately messy versions of the files Karim exports from Intelliplan, Workbuster,
 Fortnox and the budget workbook, plus the facts the app must produce from each of them.
 **Every name, personnummer, amount and id is fictional** (seeded PRNG); the personnummer are
-checksum-valid on purpose so the PII detection has something real to catch.
+checksum-valid on purpose so the PII detection has something real to catch, and their
+födelsenummer (the three digits before the check digit) is always 980–999, the series of
+Skatteverket's published test personnummer, which is never assigned to a real person. A random
+serial would coincide with a real person's number for roughly every third fake.
 
 | Path                                | What                                                            |
 | ----------------------------------- | --------------------------------------------------------------- |
@@ -168,9 +171,12 @@ verksamhet.
 
 The September data after a report change: `Timmar` is renamed `Antal timmar` and `Avdelning`
 is inserted after `Uppdrag` (merge `A1:I1`). Against the v1 signature: removed `timmar`, added
-`avdelning` and `antal timmar` (a likely rename `timmar` → `antal timmar`). Template v2 starts
-with `rename antal timmar → timmar` and maps `avdelning` as ignore; everything else is v1.
-Truth: identical to the September file.
+`avdelning` and `antal timmar`, so the signature is **not compatible** (`drift.compatible:
+false`). `drift.renamed` is the rename a person sees (`timmar` → `antal timmar`); a
+similarity-based detector may report it only as removed + added (the ingest engine at the time
+of writing does), so tests should require `added`, `removed` and `compatible` and treat
+`renamed` as a hint. Template v2 starts with `rename antal timmar → timmar` and maps
+`avdelning` as ignore; everything else is v1. Truth: identical to the September file.
 
 ### 3. `intelliplan_timmar_MBAB_2026-09_utf16.csv` → `ip_timmar`
 
@@ -216,7 +222,9 @@ Sheet `Konsulter`: title (merged `A1:G1`), company, `Utdrag: 2026-10-01 07:40`, 
 header on **row 5**: `Anställnings id | Namn | Personnummer | Anställningsform |
 Organisationsenhet | Startdatum | Slutdatum`. One row per employment, 2023-01-09 … 2026-09:
 145 people, 5 rehires (same id, later start), 2 exact duplicate rows. Slutdatum empty =
-active. Organisationsenhet is `MBAB / <ort>`. Dates as date cells or ISO text.
+active. Organisationsenhet is `MBAB / <ort>`. Anställningsform uses today's forms
+(`Särskild visstidsanställning`, `Tillsvidareanställning`, `Behovsanställning`,
+`Provanställning`). Dates as date cells or ISO text.
 
 Mapping: anställnings id → `case_key`, namn/personnummer ignore/personal, anställningsform
 ignore, organisationsenhet → dimension `ort` after `replace organisationsenhet contains
@@ -297,6 +305,16 @@ sign**: revenue negative, costs positive, net financial cost positive — the sa
 actuals, and `kostnader`/`resultat` budgets can be derived by range like the ledger. A
 column-wide step cannot produce "revenue and costs both positive" from this layout, because
 only the cost rows would need flipping.
+
+**Open cross-module decision.** The budget readers in `src/lib/db/repo/metrics.ts` (module C)
+and `src/lib/metrics/memory-source.ts` (module E) currently assume budget amounts are already in
+presentation sign and apply no account-group sign. With this file and this truth, the revenue
+and financial-net budgets would then show with the wrong sign (the four cost groups match only
+because their sign is +1), and the `kostnader`/`resultat` budgets would be missing because the
+file has no rows for them. Either those readers multiply `budget_belopp` by the account group's
+sign and derive the range groups (as `ledger_monthly` does for actuals; recommended, one sign
+convention for everything ledger-like), or the step contract gains a row-conditional negate.
+Until then an end-to-end budget-vs-actual test over this file fails on purpose.
 
 ### 11. `intelliplan_kundlista.xls` (reference, no facts)
 

@@ -1184,7 +1184,8 @@
         "fromTemplateOf": "intelliplan_timmar_MBAB_2026-09.xlsx",
         "added": ["avdelning", "antal timmar"],
         "removed": ["timmar"],
-        "renamed": [{ "from": "timmar", "to": "antal timmar" }]
+        "renamed": [{ "from": "timmar", "to": "antal timmar" }],
+        "compatible": false
       },
       "reconcileConfig": "intelliplan_timmar.json",
       "counts": {

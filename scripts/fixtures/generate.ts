@@ -233,12 +233,17 @@ function luhnDigit(digits: string): number {
   return (10 - (sum % 10)) % 10;
 }
 
-/** Fake but checksum-valid personnummer ("long" = YYYYMMDD-NNNC, "short" = YYMMDD-NNNC). */
+/**
+ * Fake but checksum-valid personnummer ("long" = YYYYMMDD-NNNC, "short" = YYMMDD-NNNC).
+ * The födelsenummer is drawn from 980-999, the series of Skatteverket's published test
+ * personnummer that is never assigned to a real person; a random serial would land on a
+ * real person's number for roughly every third fake.
+ */
 function fakePersonnummer(rng: Rng, style: "long" | "short"): string {
   const year = rng.int(1962, 2005);
   const month = rng.int(1, 12);
   const day = rng.int(1, daysInMonth(`${year}-${pad2(month)}`));
-  const serial = String(rng.int(1, 999)).padStart(3, "0");
+  const serial = String(rng.int(980, 999));
   const yymmdd = `${String(year).slice(2)}${pad2(month)}${pad2(day)}`;
   const check = luhnDigit(`${yymmdd}${serial}`);
   const body = `${serial}${check}`;
@@ -490,7 +495,10 @@ interface ManifestEntry {
     fromTemplateOf: string;
     added: string[];
     removed: string[];
+    /** The rename a person sees; a similarity-based detector may report it only as removed + added. */
     renamed: { from: string; to: string }[];
+    /** Must be false: the v1 template cannot be applied as-is. */
+    compatible: boolean;
   };
   /** scripts/reconcile/configs/<name> used by `reconcile.py --selftest`. */
   reconcileConfig: string;
@@ -661,7 +669,7 @@ function generateConsultants(): Employment[] {
       last,
       pnr: fakePersonnummer(rng, "long"),
       form: rng.weighted([
-        ["Allmän visstidsanställning", 50],
+        ["Särskild visstidsanställning", 50],
         ["Tillsvidareanställning", 25],
         ["Behovsanställning", 20],
         ["Provanställning", 5],
@@ -2039,6 +2047,7 @@ function buildAll(): Output[] {
       added: ["avdelning", "antal timmar"],
       removed: ["timmar"],
       renamed: [{ from: "timmar", to: "antal timmar" }],
+      compatible: false,
     },
     reconcileConfig: "intelliplan_timmar.json",
     counts: exclusionCounts(sep),
@@ -2416,8 +2425,12 @@ async function formatJson(value: unknown, file: string): Promise<string> {
 
 async function main(): Promise<void> {
   const outIndex = process.argv.indexOf("--out");
-  const outRoot =
-    outIndex >= 0 ? resolve(process.argv[outIndex + 1] ?? "") : join(ROOT, "fixtures");
+  const outArg = outIndex >= 0 ? process.argv[outIndex + 1] : undefined;
+  // Stale files in <out>/files and <out>/truth are deleted below, so never guess the directory.
+  if (outIndex >= 0 && (!outArg || outArg.startsWith("--"))) {
+    throw new Error("--out needs a directory: --out <dir>");
+  }
+  const outRoot = outArg ? resolve(outArg) : join(ROOT, "fixtures");
   const filesDir = join(outRoot, "files");
   const truthDir = join(outRoot, "truth");
   mkdirSync(filesDir, { recursive: true });
