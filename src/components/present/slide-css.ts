@@ -87,6 +87,8 @@ export const SLIDE_CSS = `
   line-height: 1.04;
   letter-spacing: 0.035em;
   text-wrap: balance;
+  /* A single long word ("SJUKFRÅNVARON") must not run off a phone-sized slide. */
+  overflow-wrap: break-word;
 }
 
 .mb-slide-body {
@@ -141,11 +143,13 @@ export const SLIDE_CSS = `
   font-size: clamp(1rem, min(2.3cqw, 4.6cqh), 3.4rem);
 }
 
+/* No hover tooltips: a slide shows nothing beyond its one message (clicks reach the deck). */
 .mb-slide-chart {
   position: relative;
   min-width: 0;
   min-height: 0;
   height: 100%;
+  pointer-events: none;
 }
 
 .mb-slide-footnote {
@@ -186,8 +190,11 @@ export const SLIDE_CSS = `
   white-space: nowrap;
 }
 
+/* The label column takes the room the numbers leave and truncates, so the table never
+   overflows a narrow slide (max-width: 0 lets an auto-layout cell shrink below its text). */
 .mb-slide-table tbody th {
-  max-width: 18em;
+  width: 100%;
+  max-width: 0;
   overflow: hidden;
   font-weight: 400;
   text-align: left;

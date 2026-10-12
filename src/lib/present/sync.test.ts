@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   frozenDeckKey,
   indexFromMessage,
+  isDeckLocation,
   newSenderId,
   parseSyncMessage,
   syncChannelName,
@@ -62,5 +63,18 @@ describe("newSenderId", () => {
   it("gives distinct ids for distinct random draws", () => {
     expect(newSenderId(() => 0.1)).not.toBe(newSenderId(() => 0.2));
     expect(newSenderId().length).toBeGreaterThan(2);
+  });
+});
+
+describe("isDeckLocation", () => {
+  it("is true when a window already shows the deck, whatever its query", () => {
+    expect(isDeckLocation("/presentera/t-1", "/presentera/t-1?manad=2026-09")).toBe(true);
+    expect(isDeckLocation("/presentera/arkiv/r-1", "/presentera/arkiv/r-1")).toBe(true);
+  });
+
+  it("is false for a blank window or another page (the deck must be loaded there)", () => {
+    expect(isDeckLocation("blank", "/presentera/t-1")).toBe(false);
+    expect(isDeckLocation("/rapporter/t-1", "/presentera/t-1?manad=2026-09")).toBe(false);
+    expect(isDeckLocation("/presentera/t-1/manus", "/presentera/t-1")).toBe(false);
   });
 });

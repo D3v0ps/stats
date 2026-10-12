@@ -86,18 +86,21 @@ export interface KeyTarget {
 }
 
 const EDITABLE_TAGS = new Set(["INPUT", "TEXTAREA", "SELECT"]);
-const ACTIVATABLE_TAGS = new Set(["BUTTON", "A", "SUMMARY"]);
+const BUTTON_TAGS = new Set(["BUTTON", "SUMMARY"]);
 
 /**
  * Whether a key press on this element belongs to the element, not the deck: typing in
- * fields, and Space/Enter on a focused button or link (it should press the button).
+ * fields, Space/Enter on a focused button (it should press the button) and Enter on a link.
+ * Space does nothing on a link, so it still advances the deck (focus stays on "Talarmanus"
+ * after the notes window opens).
  */
 export function keyBelongsToTarget(target: KeyTarget | null, key: string): boolean {
   if (!target) return false;
   const tag = (target.tagName ?? "").toUpperCase();
   if (EDITABLE_TAGS.has(tag) || target.isContentEditable) return true;
-  const activatable = ACTIVATABLE_TAGS.has(tag) || target.role === "button";
-  return activatable && (key === " " || key === "Spacebar" || key === "Enter");
+  const space = key === " " || key === "Spacebar";
+  if (BUTTON_TAGS.has(tag) || target.role === "button") return space || key === "Enter";
+  return tag === "A" && key === "Enter";
 }
 
 /** A tap or click on the left half goes back, on the right half forward. */

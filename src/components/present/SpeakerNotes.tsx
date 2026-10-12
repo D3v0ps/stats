@@ -1,9 +1,10 @@
 "use client";
 
 import { ChevronLeft, ChevronRight, MonitorPlay, RotateCcw } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, type MouseEvent } from "react";
 import { Button } from "@/components/ui/button";
 import { formatElapsed, slideAnnouncement, type NotesOutline } from "@/lib/present/slide-view";
+import { DECK_WINDOW_NAME, isDeckLocation } from "@/lib/present/sync";
 import { useDeckNavigation } from "./use-deck-navigation";
 
 export interface SpeakerNotesProps {
@@ -13,6 +14,24 @@ export interface SpeakerNotesProps {
 }
 
 const KICKER = "text-xs font-medium tracking-[0.2em] text-muted-foreground uppercase";
+
+/**
+ * Brings the deck window forward (the deck names its window), loading the deck there only
+ * when that window shows something else. Without a reference the link opens it normally.
+ */
+function focusDeck(event: MouseEvent<HTMLAnchorElement>, deckHref: string) {
+  const win = window.open("", DECK_WINDOW_NAME);
+  if (!win) return;
+  event.preventDefault();
+  let showing = false;
+  try {
+    showing = isDeckLocation(win.location.pathname, deckHref);
+  } catch {
+    // Not readable (another origin): load the deck.
+  }
+  if (!showing) win.location.href = deckHref;
+  win.focus();
+}
 
 /**
  * The presenter's window: current slide's notes in large type, the next headline and the
@@ -114,7 +133,11 @@ export function SpeakerNotes({ outline, deckKey, deckHref }: SpeakerNotesProps) 
         </div>
         <div className="flex items-center gap-2">
           <Button asChild variant="ghost" size="lg" className="gap-2">
-            <a href={deckHref} target="mb-presentation">
+            <a
+              href={deckHref}
+              target={DECK_WINDOW_NAME}
+              onClick={(event) => focusDeck(event, deckHref)}
+            >
               <MonitorPlay aria-hidden="true" />
               Presentationen
             </a>

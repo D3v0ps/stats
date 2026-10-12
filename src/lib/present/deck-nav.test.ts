@@ -81,6 +81,13 @@ describe("keyBelongsToTarget", () => {
     expect(keyBelongsToTarget({ tagName: "BUTTON" }, "ArrowRight")).toBe(false);
   });
 
+  it("gives Space on a focused link to the deck (links only react to Enter)", () => {
+    // After "Talarmanus" opens the notes window, focus stays on that link in the deck.
+    expect(keyBelongsToTarget({ tagName: "A" }, " ")).toBe(false);
+    expect(keyBelongsToTarget({ tagName: "a" }, "Spacebar")).toBe(false);
+    expect(keyBelongsToTarget({ tagName: "A", role: "button" }, " ")).toBe(true);
+  });
+
   it("gives everything else to the deck", () => {
     expect(keyBelongsToTarget({ tagName: "DIV" }, " ")).toBe(false);
     expect(keyBelongsToTarget({ tagName: "BODY" }, "PageDown")).toBe(false);

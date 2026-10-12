@@ -54,3 +54,13 @@ export function indexFromMessage(
 export function newSenderId(random: () => number = Math.random): string {
   return `w${Math.floor(random() * 1e12).toString(36)}${Date.now().toString(36)}`;
 }
+
+/** Window names: the deck names its own window so the notes window can bring it back. */
+export const DECK_WINDOW_NAME = "mb-presentation";
+export const NOTES_WINDOW_NAME = "mb-talarmanus";
+
+/** Whether a window at `pathname` already shows the deck at `deckHref` (query ignored). */
+export function isDeckLocation(pathname: string, deckHref: string): boolean {
+  const deckPath = deckHref.split(/[?#]/, 1)[0] ?? "";
+  return pathname === deckPath;
+}

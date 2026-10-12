@@ -14,7 +14,7 @@ import { Label } from "@/components/ui/label";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import type { FilterValue } from "@/lib/db/repo/present-extra";
 import type { ReportDimension } from "@/lib/present/context";
-import { filterSummary } from "@/lib/present/editor-options";
+import { filterSearchScore, filterSummary } from "@/lib/present/editor-options";
 
 export interface FilterPickerProps {
   id: string;
@@ -60,7 +60,7 @@ export function FilterPicker({
           align="start"
           className="w-(--radix-popover-trigger-width) min-w-64 gap-0 p-0"
         >
-          <Command>
+          <Command filter={filterSearchScore}>
             <CommandInput placeholder={`Sök ${dimension.label.toLocaleLowerCase("sv-SE")}`} />
             <CommandList>
               <CommandEmpty>Inga träffar.</CommandEmpty>

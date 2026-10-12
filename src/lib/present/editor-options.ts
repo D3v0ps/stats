@@ -115,6 +115,17 @@ export function filterSummary(
   return selectedIds.map((id) => labels.get(id) ?? "Okänt värde").join(", ");
 }
 
+/**
+ * cmdk filter for the filter picker: matches the value's label (its keywords), never the
+ * numeric id the item is keyed by. Case-insensitive, whitespace-collapsed substring match.
+ */
+export function filterSearchScore(_value: string, search: string, keywords?: string[]): number {
+  const norm = (text: string) => text.toLocaleLowerCase("sv-SE").replace(/\s+/g, " ").trim();
+  const query = norm(search);
+  if (query === "") return 1;
+  return (keywords ?? []).some((k) => norm(k).includes(query)) ? 1 : 0;
+}
+
 /** Gentle hints for combinations that render poorly (never errors: the slide still works). */
 export function slideHints(slide: SlideSpec): string[] {
   const hints: string[] = [];
@@ -143,7 +154,11 @@ export function validateReportSpec(
   input: unknown,
   dimensions: readonly ReportDimension[],
 ): SpecValidation {
-  const parsed = ReportTemplateSpecSchema.safeParse(input);
+  const named =
+    typeof input === "object" && input !== null && "name" in input && typeof input.name === "string"
+      ? { ...input, name: input.name.trim() }
+      : input;
+  const parsed = ReportTemplateSpecSchema.safeParse(named);
   if (!parsed.success) {
     const issue = parsed.error.issues[0];
     const path = issue?.path ?? [];

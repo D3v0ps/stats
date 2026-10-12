@@ -3,9 +3,9 @@
 import { NotebookText } from "lucide-react";
 import type { MouseEvent } from "react";
 import { Button } from "@/components/ui/button";
+import { NOTES_WINDOW_NAME } from "@/lib/present/sync";
 import { cn } from "@/lib/utils";
 
-const WINDOW_NAME = "mb-talarmanus";
 const WINDOW_FEATURES = "popup=yes,width=1100,height=760";
 
 export interface OpenNotesButtonProps {
@@ -20,7 +20,7 @@ export interface OpenNotesButtonProps {
  */
 export function OpenNotesButton({ href, variant = "ghost", className }: OpenNotesButtonProps) {
   const open = (event: MouseEvent<HTMLAnchorElement>) => {
-    const win = window.open(href, WINDOW_NAME, WINDOW_FEATURES);
+    const win = window.open(href, NOTES_WINDOW_NAME, WINDOW_FEATURES);
     if (win) {
       event.preventDefault();
       win.focus();

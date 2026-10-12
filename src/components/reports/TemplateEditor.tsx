@@ -3,7 +3,7 @@
 import { Presentation, Save } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useEffect, useId, useState, useTransition } from "react";
+import { useId, useState, useTransition } from "react";
 import { saveTemplateAction } from "@/app/(app)/rapporter/actions";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -32,6 +32,7 @@ import { FreezeDialog } from "./FreezeDialog";
 import { SlideForm, type EditorMetric } from "./SlideForm";
 import { SlideList } from "./SlideList";
 import { SlidePreview } from "./SlidePreview";
+import { useLeaveGuard } from "./use-leave-guard";
 import { useSlidePreview } from "./use-slide-preview";
 
 export interface TemplateEditorProps {
@@ -77,12 +78,7 @@ export function TemplateEditor({
   const preview = useSlidePreview(selected, anchor);
   const suggested = preview.resolved?.suggestedHeadline ?? null;
 
-  useEffect(() => {
-    if (!dirty) return;
-    const warn = (event: BeforeUnloadEvent) => event.preventDefault();
-    window.addEventListener("beforeunload", warn);
-    return () => window.removeEventListener("beforeunload", warn);
-  }, [dirty]);
+  useLeaveGuard(dirty && !saving);
 
   const edit = (next: SlideSpec[]) => {
     setSlides(next);

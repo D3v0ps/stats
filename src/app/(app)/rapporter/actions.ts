@@ -80,6 +80,8 @@ export async function saveTemplateAction(
     if (!valid.ok) return { ok: false, error: valid.error };
     const saved = await updateReportTemplate(db, id, valid.spec);
     revalidatePath(REPORTS_PATH);
+    // The editor's own page too: its header shows the (possibly renamed) report.
+    revalidatePath(`${REPORTS_PATH}/${id}`);
     return { ok: true, data: { updatedAt: saved.updatedAt } };
   } catch (error) {
     return failure(error, "Rapporten kunde inte sparas. Försök igen.");

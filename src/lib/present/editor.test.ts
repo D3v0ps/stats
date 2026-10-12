@@ -7,6 +7,7 @@ import { personalDimensionKeys, seededReportDimensions, type ReportDimension } f
 import {
   COMPARE_CHOICES,
   NO_GROUP,
+  filterSearchScore,
   filterSummary,
   filterableDimensions,
   fromCompareChoice,
@@ -167,6 +168,16 @@ describe("choices", () => {
     expect(filterSummary([9], values)).toBe("Okänt värde");
   });
 
+  it("searches filter values by label only, ignoring case", () => {
+    expect(filterSearchScore("12", "krom", ["KROM"])).toBe(1);
+    expect(filterSearchScore("12", "", ["KROM"])).toBe(1);
+    expect(filterSearchScore("12", "rom2", ["KROM"])).toBe(0);
+    expect(filterSearchScore("1", "rö", ["Örebro", "Rörstrand"])).toBe(1);
+    expect(filterSearchScore("1", "ÖREB", ["Örebro"])).toBe(1);
+    expect(filterSearchScore("3", "1", ["Kund A"])).toBe(0);
+    expect(filterSearchScore("3", "volvo  ab", ["Volvo AB"])).toBe(1);
+  });
+
   it("hints at combinations that render poorly", () => {
     expect(slideHints(slide())).toEqual([]);
     expect(slideHints(slide({ viz: "toplist" }))).toHaveLength(1);
@@ -198,6 +209,17 @@ describe("validateReportSpec", () => {
       DIMS,
     );
     expect(filtered.ok).toBe(false);
+  });
+
+  it("trims the name and refuses a blank one", () => {
+    expect(validateReportSpec({ name: "  Styrelse  ", slides: [slide()] }, DIMS)).toEqual({
+      ok: true,
+      spec: { name: "Styrelse", slides: [slide()] },
+    });
+    expect(validateReportSpec({ name: "   ", slides: [] }, DIMS)).toEqual({
+      ok: false,
+      error: "Rapporten behöver ett namn (högst 120 tecken).",
+    });
   });
 
   it("explains schema errors in Swedish", () => {

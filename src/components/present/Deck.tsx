@@ -7,11 +7,21 @@ import { Button } from "@/components/ui/button";
 import type { ResolvedReport } from "@/lib/contracts/slides";
 import { tapAction } from "@/lib/present/deck-nav";
 import { slideAnnouncement } from "@/lib/present/slide-view";
+import { DECK_WINDOW_NAME } from "@/lib/present/sync";
 import { cn } from "@/lib/utils";
 import { OpenNotesButton } from "./OpenNotesButton";
 import { Slide } from "./Slide";
 import { useDeckNavigation } from "./use-deck-navigation";
 import { useFullscreen } from "./use-fullscreen";
+
+/**
+ * After a mouse or touch click (detail > 0; keyboard presses have 0) the control gives focus
+ * back to the page, so a following Space advances the deck instead of pressing the same
+ * button again (e.g. leaving fullscreen right after entering it).
+ */
+function releaseFocusAfterPointer(event: MouseEvent<HTMLButtonElement>) {
+  if (event.detail > 0) event.currentTarget.blur();
+}
 
 /** Controls fade out after this long without pointer movement in fullscreen. */
 const IDLE_MS = 2500;
@@ -73,6 +83,16 @@ export function Deck({
     },
     [],
   );
+  // Name this window so "Presentationen" in the notes window brings it back instead of
+  // opening a second deck. Leaving the deck (Avsluta is a client-side navigation) also leaves
+  // fullscreen, which would otherwise stay on for the next page.
+  useEffect(() => {
+    window.name = DECK_WINDOW_NAME;
+    return () => {
+      if (window.name === DECK_WINDOW_NAME) window.name = "";
+      if (document.fullscreenElement) document.exitFullscreen().catch(() => {});
+    };
+  }, []);
   const chromeHidden = fullscreen.active && idle;
 
   const onStageClick = (event: MouseEvent<HTMLDivElement>) => {
@@ -101,7 +121,7 @@ export function Deck({
         role="presentation"
         data-testid="deck-stage"
         onClick={onStageClick}
-        className="absolute inset-0"
+        className="absolute inset-0 touch-manipulation"
       >
         {slide ? <Slide key={slide.id} slide={slide} index={index} count={count} fade /> : null}
       </div>
@@ -129,7 +149,10 @@ export function Deck({
               type="button"
               variant="ghost"
               size="icon-lg"
-              onClick={toggleFullscreen}
+              onClick={(event) => {
+                toggleFullscreen();
+                releaseFocusAfterPointer(event);
+              }}
               aria-label={fullscreen.active ? "Lämna helskärm (F)" : "Helskärm (F)"}
               aria-pressed={fullscreen.active}
               data-testid="deck-fullscreen"
@@ -149,7 +172,10 @@ export function Deck({
           type="button"
           variant="ghost"
           size="icon-lg"
-          onClick={() => move({ type: "prev" })}
+          onClick={(event) => {
+            move({ type: "prev" });
+            releaseFocusAfterPointer(event);
+          }}
           disabled={index === 0}
           aria-label="Föregående bild"
           data-testid="deck-prev"
@@ -162,7 +188,10 @@ export function Deck({
               <li key={s.id}>
                 <button
                   type="button"
-                  onClick={() => move({ type: "goto", index: i })}
+                  onClick={(event) => {
+                    move({ type: "goto", index: i });
+                    releaseFocusAfterPointer(event);
+                  }}
                   aria-label={`Gå till bild ${i + 1}`}
                   aria-current={i === index ? "step" : undefined}
                   data-testid="deck-dot"
@@ -192,7 +221,10 @@ export function Deck({
           type="button"
           variant="ghost"
           size="icon-lg"
-          onClick={() => move({ type: "next" })}
+          onClick={(event) => {
+            move({ type: "next" });
+            releaseFocusAfterPointer(event);
+          }}
           disabled={index >= count - 1}
           aria-label="Nästa bild"
           data-testid="deck-next"
