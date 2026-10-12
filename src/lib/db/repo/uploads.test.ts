@@ -4,6 +4,7 @@ import { createFakeClient, type FakeOptions } from "./fake-client";
 import { catalogTables } from "./test-fixtures";
 import {
   createUpload,
+  discardStaleUploads,
   discardUpload,
   getUpload,
   kostnadsstalleCode,
@@ -448,6 +449,20 @@ describe("lifecycle RPCs", () => {
       restoredFrom: ["u0"],
     });
     expect(await discardUpload(client, "u2")).toEqual({ facts: 5, ledgerRows: 3 });
+  });
+
+  it("discards stale staged uploads with a whole number of hours, 24 by default", async () => {
+    const { client, calls } = createFakeClient({ rpc: { discard_stale_uploads: () => 2 } });
+    expect(await discardStaleUploads(client)).toBe(2);
+    expect(await discardStaleUploads(client, 48)).toBe(2);
+    expect(calls.map((c) => c.payload)).toEqual([
+      { p_older_than_hours: 24 },
+      { p_older_than_hours: 48 },
+    ]);
+    for (const bad of [0, -3, 1.5, Number.NaN]) {
+      await expect(discardStaleUploads(client, bad)).rejects.toThrow(/minst en/);
+    }
+    expect(calls).toHaveLength(2);
   });
 
   it("maps review rows", async () => {

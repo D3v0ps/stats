@@ -1,7 +1,12 @@
 // Dashboards are JSON specs (validated with zod), rendered by WidgetRenderer.
 // Phase 1 ships a fixed default dashboard; phase 2 adds the builder + grid.
 import { z } from "zod";
-import { CompanyFilterSchema, DimensionKeySchema, MetricKeySchema } from "./domain";
+import {
+  ComparisonKindSchema,
+  CompanyFilterSchema,
+  DimensionKeySchema,
+  MetricKeySchema,
+} from "./domain";
 import { COMPANY_GROUP, DimFilterSchema } from "./metric-query";
 import { VizKindSchema } from "./slides";
 
@@ -17,6 +22,8 @@ export const WidgetSpecSchema = z.object({
     .nullable()
     .default(null),
   filters: z.array(DimFilterSchema).default([]),
+  /** What the delta compares against; omitted = prev_period (YTD: prev_year), null = none. */
+  compare: ComparisonKindSchema.nullable().optional(),
   topN: z.number().int().positive().nullable().default(null),
   /** Grid placement (12-column grid). */
   layout: z.object({

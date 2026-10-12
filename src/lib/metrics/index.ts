@@ -44,12 +44,15 @@ export {
 export {
   BUDGET_METRIC_KEY,
   MemoryMetricDataSource,
+  budgetLedgerRows,
+  leafAccountGroups,
   type MemoryFact,
   type MemoryLedgerRow,
   type MemorySlice,
   type MemorySourceInput,
 } from "./memory-source";
 export { catalogAccountGroups, catalogDefinitions } from "./catalog";
+export { KEY_METRICS, defaultAnchorMonth, pickAnchorMonth } from "./anchor";
 export { FormulaSyntaxError, MetricConfigError, PersonalDataError } from "./errors";
 export {
   MAX_FORMULA_DEPTH,

@@ -47,6 +47,13 @@ export function regroupLedger(rows: LedgerMonthlyRow[], keys: string[]): LedgerM
   return [...sums.values()];
 }
 
+/** Cache key for an RPC result: the arguments that RPC reads, with sets sorted. */
+function memoKey(...parts: unknown[]): string {
+  return JSON.stringify(parts);
+}
+
+const sortedSet = (values: readonly string[]): string[] => [...new Set(values)].sort();
+
 function matchesFilters(group: Group, filters: DimFilter[]): boolean {
   return filters.every((f) => {
     const v = group[f.dimension];
@@ -54,14 +61,35 @@ function matchesFilters(group: Group, filters: DimFilter[]): boolean {
   });
 }
 
+/**
+ * One instance serves one request (getMetricSource): definitions, account groups and the
+ * results of coverage, labels and lastUpdated are memoized per instance, keyed by the
+ * arguments each RPC reads, so a dashboard whose widgets ask the same questions sends each
+ * RPC once. A failed call is forgotten so a retry asks again. Callers get their own copies.
+ */
 export class SupabaseMetricDataSource implements MetricDataSource {
   private definitionsCache: Promise<MetricDefinition[]> | null = null;
   private accountGroupsCache: Promise<AccountGroup[]> | null = null;
   private kontogruppCache: Promise<Map<number, string>> | null = null;
   private dimensionIdCache: Promise<Map<string, number>> | null = null;
   private fiscalCache: Promise<number> | null = null;
+  private readonly coverageMemo = new Map<string, Promise<Record<string, string[]>>>();
+  private readonly labelsMemo = new Map<string, Promise<Record<number, string>>>();
+  private readonly lastUpdatedMemo = new Map<string, Promise<Record<string, string | null>>>();
 
   constructor(private readonly db: DbClient) {}
+
+  private memoized<T>(memo: Map<string, Promise<T>>, key: string, load: () => Promise<T>) {
+    let promise = memo.get(key);
+    if (!promise) {
+      promise = load().catch((e: unknown) => {
+        memo.delete(key);
+        throw e;
+      });
+      memo.set(key, promise);
+    }
+    return promise;
+  }
 
   definitions(): Promise<MetricDefinition[]> {
     this.definitionsCache ??= listMetricDefinitions(this.db).catch((e: unknown) => {
@@ -201,9 +229,22 @@ export class SupabaseMetricDataSource implements MetricDataSource {
     return budgetLedgerRows(keys, rows, (id) => kontogrupp.get(id), groups, scope.groupBy);
   }
 
+  /** Months with data per metric. metric_coverage reads no grouping or filters. */
   async coverage(metricKeys: string[], scope: SourceScope): Promise<Record<string, string[]>> {
+    if (metricKeys.length === 0 || scope.companies.length === 0) {
+      return Object.fromEntries(metricKeys.map((k) => [k, []]));
+    }
+    const keys = sortedSet(metricKeys);
+    const key = memoKey(keys, sortedSet(scope.companies), scope.scenario, scope.from, scope.to);
+    const all = await this.memoized(this.coverageMemo, key, () => this.loadCoverage(keys, scope));
+    return Object.fromEntries(metricKeys.map((k) => [k, [...(all[k] ?? [])]]));
+  }
+
+  private async loadCoverage(
+    metricKeys: string[],
+    scope: SourceScope,
+  ): Promise<Record<string, string[]>> {
     const out: Record<string, string[]> = Object.fromEntries(metricKeys.map((k) => [k, []]));
-    if (metricKeys.length === 0 || scope.companies.length === 0) return out;
     const defs = new Map((await this.definitions()).map((d) => [d.key, d]));
     const budgetLedger = scope.scenario === "budget";
     const direct = metricKeys.filter((k) => {
@@ -237,11 +278,18 @@ export class SupabaseMetricDataSource implements MetricDataSource {
   }
 
   async labels(dimension: string, ids: number[]): Promise<Record<number, string>> {
+    if (ids.length === 0 || dimension === COMPANY_GROUP) return {};
+    const unique = [...new Set(ids)].sort((a, b) => a - b);
+    const found = await this.memoized(this.labelsMemo, memoKey(dimension, unique), () =>
+      this.loadLabels(dimension, unique),
+    );
+    return { ...found };
+  }
+
+  private async loadLabels(dimension: string, unique: number[]): Promise<Record<number, string>> {
     const out: Record<number, string> = {};
-    if (ids.length === 0 || dimension === COMPANY_GROUP) return out;
     const dimensionId = (await this.dimensionIds()).get(dimension);
     if (dimensionId === undefined) return out;
-    const unique = [...new Set(ids)];
     for (let i = 0; i < unique.length; i += 500) {
       const rows = unwrap(
         "dimension_values",
@@ -256,12 +304,27 @@ export class SupabaseMetricDataSource implements MetricDataSource {
     return out;
   }
 
+  /** Newest publish behind each metric. metric_sources reads no grouping or filters. */
   async lastUpdated(
     metricKeys: string[],
     scope: SourceScope,
   ): Promise<Record<string, string | null>> {
+    if (metricKeys.length === 0 || scope.companies.length === 0) {
+      return Object.fromEntries(metricKeys.map((k) => [k, null]));
+    }
+    const keys = sortedSet(metricKeys);
+    const key = memoKey(keys, sortedSet(scope.companies), scope.scenario, scope.from, scope.to);
+    const all = await this.memoized(this.lastUpdatedMemo, key, () =>
+      this.loadLastUpdated(keys, scope),
+    );
+    return Object.fromEntries(metricKeys.map((k) => [k, all[k] ?? null]));
+  }
+
+  private async loadLastUpdated(
+    metricKeys: string[],
+    scope: SourceScope,
+  ): Promise<Record<string, string | null>> {
     const out: Record<string, string | null> = Object.fromEntries(metricKeys.map((k) => [k, null]));
-    if (metricKeys.length === 0 || scope.companies.length === 0) return out;
     const defs = new Map((await this.definitions()).map((d) => [d.key, d]));
     const allKeys = new Set(defs.keys());
 

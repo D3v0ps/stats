@@ -598,6 +598,7 @@ describe("upload lifecycle", () => {
           "ovriga_externa",
           "personal",
           "avskrivningar",
+          "ovriga_rorelse",
           "kostnader",
           "finansiella",
           "resultat",

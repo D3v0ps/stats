@@ -293,7 +293,7 @@ describe("database round trip: SQL RPCs = in-memory reference", () => {
       truth
         .filter((f) => groups.includes(f.dims.kontogrupp ?? ""))
         .reduce((a, f) => a + f.value, 0);
-    const costs = ["varor_ul", "ovriga_externa", "personal", "avskrivningar"];
+    const costs = ["varor_ul", "ovriga_externa", "personal", "avskrivningar", "ovriga_rorelse"];
     expect(budget("intakter")).toBeCloseTo(-of("intakter"), 6);
     expect(budget("intakter")).toBeGreaterThan(0);
     expect(budget("kostnader")).toBeCloseTo(of(...costs), 6);

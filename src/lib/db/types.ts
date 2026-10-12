@@ -871,6 +871,10 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
+      discard_stale_uploads: {
+        Args: { p_older_than_hours?: number };
+        Returns: number;
+      };
       discard_upload: {
         Args: { p_upload_id: string };
         Returns: Json;

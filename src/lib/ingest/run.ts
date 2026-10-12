@@ -33,7 +33,10 @@ export interface RunContext {
   aliases: AliasTables;
   fileSha256: string;
   fileSize: number;
-  /** 0-based header row picked by the user, overriding detection. */
+  /**
+   * 0-based header row picked by the user for this upload. Overrides the template's own
+   * headerRow, which in turn overrides detection.
+   */
   headerRow?: number;
   /**
    * Account group key -> sign (revenue -1), from the account groups in settings. Budget
@@ -160,10 +163,11 @@ export async function runTemplate(
     throw new IngestError("Exportdatum saknas för filen.");
   }
 
+  const pickedHeaderRow = ctx.headerRow ?? config.headerRow;
   const { table, working } = loadTable(workbook, {
     sheetHint: template.sheetHint,
     expectedHeaders: template.headerSignature,
-    headerRow: ctx.headerRow,
+    headerRow: pickedHeaderRow,
   });
   const stepped = applySteps(working, config.steps ?? [], { aliases: ctx.aliases });
 
@@ -194,7 +198,7 @@ export async function runTemplate(
   const headerRow = table.headerRows.length
     ? table.headerRows[table.headerRows.length - 1]! + 1
     : undefined;
-  if (ctx.headerRow === undefined && table.confidence < 0.5) {
+  if (pickedHeaderRow === undefined && table.confidence < 0.5) {
     warnings.push(
       `Rubrikraden hittades med låg säkerhet${headerRow ? ` (rad ${headerRow})` : ""}. Kontrollera att rätt rad används.`,
     );

@@ -16,6 +16,7 @@ import {
   COMPANY_GROUP,
   type CompareCell,
   type DimFilter,
+  type GroupCell,
   type MetricDataSource,
   type MetricDefinition,
   type MetricQuery,
@@ -350,16 +351,16 @@ function breakdownTable(
   if (compareKind && compareLabel !== undefined) {
     columns.push(capitalize(compareLabel), DELTA_COLUMN_LABEL);
   }
-  const row = (label: string, cell: MetricResult["total"]) => {
+  const row = (label: string, cell: MetricResult["total"], id: GroupCell["id"]) => {
     const values = [formatSlideValue(cell.value, def)];
     if (compareKind && compareLabel !== undefined) {
       const c = cell.compare[compareKind];
       values.push(formatSlideValue(c?.value ?? null, def), formatCellDelta(c, def.unit));
     }
-    return { label, values };
+    return { label, values, id };
   };
-  const rows = result.groups.map((g) => row(g.label, g));
-  if (withTotal) rows.push(row(TOTAL_ROW_LABEL, result.total));
+  const rows = result.groups.map((g) => row(g.label, g, g.id));
+  if (withTotal) rows.push(row(TOTAL_ROW_LABEL, result.total, null));
   return { columns, rows };
 }
 
@@ -438,6 +439,7 @@ async function resolveRequest(req: SlideRequest, ctx: ResolveContext): Promise<R
       }
       chart = {
         categories: monthCategories(main.series),
+        categoryIds: main.series.map(() => null),
         series,
         unit: def.unit,
         highlightIndex: main.series.length - 1,
@@ -446,6 +448,7 @@ async function resolveRequest(req: SlideRequest, ctx: ResolveContext): Promise<R
       const first = companySeries[0]?.series ?? [];
       chart = {
         categories: monthCategories(first),
+        categoryIds: first.map(() => null),
         series: companySeries.map((r, i) => ({
           key: stackCompanies[i] as string,
           label: ctx.companyLabels[stackCompanies[i] as CompanyCode],
@@ -476,6 +479,7 @@ async function resolveRequest(req: SlideRequest, ctx: ResolveContext): Promise<R
         }
         chart = {
           categories: groups.map((g) => g.label),
+          categoryIds: groups.map((g) => g.id),
           series,
           unit: def.unit,
           highlightIndex: null,
@@ -524,6 +528,7 @@ async function resolveRequest(req: SlideRequest, ctx: ResolveContext): Promise<R
     footnote: footnoteFor(main, req, def, ctx, companyNotes),
     notes: req.notes,
     sourceUploadIds: [],
+    lastUpdatedAt: main.lastUpdatedAt,
   };
 }
 
@@ -554,7 +559,8 @@ export async function resolveReport(
 
 /**
  * Resolve a dashboard widget under the global filters (company, grain, anchor). The
- * widget's own company wins over the global one; its title overrides the headline.
+ * widget's own company wins over the global one; its title overrides the headline. It
+ * compares with the previous period unless the widget names another comparison (or none).
  */
 export async function resolveWidget(
   spec: WidgetSpec,
@@ -576,7 +582,7 @@ export async function resolveWidget(
       company: w.company ?? f.company,
       groupBy: w.groupBy,
       filters: w.filters,
-      compare: "prev_period",
+      compare: w.compare === undefined ? "prev_period" : w.compare,
       topN: w.topN,
       headline: w.title,
       notes: "",

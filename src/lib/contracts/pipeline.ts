@@ -221,6 +221,9 @@ export const BUDGET_SIGN_LABELS: Record<BudgetSign, string> = {
   ledger: "Som i bokföringen (intäkter minus, kostnader plus)",
 };
 
+/** A sheet row index (0-based), as RawSheet.rows and DetectedTable.headerRows count them. */
+export const HeaderRowSchema = z.number().int().nonnegative();
+
 export const TableTemplateConfigSchema = z.object({
   kind: z.literal("table"),
   steps: z.array(StepSchema).default([]),
@@ -231,6 +234,8 @@ export const TableTemplateConfigSchema = z.object({
   scenario: ScenarioSchema.default("utfall"),
   /** Sign convention of budget_belopp amounts in the file (see BudgetSignSchema). */
   budgetSign: BudgetSignSchema.optional(),
+  /** 0-based sheet row of the (last) header row, picked by hand; omitted = detected. */
+  headerRow: HeaderRowSchema.optional(),
 });
 
 export const CasesTemplateConfigSchema = z.object({
@@ -239,6 +244,8 @@ export const CasesTemplateConfigSchema = z.object({
   columns: z.array(ColumnMappingSchema),
   cases: CasesConfigSchema,
   company: CompanySourceSchema,
+  /** 0-based sheet row of the (last) header row, picked by hand; omitted = detected. */
+  headerRow: HeaderRowSchema.optional(),
 });
 
 export const SieTemplateConfigSchema = z.object({

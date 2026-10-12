@@ -498,9 +498,9 @@ export function rangesCover(outer: readonly AccountRange[], inner: readonly Acco
 
 /**
  * Account groups whose ranges do not strictly contain another group's ranges (intakter,
- * varor_ul, ovriga_externa, personal, avskrivningar, finansiella, bokslut_skatt in the
- * seeded catalog; kostnader and resultat are sums of them). Groups without ranges are
- * neither leaves nor contained in anything.
+ * varor_ul, ovriga_externa, personal, avskrivningar, ovriga_rorelse, finansiella,
+ * bokslut_skatt in the seeded catalog; kostnader and resultat are sums of them). Groups
+ * without ranges are neither leaves nor contained in anything.
  */
 export function leafAccountGroups(groups: readonly AccountGroup[]): AccountGroup[] {
   const ranged = groups.filter((g) => g.ranges.length > 0);

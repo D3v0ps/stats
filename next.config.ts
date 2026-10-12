@@ -18,7 +18,10 @@ const nextConfig: NextConfig = {
   poweredByHeader: false,
   turbopack: {
     rules: {
+      // Tailwind CSS v4 runs as a Turbopack loader (there is no PostCSS config). CSS modules
+      // are left to Next's own handling: through this rule they would come out as global CSS.
       "*.css": {
+        condition: { not: { path: /\.module\.css$/ } },
         loaders: ["@tailwindcss/turbopack"],
         as: "*.css",
       },

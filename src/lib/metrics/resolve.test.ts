@@ -102,6 +102,7 @@ describe("resolveSlide: kpi", () => {
       },
       chart: {
         categories: LAST12,
+        categoryIds: Array(12).fill(null),
         series: [
           {
             key: "fakturerat_kund",
@@ -131,6 +132,7 @@ describe("resolveSlide: kpi", () => {
       footnote: "MB Restart saknar data för augusti 2026 · Summa bolag (ej eliminerat)",
       notes: "",
       sourceUploadIds: [],
+      lastUpdatedAt: null,
     });
   });
 
@@ -380,6 +382,24 @@ describe("headline against budget", () => {
   });
 });
 
+describe("last updated", () => {
+  it("carries the newest upload behind the number", async () => {
+    const src = makeSource({
+      facts: [...deltagare, ...timmar],
+      uploadTimes: { w1: "2026-10-02T08:00:00Z", w2: "2026-10-04T09:30:00Z" },
+    });
+    const r = await resolveSlide(slide({ metricKey: "aktiva_deltagare" }), ctx(src));
+    expect(r.lastUpdatedAt).toBe("2026-10-04T09:30:00Z");
+    const mbab = await resolveSlide(
+      slide({ metricKey: "aktiva_deltagare", company: "MBAB" }),
+      ctx(src),
+    );
+    expect(mbab.lastUpdatedAt).toBe("2026-10-02T08:00:00Z");
+    // No publish time known for the hours upload.
+    expect((await resolveSlide(slide({}), ctx(src))).lastUpdatedAt).toBeNull();
+  });
+});
+
 describe("resolveSlide: line", () => {
   it("shows the last 12 months against the year before, highlighting the anchor", async () => {
     const r = await resolveSlide(
@@ -388,6 +408,7 @@ describe("resolveSlide: line", () => {
     );
     expect(r.chart).toEqual({
       categories: LAST12,
+      categoryIds: Array(12).fill(null),
       series: [
         {
           key: "aktiva_deltagare",
@@ -416,6 +437,7 @@ describe("resolveSlide: breakdowns", () => {
     const r = await resolveSlide(slide({ viz: "bar", groupBy: "kund" }), ctx());
     expect(r.chart).toEqual({
       categories: ["IKEA", "Volvo", "Scania"],
+      categoryIds: [ID.ikea, ID.volvo, ID.scania],
       series: [
         { key: "timmar", label: "September 2026", role: "primary", values: [100, 60, 30] },
         {
@@ -459,6 +481,7 @@ describe("resolveSlide: breakdowns", () => {
     );
     expect(r.chart).toEqual({
       categories: ["KROM", "ROM2", "KVL"],
+      categoryIds: [ID.krom, ID.rom2, ID.kvl],
       series: [
         { key: "aktiva_deltagare", label: "September 2026", role: "primary", values: [33, 5, 4] },
       ],
@@ -470,13 +493,14 @@ describe("resolveSlide: breakdowns", () => {
   it("toplist: top N plus Övriga, as chart and as rows with deltas", async () => {
     const r = await resolveSlide(slide({ viz: "toplist", groupBy: "kund", topN: 2 }), ctx());
     expect(r.chart?.categories).toEqual(["IKEA", "Volvo", "Övriga"]);
+    expect(r.chart?.categoryIds).toEqual([ID.ikea, ID.volvo, null]);
     expect(r.chart?.series[0]?.values).toEqual([100, 60, 30]);
     expect(r.table).toEqual({
       columns: ["Kund", "September 2026", "Augusti 2026", "Förändring"],
       rows: [
-        { label: "IKEA", values: [s("100 h"), s("80 h"), s("+25 %")] },
-        { label: "Volvo", values: [s("60 h"), s("60 h"), s("±0 %")] },
-        { label: "Övriga", values: [s("30 h"), s("40 h"), s(`${MINUS}25 %`)] },
+        { label: "IKEA", values: [s("100 h"), s("80 h"), s("+25 %")], id: ID.ikea },
+        { label: "Volvo", values: [s("60 h"), s("60 h"), s("±0 %")], id: ID.volvo },
+        { label: "Övriga", values: [s("30 h"), s("40 h"), s(`${MINUS}25 %`)], id: null },
       ],
     });
   });
@@ -499,10 +523,10 @@ describe("resolveSlide: breakdowns", () => {
     expect(r.table).toEqual({
       columns: ["Kund", "September 2026", "Augusti 2026", "Förändring"],
       rows: [
-        { label: "IKEA", values: [s("100 h"), s("80 h"), s("+25 %")] },
-        { label: "Volvo", values: [s("60 h"), s("60 h"), s("±0 %")] },
-        { label: "Scania", values: [s("30 h"), s("40 h"), s(`${MINUS}25 %`)] },
-        { label: "Totalt", values: [s("190 h"), s("180 h"), s("+6 %")] },
+        { label: "IKEA", values: [s("100 h"), s("80 h"), s("+25 %")], id: ID.ikea },
+        { label: "Volvo", values: [s("60 h"), s("60 h"), s("±0 %")], id: ID.volvo },
+        { label: "Scania", values: [s("30 h"), s("40 h"), s(`${MINUS}25 %`)], id: ID.scania },
+        { label: "Totalt", values: [s("190 h"), s("180 h"), s("+6 %")], id: null },
       ],
     });
   });
@@ -515,9 +539,9 @@ describe("resolveSlide: breakdowns", () => {
     expect(r.table).toEqual({
       columns: ["Bolag", "September 2026", "Augusti 2026", "Förändring"],
       rows: [
-        { label: "MB AB", values: [s("2,0 mkr"), s("2,0 mkr"), s("±0 %")] },
-        { label: "MB Restart", values: [s("400 tkr"), "–", "–"] },
-        { label: "Totalt", values: [s("2,4 mkr"), s("2,0 mkr"), s("+20 %")] },
+        { label: "MB AB", values: [s("2,0 mkr"), s("2,0 mkr"), s("±0 %")], id: "MBAB" },
+        { label: "MB Restart", values: [s("400 tkr"), "–", "–"], id: "MBR" },
+        { label: "Totalt", values: [s("2,4 mkr"), s("2,0 mkr"), s("+20 %")], id: null },
       ],
     });
   });
@@ -536,6 +560,7 @@ describe("resolveSlide: breakdowns", () => {
     expect(r.table?.rows[1]).toEqual({
       label: "MB Restart",
       values: [s("400 tkr"), s("0 kr"), s("+400 tkr")],
+      id: "MBR",
     });
   });
 
@@ -543,7 +568,7 @@ describe("resolveSlide: breakdowns", () => {
     const r = await resolveSlide(slide({ viz: "table", compare: null }), ctx());
     expect(r.table).toEqual({
       columns: ["Mått", "September 2026"],
-      rows: [{ label: "Fakturerade timmar", values: [s("190 h")] }],
+      rows: [{ label: "Fakturerade timmar", values: [s("190 h")], id: null }],
     });
   });
 });
@@ -556,6 +581,7 @@ describe("resolveSlide: stacked_company", () => {
     );
     expect(r.chart).toEqual({
       categories: LAST12,
+      categoryIds: Array(12).fill(null),
       series: [
         {
           key: "MBAB",
@@ -699,6 +725,42 @@ describe("resolveWidget", () => {
     expect(r.companyLabel).toBe("MB AB");
     expect(r.periodLabel).toBe("september 2026");
     expect(r.number?.value).toBe(38);
+  });
+
+  it("compares with what the widget names, or with nothing", async () => {
+    const filters = { company: "MBAB", grain: "month", anchor: null } as const;
+    const byDefault = await resolveWidget(widget({ metricKey: "timmar" }), filters, ctx());
+    expect(byDefault.delta).toMatchObject({
+      formatted: s("+6 %"),
+      againstLabel: "mot augusti 2026",
+    });
+
+    const budget = await resolveWidget(
+      widget({ metricKey: "timmar", compare: "budget" }),
+      filters,
+      ctx(),
+    );
+    expect(budget.delta).toMatchObject({ formatted: s("+58 %"), againstLabel: "mot budget" });
+    // Against budget the headline states the value.
+    expect(budget.headline).toBe(`TIMMARNA I MB AB: 190${NBSP}H.`);
+
+    const lastYear = await resolveWidget(
+      widget({ metricKey: "fakturerat_kund", compare: "prev_year" }),
+      filters,
+      ctx(),
+    );
+    expect(lastYear.delta).toMatchObject({
+      formatted: s("+33 %"),
+      againstLabel: "mot september 2025",
+    });
+
+    const none = await resolveWidget(
+      widget({ metricKey: "timmar", compare: null }),
+      filters,
+      ctx(),
+    );
+    expect(none.delta).toBeNull();
+    expect(none.number?.value).toBe(190);
   });
 
   it("uses the widget title as headline and last year for YTD", async () => {

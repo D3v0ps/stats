@@ -91,6 +91,12 @@ export interface ChartSeries {
 export interface ChartData {
   /** Category labels on the x-axis (months, customers, programs...). */
   categories: string[];
+  /**
+   * Aligned with categories: the group behind each category (dimension_values.id, or the
+   * company code for "bolag"); null for months, "Övriga" and unassigned. Absent in reports
+   * frozen before it existed.
+   */
+  categoryIds?: (number | string | null)[];
   series: ChartSeries[];
   unit: Unit;
   /** Index into categories to highlight in red (e.g. the current month), if any. */
@@ -99,7 +105,8 @@ export interface ChartData {
 
 export interface TableData {
   columns: string[];
-  rows: { label: string; values: string[] }[];
+  /** id: the group behind the row like ChartData.categoryIds (null for totals, "Övriga"). */
+  rows: { label: string; values: string[]; id?: number | string | null }[];
 }
 
 export interface ResolvedSlide {
@@ -120,6 +127,8 @@ export interface ResolvedSlide {
   notes: string;
   /** Upload ids behind the numbers (for the source popover). */
   sourceUploadIds: string[];
+  /** ISO timestamp of the newest published upload behind the number (absent in old snapshots). */
+  lastUpdatedAt?: string | null;
 }
 
 export interface ResolvedReport {

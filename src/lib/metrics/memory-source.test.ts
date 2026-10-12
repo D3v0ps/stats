@@ -318,6 +318,7 @@ describe("ledger budget helpers", () => {
       "ovriga_externa",
       "personal",
       "avskrivningar",
+      "ovriga_rorelse",
       "finansiella",
       "bokslut_skatt",
     ]);
@@ -332,6 +333,7 @@ describe("ledger budget helpers", () => {
       ovriga_externa: ["kostnader", "resultat"],
       personal: ["personal", "kostnader", "resultat"],
       avskrivningar: ["kostnader", "resultat"],
+      ovriga_rorelse: ["kostnader", "resultat"],
       finansiella: ["resultat"],
       bokslut_skatt: ["resultat"],
     });
@@ -360,7 +362,7 @@ describe("ledger budget helpers", () => {
     expect(rangesCover([], [{ from: 1, to: 1 }])).toBe(false);
     const withEmpty = [...groups, { key: "tom", name: "Tom", sign: 1 as const, ranges: [] }];
     expect(leafAccountGroups(withEmpty).map((g) => g.key)).not.toContain("tom");
-    expect(leafAccountGroups(withEmpty)).toHaveLength(7);
+    expect(leafAccountGroups(withEmpty)).toEqual(leafAccountGroups(groups));
   });
 
   it("turns budget rows into account-group rows with the group's sign", () => {

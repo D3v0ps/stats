@@ -490,6 +490,21 @@ export async function discardUpload(
   return { facts: toNumber(r.facts), ledgerRows: toNumber(r.ledger_rows) };
 }
 
+/**
+ * Discard every staged upload older than the threshold (default 24 h, at least 1 h) that
+ * was never published or discarded, the same way discardUpload does. Returns how many.
+ */
+export async function discardStaleUploads(db: DbClient, olderThanHours = 24): Promise<number> {
+  if (!Number.isInteger(olderThanHours) || olderThanHours < 1) {
+    throw new Error("Gränsen måste vara ett helt antal timmar, minst en.");
+  }
+  const r = unwrap(
+    "discard_stale_uploads",
+    await db.rpc("discard_stale_uploads", { p_older_than_hours: olderThanHours }),
+  );
+  return toNumber(r);
+}
+
 // ---- History ---------------------------------------------------------------
 
 export interface UploadHistoryItem {

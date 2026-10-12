@@ -62,8 +62,11 @@ export {
 
 export {
   aggregateTable,
+  applyBudgetSign,
+  resolveAccountGroupKey,
   PersonalDataError,
   MISSING_LABEL,
+  type AggregateOptions,
   type AggregateResult,
 } from "./aggregate";
 

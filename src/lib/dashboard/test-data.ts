@@ -135,8 +135,9 @@ export function buildFacts(options: { budget?: boolean } = {}): {
     rows.push(ledger("fx-mbab", "MBAB", m, 7010, 150_000));
     rows.push(ledger("fx-mbr", "MBR", m, 3010, -120_000));
     rows.push(ledger("fx-mbr", "MBR", m, 5010, 90_000));
+    // budget_belopp is stored in SIE sign too: a revenue budget of 230 000 kr is negative.
     if (options.budget && m >= "2026-01") {
-      facts.push(f("bud", "budget_belopp", "MBAB", m, 230_000, { kontogrupp: T.kgIntakter }));
+      facts.push(f("bud", "budget_belopp", "MBAB", m, -230_000, { kontogrupp: T.kgIntakter }));
     }
   });
   return { facts, ledger: rows, scenarios: { bud: "budget" } };

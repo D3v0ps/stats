@@ -121,6 +121,12 @@ export const CATALOG_ACCOUNT_GROUPS: CatalogAccountGroup[] = [
   },
   { key: "personal", name: "Personalkostnader", sign: 1, ranges: [{ from: 7000, to: 7699 }] },
   { key: "avskrivningar", name: "Avskrivningar", sign: 1, ranges: [{ from: 7700, to: 7899 }] },
+  {
+    key: "ovriga_rorelse",
+    name: "Övriga rörelsekostnader",
+    sign: 1,
+    ranges: [{ from: 7900, to: 7999 }],
+  },
   { key: "kostnader", name: "Rörelsens kostnader", sign: 1, ranges: [{ from: 4000, to: 7999 }] },
   { key: "finansiella", name: "Finansiella poster", sign: -1, ranges: [{ from: 8000, to: 8799 }] },
   {
@@ -387,6 +393,18 @@ export const CATALOG_METRICS: CatalogMetric[] = [
     description: "Konto 7700–7899.",
     headlineSubject: "AVSKRIVNINGARNA",
     accountGroupKey: "avskrivningar",
+  },
+  {
+    key: "ovriga_rorelse",
+    name: "Övriga rörelsekostnader",
+    unit: "kr",
+    kind: "ledger",
+    datasetKey: "fx_bokforing",
+    higherIsBetter: false,
+    decimals: 0,
+    description: "Konto 7900–7999.",
+    headlineSubject: "DE ÖVRIGA RÖRELSEKOSTNADERNA",
+    accountGroupKey: "ovriga_rorelse",
   },
   {
     key: "kostnader",

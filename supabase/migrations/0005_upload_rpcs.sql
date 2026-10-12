@@ -218,7 +218,9 @@ begin
     end if;
   end if;
 
-  if exists (
+  -- Same rule as uploads_published_file_uniq: an upload whose template was deleted while
+  -- it was staged (template_id null, version kept) is not compared.
+  if (v_upload.template_id is not null or v_upload.template_version is null) and exists (
     select 1
     from public.uploads u
     where u.status = 'published'
@@ -409,6 +411,41 @@ begin
 end;
 $$;
 
+-- Staged uploads nobody published or discarded (a closed tab, a lost connection) keep
+-- their staged rows. Discards every one older than the threshold exactly as
+-- discard_upload does (each is audited there) and returns how many. Uploads being
+-- published right now are locked and skipped. The threshold is at least an hour so an
+-- upload that is still being staged or reviewed is never thrown away.
+create or replace function public.discard_stale_uploads(p_older_than_hours integer default 24)
+returns integer
+language plpgsql
+security definer
+set search_path = ''
+as $$
+declare
+  v_id uuid;
+  v_count integer := 0;
+begin
+  perform private.assert_app_user();
+  if p_older_than_hours is null or p_older_than_hours < 1 then
+    raise exception 'Gränsen måste vara minst en timme' using errcode = 'invalid_parameter_value';
+  end if;
+
+  for v_id in
+    select u.id
+    from public.uploads u
+    where u.status = 'staged'
+      and u.created_at < now() - make_interval(hours => p_older_than_hours)
+    order by u.created_at, u.id
+    for update skip locked
+  loop
+    perform public.discard_upload(v_id);
+    v_count := v_count + 1;
+  end loop;
+  return v_count;
+end;
+$$;
+
 -- Per metric x company x month of a staged upload: the staged total, the current
 -- published total for the same slice, the previous month (inside this upload when it
 -- covers that month, else current data) and the relative deviations.
@@ -516,8 +553,10 @@ grant execute on function private.month_total(smallint, smallint, text, date, uu
 revoke execute on function public.publish_upload(uuid) from public, anon;
 revoke execute on function public.retract_upload(uuid, text) from public, anon;
 revoke execute on function public.discard_upload(uuid) from public, anon;
+revoke execute on function public.discard_stale_uploads(integer) from public, anon;
 revoke execute on function public.review_compare(uuid) from public, anon;
 grant execute on function public.publish_upload(uuid) to authenticated;
 grant execute on function public.retract_upload(uuid, text) to authenticated;
 grant execute on function public.discard_upload(uuid) to authenticated;
+grant execute on function public.discard_stale_uploads(integer) to authenticated;
 grant execute on function public.review_compare(uuid) to authenticated;

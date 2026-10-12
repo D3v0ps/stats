@@ -50,10 +50,15 @@ create table public.uploads (
   published_at timestamptz,
   retracted_at timestamptz,
   retract_reason text,
-  check ((template_id is null) = (template_version is null)),
+  -- A template version needs its template. A version without a template is the history of
+  -- a deleted template (see the foreign key); clients can only stage both or neither.
+  check (template_id is null or template_version is not null),
   check ((status = 'staged') = (published_at is null) or status = 'discarded'),
+  -- Templates can be deleted while their uploads keep their data: deleting a template
+  -- cascades to its versions, which nulls template_id here and keeps template_version.
   foreign key (template_id, template_version)
-    references public.import_template_versions (template_id, version),
+    references public.import_template_versions (template_id, version)
+    on delete set null (template_id),
   -- Target of the composite FK from upload_slices.
   unique (id, dataset_id, scenario)
 );
@@ -63,13 +68,16 @@ create trigger uploads_no_personnummer
   for each row execute function private.reject_personnummer('file_name', 'parse_report');
 create index uploads_dataset_status_idx on public.uploads (dataset_id, status);
 create index uploads_template_idx on public.uploads (template_id, template_version);
--- The same file through the same template version can only be published once.
+-- The same file through the same template version (or, for SIE, without a template) can
+-- only be published once. Uploads of a deleted template (template_id null, version kept)
+-- are left out: no one can publish through that template again, and two versions of it
+-- may have published the same file.
 create unique index uploads_published_file_uniq on public.uploads (
   dataset_id,
   file_sha256,
   coalesce(template_id, '00000000-0000-0000-0000-000000000000'::uuid),
   coalesce(template_version, 0)
-) where status = 'published';
+) where status = 'published' and (template_id is not null or template_version is null);
 
 create table public.upload_slices (
   upload_id uuid not null,
@@ -182,6 +190,7 @@ create policy "app users stage" on public.uploads
   with check (
     (select private.is_app_user())
     and status = 'staged' and published_at is null and retracted_at is null
+    and (template_id is null) = (template_version is null)
   );
 
 create policy "app users select" on public.upload_slices

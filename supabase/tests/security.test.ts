@@ -9,6 +9,7 @@ const APP_RPCS: Record<string, string> = {
   publish_upload: `select public.publish_upload('${NIL}')`,
   retract_upload: `select public.retract_upload('${NIL}', 'x')`,
   discard_upload: `select public.discard_upload('${NIL}')`,
+  discard_stale_uploads: `select public.discard_stale_uploads(24)`,
   review_compare: `select public.review_compare('${NIL}')`,
   metric_monthly: `select * from public.metric_monthly(array['timmar'], null, 'utfall', '2026-01-01', '2026-12-01', '{}', '[]')`,
   metric_distinct: `select * from public.metric_distinct('timmar', 'konsult', null, 'utfall', '2026-01-01', '2026-12-01', '{}', '[]', false)`,

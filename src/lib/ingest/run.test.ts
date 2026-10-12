@@ -290,6 +290,42 @@ describe("runTemplate – table template on an Intelliplan-style xlsx", () => {
     expect(r.report.headerRow).toBe(4);
     expect(r.facts.length).toBeGreaterThan(0);
   });
+
+  it("uses the template's own header row instead of detection", async () => {
+    const wb = readWorkbook(bytes, "x.xlsx");
+    const withRow = (headerRow: number): ImportTemplate =>
+      ImportTemplateSchema.parse({
+        ...timmarTemplate,
+        config: { ...timmarTemplate.config, headerRow },
+      });
+    const ctx = { aliases, fileSha256: "0".repeat(64), fileSize: 1 };
+    const detected = await runTemplate(wb, timmarTemplate, { company: "MBAB" }, ctx);
+
+    const same = await runTemplate(wb, withRow(3), { company: "MBAB" }, ctx);
+    expect(same.facts).toEqual(detected.facts);
+    expect(same.report.headerRow).toBe(4);
+
+    // Row 0 is the report title: the template's choice is taken as given.
+    const title = await runTemplate(wb, withRow(0), { company: "MBAB" }, ctx);
+    expect(title.report.headerRow).toBe(1);
+    expect(title.facts).toEqual([]);
+    expect(title.report.warnings.join("\n")).not.toMatch(/låg säkerhet/);
+
+    // A row picked for this upload wins over the template's.
+    const picked = await runTemplate(wb, withRow(0), { company: "MBAB" }, { ...ctx, headerRow: 3 });
+    expect(picked.facts).toEqual(detected.facts);
+  });
+
+  it("rejects a negative or fractional header row in a template", () => {
+    for (const headerRow of [-1, 1.5]) {
+      expect(
+        ImportTemplateSchema.safeParse({
+          ...timmarTemplate,
+          config: { ...timmarTemplate.config, headerRow },
+        }).success,
+      ).toBe(false);
+    }
+  });
 });
 
 describe("runTemplate – cases template on a Workbuster-style CSV", () => {

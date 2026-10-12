@@ -269,7 +269,7 @@ describe("SupabaseMetricDataSource", () => {
         pass: [],
       });
       expect(rpcCalls(calls, "metric_coverage")[0]?.payload).toMatchObject({
-        p_metric_keys: ["timmar", "intakter", "pass"],
+        p_metric_keys: ["intakter", "pass", "timmar"],
       });
     });
 
@@ -351,6 +351,105 @@ describe("SupabaseMetricDataSource", () => {
     expect(await ds.fiscalStartMonth()).toBe(1);
     await ds.fiscalStartMonth();
     expect(calls.filter((c) => c.target === "companies")).toHaveLength(1);
+  });
+
+  describe("memoization within one instance", () => {
+    const sourceRow = (dataset: string, at: string) => ({
+      upload_id: at,
+      file_name: "f",
+      dataset_key: dataset,
+      template_name: null,
+      template_version: null,
+      published_at: at,
+      months: [],
+    });
+
+    it("asks metric_coverage once per question, whatever the order of keys or companies", async () => {
+      const { ds, calls } = source({
+        rpc: { metric_coverage: () => [{ metric_key: "timmar", month: "2026-07-01" }] },
+      });
+      const first = await ds.coverage(["timmar", "pass"], scope());
+      first.timmar!.push("2099-01");
+      const again = await Promise.all([
+        ds.coverage(["pass", "timmar"], scope({ companies: ["MBR", "MBAB"] })),
+        // Grouping and filters do not change coverage.
+        ds.coverage(["timmar", "pass"], scope({ groupBy: ["kund"] })),
+        ds.coverage(["timmar", "pass", "timmar"], scope()),
+      ]);
+      expect(rpcCalls(calls, "metric_coverage")).toHaveLength(1);
+      for (const r of again) expect(r).toEqual({ timmar: ["2026-07"], pass: [] });
+
+      await ds.coverage(["timmar", "pass"], scope({ to: "2026-08" }));
+      await ds.coverage(["timmar", "pass"], scope({ companies: ["MBAB"] }));
+      await ds.coverage(["timmar", "pass"], scope({ scenario: "budget" }));
+      await ds.coverage(["timmar"], scope());
+      expect(rpcCalls(calls, "metric_coverage")).toHaveLength(5);
+    });
+
+    it("asks metric_sources once per question for last-updated", async () => {
+      const { ds, calls } = source({
+        rpc: { metric_sources: () => [sourceRow("ip_timmar", "2026-10-07T08:00:00Z")] },
+      });
+      const results = await Promise.all([
+        ds.lastUpdated(["timmar", "pass"], scope()),
+        ds.lastUpdated(
+          ["pass", "timmar"],
+          scope({ filters: [{ dimension: "kund", valueIds: [1] }] }),
+        ),
+      ]);
+      expect(results[0]).toEqual({ timmar: "2026-10-07T08:00:00Z", pass: "2026-10-07T08:00:00Z" });
+      expect(results[1]).toEqual(results[0]);
+      expect(rpcCalls(calls, "metric_sources")).toHaveLength(1);
+      // The budget scenario reads ledger metrics through budget_belopp: another question.
+      await ds.lastUpdated(["timmar", "pass"], scope({ scenario: "budget" }));
+      expect(rpcCalls(calls, "metric_sources")).toHaveLength(2);
+    });
+
+    it("looks up the same labels once", async () => {
+      const { ds, calls } = source();
+      const labelCalls = () => calls.filter((c) => c.target === "dimension_values");
+      const first = await ds.labels("verksamhet", [2, 1, 2]);
+      first[1] = "ändrad";
+      expect(await ds.labels("verksamhet", [1, 2])).toEqual({ 1: "ROM2", 2: "KROM" });
+      expect(labelCalls()).toHaveLength(1);
+      await ds.labels("verksamhet", [1]);
+      await ds.labels("kund", [1, 2]);
+      expect(labelCalls()).toHaveLength(3);
+    });
+
+    it("serves definitions to every caller from one read", async () => {
+      const { ds, calls } = source({
+        rpc: { metric_coverage: () => [], metric_sources: () => [] },
+      });
+      await Promise.all([
+        ds.definitions(),
+        ds.coverage(["timmar", "faktor"], scope()),
+        ds.lastUpdated(["faktor"], scope()),
+      ]);
+      expect(calls.filter((c) => c.target === "metrics")).toHaveLength(1);
+    });
+
+    it("forgets a failed call so the next one asks again", async () => {
+      let fail = true;
+      const { ds, calls } = source({
+        rpc: { metric_coverage: () => [{ metric_key: "timmar", month: "2026-07-01" }] },
+        fail: (c) => (fail && c.target === "metric_coverage" ? { message: "nere" } : null),
+      });
+      await expect(ds.coverage(["timmar"], scope())).rejects.toThrow(/nere/);
+      fail = false;
+      expect(await ds.coverage(["timmar"], scope())).toEqual({ timmar: ["2026-07"] });
+      expect(rpcCalls(calls, "metric_coverage")).toHaveLength(2);
+    });
+
+    it("does not share results between instances (one per request)", async () => {
+      const fake = createFakeClient({
+        tables: catalogTables(),
+        rpc: { metric_coverage: () => [] },
+      });
+      await new SupabaseMetricDataSource(fake.client).coverage(["timmar"], scope());
+      await new SupabaseMetricDataSource(fake.client).coverage(["timmar"], scope());
+      expect(rpcCalls(fake.calls, "metric_coverage")).toHaveLength(2);
+    });
   });
 
   it("does not cache failures", async () => {

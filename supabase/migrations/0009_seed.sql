@@ -63,10 +63,11 @@ insert into public.account_groups (key, name, sign, sort) values
   ('ovriga_externa', 'Övriga externa kostnader', 1, 3),
   ('personal', 'Personalkostnader', 1, 4),
   ('avskrivningar', 'Avskrivningar', 1, 5),
-  ('kostnader', 'Rörelsens kostnader', 1, 6),
-  ('finansiella', 'Finansiella poster', -1, 7),
-  ('bokslut_skatt', 'Bokslutsdispositioner och skatt', -1, 8),
-  ('resultat', 'Resultat', -1, 9);
+  ('ovriga_rorelse', 'Övriga rörelsekostnader', 1, 6),
+  ('kostnader', 'Rörelsens kostnader', 1, 7),
+  ('finansiella', 'Finansiella poster', -1, 8),
+  ('bokslut_skatt', 'Bokslutsdispositioner och skatt', -1, 9),
+  ('resultat', 'Resultat', -1, 10);
 
 insert into public.account_group_ranges (group_key, from_account, to_account) values
   ('intakter', 3000, 3999),
@@ -74,6 +75,7 @@ insert into public.account_group_ranges (group_key, from_account, to_account) va
   ('ovriga_externa', 5000, 6999),
   ('personal', 7000, 7699),
   ('avskrivningar', 7700, 7899),
+  ('ovriga_rorelse', 7900, 7999),
   ('kostnader', 4000, 7999),
   ('finansiella', 8000, 8799),
   ('bokslut_skatt', 8800, 8999),
@@ -326,6 +328,17 @@ select 'avskrivningar', 'Avskrivningar', 'kr', 'ledger',
 insert into public.metrics (key, name, unit, kind, dataset_id, higher_is_better, decimals,
   description, headline_subject, snapshot_rollup, base_metric_id, distinct_dimension_id,
   account_group_key, formula, is_system)
+select 'ovriga_rorelse', 'Övriga rörelsekostnader', 'kr', 'ledger',
+  (select id from public.datasets where key = 'fx_bokforing'),
+  false, 0,
+  'Konto 7900–7999.',
+  'DE ÖVRIGA RÖRELSEKOSTNADERNA', null,
+  null,
+  null,
+  'ovriga_rorelse', null, true;
+insert into public.metrics (key, name, unit, kind, dataset_id, higher_is_better, decimals,
+  description, headline_subject, snapshot_rollup, base_metric_id, distinct_dimension_id,
+  account_group_key, formula, is_system)
 select 'kostnader', 'Rörelsens kostnader', 'kr', 'ledger',
   (select id from public.datasets where key = 'fx_bokforing'),
   false, 0,
@@ -481,10 +494,11 @@ from (values
   ('kontogrupp', 'ovriga_externa', 'Övriga externa kostnader', 3),
   ('kontogrupp', 'personal', 'Personalkostnader', 4),
   ('kontogrupp', 'avskrivningar', 'Avskrivningar', 5),
-  ('kontogrupp', 'kostnader', 'Rörelsens kostnader', 6),
-  ('kontogrupp', 'finansiella', 'Finansiella poster', 7),
-  ('kontogrupp', 'bokslut_skatt', 'Bokslutsdispositioner och skatt', 8),
-  ('kontogrupp', 'resultat', 'Resultat', 9)
+  ('kontogrupp', 'ovriga_rorelse', 'Övriga rörelsekostnader', 6),
+  ('kontogrupp', 'kostnader', 'Rörelsens kostnader', 7),
+  ('kontogrupp', 'finansiella', 'Finansiella poster', 8),
+  ('kontogrupp', 'bokslut_skatt', 'Bokslutsdispositioner och skatt', 9),
+  ('kontogrupp', 'resultat', 'Resultat', 10)
 ) as v (dimension_key, code, label, sort)
 join public.dimensions dim on dim.key = v.dimension_key;
 

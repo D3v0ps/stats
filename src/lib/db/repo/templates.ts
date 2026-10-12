@@ -215,7 +215,10 @@ export async function createTemplateVersion(
   return next;
 }
 
-/** Delete a template (refused by the database while uploads reference it). */
+/**
+ * Delete a template and its versions. Uploads made with it keep their data and stay
+ * current: the database nulls their template_id and keeps template_version as history.
+ */
 export async function deleteTemplate(db: DbClient, id: string): Promise<void> {
   check("import_templates.delete", await db.from("import_templates").delete().eq("id", id));
 }

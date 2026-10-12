@@ -291,7 +291,10 @@ export async function listMonthsWithData(
 
 // ---- Import templates -------------------------------------------------------------
 
-/** Number of uploads (any status) per template id; such templates cannot be deleted. */
+/**
+ * Number of uploads (any status) per template id. Deleting a used template keeps those
+ * uploads and their data (their template_id becomes null), so settings can warn first.
+ */
 export async function templateUploadCounts(db: DbClient): Promise<Record<string, number>> {
   const rows = await fetchAll("uploads", (from, to) =>
     db.from("uploads").select("id, template_id").order("id").range(from, to),
