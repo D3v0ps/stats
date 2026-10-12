@@ -304,7 +304,8 @@ describe("repo adapters against the database", () => {
           company: "MBAB",
           month: "2026-01",
           dims: { kontogrupp: dict.kontogrupp!.byNorm.intakter!, kostnadsstalle: ks100 },
-          value: 1200,
+          // budget_belopp is stored in SIE sign: revenue negative.
+          value: -1200,
           sourceRows: [],
         },
         {
@@ -323,6 +324,8 @@ describe("repo adapters against the database", () => {
     expect(budgetRows.sort((a, b) => a.accountGroupKey.localeCompare(b.accountGroupKey))).toEqual([
       { accountGroupKey: "intakter", month: "2026-01", group: {}, value: 1200 },
       { accountGroupKey: "personal", month: "2026-01", group: {}, value: 500 },
+      // Derived from the leaf groups: −(−1200 + 500).
+      { accountGroupKey: "resultat", month: "2026-01", group: {}, value: 700 },
     ]);
     expect(await ds.ledger(["intakter"], { ...budget, groupBy: ["kostnadsstalle"] })).toEqual([
       {

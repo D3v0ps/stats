@@ -335,19 +335,20 @@ describe("buildCases – dates and edge cases", () => {
     ]);
   });
 
-  it("computes average tenure over active cases and weights the total", () => {
+  it("sums tenure months over active cases so groups and companies add up", () => {
     const cols = ["gen", "tjänst", "start", "slut"];
     const cfg = config({
       groupBy: ["tjänst"],
       interruptColumn: undefined,
       resultColumn: undefined,
-      metrics: { active: "aktiva", tenureMonths: "tenure" },
+      metrics: { active: "aktiva", tenureMonthsSum: "tenure" },
     });
     const r = buildCases(
       table(cols, [
         ["K1", "KROM", "2026-01-01", null],
         ["K2", "KROM", "2026-03-01", null],
         ["K3", "ROM2", "2026-03-31", "2026-03-31"],
+        ["K4", "ROM2", "2025-12-01", "2026-02-10"],
       ]),
       cfg,
       { asOfDate: "2026-03-31" },
@@ -356,17 +357,42 @@ describe("buildCases – dates and edge cases", () => {
     const m = (a: string, b: string) => days(a, b) / (365.25 / 12);
     const t = pivot(r.facts, "tenure");
     expect(t["2026-01"]!.KROM).toBeCloseTo(m("2026-01-01", "2026-01-31"), 10);
-    expect(t["2026-01"]!.ROM2).toBeUndefined();
+    expect(t["2026-01"]!.ROM2).toBeCloseTo(m("2025-12-01", "2026-01-31"), 10);
+    // Nobody active in the group: a real 0 (like the active count), not a missing value.
+    expect(t["2026-02"]!.ROM2).toBe(0);
     expect(t["2026-03"]!.KROM).toBeCloseTo(
-      (m("2026-01-01", "2026-03-31") + m("2026-03-01", "2026-03-31")) / 2,
+      m("2026-01-01", "2026-03-31") + m("2026-03-01", "2026-03-31"),
       10,
     );
+    // Started on the snapshot day: active with 0 months.
     expect(t["2026-03"]!.ROM2).toBe(0);
     const total = r.totals.find((x) => x.metricKey === "tenure" && x.month === "2026-03")!;
-    expect(total.value).toBeCloseTo(
-      (m("2026-01-01", "2026-03-31") + m("2026-03-01", "2026-03-31") + 0) / 3,
-      10,
+    expect(total.value).toBeCloseTo(t["2026-03"]!.KROM! + t["2026-03"]!.ROM2!, 10);
+    // The average is a formula over the two snapshots: 2 + 1 active cases in March.
+    const active = pivot(r.facts, "aktiva");
+    expect(active["2026-03"]).toEqual({ KROM: 2, ROM2: 1 });
+    expect(r.issues).toEqual([]);
+  });
+
+  it("ignores the deprecated average tenure with a warning", () => {
+    const cfg = config({
+      groupBy: ["tjänst"],
+      interruptColumn: undefined,
+      resultColumn: undefined,
+      metrics: { active: "aktiva", tenureMonths: "anstallningstid" },
+    });
+    const r = buildCases(
+      table(["gen", "tjänst", "start", "slut"], [["K1", "KROM", "2026-01-01", null]]),
+      cfg,
+      { asOfDate: "2026-01-31" },
     );
+    expect(r.facts.map((f) => f.metricKey)).toEqual(["aktiva"]);
+    expect(r.issues).toEqual([
+      expect.objectContaining({
+        severity: "warning",
+        message: expect.stringMatching(/Anställningsmånader/),
+      }),
+    ]);
   });
 
   it("uses a company column and skips unknown companies", () => {

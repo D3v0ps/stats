@@ -446,12 +446,12 @@ class FactSet {
     else this.byKey.set(key, { metricKey, company, month, dims: d, value });
   }
 
-  /** Rounded to 6 decimals, value-0 facts dropped (except metrics in keepZero), canonical order. */
-  list(keepZero: ReadonlySet<string> = new Set()): Fact[] {
+  /** Rounded to 6 decimals, value-0 facts dropped, canonical order. */
+  list(): Fact[] {
     return [...this.byKey.entries()]
       .sort(([a], [b]) => (a < b ? -1 : a > b ? 1 : 0))
       .map(([, f]) => ({ ...f, value: round6(f.value) }))
-      .filter((f) => f.value !== 0 || keepZero.has(f.metricKey));
+      .filter((f) => f.value !== 0);
   }
 }
 
@@ -1239,31 +1239,25 @@ interface CaseMetrics {
   ended?: string;
   interrupted?: string;
   results?: string;
-  tenure?: string;
+  /** Sum of the tenure months of the cases active at month end. */
+  tenureSum?: string;
 }
 
 const AVG_DAYS_PER_MONTH = 365.25 / 12;
-
-interface TenureAcc {
-  company: Company;
-  dims: Record<string, string>;
-  sum: number;
-  n: number;
-}
 
 /**
  * Monthly counts per company x group, evaluated at each month's last day (ME):
  * - active: start <= ME and (end empty or end >= ME), and not interrupted on or before ME
  * - started: start in the month; ended: end in the month; interrupted: interrupted and end in month
  * - results: result set and (Resultatdatum, else end) in the month, per resultattyp
- * - tenure: mean over active cases of (ME - start) days / (365.25 / 12)
+ * - tenureSum: sum over active cases of (ME - start) days / (365.25 / 12); the average
+ *   tenure is a formula over it and active, so it is not part of the truth
  */
 function casesTruth(cases: CaseRecord[], months: string[], metrics: CaseMetrics): Fact[] {
   const facts = new FactSet();
   const inMonth = (d: string | null, month: string) => d !== null && d.slice(0, 7) === month;
   for (const month of months) {
     const me = monthEndDate(month);
-    const tenure = new Map<string, TenureAcc>();
     for (const c of cases) {
       const interruptedByMe = c.interrupted && c.end !== null && c.end <= me;
       const active = c.start <= me && (c.end === null || c.end >= me) && !interruptedByMe;
@@ -1278,20 +1272,18 @@ function casesTruth(cases: CaseRecord[], months: string[], metrics: CaseMetrics)
       if (metrics.results && c.result && inMonth(c.resultDate ?? c.end, month)) {
         facts.add(metrics.results, c.company, month, { ...c.dims, resultattyp: c.result }, 1);
       }
-      if (metrics.tenure && active) {
-        const key = JSON.stringify([c.company, sortedDims(c.dims)]);
-        const t = tenure.get(key) ?? { company: c.company, dims: c.dims, sum: 0, n: 0 };
-        t.sum += daysBetween(c.start, me) / AVG_DAYS_PER_MONTH;
-        t.n += 1;
-        tenure.set(key, t);
+      if (metrics.tenureSum && active) {
+        facts.add(
+          metrics.tenureSum,
+          c.company,
+          month,
+          c.dims,
+          daysBetween(c.start, me) / AVG_DAYS_PER_MONTH,
+        );
       }
     }
-    if (metrics.tenure) {
-      for (const t of tenure.values())
-        facts.add(metrics.tenure, t.company, month, t.dims, t.sum / t.n);
-    }
   }
-  return facts.list(new Set(metrics.tenure ? [metrics.tenure] : []));
+  return facts.list();
 }
 
 // ---------------------------------------------------------------------------
@@ -1349,7 +1341,7 @@ function konsulterXlsx(employments: Employment[]) {
     active: "anstallda_konsulter",
     started: "nyanstallda",
     ended: "avslutade_anstallningar",
-    tenure: "anstallningstid",
+    tenureSum: "anstallningsmanader",
   });
   const layout = sheet.layout();
   return {
@@ -1879,7 +1871,8 @@ function budgetSheet(company: Company, facts: FactSet): SheetBuilder {
     ),
   ]);
 
-  // Intended mapping negates the amounts: budget_belopp is stored in ledger (SIE) sign.
+  // The file is a result budget (revenue +, costs −); budget_belopp is stored in ledger (SIE)
+  // sign, so the intended mapping (budgetSign "result") negates every amount.
   for (const row of BUDGET_ROWS) {
     (values[row.key] ?? []).forEach((v, m) => {
       facts.add("budget_belopp", company, `2026-${pad2(m + 1)}`, { kontogrupp: row.key }, -v);
@@ -1914,7 +1907,6 @@ function budgetTemplate(company: Company): Json {
         { op: "unpivot", columns: months, nameColumn: "månad", valueColumn: "belopp" },
         { op: "constant", column: "år", value: "2026" },
         { op: "merge", columns: ["månad", "år"], separator: " ", into: "period" },
-        { op: "negate", column: "belopp" },
         ...BUDGET_ROWS.map((r) => ({
           op: "replace",
           column: "post",
@@ -1933,6 +1925,7 @@ function budgetTemplate(company: Company): Json {
       period: { kind: "column", column: "period" },
       company: { kind: "fixed", company },
       scenario: "budget",
+      budgetSign: "result",
     },
     COMPANY_INFO[company].shortName,
   );
@@ -2223,7 +2216,7 @@ function buildAll(): Output[] {
             active: "anstallda_konsulter",
             started: "nyanstallda",
             ended: "avslutade_anstallningar",
-            tenureMonths: "anstallningstid",
+            tenureMonthsSum: "anstallningsmanader",
           },
           fromMonth: "2023-01",
         },

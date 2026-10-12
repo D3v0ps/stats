@@ -437,6 +437,48 @@ describe("runTemplate – other inputs", () => {
     expect(r.report.skipped.map((s) => s.reason)).toEqual(["sum_row"]);
   });
 
+  it("stores budget amounts in SIE sign using the account group signs from the context", async () => {
+    const csv = "Post;Månad;Belopp\nIntäkter;2026-01;1000\nPersonalkostnader;2026-01;400\n";
+    const template = (budgetSign: "positive" | "result") =>
+      ImportTemplateSchema.parse({
+        datasetKey: "budget",
+        name: "Budget",
+        headerSignature: ["post", "månad", "belopp"],
+        config: {
+          kind: "table",
+          columns: [
+            { column: "post", type: "text", usage: "dimension", dimensionKey: "kontogrupp" },
+            { column: "månad", type: "text", usage: "period" },
+            { column: "belopp", type: "amount", usage: "measure", metricKey: "budget_belopp" },
+          ],
+          period: { kind: "column", column: "månad" },
+          company: { kind: "fixed", company: "MBR" },
+          scenario: "budget",
+          budgetSign,
+        },
+      });
+    const ctx = {
+      aliases: {},
+      fileSha256: "0".repeat(64),
+      fileSize: 1,
+      accountGroupSigns: { intakter: -1, personal: 1 } as Record<string, 1 | -1>,
+      accountGroupNames: { intakter: "Intäkter", personal: "Personalkostnader" },
+    };
+    const wb = readWorkbook(utf8(csv), "budget.csv");
+    const positive = await runTemplate(wb, template("positive"), {}, ctx);
+    expect(positive.scenario).toBe("budget");
+    expect(positive.facts.map((f) => [f.dims.kontogrupp, f.value])).toEqual([
+      ["Intäkter", -1000],
+      ["Personalkostnader", 400],
+    ]);
+    expect(positive.totals).toEqual([
+      { metricKey: "budget_belopp", company: "MBR", month: "2026-01", value: -600 },
+    ]);
+    // Read as a result budget every amount is negated, whatever its account group.
+    const result = await runTemplate(wb, template("result"), {}, ctx);
+    expect(result.facts.map((f) => f.value)).toEqual([-1000, -400]);
+  });
+
   it("throws for SIE templates and workbooks without sheets", async () => {
     const sie = ImportTemplateSchema.parse({
       datasetKey: "fx_bokforing",

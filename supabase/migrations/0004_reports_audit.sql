@@ -67,11 +67,14 @@ create table public.audit_log (
 );
 create index audit_log_at_idx on public.audit_log (at desc);
 
--- Only service_role (via login_gate/login_record) touches this table.
+-- Only service_role (via login_gate/login_record) touches this table. login_gate inserts
+-- each attempt it lets through as pending (ok null, counted as a failure) and
+-- login_record finalizes it by id.
 create table private.login_attempts (
+  id uuid primary key default gen_random_uuid(),
   ip_hash text not null,
   at timestamptz not null default now(),
-  ok boolean not null
+  ok boolean
 );
 create index login_attempts_ip_at_idx on private.login_attempts (ip_hash, at);
 create index login_attempts_at_idx on private.login_attempts (at);

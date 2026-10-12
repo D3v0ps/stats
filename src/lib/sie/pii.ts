@@ -3,34 +3,27 @@
 // trader, object codes of an "Anställd" dimension, free text that ends up in
 // parse issues. Everything ingest returns passes through these helpers.
 //
-// Deliberately broader than the database trigger (no Luhn check): masking a
-// mistyped personnummer or an odd reference number is harmless, storing a real
-// one is not. Organisation numbers never match because their month digits are
-// 20 or more.
-
-// [CC]YYMMDD, optional "-" or "+", four digits; not part of a longer number.
-const PNR_RE = /(?<!\d)(\d{2})?(\d{2})(\d{2})(\d{2})[-+]?\d{4}(?!\d)/g;
+// Shapes, separators ("-", "+", space, no-break space) and the birth-date rule come
+// from src/lib/core/pnr.ts. Deliberately broader than that module and the database
+// trigger: no Luhn check, because masking a mistyped personnummer or an odd reference
+// number is harmless and storing a real one is not. Organisation numbers never match
+// because their month digits are 20 or more.
+import {
+  PNR_PLACEHOLDER,
+  hasValidBirthDate,
+  personnummerParts,
+  personnummerScanner,
+} from "@/lib/core/pnr";
 
 /** Shown in place of a personnummer. */
-export const PNR_MASK = "ÅÅMMDD-XXXX";
-
-function isBirthDate(century: string | undefined, yy: string, mm: string, dd: string): boolean {
-  if (century !== undefined && century !== "18" && century !== "19" && century !== "20") {
-    return false;
-  }
-  const month = Number(mm);
-  let day = Number(dd);
-  if (day > 60) day -= 60; // samordningsnummer
-  if (month < 1 || month > 12 || day < 1) return false;
-  // Without a century 29 February must pass (00 may be 1900 or 2000), so use a leap year.
-  const year = century === undefined ? 2000 : Number(century + yy);
-  return day <= new Date(Date.UTC(year, month, 0)).getUTCDate();
-}
+export const PNR_MASK = PNR_PLACEHOLDER;
 
 function personnummerMatches(text: string): RegExpExecArray[] {
-  return [...text.matchAll(PNR_RE)].filter((m) =>
-    isBirthDate(m[1], m[2] as string, m[3] as string, m[4] as string),
-  );
+  if (!/\d{6}/.test(text)) return [];
+  return [...text.matchAll(personnummerScanner())].filter((m) => {
+    const parts = personnummerParts(m[0]);
+    return parts !== null && hasValidBirthDate(parts);
+  });
 }
 
 /** True when `text` contains something shaped like a personnummer or samordningsnummer. */

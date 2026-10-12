@@ -61,8 +61,8 @@ independent implementations agreeing is the guarantee; the app is the third.
     `Stöd och matchning`, `Bemanning`).
   - `kontogrupp`: the account group **key** (`intakter`, `varor_ul`, …), which equals
     `dimension_values.code` of the seeded kontogrupp values.
-- Facts with value 0 are omitted (treat a missing key as 0). Exception: `anstallningstid`
-  (an average) is present exactly when `anstallda_konsulter` > 0 for the same key, even if 0.
+- Facts with value 0 are omitted (treat a missing key as 0). The app's cases ingest writes
+  explicit zeros, so compare after dropping zero values on both sides.
 - Values are rounded to 6 decimals. Compare with a tolerance (≥ 0.000001; 0.01 is plenty).
 - Sorted by metric, company, month, dims; dims keys sorted. Months are `YYYY-MM`.
 
@@ -109,14 +109,14 @@ same is done by a `lookup` on `kund` with the alias from `aliases`.
 
 Evaluated per company × group at each month's **last day ME**:
 
-| Metric                                                   | Counted when                                                                                                           |
-| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------- |
-| active (`anstallda_konsulter`, `aktiva_deltagare`)       | start ≤ ME and (end empty or end ≥ ME) and not interrupted on or before ME                                             |
-| started (`nyanstallda`, `nya_deltagare`)                 | start date in the month                                                                                                |
-| ended (`avslutade_anstallningar`, `avslutade_deltagare`) | end date (Slutdatum) in the month, interrupted or not                                                                  |
-| interrupted (`avbrott_deltagare`)                        | Avbrott is truthy and Slutdatum in the month (the interruption date is Slutdatum; there is no separate column)         |
-| results (`resultat_deltagare`)                           | Resultat maps to Arbete/Studier and Resultatdatum (or, when empty, Slutdatum) is in the month; extra dim `resultattyp` |
-| tenure (`anstallningstid`)                               | mean over active cases of (ME − start) in days ÷ (365.25 / 12)                                                         |
+| Metric                                                   | Counted when                                                                                                                 |
+| -------------------------------------------------------- | ---------------------------------------------------------------------------------------------------------------------------- |
+| active (`anstallda_konsulter`, `aktiva_deltagare`)       | start ≤ ME and (end empty or end ≥ ME) and not interrupted on or before ME                                                   |
+| started (`nyanstallda`, `nya_deltagare`)                 | start date in the month                                                                                                      |
+| ended (`avslutade_anstallningar`, `avslutade_deltagare`) | end date (Slutdatum) in the month, interrupted or not                                                                        |
+| interrupted (`avbrott_deltagare`)                        | Avbrott is truthy and Slutdatum in the month (the interruption date is Slutdatum; there is no separate column)               |
+| results (`resultat_deltagare`)                           | Resultat maps to Arbete/Studier and Resultatdatum (or, when empty, Slutdatum) is in the month; extra dim `resultattyp`       |
+| tenure sum (`anstallningsmanader`)                       | sum over active cases of (ME − start) in days ÷ (365.25 / 12); average tenure (`anstallningstid`) is a formula: sum ÷ active |
 
 Consequences the files exercise on purpose: a case ending exactly on ME is still active at ME
 and also counts as ended that month; an interrupted case ending on ME is **not** active at ME;
@@ -230,8 +230,8 @@ Mapping: anställnings id → `case_key`, namn/personnummer ignore/personal, ans
 ignore, organisationsenhet → dimension `ort` after `replace organisationsenhet contains
 "MBAB / " → ""`, startdatum → `case_start`, slutdatum → `case_end`. Cases: groupBy
 `organisationsenhet`, metrics active `anstallda_konsulter`, started `nyanstallda`, ended
-`avslutade_anstallningar`, tenureMonths `anstallningstid`, fromMonth `2023-01`. Company fixed
-`MBAB`, asOfDate `2026-09-30`.
+`avslutade_anstallningar`, tenureMonthsSum `anstallningsmanader`, fromMonth `2023-01`. Company
+fixed `MBAB`, asOfDate `2026-09-30`.
 
 Truth: months 2023-01 … 2026-09 by `ort` (Södertälje, Stockholm, Kungsängen, Uppsala).
 
@@ -294,10 +294,11 @@ Revenue is positive; costs and the net financial cost are negative.
 Mapping (one template per sheet, `sheetHint` = sheet name, company fixed): steps
 `filter post equals "Rörelseresultat"` · `filter post equals "Resultat efter finansiella
 poster"` · `drop helår` · `unpivot jan … dec → månad, belopp` · `constant år = "2026"` ·
-`merge månad + år (" ") → period` (`"jan 2026"`) · `negate belopp` · six `replace post`
-(whole cell) label → group key (`Intäkter` → `intakter`, …, `Finansiella poster` →
-`finansiella`; alternatively a `lookup` on `kontogrupp` with `aliases`). Columns: post →
-dimension `kontogrupp`, period → period, belopp → measure `budget_belopp` (amount).
+`merge månad + år (" ") → period` (`"jan 2026"`) · six `replace post` (whole cell) label →
+group key (`Intäkter` → `intakter`, …, `Finansiella poster` → `finansiella`; alternatively a
+`lookup` on `kontogrupp` with `aliases`). Columns: post → dimension `kontogrupp`, period →
+period, belopp → measure `budget_belopp` (amount). `budgetSign: "result"` (the file writes
+revenue positive and costs negative) makes ingest negate every amount into SIE sign.
 
 Truth: 2 companies × 12 months × 6 groups = 144 facts, `value = −(cell)`, i.e. **ledger (SIE)
 sign**: revenue negative, costs positive, net financial cost positive — the same convention as
@@ -306,15 +307,12 @@ actuals, and `kostnader`/`resultat` budgets can be derived by range like the led
 column-wide step cannot produce "revenue and costs both positive" from this layout, because
 only the cost rows would need flipping.
 
-**Open cross-module decision.** The budget readers in `src/lib/db/repo/metrics.ts` (module C)
-and `src/lib/metrics/memory-source.ts` (module E) currently assume budget amounts are already in
-presentation sign and apply no account-group sign. With this file and this truth, the revenue
-and financial-net budgets would then show with the wrong sign (the four cost groups match only
-because their sign is +1), and the `kostnader`/`resultat` budgets would be missing because the
-file has no rows for them. Either those readers multiply `budget_belopp` by the account group's
-sign and derive the range groups (as `ledger_monthly` does for actuals; recommended, one sign
-convention for everything ledger-like), or the step contract gains a row-conditional negate.
-Until then an end-to-end budget-vs-actual test over this file fails on purpose.
+**Budget sign (decided).** budget_belopp is stored in SIE sign. The budget of a ledger metric
+with account group G is (Σ budget facts whose kontogrupp is a leaf group within G's ranges) ×
+G.sign, in both `src/lib/metrics/memory-source.ts` and `src/lib/db/repo/metrics.ts`
+(`budgetLedgerRows`), so the revenue and financial-net budgets show positive like actuals and
+the `kostnader`/`resultat` budgets are derived from the leaf groups. Budget files in other sign
+conventions declare it with the template's `budgetSign` (`result`, `positive` or `ledger`).
 
 ### 11. `intelliplan_kundlista.xls` (reference, no facts)
 

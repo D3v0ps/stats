@@ -46,6 +46,8 @@ const { login, logout, logoutEverywhere } = await import("./actions");
 
 const EMAIL = "stats-user@example.invalid";
 const HASH = ipHash("203.0.113.7", EMAIL);
+const ATTEMPT = "3f2c8a8e-5b1d-4c6e-9f7a-2b8d4e6f1a3c";
+const OPEN_GATE = { allowed: true, retry_after_s: 0, delay_ms: 0, attempt_id: ATTEMPT };
 
 function form(password: string | null) {
   const data = new FormData();
@@ -75,9 +77,7 @@ beforeEach(() => {
   vi.stubEnv("STATS_LOGIN_EMAIL", EMAIL);
   mocks.createAdminClient.mockReturnValue({ rpc: mocks.rpc });
   mocks.rpc.mockImplementation(async (fn: string) =>
-    fn === "login_gate"
-      ? { data: { allowed: true, retry_after_s: 0, delay_ms: 0 }, error: null }
-      : { data: null, error: null },
+    fn === "login_gate" ? { data: OPEN_GATE, error: null } : { data: null, error: null },
   );
   mocks.signInWithPassword.mockResolvedValue({ data: {}, error: null });
   mocks.signOut.mockResolvedValue({ error: null });
@@ -102,7 +102,10 @@ describe("login", () => {
       password: "rätt lösenord",
     });
     expect(mocks.rpc).toHaveBeenNthCalledWith(1, "login_gate", { p_ip_hash: HASH });
-    expect(mocks.rpc).toHaveBeenNthCalledWith(2, "login_record", { p_ip_hash: HASH, p_ok: true });
+    expect(mocks.rpc).toHaveBeenNthCalledWith(2, "login_record", {
+      p_attempt_id: ATTEMPT,
+      p_ok: true,
+    });
     expect(ms).toBeGreaterThanOrEqual(MIN_RESPONSE_MS);
   });
 
@@ -129,13 +132,16 @@ describe("login", () => {
     });
     const { result, ms } = await run(() => login(INITIAL_LOGIN_STATE, form("fel")));
     expect(result).toMatchObject({ error: LOGIN_ERROR });
-    expect(mocks.rpc).toHaveBeenLastCalledWith("login_record", { p_ip_hash: HASH, p_ok: false });
+    expect(mocks.rpc).toHaveBeenLastCalledWith("login_record", {
+      p_attempt_id: ATTEMPT,
+      p_ok: false,
+    });
     expect(ms).toBeGreaterThanOrEqual(MIN_RESPONSE_MS);
   });
 
   it("does not try the password while the gate is closed", async () => {
     mocks.rpc.mockResolvedValue({
-      data: { allowed: false, retry_after_s: 600, delay_ms: 0 },
+      data: { allowed: false, retry_after_s: 600, delay_ms: 0, attempt_id: null },
       error: null,
     });
     const { result } = await run(() => login(INITIAL_LOGIN_STATE, form("gissning")));
@@ -147,7 +153,7 @@ describe("login", () => {
   it("waits the global slow-down before trying", async () => {
     mocks.rpc.mockImplementation(async (fn: string) =>
       fn === "login_gate"
-        ? { data: { allowed: true, retry_after_s: 0, delay_ms: 2000 }, error: null }
+        ? { data: { ...OPEN_GATE, delay_ms: 2000 }, error: null }
         : { data: null, error: null },
     );
     const { ms } = await run(() => login(INITIAL_LOGIN_STATE, form("x")));
@@ -177,14 +183,33 @@ describe("login", () => {
     expect(mocks.signInWithPassword).not.toHaveBeenCalled();
   });
 
-  it("does not count network failures as guesses", async () => {
+  it("leaves the attempt pending (a failure) when Auth cannot be reached", async () => {
     mocks.signInWithPassword.mockResolvedValue({
       data: {},
       error: new AuthRetryableFetchError("fetch failed", 0),
     });
     const { result } = await run(() => login(INITIAL_LOGIN_STATE, form("x")));
     expect(result).toMatchObject({ error: LOGIN_ERROR });
+    // Only the gate: an answer that is not from Auth never finalizes the attempt.
     expect(mocks.rpc).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not try the password when the gate registered no attempt", async () => {
+    mocks.rpc.mockResolvedValue({ data: { ...OPEN_GATE, attempt_id: null }, error: null });
+    const { result } = await run(() => login(INITIAL_LOGIN_STATE, form("x")));
+    expect(result).toMatchObject({ error: LOGIN_ERROR });
+    expect(mocks.signInWithPassword).not.toHaveBeenCalled();
+  });
+
+  it("still answers when recording the attempt fails", async () => {
+    mocks.rpc.mockImplementation(async (fn: string) =>
+      fn === "login_gate"
+        ? { data: OPEN_GATE, error: null }
+        : { data: null, error: { code: "P0002", message: "x" } },
+    );
+    const { error } = await run(() => login(INITIAL_LOGIN_STATE, form("rätt")));
+    expect(error?.message).toBe("REDIRECT /");
+    expect(console.error).toHaveBeenCalledWith("[login] login_record failed (P0002)");
   });
 
   it("refuses to log in without the secret key in production", async () => {

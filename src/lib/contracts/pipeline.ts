@@ -187,12 +187,39 @@ export const CasesConfigSchema = z.object({
     ended: MetricKeySchema.optional(),
     interrupted: MetricKeySchema.optional(),
     results: MetricKeySchema.optional(),
+    /**
+     * Sum of the tenure in months of the cases active at month end (a snapshot that adds
+     * up over groups). Average tenure is a formula: tenure sum ÷ active.
+     */
+    tenureMonthsSum: MetricKeySchema.optional(),
+    /**
+     * @deprecated Average tenure per group, which cannot be added up over groups or
+     * companies. Kept only so configs saved before tenureMonthsSum still parse; ingest
+     * ignores it with a warning. Use tenureMonthsSum.
+     */
     tenureMonths: MetricKeySchema.optional(),
   }),
   /** First month to produce (defaults to the earliest start in the file). */
   fromMonth: MonthSchema.optional(),
 });
 export type CasesConfig = z.infer<typeof CasesConfigSchema>;
+
+/**
+ * How a budget file writes its amounts. budget_belopp is always stored in bookkeeping
+ * (SIE) sign like ledger amounts: revenue negative, costs positive.
+ * - result: revenue positive, costs negative (a result budget) -> multiplied by -1
+ * - positive: every amount positive -> multiplied by the kontogrupp's account-group sign
+ * - ledger: already in SIE sign -> unchanged (also when the field is left out)
+ */
+export const BudgetSignSchema = z.enum(["result", "positive", "ledger"]);
+export type BudgetSign = z.infer<typeof BudgetSignSchema>;
+
+/** Swedish UI labels for BudgetSign. */
+export const BUDGET_SIGN_LABELS: Record<BudgetSign, string> = {
+  result: "Intäkter plus, kostnader minus",
+  positive: "Alla belopp positiva",
+  ledger: "Som i bokföringen (intäkter minus, kostnader plus)",
+};
 
 export const TableTemplateConfigSchema = z.object({
   kind: z.literal("table"),
@@ -202,6 +229,8 @@ export const TableTemplateConfigSchema = z.object({
   period: PeriodSourceSchema,
   company: CompanySourceSchema,
   scenario: ScenarioSchema.default("utfall"),
+  /** Sign convention of budget_belopp amounts in the file (see BudgetSignSchema). */
+  budgetSign: BudgetSignSchema.optional(),
 });
 
 export const CasesTemplateConfigSchema = z.object({

@@ -1,15 +1,18 @@
 // Table aggregation: typed rows (after steps) -> monthly facts. Only these
 // aggregates (plus source row numbers) ever leave the browser.
-import type {
-  ColumnMapping,
-  ColumnType,
-  CompanyCode,
-  FactDraft,
-  ParseIssue,
-  SkippedRow,
-  TableTemplateConfig,
-  UploadChoices,
+import {
+  BUDGET_METRIC_KEY,
+  type BudgetSign,
+  type ColumnMapping,
+  type ColumnType,
+  type CompanyCode,
+  type FactDraft,
+  type ParseIssue,
+  type SkippedRow,
+  type TableTemplateConfig,
+  type UploadChoices,
 } from "@/lib/contracts";
+import { normalizeValue } from "@/lib/core/normalize";
 import { detectDecimalSeparator, parseNumberSv, type NumberKind } from "@/lib/core/num-sv";
 import { columnContainsPersonnummer } from "@/lib/core/pnr";
 import { companyResolver, globalIssue, periodResolver } from "./row-context";
@@ -17,6 +20,9 @@ import { valueText, type WorkingTable } from "./working";
 
 /** Label used for an empty dimension cell (an empty label is not allowed). */
 export const MISSING_LABEL = "(saknas)";
+
+/** Dimension whose labels name the account group of a budget amount. */
+const KONTOGRUPP = "kontogrupp";
 
 /** Thrown when a column that would be stored contains personnummer. */
 export class PersonalDataError extends Error {
@@ -32,6 +38,96 @@ export interface AggregateResult {
   skipped: SkippedRow[];
   /** Source rows that contributed to at least one fact (counted once after unpivot). */
   rowsUsed: number;
+}
+
+export interface AggregateOptions {
+  /** Account group key -> sign (revenue -1). Needed when a template sets budgetSign "positive". */
+  accountGroupSigns?: Record<string, 1 | -1>;
+  /** Account group key -> name, so kontogrupp labels written as names ("Intäkter") resolve too. */
+  accountGroupNames?: Record<string, string>;
+}
+
+/**
+ * The account group a kontogrupp label stands for: its key or its name, compared after
+ * normalizeValue (case, whitespace). null when nothing matches.
+ */
+export function resolveAccountGroupKey(
+  label: string,
+  signs: Record<string, 1 | -1>,
+  names: Record<string, string> = {},
+): string | null {
+  const norm = normalizeValue(label);
+  for (const key of Object.keys(signs)) {
+    if (normalizeValue(key) === norm) return key;
+  }
+  for (const key of Object.keys(signs)) {
+    const name = names[key];
+    if (name !== undefined && normalizeValue(name) === norm) return key;
+  }
+  return null;
+}
+
+/**
+ * Bring budget_belopp facts to bookkeeping (SIE) sign, the sign they are stored in:
+ * "result" files (revenue +, costs −) are negated, "positive" files are multiplied by
+ * the kontogrupp's account-group sign, "ledger" (or no setting) is left as is. Facts
+ * whose account group can't be told are dropped with an error, never stored with a
+ * guessed sign. Other metrics pass through.
+ */
+export function applyBudgetSign(
+  facts: FactDraft[],
+  budgetSign: BudgetSign | undefined,
+  opts: AggregateOptions & { kontogruppColumn?: string } = {},
+): { facts: FactDraft[]; issues: ParseIssue[] } {
+  if (budgetSign === undefined || budgetSign === "ledger") return { facts, issues: [] };
+  if (!facts.some((f) => f.metricKey === BUDGET_METRIC_KEY)) return { facts, issues: [] };
+  if (budgetSign === "result") {
+    return {
+      facts: facts.map((f) =>
+        f.metricKey === BUDGET_METRIC_KEY ? { ...f, value: roundSum(-f.value) } : f,
+      ),
+      issues: [],
+    };
+  }
+
+  const issues: ParseIssue[] = [];
+  const signs = opts.accountGroupSigns;
+  const column = opts.kontogruppColumn ?? KONTOGRUPP;
+  if (!signs || Object.keys(signs).length === 0) {
+    issues.push(
+      globalIssue(column, "Kontogruppernas tecken saknas, så budgetbeloppen kan inte vändas rätt."),
+    );
+  } else if (!facts.some((f) => f.metricKey === BUDGET_METRIC_KEY && KONTOGRUPP in f.dims)) {
+    issues.push(
+      globalIssue(column, "Budget med bara positiva belopp behöver en kolumn för kontogrupp."),
+    );
+  }
+  const unknown = new Map<string, number>();
+  const out: FactDraft[] = [];
+  for (const f of facts) {
+    if (f.metricKey !== BUDGET_METRIC_KEY) {
+      out.push(f);
+      continue;
+    }
+    const label = f.dims[KONTOGRUPP];
+    if (!signs || label === undefined) continue;
+    const key = resolveAccountGroupKey(label, signs, opts.accountGroupNames);
+    if (key === null) {
+      if (!unknown.has(label)) unknown.set(label, f.sourceRows[0] ?? 0);
+      continue;
+    }
+    out.push({ ...f, value: roundSum(f.value * signs[key]!) });
+  }
+  for (const [label, sourceRow] of unknown) {
+    issues.push({
+      sourceRow,
+      column,
+      value: label,
+      message: `Okänd kontogrupp "${label}": beloppen räknas inte. Använd kontogruppens namn eller nyckel.`,
+      severity: "error",
+    });
+  }
+  return { facts: out, issues };
 }
 
 const KIND_BY_TYPE: Record<ColumnType, NumberKind> = {
@@ -96,6 +192,7 @@ export function aggregateTable(
   table: WorkingTable,
   config: TableTemplateConfig,
   choices: UploadChoices,
+  opts: AggregateOptions = {},
 ): AggregateResult {
   const issues: ParseIssue[] = [];
   const skipped: SkippedRow[] = [];
@@ -247,7 +344,7 @@ export function aggregateTable(
     if (contributed) usedRows.add(row.sourceRow);
   }
 
-  const facts: FactDraft[] = [...groups.values()].map((g) => ({
+  const aggregated: FactDraft[] = [...groups.values()].map((g) => ({
     metricKey: g.metricKey,
     company: g.company,
     month: g.month,
@@ -255,5 +352,14 @@ export function aggregateTable(
     value: roundSum(g.value),
     sourceRows: [...g.rows].sort((a, b) => a - b),
   }));
-  return { facts: sortFacts(facts), issues, skipped, rowsUsed: usedRows.size };
+  const signed = applyBudgetSign(aggregated, config.budgetSign, {
+    ...opts,
+    kontogruppColumn: dimensions.find((m) => m.dimensionKey === KONTOGRUPP)?.column,
+  });
+  issues.push(...signed.issues);
+  const rowsUsed =
+    signed.facts.length === aggregated.length
+      ? usedRows.size
+      : new Set(signed.facts.flatMap((f) => f.sourceRows)).size;
+  return { facts: sortFacts(signed.facts), issues, skipped, rowsUsed };
 }

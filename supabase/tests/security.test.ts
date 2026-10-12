@@ -21,7 +21,7 @@ const APP_RPCS: Record<string, string> = {
 };
 const SERVICE_RPCS: Record<string, string> = {
   login_gate: `select public.login_gate('abcdef0123456789abcdef')`,
-  login_record: `select public.login_record('abcdef0123456789abcdef', false)`,
+  login_record: `select public.login_record('00000000-0000-4000-8000-000000000000', false)`,
 };
 
 /** Luhn check digit for nine digits, giving a valid ten-digit personnummer. */
@@ -375,6 +375,12 @@ describe("security", () => {
       ["YYMMDD+NNNN", `${pnr10.slice(0, 6)}+${pnr10.slice(6)}`],
       ["samordningsnummer", samordning],
       ["inside text", `Anna Svensson ${pnr10.slice(0, 6)}-${pnr10.slice(6)} (KROM)`],
+      ["YYMMDD NNNN", `${pnr10.slice(0, 6)} ${pnr10.slice(6)}`],
+      ["YYYYMMDD NNNN", `19${pnr10.slice(0, 6)} ${pnr10.slice(6)}`],
+      ["YYMMDD\u00A0NNNN", `${pnr10.slice(0, 6)}\u00A0${pnr10.slice(6)}`],
+      ["YYYYMMDD\u00A0NNNN", `19${pnr10.slice(0, 6)}\u00A0${pnr10.slice(6)}`],
+      ["YYMMDD\u202FNNNN", `${pnr10.slice(0, 6)}\u202F${pnr10.slice(6)}`],
+      ["spaced inside text", `Anna Svensson 19${pnr10.slice(0, 6)} ${pnr10.slice(6)} (KROM)`],
     ];
 
     for (const [name, value] of cases) {
@@ -409,6 +415,19 @@ describe("security", () => {
         ).rejects.toThrow(/Personnummer får inte sparas/);
       });
     }
+
+    it("allows exactly one separator between date and serial", async () => {
+      const contains = async (text: string) =>
+        (await db.query<{ r: boolean }>(`select private.contains_personnummer($1) as r`, [text]))
+          .rows[0]?.r;
+      const [date, serial] = [pnr10.slice(0, 6), pnr10.slice(6)];
+      for (const sep of ["", "-", "+", " ", " ", " "]) {
+        expect(await contains(`${date}${sep}${serial}`), JSON.stringify(sep)).toBe(true);
+      }
+      for (const sep of ["u", "a", "\t", "  ", "--", "/"]) {
+        expect(await contains(`${date}${sep}${serial}`), JSON.stringify(sep)).toBe(false);
+      }
+    });
 
     it("never echoes the number in the error", async () => {
       const error = await asUser(db, app, (tx) =>
@@ -458,7 +477,10 @@ describe("security", () => {
         "5569599318",
         "165569599318",
         "559208-9071",
+        "556959 9318",
+        "559208\u00A09071",
         bad,
+        `${bad.slice(0, 6)} ${bad.slice(6)}`,
         "811232-1234",
         "Uppdrag 2026-09 nr 12345",
         "12345678901",

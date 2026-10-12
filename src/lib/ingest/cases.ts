@@ -1,6 +1,6 @@
 // Cases: one row per participant/employment with start and end dates, turned
 // into monthly counts (active at month end, started, ended, interrupted,
-// results, average tenure). Only counts leave the browser: the key column is
+// results, summed tenure). Only counts leave the browser: the key column is
 // used for de-duplication and never appears in a fact.
 import type {
   CasesTemplateConfig,
@@ -29,7 +29,7 @@ export interface CasesResult {
   skipped: SkippedRow[];
   /** Cases counted (after de-duplication). */
   rowsUsed: number;
-  /** Per metric x company x month; tenure is weighted by active cases, not summed. */
+  /** Per metric x company x month (every case metric adds up over groups). */
   totals: MetricTotal[];
 }
 
@@ -107,7 +107,8 @@ function isValidIsoDate(s: string): boolean {
  * taken at asOfDate (not a future month end).
  * - active: start <= ref, end null or >= ref, not interrupted on/before ref
  * - started / ended (effective end) / interrupted / results within the month and <= asOfDate
- * - tenureMonths: average months from start to ref over active cases
+ * - tenureMonthsSum: sum over active cases of the months from start to ref (average
+ *   tenure is the formula tenureMonthsSum / active, evaluated after rolling both up)
  */
 export function buildCases(
   table: WorkingTable,
@@ -179,6 +180,16 @@ export function buildCases(
 
   const companyOf = companyResolver(config.company, table, choices.company, issues);
   if (!companyOf) return empty();
+  if (c.metrics.tenureMonths) {
+    issues.push({
+      sourceRow: 0,
+      column: "",
+      value: "",
+      message:
+        "Genomsnittlig anställningstid räknas inte längre vid importen. Koppla Anställningsmånader i mallen; snittet räknas fram i rapporterna.",
+      severity: "warning",
+    });
+  }
 
   const resultMap = new Map<string, string>();
   for (const [raw, label] of Object.entries(c.resultMap ?? {}))
@@ -378,7 +389,6 @@ export function buildCases(
   for (const month of monthRange(firstMonth, lastMonth)) {
     const monthEnd = monthEndDate(month);
     const ref = minDate(monthEnd, asOf);
-    const tenure = new Map<CompanyCode, { sum: number; count: number }>();
     for (const [groupKey, group] of groups) {
       const list = byGroup.get(groupKey) ?? [];
       let active = 0;
@@ -422,16 +432,10 @@ export function buildCases(
           addTotal(m.results, group.company, month, value);
         }
       }
-      if (m.tenureMonths && active > 0) {
-        pushFact(m.tenureMonths, group, month, { ...group.dims }, tenureSum / active);
-        const t = tenure.get(group.company) ?? { sum: 0, count: 0 };
-        t.sum += tenureSum;
-        t.count += active;
-        tenure.set(group.company, t);
+      if (m.tenureMonthsSum) {
+        pushFact(m.tenureMonthsSum, group, month, { ...group.dims }, tenureSum);
+        addTotal(m.tenureMonthsSum, group.company, month, tenureSum);
       }
-    }
-    if (m.tenureMonths) {
-      for (const [company, t] of tenure) addTotal(m.tenureMonths, company, month, t.sum / t.count);
     }
   }
 

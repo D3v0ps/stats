@@ -28,7 +28,9 @@ describe("globals.css theme", () => {
       "--foreground": "#1e252b",
       "--primary": "#1e252b",
       "--primary-foreground": "#ffffff",
-      "--accent": "#ff0c01",
+      // Focused menu items and options use accent: light grey with antracit text, not red.
+      "--accent": "#e4e5e6",
+      "--accent-foreground": "#1e252b",
       "--destructive": "#ff0c01",
       "--muted": "#e4e5e6",
       "--muted-foreground": "#494e52",

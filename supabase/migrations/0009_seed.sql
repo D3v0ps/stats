@@ -194,11 +194,11 @@ select 'avslutade_anstallningar', 'Avslutade anställningar', 'st', 'sum',
 insert into public.metrics (key, name, unit, kind, dataset_id, higher_is_better, decimals,
   description, headline_subject, snapshot_rollup, base_metric_id, distinct_dimension_id,
   account_group_key, formula, is_system)
-select 'anstallningstid', 'Genomsnittlig anställningstid', 'man', 'snapshot',
+select 'anstallningsmanader', 'Anställningsmånader', 'man', 'snapshot',
   (select id from public.datasets where key = 'ip_konsulter'),
-  true, 1,
-  'Snittlängd för aktiva anställningar vid månadens slut.',
-  'ANSTÄLLNINGSTIDEN', 'last',
+  null, 0,
+  'Summa anställningstid i månader för aktiva anställningar vid månadens slut.',
+  'ANSTÄLLNINGSMÅNADERNA', 'last',
   null,
   null,
   null, null, true;
@@ -444,6 +444,17 @@ select 'resultatmarginal', 'Resultatmarginal', 'pct', 'formula',
   null,
   null,
   null, 'resultat / intakter * 100', true;
+insert into public.metrics (key, name, unit, kind, dataset_id, higher_is_better, decimals,
+  description, headline_subject, snapshot_rollup, base_metric_id, distinct_dimension_id,
+  account_group_key, formula, is_system)
+select 'anstallningstid', 'Genomsnittlig anställningstid', 'man', 'formula',
+  null,
+  true, 1,
+  'Anställningsmånader ÷ anställda konsulter vid månadens slut.',
+  'ANSTÄLLNINGSTIDEN', null,
+  null,
+  null,
+  null, 'anstallningsmanader / anstallda_konsulter', true;
 insert into public.metrics (key, name, unit, kind, dataset_id, higher_is_better, decimals,
   description, headline_subject, snapshot_rollup, base_metric_id, distinct_dimension_id,
   account_group_key, formula, is_system)

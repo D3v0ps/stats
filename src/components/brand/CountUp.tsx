@@ -16,8 +16,9 @@ export interface CountUpProps {
 }
 
 /**
- * A number that counts up once when it appears. Server HTML always holds the formatted final
- * value, so print and frozen views never show zeros; reduced motion skips the animation.
+ * A number that counts up when it appears on the client and counts to a new value when it
+ * changes. Server HTML always holds the formatted final value, so print and frozen views never
+ * show zeros, and a hydrated number is never reset to 0; reduced motion skips the animation.
  */
 export function CountUp({
   value,

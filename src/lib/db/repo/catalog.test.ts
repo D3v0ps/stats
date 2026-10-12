@@ -134,6 +134,7 @@ describe("catalog reads", () => {
       timmar_per_konsult: ["verksamhet", "kund", "uppdrag", "konsult"],
       intakt_per_konsult: ["kund", "uppdrag", "konsult"],
       resultatmarginal: ["kostnadsstalle"],
+      anstallningstid: ["ort"],
       resultatandel: ["verksamhet", "ort", "resultattyp"],
     });
   });

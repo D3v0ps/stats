@@ -122,7 +122,6 @@
               },
               { "op": "constant", "column": "år", "value": "2026" },
               { "op": "merge", "columns": ["månad", "år"], "separator": " ", "into": "period" },
-              { "op": "negate", "column": "belopp" },
               {
                 "op": "replace",
                 "column": "post",
@@ -190,7 +189,8 @@
             "counters": [],
             "period": { "kind": "column", "column": "period" },
             "company": { "kind": "fixed", "company": "MBAB" },
-            "scenario": "budget"
+            "scenario": "budget",
+            "budgetSign": "result"
           },
           "sheetHint": "MB AB"
         },
@@ -253,7 +253,6 @@
               },
               { "op": "constant", "column": "år", "value": "2026" },
               { "op": "merge", "columns": ["månad", "år"], "separator": " ", "into": "period" },
-              { "op": "negate", "column": "belopp" },
               {
                 "op": "replace",
                 "column": "post",
@@ -321,7 +320,8 @@
             "counters": [],
             "period": { "kind": "column", "column": "period" },
             "company": { "kind": "fixed", "company": "MBR" },
-            "scenario": "budget"
+            "scenario": "budget",
+            "budgetSign": "result"
           },
           "sheetHint": "MB Restart"
         }
@@ -759,7 +759,7 @@
                 "active": "anstallda_konsulter",
                 "started": "nyanstallda",
                 "ended": "avslutade_anstallningar",
-                "tenureMonths": "anstallningstid"
+                "tenureMonthsSum": "anstallningsmanader"
               },
               "fromMonth": "2023-01"
             },

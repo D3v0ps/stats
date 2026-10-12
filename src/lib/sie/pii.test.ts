@@ -49,6 +49,22 @@ describe("maskPersonnummer", () => {
   });
 });
 
+describe("personnummer written with a space", () => {
+  it("finds and masks them (also without a valid check digit)", () => {
+    for (const v of ["811218 9876", "19811218 9876", "811218 9876", "850101 1234"]) {
+      expect(containsPersonnummer(v), v).toBe(true);
+      expect(maskPersonnummer(`Lön ${v} jan`)).toBe(`Lön ${PNR_MASK} jan`);
+    }
+  });
+
+  it("leaves spaced organisation numbers and SIE periods alone", () => {
+    for (const v of ["556959 9318", "559208 9071", "#PSALDO 0 202601 3041 {} -100.00"]) {
+      expect(containsPersonnummer(v), v).toBe(false);
+      expect(maskPersonnummer(v)).toBe(v);
+    }
+  });
+});
+
 describe("isPersonalDimension", () => {
   it("treats SIE dimension 7 and person-named dimensions as personal", () => {
     expect(isPersonalDimension(7, undefined)).toBe(true);

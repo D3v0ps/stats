@@ -1,0 +1,49 @@
+# Supabase CLI configuration for MB Stats. No secrets belong here: keys and passwords live in
+# the environment (.env.example lists the variables) and in the Supabase dashboard.
+#
+# The hosted project is "Ekonomi mbimpact.se" (ref mmiuuwrfcumcpgyleufu, eu-north-1). Link a
+# local checkout to it and apply the migrations with:
+#   supabase link --project-ref mmiuuwrfcumcpgyleufu
+#   supabase db push
+# The SQL tests run on PGlite (pnpm test:sql) and need neither Docker nor this file.
+project_id = "mb-stats"
+
+[api]
+enabled = true
+port = 54321
+# Only public is exposed through PostgREST; helpers live in the private schema.
+schemas = ["public"]
+extra_search_path = ["public", "extensions"]
+# Same cap as the hosted project; src/lib/db/repo/shared.ts pages with PAGE_SIZE = 1000.
+max_rows = 1000
+
+[db]
+port = 54322
+major_version = 17
+
+[db.seed]
+# The day-one catalog is seeded by supabase/migrations/0009_seed.sql, not by a seed file.
+enabled = false
+
+[auth]
+enabled = true
+site_url = "http://localhost:3000"
+additional_redirect_urls = []
+# Auth settings of the hosted project, set in the dashboard (Authentication -> Sign In /
+# Providers and -> Sessions). They are documented here, not managed from this file.
+#
+# Do NOT run `supabase config push` against the hosted project while they are comments: keys
+# left out of this file take the CLI defaults (sign-ups on, 6-character passwords, 1-hour
+# tokens), so a push would weaken the production login. `supabase link` and `supabase db push`
+# never change auth settings. To manage auth from here, uncomment every value below first.
+#
+# One shared account (STATS_LOGIN_EMAIL), created by hand; nobody can sign up:
+# enable_signup = false
+# Short-lived access tokens: a revoked session ("Logga ut överallt") ends within 15 minutes.
+# jwt_expiry = 900
+# The shared password is long:
+# minimum_password_length = 16
+#
+# E-mail sign-ups are also off (Authentication -> Sign In / Providers -> Email):
+# [auth.email]
+# enable_signup = false

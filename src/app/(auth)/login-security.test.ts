@@ -56,23 +56,36 @@ describe("ipHash", () => {
 });
 
 describe("gateDecision", () => {
-  it("allows when the gate allows and nothing remains of a lockout", () => {
-    expect(gateDecision({ allowed: true, retry_after_s: 0, delay_ms: 0 })).toEqual({
-      allowed: true,
-      delayMs: 0,
-    });
+  const ATTEMPT = "3f2c8a8e-5b1d-4c6e-9f7a-2b8d4e6f1a3c";
+  const open = { allowed: true, retry_after_s: 0, delay_ms: 0, attempt_id: ATTEMPT };
+
+  it("allows when the gate allows, nothing remains of a lockout and the attempt is registered", () => {
+    expect(gateDecision(open)).toEqual({ allowed: true, delayMs: 0, attemptId: ATTEMPT });
   });
 
   it("blocks during a lockout", () => {
-    expect(gateDecision({ allowed: false, retry_after_s: 900, delay_ms: 0 }).allowed).toBe(false);
-    expect(gateDecision({ allowed: true, retry_after_s: 30, delay_ms: 0 }).allowed).toBe(false);
+    expect(
+      gateDecision({ allowed: false, retry_after_s: 900, delay_ms: 0, attempt_id: null }),
+    ).toEqual({ allowed: false, delayMs: 0, attemptId: null });
+    expect(gateDecision({ ...open, retry_after_s: 30 }).allowed).toBe(false);
+  });
+
+  it("never allows an attempt the gate did not register", () => {
+    expect(gateDecision({ ...open, attempt_id: null })).toEqual({
+      allowed: false,
+      delayMs: 0,
+      attemptId: null,
+    });
+    // The pre-registration shape of login_gate (no attempt_id) fails closed.
+    expect(gateDecision({ allowed: true, retry_after_s: 0, delay_ms: 0 }).allowed).toBe(false);
   });
 
   it("passes on the global slow-down, capped", () => {
-    expect(gateDecision({ allowed: true, retry_after_s: 0, delay_ms: 1200 }).delayMs).toBe(1200);
-    expect(gateDecision({ allowed: true, retry_after_s: 0, delay_ms: 99_999 }).delayMs).toBe(
-      MAX_GATE_DELAY_MS,
-    );
+    expect(gateDecision({ ...open, delay_ms: 1200 }).delayMs).toBe(1200);
+    expect(gateDecision({ ...open, delay_ms: 99_999 }).delayMs).toBe(MAX_GATE_DELAY_MS);
+    expect(
+      gateDecision({ allowed: false, retry_after_s: 60, delay_ms: 2000, attempt_id: null }).delayMs,
+    ).toBe(2000);
   });
 
   it("fails closed on anything unexpected", () => {
@@ -81,11 +94,12 @@ describe("gateDecision", () => {
       undefined,
       "yes",
       {},
-      { allowed: "true", retry_after_s: 0, delay_ms: 0 },
+      { ...open, allowed: "true" },
+      { ...open, attempt_id: "not-a-uuid" },
     ]) {
-      expect(gateDecision(raw)).toEqual({ allowed: false, delayMs: 0 });
+      expect(gateDecision(raw)).toEqual({ allowed: false, delayMs: 0, attemptId: null });
     }
-    expect(gateDecision({ allowed: true, retry_after_s: -1, delay_ms: 0 }).allowed).toBe(false);
+    expect(gateDecision({ ...open, retry_after_s: -1 }).allowed).toBe(false);
   });
 });
 

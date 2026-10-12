@@ -1,7 +1,13 @@
 import { describe, expect, it } from "vitest";
 import type { SourceScope } from "@/lib/contracts/metric-query";
-import { catalogDefinitions } from "./catalog";
-import { MemoryMetricDataSource } from "./memory-source";
+import { catalogAccountGroups, catalogDefinitions } from "./catalog";
+import {
+  MemoryMetricDataSource,
+  budgetLeafTargets,
+  budgetLedgerRows,
+  leafAccountGroups,
+  rangesCover,
+} from "./memory-source";
 import { ID, fact, ledgerRow, makeSource } from "./test-fixtures";
 
 const scope = (over: Partial<SourceScope> = {}): SourceScope => ({
@@ -247,14 +253,14 @@ describe("MemoryMetricDataSource.ledger", () => {
     ]);
   });
 
-  it("reads ledger budget from budget_belopp by kontogrupp code, without sign", async () => {
+  it("reads ledger budget from budget_belopp (SIE sign) by kontogrupp code, times the group sign", async () => {
     const src = makeSource({
       facts: [
-        fact("b1", "budget_belopp", "MBAB", "2026-08", 900, {
+        fact("b1", "budget_belopp", "MBAB", "2026-08", -900, {
           kontogrupp: ID.kgIntakter,
           kostnadsstalle: ID.ks100,
         }),
-        fact("b1", "budget_belopp", "MBAB", "2026-08", 300, {
+        fact("b1", "budget_belopp", "MBAB", "2026-08", -300, {
           kontogrupp: ID.kgIntakter,
           kostnadsstalle: ID.ks200,
         }),
@@ -282,6 +288,114 @@ describe("MemoryMetricDataSource.ledger", () => {
         group: { kostnadsstalle: ID.ks200 },
         value: 300,
       },
+    ]);
+  });
+
+  it("derives kostnader and resultat budgets from the leaf groups, never from their own lines", async () => {
+    const src = makeSource({
+      facts: [
+        fact("b1", "budget_belopp", "MBAB", "2026-08", -1000, { kontogrupp: ID.kgIntakter }),
+        fact("b1", "budget_belopp", "MBAB", "2026-08", 450, { kontogrupp: ID.kgPersonal }),
+        // A budget line on the non-leaf "resultat" would count the same money twice.
+        fact("b1", "budget_belopp", "MBAB", "2026-08", 77, { kontogrupp: ID.kgResultat }),
+      ],
+      scenarios: { b1: "budget" },
+    });
+    expect(await src.ledger(["kostnader", "resultat"], scope({ scenario: "budget" }))).toEqual([
+      { accountGroupKey: "kostnader", month: "2026-08", group: {}, value: 450 },
+      { accountGroupKey: "resultat", month: "2026-08", group: {}, value: 550 },
+    ]);
+  });
+});
+
+describe("ledger budget helpers", () => {
+  const groups = catalogAccountGroups();
+
+  it("finds the leaf account groups of the seeded catalog", () => {
+    expect(leafAccountGroups(groups).map((g) => g.key)).toEqual([
+      "intakter",
+      "varor_ul",
+      "ovriga_externa",
+      "personal",
+      "avskrivningar",
+      "finansiella",
+      "bokslut_skatt",
+    ]);
+  });
+
+  it("maps each leaf to the requested groups that contain it", () => {
+    expect(
+      Object.fromEntries(budgetLeafTargets(["personal", "kostnader", "resultat"], groups)),
+    ).toEqual({
+      intakter: ["resultat"],
+      varor_ul: ["kostnader", "resultat"],
+      ovriga_externa: ["kostnader", "resultat"],
+      personal: ["personal", "kostnader", "resultat"],
+      avskrivningar: ["kostnader", "resultat"],
+      finansiella: ["resultat"],
+      bokslut_skatt: ["resultat"],
+    });
+    expect(budgetLeafTargets(["okand"], groups).size).toBe(0);
+  });
+
+  it("covers ranges by their union and ignores groups without ranges", () => {
+    expect(
+      rangesCover(
+        [
+          { from: 3000, to: 3499 },
+          { from: 3500, to: 3999 },
+        ],
+        [{ from: 3100, to: 3900 }],
+      ),
+    ).toBe(true);
+    expect(
+      rangesCover(
+        [
+          { from: 3000, to: 3499 },
+          { from: 3600, to: 3999 },
+        ],
+        [{ from: 3100, to: 3900 }],
+      ),
+    ).toBe(false);
+    expect(rangesCover([], [{ from: 1, to: 1 }])).toBe(false);
+    const withEmpty = [...groups, { key: "tom", name: "Tom", sign: 1 as const, ranges: [] }];
+    expect(leafAccountGroups(withEmpty).map((g) => g.key)).not.toContain("tom");
+    expect(leafAccountGroups(withEmpty)).toHaveLength(7);
+  });
+
+  it("turns budget rows into account-group rows with the group's sign", () => {
+    const codes: Record<number, string> = { 1: "intakter", 2: "personal", 3: "kostnader" };
+    const rows = [
+      {
+        metricKey: "budget_belopp",
+        month: "2026-01",
+        group: { kontogrupp: 1, bolag: "MBAB" },
+        value: -100,
+      },
+      {
+        metricKey: "budget_belopp",
+        month: "2026-01",
+        group: { kontogrupp: 2, bolag: "MBAB" },
+        value: 40,
+      },
+      {
+        metricKey: "budget_belopp",
+        month: "2026-01",
+        group: { kontogrupp: 3, bolag: "MBAB" },
+        value: 999,
+      },
+      {
+        metricKey: "budget_belopp",
+        month: "2026-01",
+        group: { kontogrupp: 9, bolag: "MBAB" },
+        value: 5,
+      },
+    ];
+    expect(
+      budgetLedgerRows(["resultat", "intakter"], rows, (id) => codes[id], groups, ["bolag"]),
+    ).toEqual([
+      { accountGroupKey: "intakter", month: "2026-01", group: { bolag: "MBAB" }, value: 100 },
+      { accountGroupKey: "resultat", month: "2026-01", group: { bolag: "MBAB" }, value: 60 },
     ]);
   });
 });

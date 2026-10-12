@@ -1246,1250 +1246,1250 @@
     "value": 7
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-01",
     "dims": { "ort": "Kungsängen" },
     "value": 0.065708
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-01",
     "dims": { "ort": "Södertälje" },
     "value": 0.197125
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-01",
     "dims": { "ort": "Uppsala" },
-    "value": 0.476386
+    "value": 0.952772
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-02",
     "dims": { "ort": "Kungsängen" },
     "value": 0.985626
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-02",
     "dims": { "ort": "Södertälje" },
-    "value": 0.919918
+    "value": 1.839836
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-02",
     "dims": { "ort": "Uppsala" },
-    "value": 0.887064
+    "value": 1.774127
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-03",
     "dims": { "ort": "Kungsängen" },
-    "value": 0.930869
+    "value": 2.792608
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-03",
     "dims": { "ort": "Stockholm" },
     "value": 0.952772
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-03",
     "dims": { "ort": "Södertälje" },
-    "value": 1.598905
+    "value": 4.796715
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-03",
     "dims": { "ort": "Uppsala" },
-    "value": 1.905544
+    "value": 3.811088
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-04",
     "dims": { "ort": "Kungsängen" },
-    "value": 1.916496
+    "value": 5.749487
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-04",
     "dims": { "ort": "Stockholm" },
     "value": 1.938398
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-04",
     "dims": { "ort": "Södertälje" },
-    "value": 2.584531
+    "value": 7.753593
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-04",
     "dims": { "ort": "Uppsala" },
-    "value": 2.89117
+    "value": 5.782341
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-05",
     "dims": { "ort": "Kungsängen" },
-    "value": 2.934976
+    "value": 8.804928
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-05",
     "dims": { "ort": "Stockholm" },
     "value": 2.956879
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-05",
     "dims": { "ort": "Södertälje" },
-    "value": 2.924025
+    "value": 11.696099
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-05",
     "dims": { "ort": "Uppsala" },
     "value": 4.172485
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-06",
     "dims": { "ort": "Kungsängen" },
-    "value": 3.920602
+    "value": 11.761807
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-06",
     "dims": { "ort": "Stockholm" },
-    "value": 2.365503
+    "value": 4.731006
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-06",
     "dims": { "ort": "Södertälje" },
-    "value": 3.909651
+    "value": 15.638604
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-06",
     "dims": { "ort": "Uppsala" },
     "value": 5.158111
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-07",
     "dims": { "ort": "Kungsängen" },
-    "value": 4.939083
+    "value": 14.817248
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-07",
     "dims": { "ort": "Stockholm" },
-    "value": 3.383984
+    "value": 6.767967
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-07",
     "dims": { "ort": "Södertälje" },
-    "value": 3.962218
+    "value": 19.811088
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-07",
     "dims": { "ort": "Uppsala" },
     "value": 6.176591
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-08",
     "dims": { "ort": "Kungsängen" },
-    "value": 3.659959
+    "value": 18.299795
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-08",
     "dims": { "ort": "Stockholm" },
-    "value": 4.402464
+    "value": 8.804928
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-08",
     "dims": { "ort": "Södertälje" },
-    "value": 4.980698
+    "value": 24.903491
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-08",
     "dims": { "ort": "Uppsala" },
     "value": 7.195072
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-09",
     "dims": { "ort": "Kungsängen" },
-    "value": 4.25462
+    "value": 17.01848
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-09",
     "dims": { "ort": "Stockholm" },
-    "value": 3.865845
+    "value": 11.597536
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-09",
     "dims": { "ort": "Södertälje" },
-    "value": 5.519507
+    "value": 22.078029
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-09",
     "dims": { "ort": "Uppsala" },
-    "value": 3.099247
+    "value": 9.297741
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-10",
     "dims": { "ort": "Kungsängen" },
-    "value": 4.490075
+    "value": 13.470226
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-10",
     "dims": { "ort": "Stockholm" },
-    "value": 3.852156
+    "value": 15.408624
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-10",
     "dims": { "ort": "Södertälje" },
-    "value": 5.342094
+    "value": 26.710472
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-10",
     "dims": { "ort": "Uppsala" },
-    "value": 4.117728
+    "value": 12.353183
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-11",
     "dims": { "ort": "Kungsängen" },
-    "value": 4.131417
+    "value": 16.525667
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-11",
     "dims": { "ort": "Stockholm" },
-    "value": 4.837782
+    "value": 19.351129
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-11",
     "dims": { "ort": "Södertälje" },
-    "value": 6.327721
+    "value": 31.638604
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-11",
     "dims": { "ort": "Uppsala" },
-    "value": 5.103354
+    "value": 15.310062
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-12",
     "dims": { "ort": "Kungsängen" },
-    "value": 5.149897
+    "value": 20.599589
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-12",
     "dims": { "ort": "Stockholm" },
-    "value": 4.750719
+    "value": 23.753593
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-12",
     "dims": { "ort": "Södertälje" },
-    "value": 4.555784
+    "value": 27.334702
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2023-12",
     "dims": { "ort": "Uppsala" },
-    "value": 4.747433
+    "value": 18.989733
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-01",
     "dims": { "ort": "Kungsängen" },
-    "value": 6.168378
+    "value": 24.673511
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-01",
     "dims": { "ort": "Stockholm" },
-    "value": 4.856947
+    "value": 29.141684
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-01",
     "dims": { "ort": "Södertälje" },
-    "value": 5.574264
+    "value": 33.445585
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-01",
     "dims": { "ort": "Uppsala" },
-    "value": 5.765914
+    "value": 23.063655
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-02",
     "dims": { "ort": "Kungsängen" },
-    "value": 9.560575
+    "value": 19.12115
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-02",
     "dims": { "ort": "Stockholm" },
-    "value": 5.809719
+    "value": 34.858316
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-02",
     "dims": { "ort": "Södertälje" },
-    "value": 3.424139
+    "value": 30.817248
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-02",
     "dims": { "ort": "Uppsala" },
-    "value": 7.074606
+    "value": 21.223819
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-03",
     "dims": { "ort": "Kungsängen" },
-    "value": 7.096509
+    "value": 21.289528
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-03",
     "dims": { "ort": "Stockholm" },
-    "value": 5.195072
+    "value": 41.560575
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-03",
     "dims": { "ort": "Södertälje" },
-    "value": 2.766324
+    "value": 27.663244
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-03",
     "dims": { "ort": "Uppsala" },
-    "value": 8.903491
+    "value": 17.806982
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-04",
     "dims": { "ort": "Kungsängen" },
-    "value": 8.082136
+    "value": 24.246407
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-04",
     "dims": { "ort": "Stockholm" },
-    "value": 6.12731
+    "value": 49.01848
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-04",
     "dims": { "ort": "Södertälje" },
-    "value": 3.425798
+    "value": 37.683778
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-04",
     "dims": { "ort": "Uppsala" },
-    "value": 6.910335
+    "value": 20.731006
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-05",
     "dims": { "ort": "Kungsängen" },
-    "value": 9.100616
+    "value": 27.301848
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-05",
     "dims": { "ort": "Stockholm" },
-    "value": 6.359115
+    "value": 57.232033
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-05",
     "dims": { "ort": "Södertälje" },
-    "value": 4.184432
+    "value": 46.028747
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-05",
     "dims": { "ort": "Uppsala" },
-    "value": 7.928816
+    "value": 23.786448
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-06",
     "dims": { "ort": "Kungsängen" },
-    "value": 7.564682
+    "value": 30.258727
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-06",
     "dims": { "ort": "Stockholm" },
-    "value": 7.344741
+    "value": 66.102669
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-06",
     "dims": { "ort": "Södertälje" },
-    "value": 5.325667
+    "value": 53.256674
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-06",
     "dims": { "ort": "Uppsala" },
-    "value": 7.019849
+    "value": 21.059548
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-07",
     "dims": { "ort": "Kungsängen" },
-    "value": 8.583162
+    "value": 34.332649
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-07",
     "dims": { "ort": "Stockholm" },
-    "value": 8.62423
+    "value": 68.99384
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-07",
     "dims": { "ort": "Södertälje" },
-    "value": 4.672599
+    "value": 42.053388
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-07",
     "dims": { "ort": "Uppsala" },
-    "value": 8.03833
+    "value": 24.11499
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-08",
     "dims": { "ort": "Kungsängen" },
-    "value": 9.601643
+    "value": 38.406571
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-08",
     "dims": { "ort": "Stockholm" },
-    "value": 8.611453
+    "value": 77.50308
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-08",
     "dims": { "ort": "Södertälje" },
-    "value": 5.059548
+    "value": 45.535934
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-08",
     "dims": { "ort": "Uppsala" },
-    "value": 9.05681
+    "value": 27.170431
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-09",
     "dims": { "ort": "Kungsängen" },
-    "value": 8.620945
+    "value": 43.104723
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-09",
     "dims": { "ort": "Stockholm" },
-    "value": 8.331828
+    "value": 83.318275
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-09",
     "dims": { "ort": "Södertälje" },
-    "value": 4.521934
+    "value": 49.741273
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-09",
     "dims": { "ort": "Uppsala" },
-    "value": 10.042437
+    "value": 30.12731
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-10",
     "dims": { "ort": "Kungsängen" },
-    "value": 8.087611
+    "value": 48.525667
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-10",
     "dims": { "ort": "Stockholm" },
-    "value": 8.50028
+    "value": 93.50308
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-10",
     "dims": { "ort": "Södertälje" },
-    "value": 5.540414
+    "value": 60.944559
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-10",
     "dims": { "ort": "Uppsala" },
-    "value": 5.979466
+    "value": 11.958932
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-11",
     "dims": { "ort": "Kungsängen" },
-    "value": 10.625051
+    "value": 53.125257
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-11",
     "dims": { "ort": "Stockholm" },
-    "value": 8.046754
+    "value": 104.607803
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-11",
     "dims": { "ort": "Södertälje" },
-    "value": 5.641068
+    "value": 56.410678
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-11",
     "dims": { "ort": "Uppsala" },
-    "value": 4.785763
+    "value": 14.35729
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-12",
     "dims": { "ort": "Kungsängen" },
-    "value": 11.643532
+    "value": 58.217659
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-12",
     "dims": { "ort": "Stockholm" },
-    "value": 9.065235
+    "value": 117.848049
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-12",
     "dims": { "ort": "Södertälje" },
-    "value": 6.659548
+    "value": 66.595483
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2024-12",
     "dims": { "ort": "Uppsala" },
-    "value": 5.804244
+    "value": 17.412731
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-01",
     "dims": { "ort": "Kungsängen" },
-    "value": 14.628337
+    "value": 58.513347
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-01",
     "dims": { "ort": "Stockholm" },
-    "value": 8.767693
+    "value": 131.5154
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-01",
     "dims": { "ort": "Södertälje" },
-    "value": 6.773941
+    "value": 74.513347
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-01",
     "dims": { "ort": "Uppsala" },
-    "value": 6.078029
+    "value": 18.234086
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-02",
     "dims": { "ort": "Kungsängen" },
-    "value": 15.548255
+    "value": 62.193018
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-02",
     "dims": { "ort": "Stockholm" },
-    "value": 8.398944
+    "value": 117.585216
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-02",
     "dims": { "ort": "Södertälje" },
-    "value": 6.616332
+    "value": 86.01232
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-02",
     "dims": { "ort": "Uppsala" },
-    "value": 5.470226
+    "value": 21.880903
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-03",
     "dims": { "ort": "Kungsängen" },
-    "value": 16.566735
+    "value": 66.26694
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-03",
     "dims": { "ort": "Stockholm" },
-    "value": 8.157231
+    "value": 114.201232
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-03",
     "dims": { "ort": "Södertälje" },
-    "value": 6.627789
+    "value": 99.416838
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-03",
     "dims": { "ort": "Uppsala" },
-    "value": 4.550308
+    "value": 27.301848
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-04",
     "dims": { "ort": "Kungsängen" },
-    "value": 14.068172
+    "value": 70.340862
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-04",
     "dims": { "ort": "Stockholm" },
-    "value": 9.051335
+    "value": 126.718686
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-04",
     "dims": { "ort": "Södertälje" },
-    "value": 7.728321
+    "value": 100.468172
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-04",
     "dims": { "ort": "Uppsala" },
-    "value": 3.351129
+    "value": 20.106776
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-05",
     "dims": { "ort": "Kungsängen" },
-    "value": 10.88413
+    "value": 76.188912
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-05",
     "dims": { "ort": "Stockholm" },
-    "value": 10.283368
+    "value": 123.400411
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-05",
     "dims": { "ort": "Södertälje" },
-    "value": 7.354288
+    "value": 95.605749
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-05",
     "dims": { "ort": "Uppsala" },
-    "value": 4.36961
+    "value": 26.217659
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-06",
     "dims": { "ort": "Kungsängen" },
-    "value": 10.422998
+    "value": 83.383984
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-06",
     "dims": { "ort": "Stockholm" },
-    "value": 9.729539
+    "value": 136.213552
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-06",
     "dims": { "ort": "Södertälje" },
-    "value": 6.889117
+    "value": 110.225873
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-06",
     "dims": { "ort": "Uppsala" },
-    "value": 4.944559
+    "value": 29.667351
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-07",
     "dims": { "ort": "Kungsängen" },
-    "value": 12.786858
+    "value": 63.934292
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-07",
     "dims": { "ort": "Stockholm" },
-    "value": 10.74802
+    "value": 150.472279
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-07",
     "dims": { "ort": "Södertälje" },
-    "value": 7.452108
+    "value": 126.685832
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-07",
     "dims": { "ort": "Uppsala" },
-    "value": 5.963039
+    "value": 35.778234
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-08",
     "dims": { "ort": "Kungsängen" },
-    "value": 10.447639
+    "value": 52.238193
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-08",
     "dims": { "ort": "Stockholm" },
-    "value": 10.982067
+    "value": 164.731006
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-08",
     "dims": { "ort": "Södertälje" },
-    "value": 7.212465
+    "value": 122.61191
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-08",
     "dims": { "ort": "Uppsala" },
-    "value": 7.188501
+    "value": 35.942505
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-09",
     "dims": { "ort": "Kungsängen" },
-    "value": 11.433265
+    "value": 57.166324
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-09",
     "dims": { "ort": "Stockholm" },
-    "value": 12.914232
+    "value": 167.88501
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-09",
     "dims": { "ort": "Södertälje" },
-    "value": 8.176591
+    "value": 130.825462
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-09",
     "dims": { "ort": "Uppsala" },
-    "value": 5.724846
+    "value": 22.899384
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-10",
     "dims": { "ort": "Kungsängen" },
-    "value": 12.451745
+    "value": 62.258727
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-10",
     "dims": { "ort": "Stockholm" },
-    "value": 14.31896
+    "value": 171.827515
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-10",
     "dims": { "ort": "Södertälje" },
-    "value": 7.856021
+    "value": 133.552361
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-10",
     "dims": { "ort": "Uppsala" },
-    "value": 6.743326
+    "value": 26.973306
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-11",
     "dims": { "ort": "Kungsängen" },
-    "value": 8.546201
+    "value": 68.36961
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-11",
     "dims": { "ort": "Stockholm" },
-    "value": 15.581856
+    "value": 171.400411
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-11",
     "dims": { "ort": "Södertälje" },
-    "value": 8.659138
+    "value": 138.546201
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-11",
     "dims": { "ort": "Uppsala" },
-    "value": 7.728953
+    "value": 30.915811
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-12",
     "dims": { "ort": "Kungsängen" },
-    "value": 9.416838
+    "value": 75.334702
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-12",
     "dims": { "ort": "Stockholm" },
-    "value": 16.569473
+    "value": 149.125257
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-12",
     "dims": { "ort": "Södertälje" },
-    "value": 9.805886
+    "value": 147.088296
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2025-12",
     "dims": { "ort": "Uppsala" },
-    "value": 7.155647
+    "value": 35.778234
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-01",
     "dims": { "ort": "Kungsängen" },
-    "value": 9.319644
+    "value": 83.876797
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-01",
     "dims": { "ort": "Stockholm" },
-    "value": 12.338019
+    "value": 160.394251
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-01",
     "dims": { "ort": "Södertälje" },
-    "value": 10.824367
+    "value": 162.365503
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-01",
     "dims": { "ort": "Uppsala" },
-    "value": 6.86653
+    "value": 41.199179
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-02",
     "dims": { "ort": "Kungsängen" },
-    "value": 8.842476
+    "value": 61.897331
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-02",
     "dims": { "ort": "Stockholm" },
-    "value": 9.666439
+    "value": 173.995893
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-02",
     "dims": { "ort": "Södertälje" },
-    "value": 11.063655
+    "value": 177.01848
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-02",
     "dims": { "ort": "Uppsala" },
-    "value": 7.786448
+    "value": 46.718686
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-03",
     "dims": { "ort": "Kungsängen" },
-    "value": 8.73922
+    "value": 69.913758
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-03",
     "dims": { "ort": "Stockholm" },
-    "value": 10.728953
+    "value": 171.663244
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-03",
     "dims": { "ort": "Södertälje" },
-    "value": 11.381085
+    "value": 193.478439
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-03",
     "dims": { "ort": "Uppsala" },
-    "value": 6.185978
+    "value": 43.301848
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-04",
     "dims": { "ort": "Kungsängen" },
-    "value": 8.647958
+    "value": 77.831622
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-04",
     "dims": { "ort": "Stockholm" },
-    "value": 10.103765
+    "value": 151.556468
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-04",
     "dims": { "ort": "Södertälje" },
-    "value": 11.43509
+    "value": 205.831622
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-04",
     "dims": { "ort": "Uppsala" },
-    "value": 9.560575
+    "value": 47.802875
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-05",
     "dims": { "ort": "Kungsängen" },
-    "value": 9.44376
+    "value": 84.99384
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-05",
     "dims": { "ort": "Stockholm" },
-    "value": 8.863596
+    "value": 124.090349
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-05",
     "dims": { "ort": "Södertälje" },
-    "value": 10.951403
+    "value": 197.125257
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-05",
     "dims": { "ort": "Uppsala" },
-    "value": 9.895688
+    "value": 49.478439
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-06",
     "dims": { "ort": "Kungsängen" },
-    "value": 5.396304
+    "value": 43.170431
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-06",
     "dims": { "ort": "Stockholm" },
-    "value": 10.126678
+    "value": 131.646817
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-06",
     "dims": { "ort": "Södertälje" },
-    "value": 11.937029
+    "value": 214.86653
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-06",
     "dims": { "ort": "Uppsala" },
-    "value": 7.861543
+    "value": 55.030801
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-07",
     "dims": { "ort": "Kungsängen" },
-    "value": 5.764089
+    "value": 51.876797
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-07",
     "dims": { "ort": "Stockholm" },
-    "value": 10.955615
+    "value": 142.422998
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-07",
     "dims": { "ort": "Södertälje" },
-    "value": 12.282287
+    "value": 233.36345
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-07",
     "dims": { "ort": "Uppsala" },
-    "value": 8.880023
+    "value": 62.160164
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-08",
     "dims": { "ort": "Kungsängen" },
-    "value": 5.974773
+    "value": 41.823409
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-08",
     "dims": { "ort": "Stockholm" },
-    "value": 9.862423
+    "value": 157.798768
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-08",
     "dims": { "ort": "Södertälje" },
-    "value": 12.063753
+    "value": 253.338809
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-08",
     "dims": { "ort": "Uppsala" },
-    "value": 9.898504
+    "value": 69.289528
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-09",
     "dims": { "ort": "Kungsängen" },
-    "value": 6.847756
+    "value": 47.934292
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-09",
     "dims": { "ort": "Stockholm" },
-    "value": 10.250513
+    "value": 174.258727
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-09",
     "dims": { "ort": "Södertälje" },
-    "value": 12.537166
+    "value": 250.743326
   },
   {
-    "metricKey": "anstallningstid",
+    "metricKey": "anstallningsmanader",
     "company": "MBAB",
     "month": "2026-09",
     "dims": { "ort": "Uppsala" },
-    "value": 8.082136
+    "value": 56.574949
   },
   {
     "metricKey": "avslutade_anstallningar",
