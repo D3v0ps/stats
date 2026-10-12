@@ -47,3 +47,6 @@ next-env.d.ts
 /playwright-report/
 /blob-report/
 /.claude/worktrees/
+
+# Personal Claude Code settings
+.claude/settings.local.json
