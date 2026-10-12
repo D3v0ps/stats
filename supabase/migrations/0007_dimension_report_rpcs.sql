@@ -10,8 +10,8 @@ set search_path = ''
 as $$
   select btrim(
     regexp_replace(
-      regexp_replace(normalize(p_text, NFC), '[​-‍⁠]', '', 'g'),
-      '[\t\n\v\f\r    -     　﻿]+',
+      regexp_replace(normalize(p_text, NFC), '[\u200b-\u200d\u2060]', '', 'g'),
+      '[\t\n\v\f\r \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+',
       ' ',
       'g'
     ),
