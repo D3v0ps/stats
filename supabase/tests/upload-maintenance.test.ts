@@ -151,13 +151,21 @@ describe("upload maintenance", () => {
 
       const history = await listUploads(client, { ids: [v1.id, v2.id, older.id, staged] });
       expect(history.map((u) => u.templateId)).toEqual([null, null, null, null]);
-      const sources = await rpc<{ upload_id: string; template_name: string | null }>(
+      const sources = await rpc<{
+        upload_id: string;
+        template_name: string | null;
+        template_version: number | null;
+      }>(
         db,
         app,
-        `select upload_id, template_name from public.metric_sources(array['timmar'], array['MBAB'],
-           '2026-07-01', '2026-08-01')`,
+        `select upload_id, template_name, template_version
+         from public.metric_sources(array['timmar'], array['MBAB'], '2026-07-01', '2026-08-01')`,
       );
-      expect(sources.map((s) => s.template_name)).toEqual([null, null]);
+      // A version without its template names nothing the reader can look up.
+      expect(sources.map((s) => [s.template_name, s.template_version])).toEqual([
+        [null, null],
+        [null, null],
+      ]);
 
       // The upload staged with the deleted template can still be reviewed and published.
       const review = await rpc<{ r: { rows: { metric_key: string; staged: number }[] } }>(
@@ -217,6 +225,39 @@ describe("upload maintenance", () => {
           [dup],
         ),
       ).rejects.toThrow(/uploads_published_file_uniq/);
+    });
+
+    it("never cuts an upload's link to a template that still exists (versions are immutable)", async () => {
+      const template = await createTemplate(client, TEMPLATE);
+      const used = await stageAndPublish(
+        db,
+        app,
+        timmar("2026-04", 2, {
+          file: "timmar-apr.xlsx",
+          templateId: template.id,
+          templateVersion: 1,
+        }),
+      );
+      // Deleting one version (not the template) would null template_id through the foreign key.
+      await expect(
+        asUser(db, app, (tx) =>
+          tx.query("delete from public.import_template_versions where template_id = $1", [
+            template.id,
+          ]),
+        ),
+      ).rejects.toThrow(/permission denied/);
+      expect(await upload(used.id)).toEqual({
+        status: "published",
+        template_id: template.id,
+        template_version: 1,
+      });
+      // Deleting the whole template still takes its versions with it.
+      await deleteTemplate(client, template.id);
+      expect(await upload(used.id)).toEqual({
+        status: "published",
+        template_id: null,
+        template_version: 1,
+      });
     });
 
     it("does not let clients stage a template version without a template", async () => {

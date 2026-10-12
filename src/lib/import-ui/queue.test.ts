@@ -260,6 +260,14 @@ describe("queueReducer", () => {
       headerRow: 3,
     });
     expect(s[0]).toMatchObject({ status: "running", choices: { month: "2026-09" }, headerRow: 3 });
+    // Saved again with the row cleared (back to detection): the old row no longer applies.
+    s = queueReducer(s, {
+      type: "template_saved",
+      id: "a",
+      template: TPL,
+      requires: { month: true, company: false, asOfDate: false },
+    });
+    expect(s[0]).not.toHaveProperty("headerRow");
   });
 
   it("reads SIE files straight to review, or refuses an unknown company", () => {

@@ -257,9 +257,12 @@ as $$
 begin
   perform private.assert_app_user();
 
+  -- The version of a deleted template (kept on the upload as history) is left out: it names
+  -- nothing the reader could look up.
   return query
-  select u.id, u.file_name, d.key, t.name, u.template_version, u.published_at,
-    array_agg(distinct s.month order by s.month)
+  select u.id, u.file_name, d.key, t.name,
+    case when t.id is null then null else u.template_version end,
+    u.published_at, array_agg(distinct s.month order by s.month)
   from public.upload_slices s
   join public.uploads u on u.id = s.upload_id
   join public.datasets d on d.id = s.dataset_id
@@ -272,7 +275,7 @@ begin
       select m.dataset_id from public.metrics m
       where m.key = any (p_metric_keys) and m.dataset_id is not null
     )
-  group by u.id, u.file_name, d.key, t.name, u.template_version, u.published_at
+  group by u.id, u.file_name, d.key, t.id, t.name, u.template_version, u.published_at
   order by u.published_at desc, u.id;
 end;
 $$;

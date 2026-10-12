@@ -1052,6 +1052,25 @@ export function setHeaderRow(state: MappingState, headerRow: number | undefined)
   return next;
 }
 
+/**
+ * What leaving the "Rubrikraden står på rad" field picks: `typed` is the 1-based row the user
+ * left in it, `shownRow` the 1-based row the table was read at, `picked` the 0-based row
+ * picked so far. null = no change, so tabbing through the field never pins the detected row
+ * in the template; an emptied field returns to automatic detection.
+ */
+export function headerRowFromInput(
+  typed: string,
+  shownRow: number | null,
+  picked: number | undefined,
+): { headerRow: number | undefined } | null {
+  const text = typed.trim();
+  if (text === "") return picked === undefined ? null : { headerRow: undefined };
+  const n = Number(text);
+  if (!Number.isInteger(n) || n < 1) return null;
+  const current = picked !== undefined ? picked + 1 : shownRow;
+  return n === current ? null : { headerRow: n - 1 };
+}
+
 export function setCases(state: MappingState, patch: Partial<CasesForm>): MappingState {
   return { ...state, cases: { ...state.cases, ...patch } };
 }

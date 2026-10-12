@@ -305,7 +305,8 @@ export async function loadWidget(spec: WidgetSpec, ctx: DashboardContext): Promi
     const monthlyLedgerBar = spec.viz === "bar" && !spec.groupBy && def.kind === "ledger";
     const [slide, budget, series] = await Promise.all([
       resolveWidget(spec, globalFilters(ctx), resolveContext(ctx)),
-      spec.viz === "kpi" && def.kind === "ledger"
+      // A KPI that already compares with budget (WidgetSpec.compare) gets no second budget delta.
+      spec.viz === "kpi" && def.kind === "ledger" && spec.compare !== "budget"
         ? budgetComparison(spec, ctx, company, def)
         : Promise.resolve<BudgetComparison>({ delta: null, value: null, note: null }),
       monthlyLedgerBar ? budgetSeries(spec, ctx, company, def) : Promise.resolve(null),

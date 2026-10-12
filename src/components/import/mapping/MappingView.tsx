@@ -15,6 +15,7 @@ import {
   datasetKind,
   fromTemplateConfig,
   hasBlockingProblems,
+  headerRowFromInput,
   initialMapping,
   isKept,
   mappingSteps,
@@ -401,32 +402,34 @@ export function MappingView(props: MappingViewProps) {
             )}
           </Field>
         ) : null}
-        {inspect.confidence < 0.5 || headerRow !== undefined ? (
-          <Field
-            label="Rubrikraden står på rad"
-            hint={
-              inspect.confidence < 0.5 && headerRow === undefined
+        {/* Always shown: a confident detection can still be wrong, and a picked row is saved. */}
+        <Field
+          label="Rubrikraden står på rad"
+          hint={
+            headerRow !== undefined
+              ? "Vald för hand: sparas i mallen och används för nästa månads fil. Töm fältet för att hitta raden automatiskt."
+              : inspect.confidence < 0.5
                 ? "Rubrikerna var svåra att hitta. Kontrollera raden."
-                : "Sparas i mallen och används för nästa månads fil."
-            }
-          >
-            {(id) => (
-              <input
-                id={id}
-                type="number"
-                min={1}
-                className="num h-9 w-28 rounded-lg border border-input bg-card px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
-                defaultValue={inspect.headerRow ?? 1}
-                onBlur={(e) => {
-                  const n = Number(e.target.value);
-                  if (Number.isInteger(n) && n >= 1 && n - 1 !== headerRow)
-                    setHeaderRowChoice(n - 1);
-                }}
-                data-testid="header-row"
-              />
-            )}
-          </Field>
-        ) : null}
+                : "Hittad automatiskt. Ändra om rubrikerna står på en annan rad."
+          }
+        >
+          {(id) => (
+            <input
+              // Remount when the table is read at another row, so the field shows that row.
+              key={`${inspect.headerRow ?? ""}:${headerRow ?? ""}`}
+              id={id}
+              type="number"
+              min={1}
+              className="num h-9 w-28 rounded-lg border border-input bg-card px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              defaultValue={inspect.headerRow ?? ""}
+              onBlur={(e) => {
+                const choice = headerRowFromInput(e.target.value, inspect.headerRow, headerRow);
+                if (choice) setHeaderRowChoice(choice.headerRow);
+              }}
+              data-testid="header-row"
+            />
+          )}
+        </Field>
       </Panel>
 
       <ColumnTable

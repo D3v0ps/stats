@@ -96,6 +96,7 @@ export type QueueAction =
       id: string;
       template: TemplateRef;
       requires: ChoiceRequirements;
+      /** The mapping view's header row; omitted = detected (replaces an earlier choice). */
       headerRow?: number;
     }
   | { type: "run_done"; id: string; result: IngestResult }
@@ -271,6 +272,7 @@ export function queueReducer(state: QueueItem[], action: QueueAction): QueueItem
           ...(action.headerRow !== undefined ? { headerRow: action.headerRow } : {}),
           choices: { ...autoChoices(action.requires, item.suggestions), ...item.choices },
         };
+        if (action.headerRow === undefined) delete next.headerRow;
         return { ...next, status: missingChoices(next).length ? "needs_choices" : "running" };
       });
     case "run_done":

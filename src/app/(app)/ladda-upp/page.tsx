@@ -26,9 +26,10 @@ async function loadCatalog(): Promise<
 > {
   try {
     const db = await createSupabaseServerClient();
-    // Uploads left staged by a closed tab or a lost connection are cleaned up on the way in.
-    // It is housekeeping only: the page works the same when it fails.
-    await discardStaleUploads(db).catch(() => undefined);
+    // Uploads left staged by a closed tab or a lost connection are cleaned up on the way in,
+    // alongside the reads (none of them reads staged uploads). Housekeeping only: the page
+    // works the same when it fails.
+    const cleanup = discardStaleUploads(db).catch(() => undefined);
     const [datasets, metrics, dimensions, templates, accountGroups] = await Promise.all([
       listDatasets(db),
       listMetricDefinitions(db),
@@ -36,6 +37,7 @@ async function loadCatalog(): Promise<
       listTemplates(db),
       listAccountGroups(db),
     ]);
+    await cleanup;
     return {
       ok: true,
       catalog: {

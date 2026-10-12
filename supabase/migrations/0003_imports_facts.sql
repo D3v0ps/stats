@@ -161,7 +161,10 @@ grant select on public.uploads, public.upload_slices, public.metric_values,
   public.ledger_balances to service_role;
 
 grant select, insert, update, delete on public.import_templates to authenticated;
-grant select, insert, delete on public.import_template_versions to authenticated;
+-- Versions are immutable and are only deleted with their template (on delete cascade, which
+-- runs as the table owner): deleting a single version would cut the template link of the
+-- uploads read with it (see the uploads foreign key) while the template still exists.
+grant select, insert on public.import_template_versions to authenticated;
 grant select, insert on public.uploads, public.upload_slices, public.metric_values,
   public.ledger_balances to authenticated;
 grant select, insert, update on public.ledger_accounts to authenticated;
@@ -180,8 +183,6 @@ create policy "app users select" on public.import_template_versions
   for select to authenticated using ((select private.is_app_user()));
 create policy "app users insert" on public.import_template_versions
   for insert to authenticated with check ((select private.is_app_user()));
-create policy "app users delete" on public.import_template_versions
-  for delete to authenticated using ((select private.is_app_user()));
 
 create policy "app users select" on public.uploads
   for select to authenticated using ((select private.is_app_user()));

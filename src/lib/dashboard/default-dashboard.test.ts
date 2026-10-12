@@ -134,6 +134,16 @@ describe("loading dashboard widgets", () => {
     expect(without.budgetDelta).toBeNull();
   });
 
+  it("does not show the budget twice when the KPI itself compares with budget", async () => {
+    const spec = DEFAULT_DASHBOARD.widgets.find((w) => w.id === "intakter")!;
+    const own = await loadWidget(
+      { ...spec, compare: "budget" },
+      ctx(buildSource({ budget: true })),
+    );
+    expect(own.slide?.delta?.againstLabel).toBe("mot budget");
+    expect(own.budgetDelta).toBeNull();
+  });
+
   it("shows the budget chart only when a budget exists", async () => {
     const spec = DEFAULT_DASHBOARD.widgets.find((w) => BUDGET_ONLY_WIDGET_IDS.has(w.id))!;
     expect((await loadWidget(spec, ctx())).status).toBe("hidden");

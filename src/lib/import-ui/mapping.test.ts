@@ -9,6 +9,7 @@ import {
   defaultCaseMetrics,
   fromTemplateConfig,
   hasBlockingProblems,
+  headerRowFromInput,
   initialMapping,
   mappingSteps,
   migrateCaseMetrics,
@@ -427,6 +428,23 @@ describe("header row", () => {
     expect(cleared).not.toHaveProperty("headerRow");
     expect(toTemplateConfig(cleared, SEED_CATALOG)).not.toHaveProperty("headerRow");
     expect(toTemplateConfig(timmar(), SEED_CATALOG)).not.toHaveProperty("headerRow");
+  });
+
+  it("takes a row from the field only when the user changes it", () => {
+    // Detected at row 4 (1-based), nothing picked: leaving the field as it is pins nothing.
+    expect(headerRowFromInput("4", 4, undefined)).toBeNull();
+    expect(headerRowFromInput(" 4 ", 4, undefined)).toBeNull();
+    expect(headerRowFromInput("6", 4, undefined)).toEqual({ headerRow: 5 });
+    // Picked row 6 (0-based 5): the same row again changes nothing, another row replaces it.
+    expect(headerRowFromInput("6", 6, 5)).toBeNull();
+    expect(headerRowFromInput("3", 6, 5)).toEqual({ headerRow: 2 });
+    // An emptied field goes back to automatic detection.
+    expect(headerRowFromInput("", 6, 5)).toEqual({ headerRow: undefined });
+    expect(headerRowFromInput("  ", 4, undefined)).toBeNull();
+    // Not a row number: ignored.
+    for (const typed of ["0", "-2", "2.5", "x"]) {
+      expect(headerRowFromInput(typed, 4, undefined)).toBeNull();
+    }
   });
 });
 
