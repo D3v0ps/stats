@@ -1,6 +1,8 @@
 -- Dimension value resolution/merging and freezing board reports.
 
--- Display form of a label: NFC, whitespace collapsed and trimmed, case kept.
+-- Display form of a label: NFC, whitespace collapsed and trimmed, case kept. Mirrors
+-- cleanLabel() in src/lib/db/repo/shared.ts. The character classes are built with chr() so
+-- the SQL contains no backslashes or invisible characters (it is sent to Supabase as text).
 create or replace function private.clean_label(p_text text)
 returns text
 language sql
@@ -10,8 +12,15 @@ set search_path = ''
 as $$
   select btrim(
     regexp_replace(
-      regexp_replace(normalize(p_text, NFC), '[\u200b-\u200d\u2060]', '', 'g'),
-      '[\t\n\v\f\r \u00a0\u1680\u2000-\u200a\u2028\u2029\u202f\u205f\u3000\ufeff]+',
+      regexp_replace(
+        normalize(p_text, NFC),
+        '[' || chr(8203) || '-' || chr(8205) || chr(8288) || ']',
+        '',
+        'g'
+      ),
+      '[' || chr(9) || chr(10) || chr(11) || chr(12) || chr(13) || ' ' || chr(160) || chr(5760)
+        || chr(8192) || '-' || chr(8202) || chr(8232) || chr(8233) || chr(8239) || chr(8287)
+        || chr(12288) || chr(65279) || ']+',
       ' ',
       'g'
     ),
