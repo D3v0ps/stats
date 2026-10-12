@@ -54,6 +54,17 @@ export function SieChecks({ result }: { result: IngestResult }) {
         ) : null}
       </dl>
 
+      {checks.warnings.length > 0 ? (
+        <div className="flex flex-col gap-1" data-testid="sie-warnings">
+          <p className="font-medium">Att kontrollera</p>
+          <ul className="list-disc pl-5">
+            {checks.warnings.map((w) => (
+              <li key={w}>{w}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
       {checks.resultPerMonth.length > 0 ? (
         <div className="flex flex-col gap-2">
           <p className="font-medium">Kontrollsumma: stäm av mot Fortnox resultatrapport</p>

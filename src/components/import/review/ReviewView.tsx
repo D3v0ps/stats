@@ -15,6 +15,7 @@ import { ReviewPanel, type Publisher } from "./ReviewPanel";
 export function ReviewView({
   items,
   catalog,
+  templates,
   getDictionaries,
   rememberValues,
   onPublished,
@@ -100,6 +101,7 @@ export function ReviewView({
             rememberValues={rememberValues}
             onPublished={onPublished}
             register={register}
+            templateConfig={templates.find((t) => t.id === item.template?.id)?.config}
             onDiscarded={several ? undefined : onBack}
             now={now}
           />

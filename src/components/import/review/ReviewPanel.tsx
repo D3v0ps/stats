@@ -6,8 +6,9 @@
 // discard; nothing is visible to anyone until "Godkänn och publicera".
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Button } from "@/components/ui/button";
-import type { FactRow, IngestResult } from "@/lib/contracts";
+import type { FactRow, IngestResult, TemplateConfig } from "@/lib/contracts";
 import { COMPANY_FILTER_LABELS } from "@/lib/contracts";
+import { formatNumber } from "@/lib/core/format-sv";
 import type { ReviewComparison } from "@/lib/db/repo/uploads";
 import { progressPercent } from "@/lib/import-ui/chunking";
 import { excludeMonths, formatMonthSpan, openMonths, resultMonths } from "@/lib/import-ui/months";
@@ -18,6 +19,7 @@ import {
   publishSummaryText,
   resolveFacts,
   resultMetricKeys,
+  templateMetricKeys,
   withResolvedValues,
   type DictionaryEntry,
   type Resolution,
@@ -68,6 +70,8 @@ export interface ReviewPanelProps {
   rememberValues: (dimension: string, entry: DictionaryEntry) => void;
   onPublished: (id: string, summary: string, publishedAt: string) => void;
   register: (id: string, publish: Publisher | null) => void;
+  /** The template the file was read with (null for SIE files). */
+  templateConfig?: TemplateConfig;
   onDiscarded?: () => void;
   now: Date;
 }
@@ -83,6 +87,7 @@ export function ReviewPanel({
   rememberValues,
   onPublished,
   register,
+  templateConfig,
   onDiscarded,
   now,
 }: ReviewPanelProps) {
@@ -336,7 +341,18 @@ export function ReviewPanel({
   const metrics = catalog.metrics;
   const reviewRows =
     phase.kind === "ready" || phase.kind === "publishing"
-      ? buildReviewRows(phase.comparison.rows, metrics)
+      ? buildReviewRows(
+          phase.comparison.rows,
+          metrics,
+          effective && !effective.ledger
+            ? {
+                produced: [
+                  ...resultMetricKeys(effective),
+                  ...(templateConfig ? templateMetricKeys(templateConfig) : []),
+                ],
+              }
+            : {},
+        )
       : [];
   const shown = effective ?? result;
   const busyPhase = ["preparing", "staging", "comparing", "publishing"].includes(phase.kind);
@@ -423,7 +439,11 @@ export function ReviewPanel({
           <p className="text-sm">Avbrutet – ingenting publicerades.</p>
         ) : null}
         {phase.kind === "empty" ? (
-          <p className="text-sm">Det finns inga avslutade månader att publicera i filen.</p>
+          <p className="text-sm">
+            {result.facts.length === 0 && !result.ledger?.rows.length
+              ? "Filen gav inga siffror att publicera. Kontrollera mallen eller valen för filen."
+              : "Det finns inga avslutade månader att publicera i filen."}
+          </p>
         ) : null}
         {phase.kind === "error" ? (
           <p role="alert" className="text-sm">
@@ -432,10 +452,17 @@ export function ReviewPanel({
         ) : null}
       </div>
 
-      {result.ledger ? <SieChecks result={shown} /> : null}
+      {result.ledger ? <SieChecks result={result} /> : null}
 
       <details className="rounded-lg border border-border p-3">
-        <summary className="cursor-pointer text-sm font-medium">Detaljer om filen</summary>
+        <summary className="num cursor-pointer text-sm font-medium">
+          Detaljer om filen
+          <span className="font-normal text-muted-foreground">
+            {" "}
+            · {formatNumber(shown.report.rowsRead)} rader lästes,{" "}
+            {formatNumber(shown.report.rowsUsed)} användes
+          </span>
+        </summary>
         <div className="pt-3">
           <ReportDetails result={shown} dimensionLabel={(k) => dimensionLabels[k] ?? k} />
         </div>

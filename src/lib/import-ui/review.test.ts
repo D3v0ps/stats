@@ -4,6 +4,7 @@ import { CATALOG_METRICS } from "@/lib/contracts/catalog";
 import {
   aliasTablesFromDictionary,
   buildReviewRows,
+  canAddValues,
   emptyDimensionRows,
   existingValues,
   factDimensions,
@@ -14,6 +15,7 @@ import {
   resultMetricKeys,
   scopeKostnadsstalle,
   splitIssues,
+  templateMetricKeys,
   withResolvedValues,
   type DictionaryEntry,
 } from "./review";
@@ -126,6 +128,65 @@ describe("dimension resolution", () => {
   });
 });
 
+describe("templateMetricKeys", () => {
+  it("lists mapped measures and row counters of a table template", () => {
+    expect(
+      templateMetricKeys({
+        kind: "table",
+        steps: [],
+        columns: [
+          {
+            column: "timmar",
+            type: "hours",
+            usage: "measure",
+            metricKey: "timmar",
+            personal: false,
+            keep: true,
+          },
+          {
+            column: "kund",
+            type: "text",
+            usage: "dimension",
+            dimensionKey: "kund",
+            personal: false,
+            keep: true,
+          },
+        ],
+        counters: [{ metricKey: "pass", kind: "count_rows" }],
+        period: { kind: "per_upload" },
+        company: { kind: "fixed", company: "MBAB" },
+        scenario: "utfall",
+      }),
+    ).toEqual(["timmar", "pass"]);
+  });
+
+  it("lists the chosen measures of a cases template and nothing for SIE", () => {
+    expect(
+      templateMetricKeys({
+        kind: "cases",
+        steps: [],
+        columns: [],
+        company: { kind: "per_upload" },
+        cases: {
+          startColumn: "start",
+          resultMap: {},
+          groupBy: [],
+          metrics: { active: "aktiva_deltagare", started: "nya_deltagare" },
+        },
+      }),
+    ).toEqual(["aktiva_deltagare", "nya_deltagare"]);
+    expect(templateMetricKeys({ kind: "sie", objectDims: [1] })).toEqual([]);
+  });
+});
+
+describe("canAddValues", () => {
+  it("offers new values except for the fixed list of account groups", () => {
+    expect(canAddValues("kund")).toBe(true);
+    expect(canAddValues("verksamhet")).toBe(true);
+    expect(canAddValues("kontogrupp")).toBe(false);
+  });
+});
+
 describe("buildReviewRows", () => {
   const metrics = CATALOG_METRICS.map((m) => ({
     key: m.key,
@@ -175,6 +236,30 @@ describe("buildReviewRows", () => {
     expect(rows[1]?.replacing).toBe(false);
     expect(rows[3]?.direction).toBeNull();
     expect(flaggedCount(rows)).toBe(3);
+  });
+
+  it("leaves out metrics the file does not provide unless a published value would be replaced", () => {
+    const rows = buildReviewRows(
+      [
+        row("fakturerat_ip"),
+        row("lonekostnad", { staged: 0, previous: 0, deviationPct: null, flagged: false }),
+        row("lonekostnad", {
+          month: "2026-08",
+          staged: 0,
+          current: 500,
+          previous: null,
+          deviationPct: null,
+          flagged: false,
+        }),
+      ],
+      metrics,
+      { produced: ["fakturerat_ip"] },
+    );
+    expect(rows.map((r) => [r.metricKey, r.month])).toEqual([
+      ["fakturerat_ip", "2026-09"],
+      ["lonekostnad", "2026-08"],
+    ]);
+    expect(rows[1]?.replacing).toBe(true);
   });
 
   it("does not call low-priority slices replacing", () => {

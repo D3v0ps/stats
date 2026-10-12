@@ -214,6 +214,8 @@ export const FILE_GONE_MESSAGE = "Filen finns inte längre i minnet. Lägg till 
 const GENERIC_ERROR = "Filen kunde inte läsas.";
 const SAMPLE_VALUES = 5;
 const MAX_PERIOD_VALUES = 5000;
+/** Sheets summarized when a workbook is recognized (the default and hinted sheets always are). */
+const MAX_RECOGNIZE_SHEETS = 12;
 
 function errorMessage(error: unknown): string {
   if (
@@ -353,8 +355,21 @@ export class IngestService {
         wanted.add(name);
       }
     }
+    // Every visible sheet is summarized too, so sheets laid out like a known one
+    // (one budget sheet per company) are offered instead of skipped.
+    for (const s of e.workbook.sheets) {
+      if (wanted.size >= MAX_RECOGNIZE_SHEETS) break;
+      if (!s.hidden && s.rows.length > 0) wanted.add(s.name);
+    }
     const sheets: Record<string, SheetSummary> = {};
-    for (const name of wanted) sheets[name] = this.summary(e, this.table(e, name), req.today);
+    for (const name of wanted) {
+      try {
+        sheets[name] = this.summary(e, this.table(e, name), req.today);
+      } catch (error) {
+        // A sheet without a readable table is simply not a candidate; the default sheet must read.
+        if (name === defaultSheet) throw error;
+      }
+    }
     return { ok: true, op: "recognize", defaultSheet, sheetForHint, sheets };
   }
 

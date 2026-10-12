@@ -16,6 +16,8 @@ export function ReportDetails({
   const groups = groupSkipped(report.skipped.filter((s) => s.reason !== "empty"));
   const { general, cells } = splitIssues(report.issues);
   const empty = emptyDimensionRows(result.facts);
+  // A SIE file's warnings are its checks, shown openly next to the control totals.
+  const warnings = result.ledger ? [] : report.warnings;
   return (
     <div className="flex flex-col gap-4 text-sm" data-testid="report-details">
       <p className="num">
@@ -114,11 +116,11 @@ export function ReportDetails({
         </div>
       ) : null}
 
-      {report.warnings.length > 0 ? (
+      {warnings.length > 0 ? (
         <div className="flex flex-col gap-1">
           <p className="font-medium">Att tänka på</p>
           <ul className="list-disc pl-5">
-            {report.warnings.map((w) => (
+            {warnings.map((w) => (
               <li key={w}>{w}</li>
             ))}
           </ul>

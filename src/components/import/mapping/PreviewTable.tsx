@@ -111,7 +111,9 @@ export function PreviewTable({
                             : ""}
                           {measureCols.has(c) && s && s.unreadable > 0 ? (
                             <span className="block text-[11px] font-normal text-muted-foreground">
-                              {s.unreadable} celler är inte tal
+                              {s.unreadable === 1
+                                ? "1 cell är inte ett tal"
+                                : `${formatNumber(s.unreadable)} celler är inte tal`}
                             </span>
                           ) : null}
                         </td>

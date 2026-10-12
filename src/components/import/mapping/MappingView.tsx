@@ -228,7 +228,8 @@ export function MappingView(props: MappingViewProps) {
       headerRow,
       datasetKey: key,
     });
-    edit((s) => setDataset(s, key, catalog, res.ok ? res.suggestions : undefined));
+    const sheetName = visibleSheets.length > 1 ? inspect?.sheetName : undefined;
+    edit((s) => setDataset(s, key, catalog, res.ok ? res.suggestions : undefined, sheetName));
   };
 
   const save = async () => {

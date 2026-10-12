@@ -10,6 +10,7 @@ import {
   type ParseIssue,
   type SkipReason,
   type SkippedRow,
+  type TemplateConfig,
 } from "@/lib/contracts";
 import { formatDateSv } from "@/lib/core/format-sv";
 import { formatMonthShort } from "@/lib/core/month";
@@ -100,6 +101,18 @@ export function resolveFacts(
   return { rows: r.rows, unknown, onlyAutoCreate: Object.keys(r.toAsk).length === 0 };
 }
 
+/**
+ * Dimensions whose values are a fixed list: a kontogrupp is one of the account
+ * groups (the budget is read per group), so an unknown spelling can only be
+ * "Samma som…" an existing group, never a new value.
+ */
+const FIXED_VALUE_DIMENSIONS = new Set(["kontogrupp"]);
+
+/** Whether "Lägg till som ny" is offered for unknown values of the dimension. */
+export function canAddValues(dimension: string): boolean {
+  return !FIXED_VALUE_DIMENSIONS.has(dimension);
+}
+
 /** Existing values of a dimension for the "Samma som…" picker, sorted by label. */
 export function existingValues(
   entry: DictionaryEntry | undefined,
@@ -183,14 +196,28 @@ export interface ReviewRow extends ComparisonInputRow {
   direction: "up" | "down" | "flat" | null;
 }
 
-/** Comparison rows in catalog metric order, then company, then month. */
+/**
+ * Comparison rows in catalog metric order, then company, then month.
+ *
+ * The database compares every metric of the dataset. With `produced` (the
+ * metrics this file has values for) a metric the file does not provide is left
+ * out, unless publishing would replace a published value of it ("0" would
+ * otherwise read as "the file says zero").
+ */
 export function buildReviewRows(
   rows: readonly ComparisonInputRow[],
   metrics: readonly ReviewMetricInfo[],
+  opts: { produced?: readonly string[] } = {},
 ): ReviewRow[] {
   const index = new Map(metrics.map((m, i) => [m.key, i]));
   const companyOrder: CompanyCode[] = ["MBAB", "MBR"];
-  return [...rows]
+  const produced = opts.produced ? new Set(opts.produced) : null;
+  const relevant = (r: ComparisonInputRow) =>
+    !produced ||
+    produced.has(r.metricKey) ||
+    (r.replacesCurrent && r.current !== null && r.current !== 0);
+  return rows
+    .filter(relevant)
     .sort(
       (a, b) =>
         (index.get(a.metricKey) ?? 1e9) - (index.get(b.metricKey) ?? 1e9) ||
@@ -268,6 +295,21 @@ export function splitIssues(issues: readonly ParseIssue[]): {
     general: issues.filter((i) => i.sourceRow === 0),
     cells: issues.filter((i) => i.sourceRow > 0),
   };
+}
+
+/** Metrics a template is set up to produce (mapped columns, row counters, case measures). */
+export function templateMetricKeys(config: TemplateConfig): string[] {
+  if (config.kind === "sie") return [];
+  const keys =
+    config.kind === "table"
+      ? [
+          ...config.columns.flatMap((c) =>
+            c.usage === "measure" && c.keep !== false && c.metricKey ? [c.metricKey] : [],
+          ),
+          ...(config.counters ?? []).map((c) => c.metricKey),
+        ]
+      : Object.values(config.cases.metrics).filter((k): k is string => Boolean(k));
+  return [...new Set(keys)];
 }
 
 /** Metrics with values in the result (facts), in first-seen order. */

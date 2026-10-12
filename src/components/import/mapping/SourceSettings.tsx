@@ -14,6 +14,7 @@ import {
 import type { PreviewResponse } from "@/lib/import-ui/ingest-service";
 import {
   companyChoice,
+  defaultColumnFor,
   setBudgetSign,
   setCases,
   setCompanyChoice,
@@ -30,31 +31,41 @@ import type { UploadCatalog } from "../types";
 const COMPANIES: CompanyCode[] = ["MBAB", "MBR"];
 const radio = "accent-antracit";
 
+/**
+ * A radio option. `extra` (the column picker, the company mapping) is shown
+ * under the option but outside its label: form controls inside a label would
+ * be part of the radio's name and nested labels are invalid.
+ */
 function Radio({
   name,
   checked,
   onChange,
   children,
+  extra,
   testId,
 }: {
   name: string;
   checked: boolean;
   onChange: () => void;
   children: ReactNode;
+  extra?: ReactNode;
   testId?: string;
 }) {
   return (
-    <label className="flex items-start gap-2 text-sm">
-      <input
-        type="radio"
-        name={name}
-        checked={checked}
-        onChange={onChange}
-        className={`${radio} mt-0.5`}
-        data-testid={testId}
-      />
-      <span className="flex flex-col gap-1">{children}</span>
-    </label>
+    <div className="flex flex-col gap-2">
+      <label className="flex items-start gap-2 text-sm">
+        <input
+          type="radio"
+          name={name}
+          checked={checked}
+          onChange={onChange}
+          className={`${radio} mt-0.5`}
+          data-testid={testId}
+        />
+        <span className="flex flex-col gap-1">{children}</span>
+      </label>
+      {extra ? <div className="flex flex-col gap-3 pl-6">{extra}</div> : null}
+    </div>
   );
 }
 
@@ -138,48 +149,55 @@ export function SourceSettings({
       <Radio
         name="company"
         checked={company.kind === "column"}
-        onChange={() =>
-          outputs[0] && edit((s) => setCompanyChoice(s, { kind: "column", column: outputs[0]! }))
-        }
+        onChange={() => {
+          const column = defaultColumnFor(state, outputs, "company");
+          if (column) edit((s) => setCompanyChoice(s, { kind: "column", column }));
+        }}
         testId="company-column"
+        extra={
+          company.kind === "column" ? (
+            <>
+              <NativeSelect
+                aria-label="Kolumnen med bolag"
+                value={company.column}
+                options={columnOptions}
+                onChange={(e) =>
+                  edit((s) => setCompanyChoice(s, { kind: "column", column: e.target.value }))
+                }
+              />
+              {companyValues.length > 0 ? (
+                <div className="grid gap-2 sm:grid-cols-2">
+                  {companyValues.map((v) => (
+                    <Field key={v} label={v}>
+                      {(id) => (
+                        <NativeSelect
+                          id={id}
+                          value={state.companyMapping[v] ?? ""}
+                          placeholder="Känns igen av sig själv"
+                          options={COMPANIES.map((c) => ({
+                            value: c,
+                            label: COMPANY_FILTER_LABELS[c],
+                          }))}
+                          onChange={(e) =>
+                            edit((s) =>
+                              setCompanyMapping(
+                                s,
+                                v,
+                                (e.target.value || null) as CompanyCode | null,
+                              ),
+                            )
+                          }
+                        />
+                      )}
+                    </Field>
+                  ))}
+                </div>
+              ) : null}
+            </>
+          ) : null
+        }
       >
         En kolumn i filen
-        {company.kind === "column" ? (
-          <span className="flex flex-col gap-3">
-            <NativeSelect
-              aria-label="Kolumnen med bolag"
-              value={company.column}
-              options={columnOptions}
-              onChange={(e) =>
-                edit((s) => setCompanyChoice(s, { kind: "column", column: e.target.value }))
-              }
-            />
-            {companyValues.length > 0 ? (
-              <span className="grid gap-2 sm:grid-cols-2">
-                {companyValues.map((v) => (
-                  <Field key={v} label={v}>
-                    {(id) => (
-                      <NativeSelect
-                        id={id}
-                        value={state.companyMapping[v] ?? ""}
-                        placeholder="Känns igen av sig själv"
-                        options={COMPANIES.map((c) => ({
-                          value: c,
-                          label: COMPANY_FILTER_LABELS[c],
-                        }))}
-                        onChange={(e) =>
-                          edit((s) =>
-                            setCompanyMapping(s, v, (e.target.value || null) as CompanyCode | null),
-                          )
-                        }
-                      />
-                    )}
-                  </Field>
-                ))}
-              </span>
-            ) : null}
-          </span>
-        ) : null}
       </Radio>
     </fieldset>
   );
@@ -354,20 +372,22 @@ export function SourceSettings({
             name="period"
             checked={periodColumn !== undefined}
             onChange={() => {
-              const col = outputs.find((c) => state.fields[c]?.type === "date") ?? outputs[0];
+              const col = defaultColumnFor(state, outputs, "period");
               if (col) edit((s) => setPeriodColumn(s, col));
             }}
             testId="period-column"
+            extra={
+              periodColumn ? (
+                <NativeSelect
+                  aria-label="Kolumnen med datum eller månad"
+                  value={periodColumn}
+                  options={columnOptions}
+                  onChange={(e) => edit((s) => setPeriodColumn(s, e.target.value))}
+                />
+              ) : null
+            }
           >
             En kolumn i filen
-            {periodColumn ? (
-              <NativeSelect
-                aria-label="Kolumnen med datum eller månad"
-                value={periodColumn}
-                options={columnOptions}
-                onChange={(e) => edit((s) => setPeriodColumn(s, e.target.value))}
-              />
-            ) : null}
           </Radio>
           <Radio
             name="period"

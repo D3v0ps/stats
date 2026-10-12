@@ -21,8 +21,15 @@ let queue: Promise<void> = Promise.resolve();
 
 scope.addEventListener("message", (event) => {
   const { id, req } = event.data;
-  queue = queue.then(async () => {
-    const res = await service.handle(req);
-    scope.postMessage({ id, res });
-  });
+  queue = queue
+    .then(async () => {
+      try {
+        scope.postMessage({ id, res: await service.handle(req) });
+      } catch {
+        // A reply that cannot be sent must still answer the request.
+        scope.postMessage({ id, res: { ok: false, error: "Filen kunde inte läsas." } });
+      }
+    })
+    // Never leave the chain rejected: every later request would wait forever.
+    .catch(() => undefined);
 });

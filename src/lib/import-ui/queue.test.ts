@@ -230,6 +230,22 @@ describe("queueReducer", () => {
     expect(d[1]).toMatchObject({ status: "drift", template: TPL });
   });
 
+  it("gives a known sheet and an unmapped sibling sheet a card each", () => {
+    const s = queueReducer(reading(), {
+      type: "recognized",
+      id: "a",
+      jobs: [
+        { ...known({ month: false, company: false, asOfDate: false }), sheetName: "MB AB" },
+        { kind: "new", sheetName: "MB Restart", signature: ["post", "jan"], suggestions: SUG },
+      ],
+    });
+    expect(s.map((i) => [i.id, i.sheetName, i.sourceSheet, i.status])).toEqual([
+      ["a", "MB AB", "MB AB", "running"],
+      ["a:1", "MB Restart", "MB Restart", "new"],
+    ]);
+    expect(statusLabel(s[1]!)).toBe("Ny rapporttyp – mappa");
+  });
+
   it("runs a new file once its template is saved", () => {
     let s = queueReducer(reading(), {
       type: "recognized",

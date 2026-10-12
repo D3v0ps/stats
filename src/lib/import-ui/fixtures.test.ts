@@ -236,6 +236,22 @@ describe("recognition of the fixture files", () => {
     ]);
   });
 
+  it("offers both budget sheets the first time, and the second sheet once the first is mapped", async () => {
+    const fresh = await recognize("budget_2026.xlsx", []);
+    expect(fresh).toEqual([
+      { kind: "new", sheetName: "MB AB" },
+      { kind: "new", sheetName: "MB Restart" },
+    ]);
+    const onlyFirst = recognitionTemplates(["budget_2026.xlsx"]).filter(
+      (t) => t.sheetHint === "MB AB",
+    );
+    const jobs = await recognize("budget_2026.xlsx", onlyFirst);
+    expect(jobs.map((j) => [j.kind, j.sheetName])).toEqual([
+      ["known", "MB AB"],
+      ["new", "MB Restart"],
+    ]);
+  });
+
   it("reports the changed timmar file as drift when only the old template exists", async () => {
     const jobs = await recognize(
       "intelliplan_timmar_MBAB_2026-09_andrad.xlsx",

@@ -62,7 +62,12 @@ export function NewMetricDialog({
     }
     setBusy(true);
     setError(null);
-    const res = await createMetricAction(parsed.data);
+    let res: Awaited<ReturnType<typeof createMetricAction>>;
+    try {
+      res = await createMetricAction(parsed.data);
+    } catch {
+      res = { ok: false, error: "Måttet kunde inte skapas. Försök igen." };
+    }
     setBusy(false);
     if (!res.ok) {
       setError(res.error);

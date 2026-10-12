@@ -5,8 +5,17 @@ import {
   type IngestResult,
   type LedgerRow,
 } from "@/lib/contracts";
+import { formatNumber } from "@/lib/core/format-sv";
 import { jsonBytes, STAGE_MAX_BYTES } from "./chunking";
-import { buildUploadCreate, factChunks, ledgerChunks, stageTotal } from "./upload-payload";
+import {
+  REPORT_MAX_ISSUES,
+  REPORT_MAX_SKIPPED,
+  buildUploadCreate,
+  compactParseReport,
+  factChunks,
+  ledgerChunks,
+  stageTotal,
+} from "./upload-payload";
 
 const base: IngestResult = {
   engineVersion: 1,
@@ -30,6 +39,50 @@ const ledgerRow = (i: number): LedgerRow => ({
   amount: -i,
   yearOffset: 0,
   source: "psaldo",
+});
+
+describe("compactParseReport", () => {
+  const big: IngestResult["report"] = {
+    rowsRead: 50_000,
+    rowsUsed: 20_000,
+    skipped: Array.from({ length: 30_000 }, (_, i) => ({
+      sourceRow: i + 2,
+      reason: "filtered" as const,
+      detail: `Makulerad – Anna Andersson ${i}`,
+    })),
+    issues: Array.from({ length: 5000 }, (_, i) => ({
+      sourceRow: i + 2,
+      column: "timmar",
+      value: `åtta och en halv ${i}`,
+      message: "Kunde inte läsas som timmar.",
+      severity: "error" as const,
+    })),
+    warnings: ["Okända värden för kund: X."],
+    sheet: "Rapport",
+  };
+
+  it("keeps a 50 000-row file's upload header well inside one Server Action request", () => {
+    const header = buildUploadCreate({ ...base, report: big }, null);
+    expect(jsonBytes(header)).toBeLessThan(STAGE_MAX_BYTES);
+    expect(UploadCreateSchema.safeParse(header).success).toBe(true);
+  });
+
+  it("drops cell values and skip details and says that the lists were cut", () => {
+    const r = compactParseReport(big);
+    expect(r.skipped).toHaveLength(REPORT_MAX_SKIPPED);
+    expect(r.issues).toHaveLength(REPORT_MAX_ISSUES);
+    expect(r.skipped.some((s) => "detail" in s)).toBe(false);
+    expect(r.issues.every((i) => i.value === "")).toBe(true);
+    expect(JSON.stringify(r)).not.toContain("Anna Andersson");
+    expect(r.warnings.at(-1)).toBe(
+      `Rapporten sparar de första exemplen av ${formatNumber(30_000)} rader som inte räknades och ${formatNumber(5000)} celler som inte kunde läsas.`,
+    );
+    expect(r).toMatchObject({ rowsRead: 50_000, rowsUsed: 20_000, sheet: "Rapport" });
+  });
+
+  it("leaves a small report's numbers and warnings as they are", () => {
+    expect(compactParseReport(base.report)).toEqual(base.report);
+  });
 });
 
 describe("buildUploadCreate", () => {

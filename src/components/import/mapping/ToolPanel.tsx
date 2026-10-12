@@ -22,6 +22,7 @@ import { Button } from "@/components/ui/button";
 import {
   addCounter,
   addStep,
+  datasetKind,
   measureMetrics,
   removeCounter,
   removeStep,
@@ -96,9 +97,11 @@ export function ToolPanel({
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-3 2xl:grid-cols-4">
           {TOOLS.map((t) => {
             const Icon = ICONS[t.kind];
+            // Row counts are measures of table reports; participant lists count people instead.
             const disabled =
               t.kind === "counter" &&
-              (!state.datasetKey || measureMetrics(catalog, state.datasetKey).length === 0);
+              (datasetKind(catalog, state.datasetKey) !== "table" ||
+                measureMetrics(catalog, state.datasetKey).length === 0);
             return (
               <button
                 key={t.kind}

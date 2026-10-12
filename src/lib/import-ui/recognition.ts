@@ -1,10 +1,14 @@
 // Recognition: which saved templates fit a dropped workbook. A template with a
 // sheet hint is tried on that sheet, others on the default sheet. Every sheet
-// with a compatible template becomes a job that runs by itself; otherwise the
-// closest template is offered as "the file has changed", and a file that
-// resembles nothing becomes a new report type to map.
+// with a compatible template becomes a job that runs by itself; a sheet that
+// resembles a template (or has a template of its own) but changed becomes "the
+// file has changed"; a file that resembles nothing becomes a new report type to
+// map. Other visible sheets laid out like a sheet that is handled (the second
+// company's budget sheet) become new report types too, so no sheet is skipped
+// without the user seeing it.
 import type { SignatureDiff } from "@/lib/contracts";
-import { matchTemplates } from "@/lib/ingest/recognize";
+import { normalizeHeader } from "@/lib/core/normalize";
+import { diffSignature, matchTemplates } from "@/lib/ingest/recognize";
 
 export interface RecognitionTemplate {
   id: string;
@@ -78,6 +82,19 @@ function sheetOf(t: RecognitionTemplate, input: RecognitionInput): string {
   return (t.sheetHint && input.sheetForHint[t.sheetHint]) || input.defaultSheet;
 }
 
+/**
+ * The sheet a template's hint really names. pickSheet falls back to the default
+ * sheet when no sheet has the hinted name; such a fallback is not the template's
+ * own sheet.
+ */
+function ownSheet(t: RecognitionTemplate, input: RecognitionInput): string | null {
+  if (t.kind === "sie" || !t.sheetHint) return null;
+  const sheet = input.sheetForHint[t.sheetHint];
+  if (sheet === undefined) return null;
+  if (sheet !== input.defaultSheet) return sheet;
+  return normalizeHeader(sheet) === normalizeHeader(t.sheetHint) ? sheet : null;
+}
+
 /** Decide what happens with a workbook (see the module comment). */
 export function planJobs(input: RecognitionInput): Job[] {
   const tableTemplates = input.templates.filter((t) => t.kind !== "sie");
@@ -88,8 +105,7 @@ export function planJobs(input: RecognitionInput): Job[] {
     bySheet.set(sheet, [...(bySheet.get(sheet) ?? []), t]);
   }
 
-  const known: Job[] = [];
-  let bestDrift: Extract<Job, { kind: "drift" }> | null = null;
+  const jobs: Job[] = [];
   for (const [sheet, candidates] of bySheet) {
     const matches = matchTemplates(input.signatures[sheet]!, candidates);
     const byId = new Map(candidates.map((t) => [t.id, t]));
@@ -99,6 +115,7 @@ export function planJobs(input: RecognitionInput): Job[] {
       .sort(
         (a, b) =>
           Number(b.m.diff.compatible) - Number(a.m.diff.compatible) ||
+          Number(ownSheet(b.t, input) === sheet) - Number(ownSheet(a.t, input) === sheet) ||
           Number(Boolean(b.t.sheetHint)) - Number(Boolean(a.t.sheetHint)) ||
           b.m.score - a.m.score ||
           (b.t.updatedAt ?? "").localeCompare(a.t.updatedAt ?? ""),
@@ -106,24 +123,46 @@ export function planJobs(input: RecognitionInput): Job[] {
     const best = ranked[0];
     if (!best) continue;
     if (best.m.diff.compatible) {
-      known.push({ kind: "known", sheetName: sheet, template: best.t, score: best.m.score });
-    } else if (best.m.score >= DRIFT_MIN_SCORE && (!bestDrift || best.m.score > bestDrift.score)) {
-      bestDrift = {
+      jobs.push({ kind: "known", sheetName: sheet, template: best.t, score: best.m.score });
+    } else if (best.m.score >= DRIFT_MIN_SCORE || ownSheet(best.t, input) === sheet) {
+      // A sheet's own template is shown as changed however much the sheet changed.
+      jobs.push({
         kind: "drift",
         sheetName: sheet,
         template: best.t,
         score: best.m.score,
         diff: best.m.diff,
-      };
+      });
+    }
+  }
+  if (jobs.length === 0) jobs.push({ kind: "new", sheetName: input.defaultSheet });
+
+  // A sheet with a template of its own is never skipped, even when nothing matches any more.
+  for (const t of tableTemplates) {
+    const own = ownSheet(t, input);
+    if (own && input.signatures[own] && !jobs.some((j) => j.sheetName === own)) {
+      jobs.push({ kind: "new", sheetName: own });
     }
   }
 
-  if (known.length > 0) {
-    const order = input.sheetOrder ?? [];
-    return known.sort((a, b) => order.indexOf(a.sheetName) - order.indexOf(b.sheetName));
+  // Sibling sheets: same layout as a handled sheet, but no template of their own.
+  const covered = new Set(jobs.map((j) => j.sheetName));
+  const order = input.sheetOrder ?? [];
+  for (const sheet of order.length > 0 ? order : Object.keys(input.signatures)) {
+    const sig = input.signatures[sheet];
+    if (covered.has(sheet) || !sig || sig.length === 0) continue;
+    const sameLayout = jobs.some((j) => {
+      const handled = input.signatures[j.sheetName];
+      return handled !== undefined && diffSignature(handled, sig).compatible;
+    });
+    if (!sameLayout) continue;
+    jobs.push({ kind: "new", sheetName: sheet });
+    covered.add(sheet);
   }
-  if (bestDrift) return [bestDrift];
-  return [{ kind: "new", sheetName: input.defaultSheet }];
+
+  return order.length > 0
+    ? jobs.sort((a, b) => order.indexOf(a.sheetName) - order.indexOf(b.sheetName))
+    : jobs;
 }
 
 export interface DriftChange {

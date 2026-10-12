@@ -772,12 +772,22 @@ export function fromTemplateConfig(
 
 // ---- Edits ----------------------------------------------------------------------
 
-/** Pick the dataset; suggestions (for the source columns) replace the field mappings. */
+/** The default template name: the report's name, plus the sheet for multi-sheet workbooks. */
+export function defaultTemplateName(datasetName: string, sheetName?: string): string {
+  return sheetName ? `${datasetName} – ${sheetName}` : datasetName;
+}
+
+/**
+ * Pick the dataset; suggestions (for the source columns) replace the field
+ * mappings. `sheetName` (workbooks with several sheets) goes into the default
+ * template name, so "Budget – MB AB" and "Budget – MB Restart" tell apart.
+ */
 export function setDataset(
   state: MappingState,
   datasetKey: string,
   catalog: MappingCatalog,
   suggestions?: readonly ColumnMapping[],
+  sheetName?: string,
 ): MappingState {
   if (datasetKey === state.datasetKey) return state;
   const fields = { ...state.fields };
@@ -797,12 +807,20 @@ export function setDataset(
   }
   const dataset = datasetOf(catalog, datasetKey);
   const oldDataset = datasetOf(catalog, state.datasetKey);
-  const keepName = state.templateName.trim() !== "" && state.templateName !== oldDataset?.name;
+  const keepName =
+    state.templateName.trim() !== "" &&
+    (!oldDataset ||
+      (state.templateName !== oldDataset.name &&
+        state.templateName !== defaultTemplateName(oldDataset.name, sheetName)));
   return {
     ...state,
     datasetKey,
     fields,
-    templateName: keepName ? state.templateName : (dataset?.name ?? state.templateName),
+    templateName: keepName
+      ? state.templateName
+      : dataset
+        ? defaultTemplateName(dataset.name, sheetName)
+        : state.templateName,
     counters: state.counters.filter((c) => allowedMetrics.has(c.metricKey)),
     cases: { ...state.cases, metrics: defaultCaseMetrics(catalog, datasetKey) },
   };
@@ -901,6 +919,33 @@ export function setPeriodColumn(state: MappingState, column: string | null): Map
   for (const [c, f] of Object.entries(fields))
     if (f.usage === "period") fields[c] = { ...f, usage: "ignore" };
   return { ...state, fields };
+}
+
+const COMPANY_HEADER = /bolag|företag|foretag|company/i;
+
+/**
+ * The column to start with when the user switches period or company to "En
+ * kolumn i filen". Taking a column means its old use is cleared, so a column
+ * that is not used for anything yet is preferred over, say, the customer
+ * column the user already mapped.
+ */
+export function defaultColumnFor(
+  state: MappingState,
+  outputs: readonly string[],
+  usage: "period" | "company",
+): string | undefined {
+  const free = (c: string) => (state.fields[c]?.usage ?? "ignore") === "ignore";
+  const fits =
+    usage === "period"
+      ? (c: string) => state.fields[c]?.type === "date"
+      : (c: string) => COMPANY_HEADER.test(c);
+  return (
+    outputs.find((c) => state.fields[c]?.usage === usage) ??
+    outputs.find((c) => fits(c) && free(c)) ??
+    outputs.find(free) ??
+    outputs.find(fits) ??
+    outputs[0]
+  );
 }
 
 export type CompanyChoice =

@@ -2,7 +2,12 @@
 
 import { Button } from "@/components/ui/button";
 import { formatNumber } from "@/lib/core/format-sv";
-import { existingValues, type DictionaryEntry, type UnknownGroup } from "@/lib/import-ui/review";
+import {
+  canAddValues,
+  existingValues,
+  type DictionaryEntry,
+  type UnknownGroup,
+} from "@/lib/import-ui/review";
 import { NativeSelect } from "../fields";
 
 /** Values the catalog does not know yet: add as new, or say it is the same as an existing one. */
@@ -34,6 +39,7 @@ export function UnknownValues({
           value: String(v.id),
           label: v.label,
         }));
+        const addable = canAddValues(g.dimension);
         return (
           <div key={g.dimension} className="flex flex-col gap-2">
             <div className="flex flex-wrap items-center justify-between gap-2">
@@ -43,7 +49,7 @@ export function UnknownValues({
                   ({formatNumber(g.ask.length)} nya)
                 </span>
               </p>
-              {g.ask.length > 1 && !g.personal ? (
+              {g.ask.length > 1 && !g.personal && addable ? (
                 <Button
                   variant="outline"
                   size="sm"
@@ -54,6 +60,11 @@ export function UnknownValues({
                 </Button>
               ) : null}
             </div>
+            {!addable ? (
+              <p className="text-sm text-muted-foreground">
+                {g.label} är en fast lista. Välj vilket befintligt värde varje rad är.
+              </p>
+            ) : null}
             <ul className="flex flex-col divide-y divide-border rounded-lg border border-border">
               {g.ask.map((label) => (
                 <li
@@ -67,14 +78,16 @@ export function UnknownValues({
                     {g.personal ? "Personuppgift" : label}
                   </span>
                   <span className="flex flex-wrap items-center gap-2">
-                    <Button
-                      size="sm"
-                      disabled={busy}
-                      onClick={() => onAddNew(g.dimension, label)}
-                      data-testid="add-new-value"
-                    >
-                      Lägg till som ny
-                    </Button>
+                    {addable ? (
+                      <Button
+                        size="sm"
+                        disabled={busy}
+                        onClick={() => onAddNew(g.dimension, label)}
+                        data-testid="add-new-value"
+                      >
+                        Lägg till som ny
+                      </Button>
+                    ) : null}
                     {existing.length > 0 ? (
                       <NativeSelect
                         aria-label={`${label} är samma som`}

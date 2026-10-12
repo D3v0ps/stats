@@ -50,6 +50,28 @@ export function UploadApp({
     window.scrollTo({ top: 0 });
   }, [view.kind]);
 
+  // A file dropped beside the drop zone must not make the browser open it (and
+  // leave the page with the files read so far). In the file list it is added.
+  const { addFiles } = queue;
+  const onQueue = view.kind === "queue";
+  useEffect(() => {
+    const over = (e: DragEvent) => {
+      if (e.dataTransfer?.types.includes("Files")) e.preventDefault();
+    };
+    const drop = (e: DragEvent) => {
+      if (!e.dataTransfer?.types.includes("Files") || e.defaultPrevented) return;
+      e.preventDefault();
+      const files = Array.from(e.dataTransfer.files);
+      if (onQueue && files.length > 0) addFiles(files);
+    };
+    window.addEventListener("dragover", over);
+    window.addEventListener("drop", drop);
+    return () => {
+      window.removeEventListener("dragover", over);
+      window.removeEventListener("drop", drop);
+    };
+  }, [addFiles, onQueue]);
+
   const byId = useMemo(() => new Map(queue.items.map((i) => [i.id, i])), [queue.items]);
 
   if (view.kind === "map") {

@@ -29,6 +29,7 @@ import {
   toolOutput,
   usagesFor,
   validateMapping,
+  defaultColumnFor,
   type MappingState,
   type SourceColumnInfo,
 } from "./mapping";
@@ -199,6 +200,41 @@ describe("edits", () => {
     expect(unnamed.templateName).toBe("Intelliplan – frånvaro");
     expect(unnamed.fields.timmar?.metricKey).toBeUndefined();
     expect(unnamed.fields["anställnings id"]?.dimensionKey).toBe("konsult");
+  });
+
+  it("names the template after the sheet in a multi-sheet workbook", () => {
+    const fresh = { ...timmar(), datasetKey: null, templateName: "" };
+    const s = setDataset(fresh, "budget", SEED_CATALOG, undefined, "MB Restart");
+    expect(s.templateName).toBe("Budget – MB Restart");
+    // The default name follows a dataset change; a name the user typed stays.
+    expect(setDataset(s, "ip_timmar", SEED_CATALOG, undefined, "MB Restart").templateName).toBe(
+      "Intelliplan – timmar och pass – MB Restart",
+    );
+    const typed = setDataset({ ...s, templateName: "Min budget" }, "ip_timmar", SEED_CATALOG);
+    expect(typed.templateName).toBe("Min budget");
+  });
+});
+
+describe("defaultColumnFor", () => {
+  it("does not take over a column that is already mapped", () => {
+    // kund is a dimension, datum the period, timmar a measure: nothing is free.
+    let s = timmar();
+    expect(defaultColumnFor(s, toolOutput(s).columns, "period")).toBe("datum");
+    expect(defaultColumnFor(s, toolOutput(s).columns, "company")).toBe("kund");
+    s = addStep(s, { op: "constant", column: "bolag", value: "MB AB" });
+    s = addStep(s, { op: "constant", column: "status", value: "x" });
+    const outputs = toolOutput(s).columns;
+    expect(defaultColumnFor(s, outputs, "company")).toBe("bolag");
+    s = setField(s, "bolag", { usage: "dimension", dimensionKey: "verksamhet" });
+    expect(defaultColumnFor(s, outputs, "company")).toBe("status");
+  });
+
+  it("prefers a free date column for the period", () => {
+    let s = setPeriodColumn(timmar(), null);
+    s = addStep(s, { op: "constant", column: "bokföringsdag", value: "2026-09-30" });
+    s = setField(s, "bokföringsdag", { type: "date" });
+    s = setField(s, "datum", { usage: "dimension", dimensionKey: "uppdrag" });
+    expect(defaultColumnFor(s, toolOutput(s).columns, "period")).toBe("bokföringsdag");
   });
 });
 
