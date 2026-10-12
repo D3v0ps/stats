@@ -20,6 +20,7 @@ import {
   mappingSteps,
   orderedOutput,
   setDataset,
+  setHeaderRow,
   setTemplateName,
   toTemplateConfig,
   toolOutput,
@@ -79,7 +80,13 @@ export function MappingView(props: MappingViewProps) {
   const { item, catalog, base, client, getDictionaries, onSaved, onCancel, onMetricCreated } =
     props;
   const [sheet, setSheet] = useState<string | undefined>(item.sourceSheet);
-  const [headerRow, setHeaderRow] = useState<number | undefined>(item.headerRow);
+  // A header row picked by hand: this upload's choice, else the one saved with the template.
+  const [headerRow, setHeaderRowChoice] = useState<number | undefined>(
+    item.headerRow ??
+      (base.kind === "update" && base.template.config.kind !== "sie"
+        ? base.template.config.headerRow
+        : undefined),
+  );
   const [inspect, setInspect] = useState<InspectResponse | null>(null);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [history, setHistory] = useState<History<MappingState> | null>(null);
@@ -138,16 +145,21 @@ export function MappingView(props: MappingViewProps) {
           catalog: c,
         });
       }
+      // The template remembers the row, so next month's file is read from it too.
+      state = setHeaderRow(state, headerRow);
       setLoadError(null);
       setInspect(res);
       setMigration(m);
       setHistory(createHistory(state));
       setOriginal(
-        initialMapping(res.columns, res.suggestions, {
-          datasetKey: state.datasetKey,
-          templateName: state.templateName,
-          catalog: c,
-        }),
+        setHeaderRow(
+          initialMapping(res.columns, res.suggestions, {
+            datasetKey: state.datasetKey,
+            templateName: state.templateName,
+            catalog: c,
+          }),
+          headerRow,
+        ),
       );
     })();
     return () => {
@@ -393,9 +405,9 @@ export function MappingView(props: MappingViewProps) {
           <Field
             label="Rubrikraden står på rad"
             hint={
-              inspect.confidence < 0.5
+              inspect.confidence < 0.5 && headerRow === undefined
                 ? "Rubrikerna var svåra att hitta. Kontrollera raden."
-                : undefined
+                : "Sparas i mallen och används för nästa månads fil."
             }
           >
             {(id) => (
@@ -407,7 +419,8 @@ export function MappingView(props: MappingViewProps) {
                 defaultValue={inspect.headerRow ?? 1}
                 onBlur={(e) => {
                   const n = Number(e.target.value);
-                  if (Number.isInteger(n) && n >= 1 && n - 1 !== headerRow) setHeaderRow(n - 1);
+                  if (Number.isInteger(n) && n >= 1 && n - 1 !== headerRow)
+                    setHeaderRowChoice(n - 1);
                 }}
                 data-testid="header-row"
               />

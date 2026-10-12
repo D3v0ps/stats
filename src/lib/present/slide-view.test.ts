@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { ChartData, ResolvedReport, ResolvedSlide } from "@/lib/contracts/slides";
 import {
   chartScale,
+  miniatureChartText,
   deckReport,
   formatElapsed,
   headlineScale,
@@ -148,6 +149,17 @@ describe("deckReport and notesOutline", () => {
         },
       ],
     });
+  });
+});
+
+describe("miniatureChartText", () => {
+  it("shrinks axis labels with the box, between 6 and 12 px", () => {
+    expect(miniatureChartText(560)).toEqual({ fontSize: 12, yAxisWidth: 54 });
+    expect(miniatureChartText(1200)).toEqual({ fontSize: 12, yAxisWidth: 54 });
+    expect(miniatureChartText(230)).toEqual({ fontSize: 6, yAxisWidth: 27 });
+    expect(miniatureChartText(368)).toEqual({ fontSize: 8, yAxisWidth: 36 });
+    expect(miniatureChartText(0)).toEqual({ fontSize: 12, yAxisWidth: 54 });
+    expect(miniatureChartText(Number.NaN).fontSize).toBe(12);
   });
 });
 

@@ -3,11 +3,12 @@
 // breakdown by the next dimension and comparisons. Works for any dimension (verksamhet, ort,
 // kostnadsställe, uppdrag, konsult). Pure orchestration over a MetricDataSource.
 import type { UrlFilters } from "@/lib/app/filters";
-import { COMPANY_FILTER_LABELS } from "@/lib/contracts/domain";
+import { COMPANY_FILTER_LABELS, DimensionKeySchema } from "@/lib/contracts/domain";
 import {
   COMPANY_GROUP,
   type CompareCell,
   type DimFilter,
+  type MetricDataSource,
   type MetricDefinition,
   type MetricResult,
 } from "@/lib/contracts/metric-query";
@@ -146,6 +147,29 @@ export interface EntityInput {
   /** Breakdown from the URL (?grupp=), null = suggested next dimension. */
   breakdown: string | null;
   sort: SortState | null;
+}
+
+/** The route params of /utforska/[dimension]/[value], or null when they cannot name an entity. */
+export function parseEntityParams(
+  dimension: string,
+  value: string,
+): Pick<EntityInput, "dimension" | "valueId"> | null {
+  if (!DimensionKeySchema.safeParse(dimension).success || !/^\d{1,15}$/.test(value)) return null;
+  const valueId = Number(value);
+  return valueId > 0 ? { dimension, valueId } : null;
+}
+
+/**
+ * Whether the entity page has something to show: a dimension of the catalog and a value of
+ * it. The page checks this before streaming, so an unknown entity answers with a real 404.
+ */
+export async function entityExists(
+  input: Pick<EntityInput, "dimension" | "valueId">,
+  ctx: { source: Pick<MetricDataSource, "labels">; dimensions: readonly DimensionMeta[] },
+): Promise<boolean> {
+  if (!ctx.dimensions.some((d) => d.key === input.dimension)) return false;
+  const labels = await ctx.source.labels(input.dimension, [input.valueId]);
+  return labels[input.valueId] !== undefined;
 }
 
 function comparisonPivot(defs: MetricDefinition[], results: MetricResult[]): PivotModel | null {

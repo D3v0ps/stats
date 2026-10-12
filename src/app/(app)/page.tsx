@@ -110,7 +110,6 @@ async function OverviewContent({ filters }: { filters: UrlFilters }) {
           filters,
           anchor,
         }}
-        lastUpdated={meta.lastUpdated}
       />
       {filters.company === "ALL" ? (
         <p className="text-xs text-muted-foreground">

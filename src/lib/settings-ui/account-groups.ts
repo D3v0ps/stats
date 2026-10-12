@@ -1,6 +1,7 @@
-// Account group editing: range validation (BAS accounts are four digits), sign wording and
-// which ledger metrics read each group.
-import type { MetricDefinition } from "@/lib/contracts/metric-query";
+// Account group editing: range validation (BAS accounts are four digits), sign wording,
+// which ledger metrics read each group and what an edit does to the budget (budget leaves).
+import type { AccountGroup, MetricDefinition } from "@/lib/contracts/metric-query";
+import { leafAccountGroups, rangesCover } from "@/lib/metrics/memory-source";
 
 export interface AccountRange {
   from: number;
@@ -96,4 +97,63 @@ export function rangesChanged(stored: readonly AccountRange[], drafts: readonly 
   return stored.some(
     (r, i) => String(r.from) !== drafts[i]?.from.trim() || String(r.to) !== drafts[i]?.to.trim(),
   );
+}
+
+const quoted = (names: readonly string[]) => names.map((n) => `”${n}”`).join(", ");
+
+/** The budget leaves whose ranges lie inside the group's ranges (a leaf lies inside itself). */
+function leavesWithin(group: AccountGroup, groups: readonly AccountGroup[]): AccountGroup[] {
+  return leafAccountGroups(groups).filter(
+    (l) => l.key !== group.key && rangesCover(group.ranges, l.ranges),
+  );
+}
+
+/**
+ * For a summary group (its ranges contain other groups, so it is not a budget leaf): how its
+ * budget is made up. null for budget leaves and groups without ranges.
+ */
+export function summaryGroupNote(groups: readonly AccountGroup[], key: string): string | null {
+  const group = groups.find((g) => g.key === key);
+  if (!group || group.ranges.length === 0) return null;
+  if (leafAccountGroups(groups).some((l) => l.key === key)) return null;
+  const inner = leavesWithin(group, groups).map((g) => g.name);
+  return `Summagrupp: budgeten räknas fram ur ${quoted(inner)}. Budget som läggs direkt på ”${group.name}” räknas inte.`;
+}
+
+/**
+ * What saving new ranges for group `key` does to the budget. A group whose ranges strictly
+ * contain another group's is a summary group, not a budget leaf: budget lines on it are not
+ * counted (its budget is the sum of the leaves inside it). Warns for every group that stops
+ * being a budget leaf, and for every group that becomes one, because of the edit.
+ */
+export function budgetLeafWarnings(
+  groups: readonly AccountGroup[],
+  key: string,
+  ranges: readonly AccountRange[],
+): string[] {
+  const edited = groups.find((g) => g.key === key);
+  if (!edited || ranges.length === 0) return [];
+  const next = groups.map((g) => (g.key === key ? { ...g, ranges: [...ranges] } : g));
+  const before = new Set(leafAccountGroups(groups).map((g) => g.key));
+  const after = new Set(leafAccountGroups(next).map((g) => g.key));
+  const warnings: string[] = [];
+  for (const g of next) {
+    if (before.has(g.key) && !after.has(g.key)) {
+      if (g.key === key) {
+        const inner = leavesWithin(g, next).map((x) => x.name);
+        warnings.push(
+          `Intervallen omsluter nu ${quoted(inner)}. Då blir ”${g.name}” en summagrupp: budget som läggs direkt på ”${g.name}” räknas inte längre, utan budgeten räknas fram ur grupperna inuti.`,
+        );
+      } else {
+        warnings.push(
+          `Intervallen ligger nu inom ”${g.name}”. Då blir ”${g.name}” en summagrupp: budget som läggs direkt på ”${g.name}” räknas inte längre – lägg den budgeten på grupperna inuti i stället.`,
+        );
+      }
+    } else if (!before.has(g.key) && after.has(g.key)) {
+      warnings.push(
+        `”${g.name}” omsluter inte längre någon annan kontogrupp och blir en egen budgetrad: budget som läggs på ”${g.name}” räknas då direkt, i stället för att räknas fram ur andra grupper.`,
+      );
+    }
+  }
+  return warnings;
 }

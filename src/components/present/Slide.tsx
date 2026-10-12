@@ -8,6 +8,7 @@ import type { ResolvedSlide } from "@/lib/contracts/slides";
 import { TOTAL_ROW_LABEL } from "@/lib/metrics";
 import {
   headlineScale,
+  miniatureChartText,
   numberScale,
   slideEmphasis,
   slideKicker,
@@ -125,33 +126,25 @@ function SlideVisualElement({
   return (
     <ScaledChart scaleUp={scaleUp}>
       {({ width, height }) => {
+        // Screen fit scales the chart up as a whole; a miniature shrinks its axis text instead.
+        const text = scaleUp ? {} : miniatureChartText(width);
+        const common = { data: chart, title, animate: false, height, ...text };
         switch (visual) {
           case "line":
-            return <MbLineChart data={chart} title={title} animate={false} height={height} />;
+            return <MbLineChart {...common} />;
           case "columns":
-            return <MbBarChart data={chart} title={title} animate={false} height={height} />;
+            return <MbBarChart {...common} />;
           case "bars":
-            return (
-              <MbBarChart
-                data={chart}
-                title={title}
-                animate={false}
-                height={height}
-                orientation="horizontal"
-                showValues
-              />
-            );
+            return <MbBarChart {...common} orientation="horizontal" showValues />;
           case "stacked":
-            return (
-              <MbStackedCompanyBar data={chart} title={title} animate={false} height={height} />
-            );
+            return <MbStackedCompanyBar {...common} />;
           case "donut":
             return (
               <MbDonut
-                data={chart}
-                title={title}
-                animate={false}
+                {...common}
                 height={Math.max(60, Math.min(height, width * 0.48))}
+                // The big number beside the donut already is the total.
+                showTotal={!slide.number}
                 centerLabel="Totalt"
               />
             );

@@ -5,7 +5,6 @@ import { kpiFormatOptions } from "@/components/explore/MetricKpiGrid";
 import type { LoadedWidget } from "@/lib/dashboard/load-dashboard";
 import { cn } from "@/lib/utils";
 import { ChartCard } from "./ChartCard";
-import { KPI_SOURCE_BUTTON, KPI_SOURCE_FRAME } from "./grid-classes";
 import { SourcePopover } from "./SourcePopover";
 import { ToplistBars } from "./ToplistBars";
 import { kpiFootnote, kpiSparkline, widgetSubtitle, widgetTitle } from "./widget-text";
@@ -13,11 +12,10 @@ import { toplistRows } from "./toplist-rows";
 
 export interface WidgetRendererProps {
   widget: LoadedWidget;
-  lastUpdatedAt: string | null;
 }
 
 /** ResolvedSlide -> KpiCard / Mb* chart / toplist / table, with drill-down links. */
-export function WidgetRenderer({ widget, lastUpdatedAt }: WidgetRendererProps) {
+export function WidgetRenderer({ widget }: WidgetRendererProps) {
   const { spec, slide, metric } = widget;
   const title = widgetTitle(widget);
   const testId = `widget-${spec.id}`;
@@ -32,35 +30,34 @@ export function WidgetRenderer({ widget, lastUpdatedAt }: WidgetRendererProps) {
     );
   }
 
+  const lastUpdatedAt = slide.lastUpdatedAt ?? null;
   if (spec.viz === "kpi") {
     return (
-      <div
-        className={cn(
-          KPI_SOURCE_FRAME,
-          "[&_[data-slot=sparkline]]:w-20 @7xl:[&_[data-slot=sparkline]]:w-24",
-        )}
+      <KpiCard
         data-testid={testId}
-      >
-        <KpiCard
-          className="h-full"
-          title={title}
-          value={slide.number?.value ?? null}
-          unit={metric.unit}
-          formatOptions={kpiFormatOptions(metric.unit, metric.decimals)}
-          delta={widget.budgetDelta ?? slide.delta}
-          sparkline={kpiSparkline(slide)}
-          sparklineLabel={`${metric.name}, senaste 12 månaderna`}
-          lastUpdatedAt={lastUpdatedAt}
-          footnote={kpiFootnote(widget)}
-          href={widget.href}
-          actionLabel={`${title}: utforska`}
-        />
-        <SourcePopover query={widget.sourceQuery} subject={title} className={KPI_SOURCE_BUTTON} />
-      </div>
+        className="h-full [&_[data-slot=sparkline]]:w-20 @7xl:[&_[data-slot=sparkline]]:w-24"
+        title={title}
+        value={slide.number?.value ?? null}
+        unit={metric.unit}
+        formatOptions={kpiFormatOptions(metric.unit, metric.decimals)}
+        delta={slide.delta}
+        secondaryDelta={widget.budgetDelta}
+        sparkline={kpiSparkline(slide)}
+        sparklineLabel={`${metric.name}, senaste 12 månaderna`}
+        lastUpdatedAt={lastUpdatedAt}
+        footnote={kpiFootnote(widget)}
+        href={widget.href}
+        actionLabel={`${title}: utforska`}
+        actions={<SourcePopover query={widget.sourceQuery} subject={title} />}
+      />
     );
   }
 
   const chart = slide.chart;
+  // Aligned with the chart's categories (built from ChartData.categoryIds).
+  const categoryHrefs = widget.categoryLinks.some((l) => l.href)
+    ? widget.categoryLinks.map((l) => l.href)
+    : undefined;
   const subtitle = widgetSubtitle(widget);
   const common = {
     title,
@@ -93,8 +90,16 @@ export function WidgetRenderer({ widget, lastUpdatedAt }: WidgetRendererProps) {
     case "donut":
       return (
         <ChartCard {...common}>
-          {chart ? <MbDonut data={chart} title={title} centerLabel="Totalt" /> : empty}
-          <CategoryLinks widget={widget} />
+          {chart ? (
+            <MbDonut
+              data={chart}
+              title={title}
+              centerLabel="Totalt"
+              categoryHrefs={categoryHrefs}
+            />
+          ) : (
+            empty
+          )}
         </ChartCard>
       );
     case "toplist": {
@@ -169,33 +174,13 @@ export function WidgetRenderer({ widget, lastUpdatedAt }: WidgetRendererProps) {
               title={title}
               orientation={horizontal ? "horizontal" : "vertical"}
               height={horizontal ? undefined : 260}
+              categoryHrefs={categoryHrefs}
             />
           ) : (
             empty
           )}
-          <CategoryLinks widget={widget} />
         </ChartCard>
       );
     }
   }
-}
-
-/** Drill-down links under a breakdown chart (chart bars themselves are not focusable). */
-function CategoryLinks({ widget }: { widget: LoadedWidget }) {
-  const links = widget.categoryLinks.filter((l) => l.href);
-  if (links.length === 0) return null;
-  return (
-    <nav aria-label={`Öppna ${widgetTitle(widget)}`} className="mt-3 flex flex-wrap gap-1.5">
-      {links.map((l) => (
-        <Link
-          key={l.label}
-          href={l.href as string}
-          data-testid={`widget-${widget.spec.id}-link`}
-          className="rounded-full border border-border px-2.5 py-1 text-xs text-muted-foreground transition-colors hover:border-antracit-200 hover:text-foreground focus-visible:ring-3 focus-visible:ring-ring/50 focus-visible:outline-none"
-        >
-          {l.label}
-        </Link>
-      ))}
-    </nav>
-  );
 }

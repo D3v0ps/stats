@@ -31,7 +31,7 @@ export function UploadApp({
   templates: StoredTemplate[];
 }) {
   const [catalog, setCatalog] = useState(initialCatalog);
-  const queue = useImportQueue(templates);
+  const queue = useImportQueue(templates, initialCatalog.accountGroups);
   const [view, setView] = useState<View>({ kind: "queue" });
   const [now] = useState(() => new Date());
   const toQueue = () => setView({ kind: "queue" });

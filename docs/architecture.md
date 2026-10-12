@@ -86,7 +86,7 @@ ranges: `intakter`, `varor_ul`, `ovriga_externa`, `personal`, `avskrivningar`,
 ### Imports
 
 - `import_templates(id uuid pk, dataset_id, name, kind check in ('table','cases','sie'), current_version int, header_signature jsonb, sheet_hint text, created_at, updated_at)`
-- `import_template_versions(template_id, version int, config jsonb, created_at, pk(template_id, version))` – config validated client-side by `TemplateConfigSchema`. Table templates may set `budgetSign` (see "Budget sign"); table and cases templates may set `headerRow` (0-based sheet row picked by hand; `runTemplate` uses `RunContext.headerRow ?? config.headerRow ?? detection`).
+- `import_template_versions(template_id, version int, config jsonb, created_at, pk(template_id, version))` – config validated client-side by `TemplateConfigSchema`. Table templates may set `budgetSign` (see "Budget sign"); table and cases templates may set `headerRow` (0-based sheet row picked by hand; `runTemplate` uses `RunContext.headerRow ?? config.headerRow ?? detection`). The mapping view saves a row picked by hand, and recognition matches such a template against the sheet read at that row (`templateHeaderRows`, `RecognizeResponse.signaturesAt`). Deleting a template in Inställningar is allowed while uploads use it (they keep their numbers; see `uploads`).
 - `uploads(id uuid pk, dataset_id, template_id null, template_version null, scenario check in ('utfall','budget'), file_name, file_sha256 text, file_size bigint, content_hash text, engine_version int, as_of_date date null, parse_report jsonb, totals jsonb, status check in ('staged','published','retracted','discarded'), created_at, published_at, retracted_at, retract_reason)`
   - Partial unique: `(dataset_id, file_sha256, coalesce(template_id,…), coalesce(template_version,0)) where status = 'published' and (template_id is not null or template_version is null)` – same file + same template version (or, for SIE, no template) cannot be published twice.
   - Templates can be deleted while uploads keep their data: FK `(template_id, template_version) → import_template_versions on delete set null (template_id)`, so deleting a template (versions cascade) nulls `template_id` and keeps `template_version` as history. Such uploads stay published/current, can still be reviewed, published (if staged) and retracted, and are left out of the partial unique index. `check (template_id is null or template_version is not null)`; clients may only stage both or neither (insert policy).
@@ -127,7 +127,7 @@ company and month (and the upload's scenario).
 - `publish_upload(p_upload_id uuid) returns jsonb` – **SECURITY DEFINER** (with `retract_upload` the only code that may flip `uploads.status` and `upload_slices.is_current`, which clients cannot write). First statement `private.assert_app_user()`; then `pg_advisory_xact_lock(hashtext('publish:'||dataset_id))` and the upload row `for update`. Validates: status = staged; `engine_version ≥ settings.min_engine_version`; the template (if any) belongs to the dataset; at least one slice; every fact's metric belongs to the dataset and is `sum`/`snapshot`; facts lie inside the upload's company×month slices; every dims value is a `dimension_values.id` of a dimension of the dataset; kostnadsställe values (facts and dim-1 ledger object rows) are scoped to the fact's company (`MBAB:100`). A slice becomes current unless the current slice has higher priority; `published_at = clock_timestamp()` taken under the lock (publish order). Writes `audit_log`; returns a summary (slices, current, kept, superseded, facts, ledger_rows).
 - `retract_upload(p_upload_id uuid, p_reason text)` – SECURITY DEFINER, same app-user check and advisory lock; only for published uploads. Releases its current slices and, per slice, makes current the upload that would be current had this one never been published (`priority desc, published_at desc, id desc`). Sets status = retracted, `retracted_at`, reason; writes `audit_log`.
 - `discard_upload(p_upload_id uuid)` – SECURITY DEFINER; only for staged uploads; deletes their staged facts/ledger rows (the only DELETE on those tables), sets status = discarded, writes `audit_log`.
-- `discard_stale_uploads(p_older_than_hours int default 24) returns int` – SECURITY DEFINER, app-user check; discards (via `discard_upload`) every upload still staged whose `created_at` is older than the threshold (at least 1 hour; rows locked by a running publish are skipped) and returns the count. Repo: `discardStaleUploads(db, hours)`.
+- `discard_stale_uploads(p_older_than_hours int default 24) returns int` – SECURITY DEFINER, app-user check; discards (via `discard_upload`) every upload still staged whose `created_at` is older than the threshold (at least 1 hour; rows locked by a running publish are skipped) and returns the count. Repo: `discardStaleUploads(db, hours)`; `/ladda-upp` calls it when it loads (errors ignored).
 - `review_compare(p_upload_id uuid) returns jsonb` – per metric × company × month: staged total, current published total (same slice), previous-month total, deviation %.
 - `metric_monthly(p_metric_keys text[], p_company_codes text[], p_scenario text, p_from date, p_to date, p_group_by text[], p_filters jsonb) returns table(metric_key text, month date, grp jsonb, value numeric)` – SECURITY INVOKER; current facts only; group key built with `jsonb_object_agg` over requested dimension keys (no dynamic SQL); "bolag" groups by company code.
 - `metric_distinct(p_base_metric_key text, p_dimension text, p_company_codes text[], p_scenario text, p_from date, p_to date, p_group_by text[], p_filters jsonb, p_per_month bool) returns table(month date, grp jsonb, cnt bigint)` – counts distinct `dims->>p_dimension` over facts with value > 0.
@@ -171,6 +171,15 @@ the label by group key or name, case-insensitively; unknown groups are dropped w
 or `ledger` (already SIE sign; also the default). `fixtures/files/budget_2026.xlsx` is a
 `result` budget.
 
+In the upload flow the mapping view writes `budgetSign` ("Hur skrivs beloppen?",
+`BUDGET_SIGN_LABELS`; `positive` needs a kontogrupp column). Templates saved before the field
+wrote a result budget as a trailing `negate` step on the measure; opening such a template turns
+that step into `budgetSign: "result"`. `/ladda-upp` loads the account groups server-side and
+every `runTemplate` call (worker or main thread) gets `accountGroupSigns`/`accountGroupNames`.
+The review warns ("Budget på summarader räknas inte – lägg budgeten på delraderna") when a
+budget file has lines on a non-leaf kontogrupp (`leafAccountGroups`), and Inställningar ›
+Kontogrupper warns when an edit makes a group stop (or start) being a budget leaf.
+
 ## Security invariants
 
 - `proxy.ts` refreshes the session and redirects anonymous users to `/logga-in`; every protected server component and server action re-checks with `supabase.auth.getClaims()`/`getUser()` via `src/lib/db/session.ts` (`requireSession()`).
@@ -190,6 +199,19 @@ or `ledger` (already SIE sign; also the default). `fixtures/files/budget_2026.xl
 - Error pages are Swedish and brand styled: `src/app/not-found.tsx` ("Sidan finns inte", link
   to Översikt), `src/app/error.tsx` and `src/app/global-error.tsx` (retry; the error digest at
   most, never a message or stack trace).
+- One `<Toaster theme="light" />` for the signed-in app, in `src/app/(app)/layout.tsx`.
+- `KpiCard` takes `actions` (bottom-right, above the stretched drill-down link; the Källa
+  button), `secondaryDelta` (dashboard ledger KPIs: prev period first, then "mot budget") and
+  passes other attributes (`data-testid`, `aria-*`) to its `<article>`.
+- `MbBarChart` and `MbDonut` take `categoryHrefs` (aligned with the categories; dashboard
+  widgets build them from `ChartData.categoryIds`): bars and slices open them on click, and a
+  link list that is visually hidden until focused serves keyboard and screen reader users.
+  Charts take `fontSize`/`yAxisWidth` (miniature slides, `miniatureChartText`); `MbDonut`
+  `showTotal={false}` hides the hole's total (slides, where the big number is the total).
+  Dashboard widgets show `ResolvedSlide.lastUpdatedAt`; no extra query for ids or dates.
+- Pages that 404 on unknown route params decide it before any Suspense boundary
+  (`/utforska/[dimension]/[value]` checks the dimension and value first): `notFound()` thrown
+  while streaming keeps status 200. No `loading.tsx` in those segments for the same reason.
 
 ## Tests that tie the modules together
 

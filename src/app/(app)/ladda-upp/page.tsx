@@ -8,6 +8,8 @@ import { PageHeader } from "@/components/shell/PageHeader";
 import { Button } from "@/components/ui/button";
 import { createSupabaseServerClient } from "@/lib/db/client-server";
 import {
+  discardStaleUploads,
+  listAccountGroups,
   listDatasets,
   listDimensions,
   listMetricDefinitions,
@@ -24,11 +26,15 @@ async function loadCatalog(): Promise<
 > {
   try {
     const db = await createSupabaseServerClient();
-    const [datasets, metrics, dimensions, templates] = await Promise.all([
+    // Uploads left staged by a closed tab or a lost connection are cleaned up on the way in.
+    // It is housekeeping only: the page works the same when it fails.
+    await discardStaleUploads(db).catch(() => undefined);
+    const [datasets, metrics, dimensions, templates, accountGroups] = await Promise.all([
       listDatasets(db),
       listMetricDefinitions(db),
       listDimensions(db),
       listTemplates(db),
+      listAccountGroups(db),
     ]);
     return {
       ok: true,
@@ -51,6 +57,12 @@ async function loadCatalog(): Promise<
             decimals: m.decimals,
           })),
         dimensions: dimensions.map((d) => ({ key: d.key, label: d.label, personal: d.personal })),
+        accountGroups: accountGroups.map((g) => ({
+          key: g.key,
+          name: g.name,
+          sign: g.sign,
+          ranges: g.ranges,
+        })),
       },
       templates,
     };

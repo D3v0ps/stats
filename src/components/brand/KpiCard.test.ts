@@ -78,6 +78,60 @@ describe("<KpiCard>", () => {
     expect(render({ ...base, sparkline: [null, null] })).not.toContain('data-slot="sparkline"');
   });
 
+  it("shows a second delta (against budget) under the first, and hides it when null", () => {
+    const html = render({
+      ...base,
+      delta: {
+        direction: "up",
+        formatted: `+12${NBSP}%`,
+        favorable: true,
+        againstLabel: "mot aug",
+      },
+      secondaryDelta: {
+        direction: "down",
+        formatted: `−8${NBSP}%`,
+        favorable: false,
+        againstLabel: "mot budget",
+      },
+    });
+    expect(html).toContain('aria-label="Ökning 12 procent mot aug"');
+    expect(html).toContain('aria-label="Minskning 8 procent mot budget"');
+    expect(html.indexOf("mot aug")).toBeLessThan(html.indexOf("mot budget"));
+    const none = render({ ...base, secondaryDelta: null });
+    expect(none).not.toContain("Jämförelse saknas");
+    // No value: no deltas at all.
+    expect(
+      render({
+        ...base,
+        value: null,
+        secondaryDelta: {
+          direction: "up",
+          formatted: "+1",
+          favorable: true,
+          againstLabel: "mot budget",
+        },
+      }),
+    ).not.toContain("mot budget");
+  });
+
+  it("renders actions above the drill-down link and passes attributes to the card", () => {
+    const html = render({
+      ...base,
+      href: "/utforska?matt=timmar",
+      actions: createElement("button", { type: "button" }, "Källa"),
+      "data-testid": "widget-timmar",
+      "aria-describedby": "hint",
+    });
+    expect(html).toMatch(/<article [^>]*data-testid="widget-timmar"/);
+    expect(html).toMatch(/<article [^>]*aria-describedby="hint"/);
+    expect(html).toMatch(
+      /data-slot="kpi-actions" class="relative z-10[^"]*"><button type="button">Källa<\/button>/,
+    );
+    // Without a footnote the footer still holds the actions.
+    expect(html).toContain("<footer");
+    expect(render({ ...base, loading: true, "data-testid": "x" })).toContain('data-testid="x"');
+  });
+
   it("formats amounts compactly when asked", () => {
     expect(
       render({ ...base, value: 2_400_000, unit: "kr", formatOptions: { compact: true } }),

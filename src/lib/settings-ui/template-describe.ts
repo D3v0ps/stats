@@ -2,6 +2,7 @@
 // for and how period, company and scenario are decided. Server-side only (it pulls in the
 // ingest module for STEP_LABELS).
 import {
+  BUDGET_SIGN_LABELS,
   COLUMN_TYPE_LABELS,
   COLUMN_USAGE_LABELS,
   type CasesConfig,
@@ -229,6 +230,12 @@ export function describeTemplate(
   settings.push({ label: "Bolag", value: companyText(config) });
   if (config.kind === "table") {
     settings.push({ label: "Scenario", value: config.scenario === "budget" ? "Budget" : "Utfall" });
+    if (config.scenario === "budget" || config.budgetSign) {
+      settings.push({
+        label: "Belopp i filen",
+        value: BUDGET_SIGN_LABELS[config.budgetSign ?? "ledger"],
+      });
+    }
     if (config.counters.length > 0) {
       settings.push({
         label: "Räknar rader",
@@ -237,6 +244,9 @@ export function describeTemplate(
     }
   } else {
     settings.push(...casesSettings(config.cases, ctx));
+  }
+  if (config.headerRow !== undefined) {
+    settings.push({ label: "Rubrikrad", value: `Rad ${config.headerRow + 1} (vald för hand)` });
   }
 
   return {

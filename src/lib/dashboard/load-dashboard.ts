@@ -25,7 +25,6 @@ import {
   type Month,
 } from "@/lib/core/month";
 import {
-  DEFAULT_TOPLIST_N,
   MetricConfigError,
   PersonalDataError,
   companiesOf,
@@ -158,41 +157,26 @@ function errorMessage(e: unknown): string {
   return "Kunde inte beräkna widgeten.";
 }
 
-async function categoryLinks(
+/**
+ * Drill-down per chart category / table row, from the group ids the resolver put on the
+ * slide (ChartData.categoryIds, TableData row ids): entity pages for dimension values, the
+ * company's own view for "bolag"; months, "Övriga", unassigned and totals are not drillable.
+ */
+function categoryLinks(
   spec: WidgetSpec,
   slide: ResolvedSlide,
   ctx: DashboardContext,
   company: CompanyFilter,
   def: MetricDefinition,
-): Promise<CategoryLink[]> {
+): CategoryLink[] {
   const groupBy = spec.groupBy;
   if (!groupBy || !BREAKDOWN_VIZ.has(spec.viz)) return [];
-  const labels = slide.chart?.categories ?? slide.table?.rows.map((r) => r.label) ?? [];
-  if (labels.length === 0) return [];
-  // resolveWidget returns labels only; the ids come from the same query run once more.
-  const result = (
-    await runMetricQuery(
-      {
-        metricKeys: [spec.metricKey],
-        period: { grain: ctx.filters.grain, anchor: ctx.anchor },
-        company,
-        scenario: "utfall",
-        groupBy,
-        filters: spec.filters,
-        compare: [],
-        series: null,
-        topN: spec.viz === "toplist" ? (spec.topN ?? DEFAULT_TOPLIST_N) : spec.topN,
-      },
-      ctx.source,
-    )
-  ).results[0] as MetricResult;
-  const idByLabel = new Map<string, number | string | null>();
-  for (const g of result.groups) if (!idByLabel.has(g.label)) idByLabel.set(g.label, g.id);
+  const chart = slide.chart;
+  const entries = chart
+    ? chart.categories.map((label, i) => ({ label, id: chart.categoryIds?.[i] ?? null }))
+    : (slide.table?.rows ?? []).map((r) => ({ label: r.label, id: r.id ?? null }));
   const urlFilters = { ...ctx.filters, company };
-  return labels.map((label, i) => {
-    // Same query, same order: match by position so two values with one label keep their ids.
-    const same = result.groups[i];
-    const id = (same?.label === label ? same.id : idByLabel.get(label)) ?? null;
+  return entries.map(({ label, id }) => {
     if (id === null) return { label, href: null };
     if (groupBy === COMPANY_GROUP) {
       const code = id as CompanyCode;
@@ -350,7 +334,7 @@ export async function loadWidget(spec: WidgetSpec, ctx: DashboardContext): Promi
     return {
       ...base,
       slide: finalSlide,
-      categoryLinks: await categoryLinks(spec, slide, ctx, company, def),
+      categoryLinks: categoryLinks(spec, slide, ctx, company, def),
       budgetDelta: budget.delta,
       budgetValue: budget.value,
       budgetNote: budget.note,

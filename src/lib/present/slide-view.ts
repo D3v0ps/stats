@@ -125,6 +125,17 @@ export function chartScale(width: number, opts: ChartScaleOptions = {}): number 
   return scale > 0 ? scale : 1;
 }
 
+/**
+ * Axis text for a chart drawn at its real size in a miniature (editor preview, archive
+ * thumbnails): labels shrink with the box instead of staying at 12 px, and the value axis
+ * gets a fixed width that fits compact labels ("2,4 mkr") at that size.
+ */
+export function miniatureChartText(width: number): { fontSize: number; yAxisWidth: number } {
+  const fontSize =
+    Number.isFinite(width) && width > 0 ? Math.min(12, Math.max(6, Math.round(width / 46))) : 12;
+  return { fontSize, yAxisWidth: Math.round(fontSize * 4.5) };
+}
+
 /** Elapsed presentation time: "0:07", "12:05", "1:02:03". */
 export function formatElapsed(ms: number): string {
   const total = Math.max(0, Math.floor(ms / 1000));

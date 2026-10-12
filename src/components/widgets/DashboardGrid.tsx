@@ -10,14 +10,13 @@ import { WidgetRenderer } from "./WidgetRenderer";
 export interface DashboardGridProps {
   widgets: WidgetSpec[];
   ctx: DashboardContext;
-  lastUpdated: Record<string, string | null>;
 }
 
 /**
  * The dashboard: KPI rows, then the bento grid. Each widget resolves on the server in its own
  * Suspense boundary, so fast cards appear while slower charts are still computing.
  */
-export function DashboardGrid({ widgets, ctx, lastUpdated }: DashboardGridProps) {
+export function DashboardGrid({ widgets, ctx }: DashboardGridProps) {
   const blocks = layoutBlocks(widgets);
   return (
     <div className={DASHBOARD_ROOT} data-testid="dashboard-grid">
@@ -32,12 +31,7 @@ export function DashboardGrid({ widgets, ctx, lastUpdated }: DashboardGridProps)
                 key={spec.id}
                 fallback={<WidgetSkeleton spec={spec} title={title} className={className} />}
               >
-                <WidgetSlot
-                  spec={spec}
-                  ctx={ctx}
-                  lastUpdatedAt={lastUpdated[spec.metricKey] ?? null}
-                  className={className}
-                />
+                <WidgetSlot spec={spec} ctx={ctx} className={className} />
               </Suspense>
             );
           })}
@@ -50,19 +44,17 @@ export function DashboardGrid({ widgets, ctx, lastUpdated }: DashboardGridProps)
 async function WidgetSlot({
   spec,
   ctx,
-  lastUpdatedAt,
   className,
 }: {
   spec: WidgetSpec;
   ctx: DashboardContext;
-  lastUpdatedAt: string | null;
   className: string;
 }) {
   const widget = await loadWidget(spec, ctx);
   if (widget.status === "hidden") return null;
   return (
     <div className={className}>
-      <WidgetRenderer widget={widget} lastUpdatedAt={lastUpdatedAt} />
+      <WidgetRenderer widget={widget} />
     </div>
   );
 }

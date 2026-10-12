@@ -3,7 +3,13 @@ import type { UrlFilters } from "@/lib/app/filters";
 import { parseUrlFilters } from "@/lib/app/filters";
 import { parseExploreState } from "./explore-state";
 import { loadExplore } from "./load-explore";
-import { ENTITY_METRIC_ORDER, loadEntity, orderEntityMetrics } from "./load-entity";
+import {
+  ENTITY_METRIC_ORDER,
+  entityExists,
+  loadEntity,
+  orderEntityMetrics,
+  parseEntityParams,
+} from "./load-entity";
 import { cellOf } from "./pivot";
 import { ANCHOR, DEFINITIONS, DIMENSIONS, FILTERS, T, buildSource } from "./test-data";
 
@@ -168,5 +174,23 @@ describe("entity page (kundkort)", () => {
       DEFINITIONS.filter((d) => ["resultat", "pass", "lonekostnad", "konsulter"].includes(d.key)),
     ).map((d) => d.key);
     expect(keys).toEqual(["konsulter", "pass", "resultat", "lonekostnad"]);
+  });
+});
+
+describe("entity route checks", () => {
+  it("parses the route params or rejects them", () => {
+    expect(parseEntityParams("kund", "12")).toEqual({ dimension: "kund", valueId: 12 });
+    expect(parseEntityParams("kund", "0")).toBeNull();
+    expect(parseEntityParams("kund", "-3")).toBeNull();
+    expect(parseEntityParams("kund", "1.5")).toBeNull();
+    expect(parseEntityParams("kund", "1234567890123456")).toBeNull();
+    expect(parseEntityParams("Kund!", "12")).toBeNull();
+  });
+
+  it("knows an entity only for a catalog dimension and an existing value", async () => {
+    const ctx = { source: buildSource(), dimensions: DIMENSIONS };
+    expect(await entityExists({ dimension: "kund", valueId: T.ikea }, ctx)).toBe(true);
+    expect(await entityExists({ dimension: "kund", valueId: 999_999 }, ctx)).toBe(false);
+    expect(await entityExists({ dimension: "finns_inte", valueId: T.ikea }, ctx)).toBe(false);
   });
 });

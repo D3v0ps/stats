@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/chart";
 import { ChartFigure } from "./ChartFigure";
 import { chartConfigFor, formatAxisTick, seriesStyles, toChartRows } from "./chart-format";
-import { AXIS_TICK, tooltipFormatter, useChartAnimation } from "./chart-parts";
+import { axisTick, tooltipFormatter, useChartAnimation } from "./chart-parts";
 import type { MbChartProps } from "./types";
 
 export interface MbStackedCompanyBarProps extends MbChartProps {
@@ -31,9 +31,12 @@ export function MbStackedCompanyBar({
   animate = true,
   height = 280,
   showTotals = false,
+  fontSize,
+  yAxisWidth,
   className,
 }: MbStackedCompanyBarProps) {
   const animated = useChartAnimation(animate);
+  const tick = axisTick(fontSize);
   const styles = seriesStyles(data.series);
   const rows = toChartRows(data).map((row) => {
     const parts = styles
@@ -64,13 +67,13 @@ export function MbStackedCompanyBar({
             axisLine={false}
             tickMargin={8}
             minTickGap={12}
-            tick={AXIS_TICK}
+            tick={tick}
           />
           <YAxis
             tickLine={false}
             axisLine={false}
-            width="auto"
-            tick={AXIS_TICK}
+            width={yAxisWidth ?? "auto"}
+            tick={tick}
             tickFormatter={tickFormatter}
           />
           <ChartTooltip
@@ -96,7 +99,7 @@ export function MbStackedCompanyBar({
                     position="top"
                     offset={6}
                     fill="var(--foreground)"
-                    fontSize={12}
+                    fontSize={tick.fontSize}
                     formatter={(v) => (typeof v === "number" ? tickFormatter(v) : "")}
                   />
                 ) : null}

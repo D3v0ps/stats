@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { sha256Hex } from "@/lib/core/hash";
+import type { ImportTemplate } from "@/lib/contracts";
 import { utf8, xlsxBytes } from "@/lib/ingest/testing/workbooks";
 import { FILE_GONE_MESSAGE, IngestService, type IngestResponse } from "./ingest-service";
 import { sieFixtureBytes } from "./test-fixtures";
@@ -126,6 +127,103 @@ describe("IngestService", () => {
       ok: false,
       error: FILE_GONE_MESSAGE,
     });
+  });
+
+  it("also reads each sheet at the header rows saved with templates", async () => {
+    const service = new IngestService();
+    const bytes = xlsxBytes([
+      {
+        name: "Data",
+        rows: [
+          ["Rapport", "Export"],
+          ["Kod", "Text"],
+          ["Kund", "Timmar"],
+          ["Acme AB", "8"],
+          ["Beta AB", "7"],
+        ],
+      },
+    ]);
+    expectOk(await service.handle({ op: "read", fileId: "h", fileName: "data.xlsx", bytes }));
+    const rec = expectOk(
+      await service.handle({
+        op: "recognize",
+        fileId: "h",
+        hints: [],
+        today: "2026-10-12",
+        headerRows: [{ row: 2 }, { sheetHint: "Data", row: 2 }, { row: 40 }],
+      }),
+    );
+    if (rec.op !== "recognize") throw new Error("recognize expected");
+    expect(rec.signaturesAt).toEqual({ Data: { 2: ["kund", "timmar"] } });
+    const plain = expectOk(
+      await service.handle({ op: "recognize", fileId: "h", hints: [], today: "2026-10-12" }),
+    );
+    expect(plain).toMatchObject({ signaturesAt: {} });
+  });
+
+  it("applies budgets with every amount positive using the account groups it is given", async () => {
+    const service = new IngestService();
+    const bytes = utf8("Kontogrupp;Belopp\nIntäkter;1000\nPersonal;400\n");
+    expectOk(await service.handle({ op: "read", fileId: "b", fileName: "budget.csv", bytes }));
+    const template: ImportTemplate = {
+      datasetKey: "budget",
+      name: "Budget",
+      headerSignature: ["kontogrupp", "belopp"],
+      version: 1,
+      config: {
+        kind: "table",
+        steps: [],
+        columns: [
+          {
+            column: "kontogrupp",
+            type: "text",
+            usage: "dimension",
+            dimensionKey: "kontogrupp",
+            personal: false,
+            keep: true,
+          },
+          {
+            column: "belopp",
+            type: "amount",
+            usage: "measure",
+            metricKey: "budget_belopp",
+            personal: false,
+            keep: true,
+          },
+        ],
+        counters: [],
+        period: { kind: "per_upload" },
+        company: { kind: "fixed", company: "MBAB" },
+        scenario: "budget",
+        budgetSign: "positive",
+      },
+    };
+    const run = (extra: object) =>
+      service.handle({
+        op: "apply",
+        fileId: "b",
+        template,
+        choices: { month: "2026-01" },
+        aliases: {},
+        ...extra,
+      });
+    const res = expectOk(
+      await run({
+        accountGroupSigns: { intakter: -1, personal: 1 },
+        accountGroupNames: { intakter: "Intäkter", personal: "Personal" },
+      }),
+    );
+    if (res.op !== "apply") throw new Error("apply expected");
+    expect(res.result.facts.map((f) => [f.dims.kontogrupp, f.value])).toEqual([
+      ["Intäkter", -1000],
+      ["Personal", 400],
+    ]);
+    const without = expectOk(await run({}));
+    if (without.op !== "apply") throw new Error("apply expected");
+    expect(without.result.facts).toEqual([]);
+    expect(without.result.report.issues.map((i) => i.message)).toContain(
+      "Kontogruppernas tecken saknas, så budgetbeloppen kan inte vändas rätt.",
+    );
   });
 
   it("returns template errors as messages", async () => {

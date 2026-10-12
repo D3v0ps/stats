@@ -6,12 +6,19 @@ import { formatPercent, formatValue } from "@/lib/core/format-sv";
 import { cn } from "@/lib/utils";
 import { ChartFigure } from "./ChartFigure";
 import { donutSlices, donutTotal } from "./chart-format";
-import { tooltipFormatter, useChartAnimation } from "./chart-parts";
+import {
+  CategoryLinkList,
+  tooltipFormatter,
+  useCategoryDrill,
+  useChartAnimation,
+} from "./chart-parts";
 import type { MbChartProps } from "./types";
 
 export interface MbDonutProps extends MbChartProps {
   /** Small caption under the total in the hole, e.g. "Totalt". */
   centerLabel?: string;
+  /** The total in the hole; off where the total already shows next to the chart (slides). */
+  showTotal?: boolean;
   showLegend?: boolean;
 }
 
@@ -26,10 +33,15 @@ export function MbDonut({
   animate = true,
   height = 220,
   centerLabel,
+  showTotal = true,
   showLegend = true,
+  categoryHrefs,
+  onCategoryClick,
+  fontSize,
   className,
 }: MbDonutProps) {
   const animated = useChartAnimation(animate);
+  const drill = useCategoryDrill(categoryHrefs, onCategoryClick);
   const slices = donutSlices(data);
   const total = donutTotal(data);
   const config = Object.fromEntries(slices.map((s) => [s.key, { label: s.label, color: s.color }]));
@@ -72,22 +84,40 @@ export function MbDonut({
                 paddingAngle={slices.length > 1 ? 1.5 : 0}
                 isAnimationActive={animated}
                 shape={sector}
+                className={drill.active ? "cursor-pointer" : undefined}
+                onClick={
+                  drill.active
+                    ? (_slice, i) => {
+                        const slice = slices[i];
+                        if (slice) drill.open(slice.index);
+                      }
+                    : undefined
+                }
               />
             </PieChart>
           </ChartContainer>
-          <div className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center">
-            <span className="num text-xl font-light">
-              {formatValue(total, data.unit, { compact: true })}
-            </span>
-            {centerLabel ? (
-              <span className="text-[0.65rem] tracking-[0.08em] text-muted-foreground uppercase">
-                {centerLabel}
+          {showTotal ? (
+            <div
+              data-slot="donut-total"
+              className="pointer-events-none absolute inset-0 flex flex-col items-center justify-center text-center"
+            >
+              <span className="num text-xl font-light">
+                {formatValue(total, data.unit, { compact: true })}
               </span>
-            ) : null}
-          </div>
+              {centerLabel ? (
+                <span className="text-[0.65rem] tracking-[0.08em] text-muted-foreground uppercase">
+                  {centerLabel}
+                </span>
+              ) : null}
+            </div>
+          ) : null}
         </div>
         {showLegend ? (
-          <ul className="grid w-full min-w-0 gap-2 text-sm" aria-hidden="true">
+          <ul
+            className="grid w-full min-w-0 gap-2 text-sm"
+            style={fontSize ? { fontSize } : undefined}
+            aria-hidden="true"
+          >
             {slices.map((s) => (
               <li key={s.key} className="flex items-center justify-between gap-3">
                 <span className="flex min-w-0 items-center gap-2">
@@ -106,6 +136,12 @@ export function MbDonut({
           </ul>
         ) : null}
       </div>
+      <CategoryLinkList
+        title={title}
+        categories={data.categories}
+        hrefs={categoryHrefs}
+        navRef={drill.navRef}
+      />
     </ChartFigure>
   );
 }

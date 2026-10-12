@@ -1,5 +1,4 @@
 // Texts shown on dashboard widgets (titles, subtitles, KPI footnotes), kept pure for tests.
-import { DELTA_GLYPH } from "@/components/brand/delta-text";
 import type { ResolvedSlide } from "@/lib/contracts/slides";
 import { formatValue } from "@/lib/core/format-sv";
 import type { LoadedWidget } from "@/lib/dashboard/load-dashboard";
@@ -28,8 +27,8 @@ export function kpiSparkline(slide: Pick<ResolvedSlide, "chart">): (number | nul
 }
 
 /**
- * KPI footnote. With a budget the card's delta is the budget comparison, so the change
- * against the previous period moves here (glyph and sign, never colour alone).
+ * KPI footnote: the budget amount (and which company lacks one) when the card compares with
+ * budget as its second delta, then the slide's own footnote.
  */
 export function kpiFootnote(
   widget: Pick<LoadedWidget, "slide" | "budgetDelta" | "budgetValue" | "budgetNote" | "metric">,
@@ -41,8 +40,6 @@ export function kpiFootnote(
       `Budget ${formatValue(widget.budgetValue, widget.metric.unit, { compact: widget.metric.unit === "kr" })}`,
     );
     if (widget.budgetNote) parts.push(widget.budgetNote);
-    const prev = slide?.delta;
-    if (prev) parts.push(`${DELTA_GLYPH[prev.direction]} ${prev.formatted} ${prev.againstLabel}`);
   }
   if (slide?.footnote) parts.push(slide.footnote);
   if (parts.length === 0 && slide?.number?.value === null) parts.push("Ingen publicerad data");

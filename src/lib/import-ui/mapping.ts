@@ -3,11 +3,13 @@
 // The user edits one row per source column (new name, type, usage, metric or
 // dimension, keep/remove) plus a list of tool steps. The saved template is a
 // plain step list: removed columns are dropped first (their values never reach
-// previews or reports), then renames, then the tools in order, then the budget
-// sign and the column order. Converting back recognizes that shape, so a saved
-// template opens again exactly as it was mapped.
+// previews or reports), then renames, then the tools in order, then the column
+// order. The budget sign and a header row picked by hand are fields of the
+// config. Converting back recognizes that shape, so a saved template opens
+// again exactly as it was mapped.
 import {
   TemplateConfigSchema,
+  type BudgetSign,
   type CasesConfig,
   type ColumnMapping,
   type ColumnType,
@@ -57,14 +59,6 @@ export interface FieldMapping {
   dimensionKey?: string;
 }
 
-/**
- * "Hur skrivs beloppen?" for budget files. income_positive: revenue plus and
- * costs minus, as budget sheets are usually written; the amounts are flipped to
- * the ledger sign the budget is stored in. ledger: already in ledger sign
- * (revenue minus, costs plus), stored as they are.
- */
-export type BudgetSign = "income_positive" | "ledger";
-
 export interface CasesForm {
   interruptDateColumn?: string;
   /** Normalized raw result value -> resultattyp label ("Arbete", "Studier"). */
@@ -89,7 +83,10 @@ export interface MappingState {
   companyFixed: CompanyCode | null;
   /** Company column values -> company, when a column has usage "company". */
   companyMapping: Record<string, CompanyCode>;
+  /** "Hur skrivs beloppen?" (budget files only; TableTemplateConfig.budgetSign). */
   budgetSign: BudgetSign;
+  /** 0-based sheet row of the header picked by hand; undefined = detected. */
+  headerRow?: number;
   cases: CasesForm;
 }
 
@@ -147,7 +144,7 @@ const KNOWN_CASE_METRICS: Record<string, CasesConfig["metrics"]> = {
     active: "anstallda_konsulter",
     started: "nyanstallda",
     ended: "avslutade_anstallningar",
-    tenureMonths: "anstallningstid",
+    tenureMonthsSum: "anstallningsmanader",
   },
   wb_deltagare: {
     active: "aktiva_deltagare",
@@ -173,6 +170,22 @@ export function defaultCaseMetrics(
     if (exists.has(key)) out[role] = key;
   }
   return out;
+}
+
+/**
+ * Case measures of a saved template as the mapping edits them. The deprecated
+ * per-group average (tenureMonths, which ingest ignores) is dropped; when the
+ * template had it and no tenure sum, the dataset's tenure sum takes its place.
+ */
+export function migrateCaseMetrics(
+  metrics: CasesConfig["metrics"],
+  catalog: MappingCatalog,
+  datasetKey: string | null,
+): CasesConfig["metrics"] {
+  const { tenureMonths, ...rest } = metrics;
+  if (tenureMonths === undefined || rest.tenureMonthsSum !== undefined) return rest;
+  const sum = defaultCaseMetrics(catalog, datasetKey).tenureMonthsSum;
+  return sum ? { ...rest, tenureMonthsSum: sum } : rest;
 }
 
 export const DEFAULT_RESULT_MAP: Record<string, string> = { arbete: "Arbete", studier: "Studier" };
@@ -269,16 +282,12 @@ export function headSteps(state: Pick<MappingState, "sources">): Step[] {
   return steps;
 }
 
-/** Output columns after drops, renames and tools (before the budget sign and order). */
+/** Output columns after drops, renames and tools (before the column order). */
 export function toolOutput(state: MappingState): ColumnFlow {
   return simulateColumns(
     state.sources.map((s) => s.name),
     [...headSteps(state), ...state.tools],
   );
-}
-
-function measureColumns(state: MappingState, columns: readonly string[]): string[] {
-  return columns.filter((c) => state.fields[c]?.usage === "measure");
 }
 
 /** Output columns in display order (the user's order first, then the rest). */
@@ -295,9 +304,6 @@ export function mappingSteps(state: MappingState): Step[] {
     state.sources.map((s) => s.name),
     steps,
   );
-  if (state.datasetKey === "budget" && state.budgetSign === "income_positive") {
-    for (const column of measureColumns(state, flow.columns)) steps.push({ op: "negate", column });
-  }
   const ordered = orderedOutput(state);
   if (ordered.some((c, i) => flow.columns[i] !== c)) {
     // reorder puts the listed columns first and keeps the rest in order: list the shortest prefix.
@@ -457,6 +463,15 @@ export function validateMapping(state: MappingState, catalog: MappingCatalog): M
     if (measures === 0 && state.counters.length === 0) {
       block("Välj minst en kolumn som ”Siffra att räkna på”, eller lägg till ”Räkna rader”.");
     }
+    if (
+      dataset.key === "budget" &&
+      state.budgetSign === "positive" &&
+      !fields.some(([, f]) => f?.usage === "dimension" && f.dimensionKey === "kontogrupp")
+    ) {
+      block(
+        "Med ”Alla belopp positiva” tas tecknet från kontogruppen: välj kolumnen som grupperas på Kontogrupp.",
+      );
+    }
     const companyColumn = fieldWithUsage(state, columns, "company");
     if (!companyColumn && state.companyFixed === null) {
       advise("Bolaget väljs vid varje uppladdning.");
@@ -525,6 +540,8 @@ export function toTemplateConfig(state: MappingState, catalog: MappingCatalog): 
       ? { kind: "fixed" as const, company: state.companyFixed }
       : { kind: "per_upload" as const };
 
+  const headerRow = state.headerRow !== undefined ? { headerRow: state.headerRow } : {};
+
   if (kind === "cases") {
     const col = (usage: ColumnUsage) => fieldWithUsage(state, outputs, usage);
     const startColumn = col("case_start");
@@ -550,6 +567,7 @@ export function toTemplateConfig(state: MappingState, catalog: MappingCatalog): 
         metrics: state.cases.metrics,
         ...opt("fromMonth", state.cases.fromMonth),
       },
+      ...headerRow,
     });
   }
   const periodColumn = fieldWithUsage(state, outputs, "period");
@@ -561,6 +579,8 @@ export function toTemplateConfig(state: MappingState, catalog: MappingCatalog): 
     period: periodColumn ? { kind: "column", column: periodColumn } : { kind: "per_upload" },
     company,
     scenario: state.datasetKey === "budget" ? "budget" : "utfall",
+    ...(state.datasetKey === "budget" ? { budgetSign: state.budgetSign } : {}),
+    ...headerRow,
   });
 }
 
@@ -612,7 +632,8 @@ export function initialMapping(
     counters: [],
     companyFixed: null,
     companyMapping: {},
-    budgetSign: "income_positive",
+    // Budget sheets are usually written as a result budget (revenue +, costs −).
+    budgetSign: "result",
     cases: {
       resultMap: { ...DEFAULT_RESULT_MAP },
       metrics: defaultCaseMetrics(opts.catalog, opts.datasetKey),
@@ -623,9 +644,12 @@ export function initialMapping(
 /**
  * Open a saved template for editing. Leading drops/renames of source columns
  * become keep/rename settings, later drops of source columns that no earlier
- * step reads are hoisted (the column is simply removed), a budget negate on a
- * measure that nothing after it reads becomes the budget sign, and a trailing
- * reorder becomes the column order. Everything else stays a tool step.
+ * step reads are hoisted (the column is simply removed), and a trailing reorder
+ * becomes the column order. Everything else stays a tool step. Budget templates
+ * saved before TableTemplateConfig.budgetSign wrote a revenue-plus sheet as a
+ * negate step on the measure that nothing after it reads: such a step becomes
+ * budgetSign "result". The deprecated tenure average of a cases template
+ * becomes the tenure sum (migrateCaseMetrics).
  */
 export function fromTemplateConfig(
   config: TemplateConfig,
@@ -688,22 +712,21 @@ export function fromTemplateConfig(
     fields[c.column] = fieldFromMapping(c);
   }
 
-  let budgetSign: BudgetSign = "ledger";
-  if (opts.datasetKey === "budget") {
-    const measures = new Set(
-      Object.entries(fields)
-        .filter(([, f]) => f.usage === "measure")
-        .map(([c]) => c),
-    );
-    const idx = tools.findIndex(
-      (s, i) =>
-        s.op === "negate" &&
-        measures.has(s.column) &&
-        !stepsReference(tools.slice(i + 1), s.column),
-    );
-    if (idx >= 0) {
-      budgetSign = "income_positive";
-      tools.splice(idx, 1);
+  let budgetSign: BudgetSign = (config.kind === "table" && config.budgetSign) || "ledger";
+  if (opts.datasetKey === "budget" && config.kind === "table" && !config.budgetSign) {
+    const measures = Object.entries(fields)
+      .filter(([, f]) => f.usage === "measure")
+      .map(([c]) => c);
+    for (const column of measures) {
+      // The legacy sign step came after the tools: the last negate of the column.
+      let idx = -1;
+      tools.forEach((s, i) => {
+        if (s.op === "negate" && s.column === column) idx = i;
+      });
+      if (idx >= 0 && !stepsReference(tools.slice(idx + 1), column)) {
+        budgetSign = "result";
+        tools.splice(idx, 1);
+      }
     }
   }
 
@@ -730,12 +753,13 @@ export function fromTemplateConfig(
     companyFixed: config.company.kind === "fixed" ? config.company.company : null,
     companyMapping: config.company.kind === "column" ? { ...config.company.mapping } : {},
     budgetSign,
+    ...(config.headerRow !== undefined ? { headerRow: config.headerRow } : {}),
     cases: {
       resultMap:
         config.kind === "cases" ? { ...(config.cases.resultMap ?? {}) } : { ...DEFAULT_RESULT_MAP },
       metrics:
         config.kind === "cases"
-          ? { ...config.cases.metrics }
+          ? migrateCaseMetrics(config.cases.metrics, opts.catalog, opts.datasetKey)
           : defaultCaseMetrics(opts.catalog, opts.datasetKey),
       ...(config.kind === "cases" && config.cases.interruptDateColumn
         ? { interruptDateColumn: config.cases.interruptDateColumn }
@@ -1017,6 +1041,15 @@ export function moveColumn(state: MappingState, from: string, to: string): Mappi
 
 export function setBudgetSign(state: MappingState, budgetSign: BudgetSign): MappingState {
   return { ...state, budgetSign };
+}
+
+/** The header row picked by hand (0-based), saved with the template; undefined = detected. */
+export function setHeaderRow(state: MappingState, headerRow: number | undefined): MappingState {
+  if (state.headerRow === headerRow) return state;
+  const next = { ...state };
+  if (headerRow === undefined) delete next.headerRow;
+  else next.headerRow = headerRow;
+  return next;
 }
 
 export function setCases(state: MappingState, patch: Partial<CasesForm>): MappingState {

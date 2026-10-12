@@ -11,6 +11,7 @@ import {
   hasBlockingProblems,
   initialMapping,
   mappingSteps,
+  migrateCaseMetrics,
   moveColumn,
   orderedOutput,
   removeCounter,
@@ -22,6 +23,7 @@ import {
   setCompanyMapping,
   setDataset,
   setField,
+  setHeaderRow,
   setKeep,
   setPeriodColumn,
   simulateColumns,
@@ -333,23 +335,98 @@ describe("budget sign", () => {
       { datasetKey: "budget", templateName: "Budget", catalog: SEED_CATALOG },
     );
 
-  it("flips amounts written with revenue plus to the ledger sign", () => {
-    const config = toTemplateConfig(budget(), SEED_CATALOG);
-    expect(config).toMatchObject({ kind: "table", scenario: "budget" });
-    expect(config.kind === "table" && config.steps).toEqual([{ op: "negate", column: "belopp" }]);
-    const ledger = toTemplateConfig(setBudgetSign(budget(), "ledger"), SEED_CATALOG);
-    expect(ledger.kind === "table" && ledger.steps).toEqual([]);
-  });
-
-  it("recognizes the sign again when the template is opened", () => {
-    const config = toTemplateConfig(budget(), SEED_CATALOG);
-    const back = fromTemplateConfig(config, [src("post"), src("period"), src("belopp")], {
+  const COLS = [src("post"), src("period"), src("belopp")];
+  const reopen = (config: ReturnType<typeof toTemplateConfig>) =>
+    fromTemplateConfig(config, COLS, {
       datasetKey: "budget",
       templateName: "Budget",
       catalog: SEED_CATALOG,
     });
-    expect(back.budgetSign).toBe("income_positive");
-    expect(back.tools).toEqual([]);
+
+  it("saves the sign as the template's budgetSign, never as a step", () => {
+    const config = toTemplateConfig(budget(), SEED_CATALOG);
+    expect(config).toMatchObject({ kind: "table", scenario: "budget", budgetSign: "result" });
+    expect(config.kind === "table" && config.steps).toEqual([]);
+    for (const sign of ["positive", "ledger"] as const) {
+      const other = toTemplateConfig(setBudgetSign(budget(), sign), SEED_CATALOG);
+      expect(other).toMatchObject({ budgetSign: sign, steps: [] });
+    }
+    // Other datasets have no budget sign.
+    expect(toTemplateConfig(timmar(), SEED_CATALOG)).not.toHaveProperty("budgetSign");
+  });
+
+  it("opens the sign again from the template", () => {
+    for (const sign of ["result", "positive", "ledger"] as const) {
+      const back = reopen(toTemplateConfig(setBudgetSign(budget(), sign), SEED_CATALOG));
+      expect(back.budgetSign).toBe(sign);
+      expect(back.tools).toEqual([]);
+    }
+  });
+
+  it("migrates a legacy trailing negate step to budgetSign result", () => {
+    const current = toTemplateConfig(budget(), SEED_CATALOG);
+    if (current.kind !== "table") throw new Error("table expected");
+    const { budgetSign: _sign, ...rest } = current;
+    expect(_sign).toBe("result");
+    const legacy = {
+      ...rest,
+      steps: [
+        { op: "fill_down" as const, column: "post" },
+        { op: "negate" as const, column: "belopp" },
+      ],
+    };
+    const back = reopen(legacy);
+    expect(back.budgetSign).toBe("result");
+    expect(back.tools).toEqual([{ op: "fill_down", column: "post" }]);
+    expect(toTemplateConfig(back, SEED_CATALOG)).toMatchObject({
+      budgetSign: "result",
+      steps: [{ op: "fill_down", column: "post" }],
+    });
+    // Without a sign step (and no budgetSign) the amounts were stored as they are.
+    expect(reopen({ ...rest, steps: [] }).budgetSign).toBe("ledger");
+    // A negate that a later step reads is a tool of its own.
+    const read = reopen({
+      ...rest,
+      steps: [
+        { op: "negate", column: "belopp" },
+        { op: "filter", column: "belopp", operator: "empty", caseSensitive: false },
+      ],
+    });
+    expect(read.budgetSign).toBe("ledger");
+    expect(read.tools).toHaveLength(2);
+    // With budgetSign set, a negate step is the user's own tool.
+    const both = reopen({ ...current, steps: [{ op: "negate", column: "belopp" }] });
+    expect(both.budgetSign).toBe("result");
+    expect(both.tools).toEqual([{ op: "negate", column: "belopp" }]);
+  });
+
+  it("needs a kontogrupp column when every amount is positive", () => {
+    const messages = (s: MappingState) => validateMapping(s, SEED_CATALOG).map((p) => p.message);
+    const positive = setBudgetSign(budget(), "positive");
+    expect(hasBlockingProblems(validateMapping(positive, SEED_CATALOG))).toBe(false);
+    expect(messages(setField(positive, "post", { usage: "ignore" }))).toContain(
+      "Med ”Alla belopp positiva” tas tecknet från kontogruppen: välj kolumnen som grupperas på Kontogrupp.",
+    );
+  });
+});
+
+describe("header row", () => {
+  it("saves a header row picked by hand and opens it again", () => {
+    const s = setHeaderRow(timmar(), 4);
+    expect(setHeaderRow(s, 4)).toBe(s);
+    const config = toTemplateConfig(s, SEED_CATALOG);
+    expect(config).toMatchObject({ headerRow: 4 });
+    const back = fromTemplateConfig(config, SOURCES, {
+      datasetKey: "ip_timmar",
+      templateName: "Timmar",
+      catalog: SEED_CATALOG,
+    });
+    expect(back.headerRow).toBe(4);
+    expect(toTemplateConfig(back, SEED_CATALOG)).toEqual(config);
+    const cleared = setHeaderRow(back, undefined);
+    expect(cleared).not.toHaveProperty("headerRow");
+    expect(toTemplateConfig(cleared, SEED_CATALOG)).not.toHaveProperty("headerRow");
+    expect(toTemplateConfig(timmar(), SEED_CATALOG)).not.toHaveProperty("headerRow");
   });
 });
 
@@ -385,9 +462,66 @@ describe("cases datasets", () => {
       active: "anstallda_konsulter",
       started: "nyanstallda",
       ended: "avslutade_anstallningar",
-      tenureMonths: "anstallningstid",
+      tenureMonthsSum: "anstallningsmanader",
     });
     expect(defaultCaseMetrics(SEED_CATALOG, "budget")).toEqual({});
+  });
+
+  it("replaces the deprecated tenure average with the tenure sum", () => {
+    const old = { active: "anstallda_konsulter", tenureMonths: "anstallningstid" };
+    expect(migrateCaseMetrics(old, SEED_CATALOG, "ip_konsulter")).toEqual({
+      active: "anstallda_konsulter",
+      tenureMonthsSum: "anstallningsmanader",
+    });
+    expect(
+      migrateCaseMetrics(
+        { ...old, tenureMonthsSum: "anstallningsmanader" },
+        SEED_CATALOG,
+        "ip_konsulter",
+      ),
+    ).toEqual({ active: "anstallda_konsulter", tenureMonthsSum: "anstallningsmanader" });
+    // A dataset without a tenure sum just loses the average.
+    expect(migrateCaseMetrics(old, SEED_CATALOG, "wb_deltagare")).toEqual({
+      active: "anstallda_konsulter",
+    });
+    const unchanged = { active: "aktiva_deltagare" };
+    expect(migrateCaseMetrics(unchanged, SEED_CATALOG, "wb_deltagare")).toEqual(unchanged);
+  });
+
+  it("opens a template with the deprecated tenure average as one with the tenure sum", () => {
+    const config = toTemplateConfig(
+      setCases(
+        setField(
+          initialMapping(SRC, [], {
+            datasetKey: "ip_konsulter",
+            templateName: "Konsulter",
+            catalog: SEED_CATALOG,
+          }),
+          "startdatum",
+          { usage: "case_start" },
+        ),
+        { metrics: { active: "anstallda_konsulter" } },
+      ),
+      SEED_CATALOG,
+    );
+    if (config.kind !== "cases") throw new Error("cases expected");
+    const legacy = {
+      ...config,
+      cases: {
+        ...config.cases,
+        metrics: { active: "anstallda_konsulter", tenureMonths: "anstallningstid" },
+      },
+    };
+    const state = fromTemplateConfig(legacy, SRC, {
+      datasetKey: "ip_konsulter",
+      templateName: "Konsulter",
+      catalog: SEED_CATALOG,
+    });
+    expect(state.cases.metrics).toEqual({
+      active: "anstallda_konsulter",
+      tenureMonthsSum: "anstallningsmanader",
+    });
+    expect(hasBlockingProblems(validateMapping(state, SEED_CATALOG))).toBe(false);
   });
 
   it("builds the cases config from the usages", () => {

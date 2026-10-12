@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   planJobs,
+  templateHeaderRows,
   templateHints,
   toRecognitionTemplate,
   type RecognitionTemplate,
@@ -179,6 +180,55 @@ describe("planJobs", () => {
     expect(jobs).toMatchObject([{ kind: "known", template: { id: "timmar" } }]);
   });
 
+  it("matches a template with a hand-picked header row on the sheet read at that row", () => {
+    const own = ["konto", "belopp"];
+    const templates = [
+      t("rad", own, { headerRow: 4 }),
+      t("rad2", own, { headerRow: 4, sheetHint: "MB AB" }),
+      t("auto", ["x", "y"]),
+      t("sie", [], { kind: "sie", headerRow: 1 }),
+    ];
+    expect(templateHeaderRows(templates)).toEqual([{ row: 4 }, { sheetHint: "MB AB", row: 4 }]);
+    // Detection found a title row; at row 4 the sheet has the template's headers.
+    const jobs = planJobs({
+      defaultSheet: "Blad1",
+      sheetForHint: {},
+      signatures: { Blad1: ["rapport", "export"] },
+      signaturesAt: { Blad1: { 4: ["belopp", "konto"] } },
+      templates: [templates[0]!],
+    });
+    expect(jobs).toEqual([
+      {
+        kind: "known",
+        sheetName: "Blad1",
+        template: templates[0],
+        score: 1,
+        signature: ["belopp", "konto"],
+      },
+    ]);
+    // Without a reading at that row the detected signature is used.
+    const fallback = planJobs({
+      defaultSheet: "Blad1",
+      sheetForHint: {},
+      signatures: { Blad1: ["konto", "belopp"] },
+      templates: [templates[0]!],
+    });
+    expect(fallback).toEqual([
+      { kind: "known", sheetName: "Blad1", template: templates[0], score: 1 },
+    ]);
+    // A changed sheet at the template's row is drift, with that row's signature.
+    const drift = planJobs({
+      defaultSheet: "Blad1",
+      sheetForHint: {},
+      signatures: { Blad1: ["rapport"] },
+      signaturesAt: { Blad1: { 4: ["konto", "belopp", "moms"] } },
+      templates: [templates[0]!],
+    });
+    expect(drift).toMatchObject([
+      { kind: "drift", signature: ["konto", "belopp", "moms"], diff: { added: ["moms"] } },
+    ]);
+  });
+
   it("maps a repo template", () => {
     expect(
       toRecognitionTemplate({
@@ -201,5 +251,15 @@ describe("planJobs", () => {
       sheetHint: "MB AB",
       updatedAt: "2026-01-01",
     });
+    expect(
+      toRecognitionTemplate({
+        id: "x",
+        name: "n",
+        datasetKey: "budget",
+        version: 1,
+        headerSignature: ["a"],
+        config: { kind: "table", headerRow: 3 },
+      }),
+    ).toMatchObject({ headerRow: 3 });
   });
 });

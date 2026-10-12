@@ -133,6 +133,37 @@ describe("fixture files through the mapping helpers", () => {
     }
   }
 
+  it("migrates budget templates that wrote the sign as a trailing negate step", async () => {
+    const file = "budget_2026.xlsx";
+    const columnsOf = async (t: ImportTemplate) => (await inspect(file, t)).columns;
+    for (const template of templatesOf(file)) {
+      if (template.config.kind !== "table") throw new Error("table template expected");
+      const { budgetSign, ...rest } = template.config;
+      expect(budgetSign).toBe("result");
+      // Before budgetSign the mapping negated the measure after the tools, before the order.
+      const measure = rest.columns.find((c) => c.usage === "measure" && c.keep !== false)!.column;
+      const steps = [...rest.steps];
+      steps.splice(steps.at(-1)?.op === "reorder" ? -1 : steps.length, 0, {
+        op: "negate",
+        column: measure,
+      });
+      const legacy: ImportTemplate = { ...template, config: { ...rest, steps } };
+      const original = comparableFacts((await apply(file, template)).facts);
+      expect(comparableFacts((await apply(file, legacy)).facts)).toEqual(original);
+
+      const state = fromTemplateConfig(legacy.config, await columnsOf(template), {
+        datasetKey: template.datasetKey,
+        templateName: template.name,
+        catalog: SEED_CATALOG,
+      });
+      expect(state.budgetSign).toBe("result");
+      const config = toTemplateConfig(state, SEED_CATALOG);
+      expect(config).toMatchObject({ budgetSign: "result" });
+      expect(config.kind === "table" && config.steps.some((x) => x.op === "negate")).toBe(false);
+      expect(comparableFacts((await apply(file, { ...template, config })).facts)).toEqual(original);
+    }
+  });
+
   it("reproduces the ground truth for single-template files", async () => {
     for (const f of withTemplates) {
       const templates = templatesOf(f.file);

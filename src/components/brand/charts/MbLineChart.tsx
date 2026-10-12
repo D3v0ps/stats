@@ -10,7 +10,7 @@ import {
 } from "@/components/ui/chart";
 import { ChartFigure } from "./ChartFigure";
 import { chartConfigFor, formatAxisTick, seriesStyles, toChartRows } from "./chart-format";
-import { AXIS_TICK, tooltipFormatter, useChartAnimation } from "./chart-parts";
+import { axisTick, tooltipFormatter, useChartAnimation } from "./chart-parts";
 import type { MbChartProps } from "./types";
 
 /**
@@ -23,9 +23,12 @@ export function MbLineChart({
   description,
   animate = true,
   height = 280,
+  fontSize,
+  yAxisWidth,
   className,
 }: MbChartProps) {
   const animated = useChartAnimation(animate);
+  const tick = axisTick(fontSize);
   const styles = seriesStyles(data.series);
   const rows = toChartRows(data);
   const highlightKey = (styles.find((s) => s.role === "primary") ?? styles[0])?.dataKey;
@@ -66,13 +69,13 @@ export function MbLineChart({
             axisLine={false}
             tickMargin={8}
             minTickGap={12}
-            tick={AXIS_TICK}
+            tick={tick}
           />
           <YAxis
             tickLine={false}
             axisLine={false}
-            width="auto"
-            tick={AXIS_TICK}
+            width={yAxisWidth ?? "auto"}
+            tick={tick}
             tickFormatter={(v: number) => formatAxisTick(v, data.unit)}
           />
           <ChartTooltip

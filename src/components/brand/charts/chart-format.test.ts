@@ -4,6 +4,7 @@ import { describe, expect, it } from "vitest";
 import type { ChartData } from "@/lib/contracts";
 import { ANTRACIT, BLA, LJUSGRA, ROD } from "../tokens";
 import { MbBarChart, MbDonut, MbLineChart, MbStackedCompanyBar } from "./index";
+import { AXIS_TICK, axisTick } from "./chart-parts";
 import {
   barFill,
   chartConfigFor,
@@ -229,5 +230,67 @@ describe("chart components (server render)", () => {
     );
     expect(html).toMatch(/<span class="num[^"]*">–<\/span>/);
     expect(html).not.toMatch(/<span class="num[^"]*">0( |&nbsp;| )kr<\/span>/);
+  });
+
+  const donut: ChartData = {
+    categories: ["MB AB", "MB Restart"],
+    series: [{ key: "v", label: "Intäkter", role: "primary", values: [3_000_000, 1_000_000] }],
+    unit: "kr",
+    highlightIndex: null,
+  };
+
+  it("hides the donut total when asked (slides show it beside the chart)", () => {
+    const shown = render(createElement(MbDonut, { data: donut, title: "Intäkter per bolag" }));
+    expect(shown).toContain('data-slot="donut-total"');
+    const hidden = render(
+      createElement(MbDonut, {
+        data: donut,
+        title: "Intäkter per bolag",
+        centerLabel: "Totalt",
+        showTotal: false,
+      }),
+    );
+    expect(hidden).not.toContain('data-slot="donut-total"');
+    expect(hidden).not.toContain(`4,0${NBSP}mkr`);
+    expect(hidden).not.toContain("Totalt");
+    // The legend still gives every share.
+    expect(hidden).toContain(`75${NBSP}%`);
+  });
+
+  it("lists the drill-down links of bars and slices for the keyboard", () => {
+    const hrefs = ["/utforska/verksamhet/1", null];
+    for (const html of [
+      render(
+        createElement(MbBarChart, {
+          data: donut,
+          title: "Intäkter per bolag",
+          orientation: "horizontal",
+          categoryHrefs: hrefs,
+        }),
+      ),
+      render(
+        createElement(MbDonut, { data: donut, title: "Intäkter per bolag", categoryHrefs: hrefs }),
+      ),
+    ]) {
+      const nav = /<nav [^>]*data-slot="chart-links"[^>]*>(.*?)<\/nav>/.exec(html);
+      expect(nav?.[0]).toContain('aria-label="Öppna i Intäkter per bolag"');
+      expect(nav?.[0]).toContain('class="sr-only focus-within:not-sr-only"');
+      const link = /<a ([^>]*)>MB AB<\/a>/.exec(nav?.[1] ?? "")?.[1] ?? "";
+      expect(link).toContain('href="/utforska/verksamhet/1"');
+      expect(link).toContain('data-category-index="0"');
+      // Not drillable: no link.
+      expect(nav?.[1]).not.toContain("MB Restart");
+    }
+    const plain = render(createElement(MbBarChart, { data: donut, title: "Intäkter per bolag" }));
+    expect(plain).not.toContain("chart-links");
+    expect(
+      render(createElement(MbBarChart, { data: donut, title: "X", categoryHrefs: [null, null] })),
+    ).not.toContain("chart-links");
+  });
+
+  it("sizes axis labels for miniatures", () => {
+    expect(axisTick()).toBe(AXIS_TICK);
+    expect(axisTick(12)).toBe(AXIS_TICK);
+    expect(axisTick(7)).toEqual({ fill: "var(--muted-foreground)", fontSize: 7 });
   });
 });

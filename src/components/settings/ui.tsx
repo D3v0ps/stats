@@ -83,13 +83,14 @@ export function Notice({
   tone = "info",
   className,
   children,
-}: {
+  ...props
+}: ComponentPropsWithoutRef<"div"> & {
   tone?: "info" | "warning";
-  className?: string;
   children: ReactNode;
 }) {
   return (
     <div
+      {...props}
       className={cn(
         "rounded-xl bg-ljusgra-100 px-4 py-3 text-sm text-antracit",
         tone === "warning" && "border-l-4 border-rod",

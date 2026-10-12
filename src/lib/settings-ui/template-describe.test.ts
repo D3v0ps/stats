@@ -171,6 +171,36 @@ describe("describeTemplate", () => {
     ]);
   });
 
+  it("describes the budget sign and a hand-picked header row", () => {
+    const config = TemplateConfigSchema.parse({
+      kind: "table",
+      columns: [{ column: "belopp", type: "amount", usage: "measure", metricKey: "budget_belopp" }],
+      period: { kind: "per_upload" },
+      company: { kind: "fixed", company: "MBAB" },
+      scenario: "budget",
+      budgetSign: "result",
+      headerRow: 3,
+    });
+    expect(describeTemplate(config, ctx).settings.slice(2)).toEqual([
+      { label: "Scenario", value: "Budget" },
+      { label: "Belopp i filen", value: "Intäkter plus, kostnader minus" },
+      { label: "Rubrikrad", value: "Rad 4 (vald för hand)" },
+    ]);
+    // A budget template without the field stores the amounts as they are.
+    const {
+      budgetSign: _sign,
+      headerRow: _row,
+      ...plain
+    } = config as typeof config & {
+      kind: "table";
+    };
+    expect([_sign, _row]).toEqual(["result", 3]);
+    expect(describeTemplate(plain, ctx).settings.at(-1)).toEqual({
+      label: "Belopp i filen",
+      value: "Som i bokföringen (intäkter minus, kostnader plus)",
+    });
+  });
+
   it("describes a SIE template", () => {
     const d = describeTemplate({ kind: "sie", objectDims: [1, 6] }, ctx);
     expect(d.steps).toEqual([]);

@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import Link from "next/link";
+import type { HTMLAttributes, ReactNode } from "react";
 import { Skeleton } from "@/components/ui/skeleton";
 import type { Unit } from "@/lib/contracts";
 import { formatDateSv, type FormatOptions } from "@/lib/core/format-sv";
@@ -9,7 +10,14 @@ import { Delta } from "./Delta";
 import type { DeltaLike } from "./delta-text";
 import { Sparkline } from "./Sparkline";
 
-export interface KpiCardProps {
+/**
+ * Other attributes (data-testid, aria-*, id …) go to the card's <article>. `title` and
+ * `onClick` are the card's own props, not the HTML attributes.
+ */
+export interface KpiCardProps extends Omit<
+  HTMLAttributes<HTMLElement>,
+  "title" | "onClick" | "children"
+> {
   title: string;
   /** null = no published data for the period ("Saknas"). */
   value: number | null;
@@ -18,6 +26,8 @@ export interface KpiCardProps {
   formatOptions?: FormatOptions;
   /** Omit to hide the delta row; null shows "–" (nothing to compare with). */
   delta?: DeltaLike | null;
+  /** A second comparison under the first, e.g. against budget ("mot budget"); null hides it. */
+  secondaryDelta?: DeltaLike | null;
   /** Monthly values, oldest first. */
   sparkline?: readonly (number | null)[] | null;
   sparklineLabel?: string;
@@ -34,7 +44,13 @@ export interface KpiCardProps {
   loading?: boolean;
   /** Frozen/print views: no count-up, no draw-in. */
   static?: boolean;
+  /**
+   * Controls in the card's bottom-right corner, e.g. the Källa button. They sit above the
+   * stretched drill-down link, so they stay clickable on a clickable card.
+   */
+  actions?: ReactNode;
   className?: string;
+  "data-testid"?: string;
 }
 
 const CARD = "relative flex min-w-0 flex-col gap-4 rounded-card bg-card p-5 shadow-soft md:p-6";
@@ -47,6 +63,7 @@ export function KpiCard(props: KpiCardProps) {
     unit,
     formatOptions,
     delta,
+    secondaryDelta,
     sparkline,
     sparklineLabel,
     lastUpdatedAt,
@@ -56,12 +73,14 @@ export function KpiCard(props: KpiCardProps) {
     actionLabel,
     loading = false,
     static: isStatic = false,
+    actions,
     className,
+    ...rest
   } = props;
 
   if (loading) {
     return (
-      <article aria-busy="true" data-slot="kpi-card" className={cn(CARD, className)}>
+      <article {...rest} aria-busy="true" data-slot="kpi-card" className={cn(CARD, className)}>
         <span className="sr-only">Laddar {title}</span>
         <Skeleton className="h-3 w-28" />
         <Skeleton className="h-9 w-36" />
@@ -93,6 +112,7 @@ export function KpiCard(props: KpiCardProps) {
 
   return (
     <article
+      {...rest}
       data-slot="kpi-card"
       data-static={isStatic ? "" : undefined}
       className={cn(
@@ -122,6 +142,9 @@ export function KpiCard(props: KpiCardProps) {
             </p>
           )}
           {delta !== undefined && value !== null ? <Delta delta={delta} size="sm" /> : null}
+          {secondaryDelta && value !== null ? (
+            <Delta delta={secondaryDelta} size="sm" className="-mt-1" />
+          ) : null}
         </div>
         {hasSparkline && sparkline ? (
           <Sparkline
@@ -133,10 +156,17 @@ export function KpiCard(props: KpiCardProps) {
         ) : null}
       </div>
 
-      {lastUpdatedAt || footnote ? (
-        <footer className="mt-auto flex flex-col gap-0.5 text-xs text-muted-foreground">
-          {footnote ? <p>{footnote}</p> : null}
-          {lastUpdatedAt ? <p>Senast uppdaterad {formatDateSv(lastUpdatedAt)}</p> : null}
+      {lastUpdatedAt || footnote || actions ? (
+        <footer className="mt-auto flex items-end justify-between gap-3 text-xs text-muted-foreground">
+          <div className="flex min-w-0 flex-col gap-0.5">
+            {footnote ? <p>{footnote}</p> : null}
+            {lastUpdatedAt ? <p>Senast uppdaterad {formatDateSv(lastUpdatedAt)}</p> : null}
+          </div>
+          {actions ? (
+            <div data-slot="kpi-actions" className="relative z-10 -mr-2 -mb-1 flex shrink-0 gap-1">
+              {actions}
+            </div>
+          ) : null}
         </footer>
       ) : null}
     </article>

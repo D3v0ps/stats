@@ -11,9 +11,11 @@ import {
   MAX_RANGES,
   SIGN_HELP,
   SIGN_LABELS,
+  budgetLeafWarnings,
   checkRanges,
   formatRange,
   rangesChanged,
+  summaryGroupNote,
   type RangeDraft,
 } from "@/lib/settings-ui/account-groups";
 import { ConfirmDialog } from "./ConfirmDialog";
@@ -40,6 +42,7 @@ export function AccountGroupsEditor({ groups, usedBy }: AccountGroupsEditorProps
           <AccountGroupCard
             key={`${g.key}:${g.name}:${g.sign}:${g.ranges.map(formatRange).join(",")}`}
             group={g}
+            groups={groups}
             usedBy={usedBy[g.key] ?? []}
           />
         ))}
@@ -50,9 +53,12 @@ export function AccountGroupsEditor({ groups, usedBy }: AccountGroupsEditorProps
 
 function AccountGroupCard({
   group,
+  groups,
   usedBy,
 }: {
   group: AccountGroup;
+  /** All groups: nesting decides which ones the budget is read from. */
+  groups: AccountGroup[];
   usedBy: { key: string; name: string }[];
 }) {
   const id = useId();
@@ -69,6 +75,12 @@ function AccountGroupCard({
   const dirty =
     name.trim() !== group.name || sign !== group.sign || rangesChanged(group.ranges, ranges);
   const valid = check.errors.length === 0 && !nameError;
+  // Ranges inside another group's make the outer group a summary group in the budget.
+  const leafWarnings =
+    check.errors.length === 0 && rangesChanged(group.ranges, ranges)
+      ? budgetLeafWarnings(groups, group.key, check.ranges)
+      : [];
+  const summaryNote = summaryGroupNote(groups, group.key);
 
   const setRange = (i: number, patch: Partial<RangeDraft>) =>
     setRanges((rs) => rs.map((r, j) => (j === i ? { ...r, ...patch } : r)));
@@ -188,12 +200,23 @@ function AccountGroupCard({
             </p>
           ))}
         </div>
+        {leafWarnings.length > 0 ? (
+          <Notice tone="warning" className="text-xs" data-testid="account-group-nesting">
+            <p className="font-medium">Budgeten läses på ett annat sätt efter ändringen.</p>
+            {leafWarnings.map((w) => (
+              <p key={w} className="mt-1">
+                {w}
+              </p>
+            ))}
+          </Notice>
+        ) : null}
       </fieldset>
 
       <p className="text-xs text-muted-foreground">
         {usedBy.length > 0
           ? `Används av måttet ${usedBy.map((m) => `”${m.name}”`).join(", ")}.`
           : "Inget mått använder kontogruppen än (den kan användas i budgeten)."}
+        {summaryNote ? ` ${summaryNote}` : null}
       </p>
 
       <div className="flex flex-wrap gap-2">
@@ -207,6 +230,9 @@ function AccountGroupCard({
                 ”{name.trim()}” räknas om för alla månader med de nya inställningarna:{" "}
                 {check.ranges.map(formatRange).join(", ")}, tecken {sign === 1 ? "+" : "−"}.
               </p>
+              {leafWarnings.map((w) => (
+                <p key={w}>{w}</p>
+              ))}
               <p>Frysta styrelserapporter påverkas inte.</p>
             </>
           }

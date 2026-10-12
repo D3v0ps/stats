@@ -165,6 +165,43 @@ describe("loading dashboard widgets", () => {
     ]);
   });
 
+  it("takes drill-down ids and the last update from the resolved slide, with no extra query", async () => {
+    const source = buildSource();
+    let calls = 0;
+    const counted = new Proxy(source, {
+      get(target, prop, receiver) {
+        const value = Reflect.get(target, prop, receiver) as unknown;
+        if (typeof value !== "function") return value;
+        return (...args: unknown[]) => {
+          if (prop === "monthly" || prop === "ledger" || prop === "distinct") calls++;
+          return (value as (...a: unknown[]) => unknown).apply(target, args);
+        };
+      },
+    });
+    const spec = DEFAULT_DASHBOARD.widgets.find((w) => w.viz === "toplist")!;
+    const toplist = await loadWidget(spec, ctx(counted));
+    const callsForWidget = calls;
+    calls = 0;
+    await resolveWidget(
+      spec,
+      { company: FILTERS.company, grain: FILTERS.grain, anchor: ANCHOR },
+      {
+        anchor: ANCHOR,
+        source: counted,
+        definitionsByKey: definitionMap(DEFINITIONS),
+        personalDimensions: new Set(["konsult"]),
+        companyLabels: COMPANY_FILTER_LABELS,
+      },
+    );
+    // Loading the widget asks the data source exactly what resolving it does.
+    expect(callsForWidget).toBe(calls);
+    expect(callsForWidget).toBeGreaterThan(0);
+    expect(toplist.categoryLinks.map((l) => l.href)).toEqual(
+      toplist.slide!.chart!.categoryIds!.map((id) => (id === null ? null : `/utforska/kund/${id}`)),
+    );
+    expect(toplist.slide?.lastUpdatedAt).toEqual(expect.any(String));
+  });
+
   it("drill-down targets match the widget kind", () => {
     const byId = (id: string) => DEFAULT_DASHBOARD.widgets.find((w) => w.id === id)!;
     const defs = definitionMap(DEFINITIONS);

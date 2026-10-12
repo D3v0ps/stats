@@ -9,6 +9,7 @@ import type { UploadChoices } from "@/lib/contracts";
 import { diffSignature } from "@/lib/ingest/recognize";
 import { findDuplicate, type PublishedFile } from "@/lib/db/repo/import-extra";
 import type { StoredTemplate } from "@/lib/db/repo/templates";
+import { accountGroupContext, type UploadAccountGroup } from "@/lib/import-ui/budget";
 import { classifyFileName, fileProblem } from "@/lib/import-ui/files";
 import { todayInStockholm } from "@/lib/import-ui/months";
 import {
@@ -20,7 +21,12 @@ import {
   type JobOutcome,
   type QueueItem,
 } from "@/lib/import-ui/queue";
-import { planJobs, templateHints, toRecognitionTemplate } from "@/lib/import-ui/recognition";
+import {
+  planJobs,
+  templateHeaderRows,
+  templateHints,
+  toRecognitionTemplate,
+} from "@/lib/import-ui/recognition";
 import { aliasTablesFromDictionary, type DictionaryEntry } from "@/lib/import-ui/review";
 import { lookupDimensions } from "@/lib/import-ui/steps";
 import { findPublishedAction, loadDictionariesAction } from "@/app/(app)/ladda-upp/actions";
@@ -46,8 +52,13 @@ function newId(): string {
   );
 }
 
-export function useImportQueue(initialTemplates: StoredTemplate[]): ImportQueue {
+export function useImportQueue(
+  initialTemplates: StoredTemplate[],
+  accountGroups: readonly UploadAccountGroup[],
+): ImportQueue {
   const [items, dispatch] = useReducer(queueReducer, []);
+  // Every template run gets the account groups (budgets written with every amount positive).
+  const groupContext = useMemo(() => accountGroupContext(accountGroups), [accountGroups]);
   const [templates, setTemplates] = useState(initialTemplates);
   const templatesRef = useRef(templates);
   const itemsRef = useRef(items);
@@ -154,6 +165,7 @@ export function useImportQueue(initialTemplates: StoredTemplate[]): ImportQueue 
         fileId: id,
         hints: templateHints(recognitionTemplates),
         today: todayInStockholm(new Date()),
+        headerRows: templateHeaderRows(recognitionTemplates),
       });
       if (!rec.ok) {
         dispatch({ type: "failed", id, message: rec.error });
@@ -165,6 +177,7 @@ export function useImportQueue(initialTemplates: StoredTemplate[]): ImportQueue 
         signatures: Object.fromEntries(
           Object.entries(rec.sheets).map(([k, v]) => [k, v.signature]),
         ),
+        signaturesAt: rec.signaturesAt,
         sheetOrder: read.sheets.map((s) => s.name),
         templates: recognitionTemplates,
       });
@@ -172,7 +185,7 @@ export function useImportQueue(initialTemplates: StoredTemplate[]): ImportQueue 
         const summary = rec.sheets[job.sheetName]!;
         const base = {
           sheetName: job.sheetName,
-          signature: summary.signature,
+          signature: (job.kind !== "new" && job.signature) || summary.signature,
           suggestions: {
             period: summary.periodSuggestions,
             company: summary.companySuggestion,
@@ -259,6 +272,7 @@ export function useImportQueue(initialTemplates: StoredTemplate[]): ImportQueue 
             template,
             choices: item.choices,
             aliases,
+            ...groupContext,
             ...(item.headerRow !== undefined ? { headerRow: item.headerRow } : {}),
           });
           finish(
@@ -275,7 +289,7 @@ export function useImportQueue(initialTemplates: StoredTemplate[]): ImportQueue 
         }
       })();
     }
-  }, [items, client, getDictionaries]);
+  }, [items, client, getDictionaries, groupContext]);
 
   const setChoices = useCallback((id: string, choices: UploadChoices) => {
     dispatch({ type: "set_choices", id, choices });

@@ -60,6 +60,7 @@ import {
   firstIssue,
 } from "@/lib/settings-ui/schemas";
 import { SETTINGS_BASE } from "@/lib/settings-ui/sections";
+import { templateDeletedMessage } from "@/lib/settings-ui/template-delete";
 import type { z } from "zod";
 
 /**
@@ -260,14 +261,10 @@ export async function deleteTemplateAction(input: unknown): Promise<ActionResult
     TemplateDeleteSchema,
     input,
     async (db, data) => {
+      // Uploads read with the template keep their numbers (the database nulls their link).
       const uses = (await templateUploadCounts(db))[data.id] ?? 0;
-      if (uses > 0) {
-        return fail(
-          `Mallen används av ${formatNumber(uses)} ${uses === 1 ? "uppladdning" : "uppladdningar"} och kan inte tas bort.`,
-        );
-      }
       await deleteTemplate(db, data.id);
-      return ok("Mallen är borttagen.");
+      return ok(templateDeletedMessage(uses));
     },
     { revalidate: false },
   );

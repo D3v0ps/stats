@@ -72,7 +72,7 @@ describe("widget texts", () => {
     expect(widgetSubtitle(widget({ slide: null }))).toBeNull();
   });
 
-  it("moves the period change to the footnote when the delta is against budget", () => {
+  it("adds the budget amount to the footnote when the card compares with budget", () => {
     expect(kpiFootnote(widget())).toBe("Summa bolag (ej eliminerat)");
     const withBudget = widget({
       budgetValue: 2_600_000,
@@ -85,7 +85,7 @@ describe("widget texts", () => {
       },
     });
     expect(kpiFootnote(withBudget)).toBe(
-      `Budget 2,6${NBSP}mkr · MB Restart saknar budget · ▲ +12${NBSP}% mot aug 2026 · Summa bolag (ej eliminerat)`,
+      `Budget 2,6${NBSP}mkr · MB Restart saknar budget · Summa bolag (ej eliminerat)`,
     );
     expect(
       kpiFootnote(

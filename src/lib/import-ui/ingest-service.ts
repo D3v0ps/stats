@@ -53,7 +53,14 @@ import {
 
 export type IngestRequest =
   | { op: "read"; fileId: string; fileName: string; bytes: ArrayBuffer | Uint8Array }
-  | { op: "recognize"; fileId: string; hints: string[]; today: string }
+  | {
+      op: "recognize";
+      fileId: string;
+      hints: string[];
+      today: string;
+      /** Header rows saved with templates: each sheet is also read at these rows. */
+      headerRows?: TemplateHeaderRow[];
+    }
   | {
       op: "inspect";
       fileId: string;
@@ -80,8 +87,18 @@ export type IngestRequest =
       choices: UploadChoices;
       aliases: AliasTables;
       headerRow?: number;
+      /** Account groups (RunContext): budgets written with every amount positive need them. */
+      accountGroupSigns?: Record<string, 1 | -1>;
+      accountGroupNames?: Record<string, string>;
     }
   | { op: "release"; fileId: string };
+
+/** A header row a template picked by hand, on the sheet its hint names (none = default sheet). */
+export interface TemplateHeaderRow {
+  sheetHint?: string;
+  /** 0-based sheet row. */
+  row: number;
+}
 
 export interface SheetInfo {
   name: string;
@@ -120,6 +137,8 @@ export interface RecognizeResponse {
   /** Sheet hint -> the sheet pickSheet chooses for it. */
   sheetForHint: Record<string, string>;
   sheets: Record<string, SheetSummary>;
+  /** Sheet name -> 0-based header row -> header signature read at that row (TemplateHeaderRow). */
+  signaturesAt: Record<string, Record<number, string[]>>;
 }
 
 export interface InspectResponse {
@@ -370,7 +389,19 @@ export class IngestService {
         if (name === defaultSheet) throw error;
       }
     }
-    return { ok: true, op: "recognize", defaultSheet, sheetForHint, sheets };
+    // A template whose header row was picked by hand is matched on that row, not the detected one.
+    const signaturesAt: Record<string, Record<number, string[]>> = {};
+    for (const { sheetHint, row } of req.headerRows ?? []) {
+      const name = pickSheet(e.workbook, sheetHint)?.name;
+      if (name === undefined || signaturesAt[name]?.[row] !== undefined) continue;
+      try {
+        const signature = headerSignature(this.table(e, name, row).table);
+        if (signature.length > 0) (signaturesAt[name] ??= {})[row] = signature;
+      } catch {
+        // A row that holds no readable table simply gives no signature.
+      }
+    }
+    return { ok: true, op: "recognize", defaultSheet, sheetForHint, sheets, signaturesAt };
   }
 
   private inspect(req: Extract<IngestRequest, { op: "inspect" }>): InspectResponse {
@@ -463,6 +494,8 @@ export class IngestService {
       fileSha256: e.sha256,
       fileSize: e.size,
       ...(req.headerRow !== undefined ? { headerRow: req.headerRow } : {}),
+      ...(req.accountGroupSigns ? { accountGroupSigns: req.accountGroupSigns } : {}),
+      ...(req.accountGroupNames ? { accountGroupNames: req.accountGroupNames } : {}),
     });
     return { ok: true, op: "apply", result };
   }

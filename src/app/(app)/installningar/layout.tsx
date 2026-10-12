@@ -1,7 +1,6 @@
 import type { ReactNode } from "react";
 import { SettingsNav } from "@/components/settings/SettingsNav";
 import { PageHeader } from "@/components/shell/PageHeader";
-import { Toaster } from "@/components/ui/sonner";
 import { requireSession } from "@/lib/db/session";
 
 export default async function SettingsLayout({ children }: { children: ReactNode }) {
@@ -16,8 +15,6 @@ export default async function SettingsLayout({ children }: { children: ReactNode
         <SettingsNav />
         <div className="min-w-0">{children}</div>
       </div>
-      {/* The app layout has no toaster yet; settings mounts its own (light: no dark theme). */}
-      <Toaster theme="light" position="bottom-right" />
     </>
   );
 }

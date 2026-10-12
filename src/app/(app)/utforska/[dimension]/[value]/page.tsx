@@ -6,9 +6,14 @@ import { ExploreError, ExploreSkeleton } from "@/components/explore/ExploreParts
 import { loadWorkspace } from "@/components/explore/workspace";
 import { FilterBarSkeleton, GlobalFilterBar } from "@/components/filters/GlobalFilterBar";
 import { parseUrlFilters, withUrlFilters, type UrlFilters } from "@/lib/app/filters";
-import { DimensionKeySchema } from "@/lib/contracts/domain";
 import { parseExploreState, withExploreState } from "@/lib/dashboard/explore-state";
-import { loadEntity, type EntityInput, type EntityView } from "@/lib/dashboard/load-entity";
+import {
+  entityExists,
+  loadEntity,
+  parseEntityParams,
+  type EntityInput,
+  type EntityView,
+} from "@/lib/dashboard/load-entity";
 import { effectiveAnchor } from "@/lib/dashboard/period";
 import { requireSession } from "@/lib/db/session";
 
@@ -25,16 +30,20 @@ export default async function EntityPage({
   searchParams: SearchParams;
 }) {
   await requireSession();
-  const { dimension, value } = await params;
+  const { dimension: rawDimension, value } = await params;
   const sp = await searchParams;
-  const valueId = Number(value);
-  if (
-    !DimensionKeySchema.safeParse(dimension).success ||
-    !/^\d{1,15}$/.test(value) ||
-    valueId <= 0
-  ) {
-    notFound();
+  const entity = parseEntityParams(rawDimension, value);
+  if (!entity) notFound();
+  const { dimension, valueId } = entity;
+  // Checked before any Suspense boundary: notFound() while streaming keeps the 200 status, so
+  // an unknown dimension or value must be ruled out here to answer with a real 404.
+  let known = true;
+  try {
+    known = await entityExists(entity, await loadWorkspace());
+  } catch {
+    // The database is unreachable: EntityContent shows the error instead of a 404.
   }
+  if (!known) notFound();
   const filters = parseUrlFilters(sp);
   const state = parseExploreState(sp);
   const input: EntityInput = { dimension, valueId, breakdown: state.groupBy, sort: state.sort };

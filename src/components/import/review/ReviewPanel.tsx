@@ -10,6 +10,7 @@ import type { FactRow, IngestResult, TemplateConfig } from "@/lib/contracts";
 import { COMPANY_FILTER_LABELS } from "@/lib/contracts";
 import { formatNumber } from "@/lib/core/format-sv";
 import type { ReviewComparison } from "@/lib/db/repo/uploads";
+import { budgetSummaryLines } from "@/lib/import-ui/budget";
 import { progressPercent } from "@/lib/import-ui/chunking";
 import { excludeMonths, formatMonthSpan, openMonths, resultMonths } from "@/lib/import-ui/months";
 import type { QueueItem } from "@/lib/import-ui/queue";
@@ -355,6 +356,10 @@ export function ReviewPanel({
         )
       : [];
   const shown = effective ?? result;
+  const summaryLines =
+    shown.datasetKey === "budget" && !shown.ledger && phase.kind !== "published"
+      ? budgetSummaryLines(shown.facts, catalog.accountGroups, dict.kontogrupp)
+      : null;
   const busyPhase = ["preparing", "staging", "comparing", "publishing"].includes(phase.kind);
   const templateName =
     item.template?.name ?? (item.format === "sie" ? "Fortnox – bokföring (SIE)" : "");
@@ -397,6 +402,18 @@ export function ReviewPanel({
             </span>
           </span>
         </label>
+      ) : null}
+
+      {summaryLines ? (
+        <p
+          className="rounded-lg border-l-4 border-bla bg-ljusgra-100 p-3 text-sm"
+          data-testid="budget-summary-lines"
+        >
+          <span className="font-medium">{summaryLines.message}.</span>{" "}
+          <span className="text-muted-foreground">
+            Filen har budget på {summaryLines.groups.join(" och ")}, som räknas fram ur delraderna.
+          </span>
+        </p>
       ) : null}
 
       <div aria-live="polite" className="flex flex-col gap-4">

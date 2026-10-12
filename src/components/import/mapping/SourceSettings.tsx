@@ -5,7 +5,9 @@
 import type { ReactNode } from "react";
 import { Heading } from "@/components/brand/Heading";
 import {
+  BUDGET_SIGN_LABELS,
   COMPANY_FILTER_LABELS,
+  type BudgetSign,
   type CasesConfig,
   type ColumnUsage,
   type CompanyCode,
@@ -92,7 +94,17 @@ const CASE_METRIC_ROLES: { role: keyof CasesConfig["metrics"]; label: string }[]
   { role: "ended", label: "Avslutade under månaden" },
   { role: "interrupted", label: "Avbrott under månaden" },
   { role: "results", label: "Till arbete eller studier" },
-  { role: "tenureMonths", label: "Genomsnittlig tid (månader)" },
+  { role: "tenureMonthsSum", label: "Anställningsmånader" },
+];
+
+/** "Hur skrivs beloppen?": the options in the order shown, with a plain-words hint. */
+const BUDGET_SIGN_OPTIONS: { value: BudgetSign; hint: string }[] = [
+  { value: "result", hint: "Som de flesta budgetark skrivs." },
+  {
+    value: "positive",
+    hint: "Tecknet tas från kontogruppen, så filen behöver en kolumn med kontogrupp.",
+  },
+  { value: "ledger", hint: "Som en export från Fortnox." },
 ];
 
 const RESULT_LABELS = ["Arbete", "Studier"];
@@ -405,24 +417,18 @@ export function SourceSettings({
             <legend className="mb-1 text-sm font-medium tracking-[0.06em] uppercase">
               Hur skrivs beloppen?
             </legend>
-            <Radio
-              name="budget-sign"
-              checked={state.budgetSign === "income_positive"}
-              onChange={() => edit((s) => setBudgetSign(s, "income_positive"))}
-              testId="budget-income-positive"
-            >
-              Intäkter med plus och kostnader med minus
-              <span className="text-muted-foreground">Som de flesta budgetark skrivs.</span>
-            </Radio>
-            <Radio
-              name="budget-sign"
-              checked={state.budgetSign === "ledger"}
-              onChange={() => edit((s) => setBudgetSign(s, "ledger"))}
-              testId="budget-ledger"
-            >
-              Som i bokföringen: intäkter med minus och kostnader med plus
-              <span className="text-muted-foreground">Som en export från Fortnox.</span>
-            </Radio>
+            {BUDGET_SIGN_OPTIONS.map((o) => (
+              <Radio
+                key={o.value}
+                name="budget-sign"
+                checked={state.budgetSign === o.value}
+                onChange={() => edit((s) => setBudgetSign(s, o.value))}
+                testId={`budget-sign-${o.value}`}
+              >
+                {BUDGET_SIGN_LABELS[o.value]}
+                <span className="text-muted-foreground">{o.hint}</span>
+              </Radio>
+            ))}
           </fieldset>
         ) : null}
       </Panel>

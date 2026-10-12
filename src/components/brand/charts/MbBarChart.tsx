@@ -19,7 +19,13 @@ import {
 } from "@/components/ui/chart";
 import { ChartFigure } from "./ChartFigure";
 import { barFill, chartConfigFor, formatAxisTick, seriesStyles, toChartRows } from "./chart-format";
-import { AXIS_TICK, tooltipFormatter, useChartAnimation } from "./chart-parts";
+import {
+  CategoryLinkList,
+  axisTick,
+  tooltipFormatter,
+  useCategoryDrill,
+  useChartAnimation,
+} from "./chart-parts";
 import type { MbChartProps } from "./types";
 
 export interface MbBarChartProps extends MbChartProps {
@@ -41,9 +47,15 @@ export function MbBarChart({
   height,
   orientation = "vertical",
   showValues = false,
+  categoryHrefs,
+  onCategoryClick,
+  fontSize,
+  yAxisWidth,
   className,
 }: MbBarChartProps) {
   const animated = useChartAnimation(animate);
+  const drill = useCategoryDrill(categoryHrefs, onCategoryClick);
+  const tick = axisTick(fontSize);
   const horizontal = orientation === "horizontal";
   const styles = seriesStyles(data.series);
   const rows = toChartRows(data);
@@ -82,7 +94,7 @@ export function MbBarChart({
             axisLine={false}
             tickMargin={8}
             minTickGap={12}
-            tick={AXIS_TICK}
+            tick={tick}
             tickFormatter={horizontal ? tickFormatter : undefined}
           />
           <YAxis
@@ -92,8 +104,8 @@ export function MbBarChart({
             interval={horizontal ? 0 : undefined}
             tickLine={false}
             axisLine={false}
-            width="auto"
-            tick={AXIS_TICK}
+            width={yAxisWidth ?? "auto"}
+            tick={tick}
             tickFormatter={horizontal ? undefined : tickFormatter}
           />
           <ChartTooltip
@@ -111,6 +123,8 @@ export function MbBarChart({
               fill={`var(--color-${s.dataKey})`}
               radius={radius}
               isAnimationActive={animated}
+              className={drill.active ? "cursor-pointer" : undefined}
+              onClick={drill.active ? (_bar, index) => drill.open(index) : undefined}
               shape={
                 s.dataKey === highlightKey && data.highlightIndex !== null
                   ? (props: BarShapeProps) => (
@@ -136,7 +150,7 @@ export function MbBarChart({
                   position={horizontal ? "right" : "top"}
                   offset={6}
                   fill="var(--foreground)"
-                  fontSize={12}
+                  fontSize={tick.fontSize}
                   formatter={(v) => (typeof v === "number" ? tickFormatter(v) : "")}
                 />
               ) : null}
@@ -144,6 +158,12 @@ export function MbBarChart({
           ))}
         </BarChart>
       </ChartContainer>
+      <CategoryLinkList
+        title={title}
+        categories={data.categories}
+        hrefs={categoryHrefs}
+        navRef={drill.navRef}
+      />
     </ChartFigure>
   );
 }
