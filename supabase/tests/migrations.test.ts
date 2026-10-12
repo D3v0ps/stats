@@ -50,7 +50,8 @@ describe("migrations", () => {
          and (has_function_privilege('anon', p.oid, 'execute'))
        order by 1`,
     );
-    expect(fns.rows.map((r) => r.name)).toEqual([]);
+    // The free-plan keep-alive ping is the single exception; it reads no data.
+    expect(fns.rows.map((r) => r.name)).toEqual(["keepalive"]);
   });
 
   it("grant no DELETE or TRUNCATE on facts, uploads, frozen reports or the audit log", async () => {

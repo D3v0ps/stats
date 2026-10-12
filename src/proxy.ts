@@ -6,7 +6,14 @@ import { NextResponse, type NextRequest } from "next/server";
 import { checkPublicEnv } from "@/lib/db/env";
 import { LOGIN_PATH, sessionFromClaims } from "@/lib/db/session";
 
-const PUBLIC_EXACT = new Set([LOGIN_PATH, "/delad", "/favicon.ico", "/robots.txt"]);
+const PUBLIC_EXACT = new Set([
+  LOGIN_PATH,
+  "/delad",
+  "/favicon.ico",
+  "/robots.txt",
+  // Vercel Cron keep-alive; checks CRON_SECRET itself and returns no data.
+  "/api/keepalive",
+]);
 const PUBLIC_PREFIXES = ["/delad/", "/_next/", "/brand/"];
 const STATIC_FILE =
   /\.(?:png|jpe?g|gif|svg|webp|avif|ico|woff2?|ttf|otf|css|js|map|txt|xml|webmanifest)$/i;

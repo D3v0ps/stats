@@ -269,7 +269,9 @@ describe("src/lib/db/types.ts matches the migrations", () => {
 
     for (const fn of res.rows) {
       const node = declared.find((d) => d.name === fn.name)!.node;
-      const args = props(member(node, "Args"));
+      // supabase-gen writes zero-argument functions as { [_ in never]: never }.
+      const argsNode = member(node, "Args");
+      const args = ts.isMappedTypeNode(argsNode) ? [] : props(argsNode);
       const expectedArgs = fn.arg_names.map((name, i) => ({
         name,
         type: tsType(fn.arg_types[i]!),

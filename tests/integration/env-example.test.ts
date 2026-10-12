@@ -11,12 +11,13 @@ const lines = text.split("\n").filter((l) => l.trim() !== "");
 const variables = lines.filter((l) => !l.startsWith("#"));
 
 describe(".env.example", () => {
-  it("lists the four variables without values", () => {
+  it("lists the variables without values", () => {
     expect(variables).toEqual([
       "NEXT_PUBLIC_SUPABASE_URL=",
       "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY=",
       "SUPABASE_SECRET_KEY=",
       "STATS_LOGIN_EMAIL=",
+      "CRON_SECRET=",
     ]);
   });
 

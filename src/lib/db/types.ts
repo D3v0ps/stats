@@ -875,6 +875,10 @@ export type Database = {
         Args: { p_older_than_hours?: number };
         Returns: number;
       };
+      keepalive: {
+        Args: { [_ in never]: never };
+        Returns: string;
+      };
       discard_upload: {
         Args: { p_upload_id: string };
         Returns: Json;

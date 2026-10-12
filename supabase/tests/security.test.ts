@@ -20,6 +20,10 @@ const APP_RPCS: Record<string, string> = {
   merge_dimension_values: `select public.merge_dimension_values(1, 2)`,
   freeze_report: `select public.freeze_report('x', null, '2026-09-01', '{"specs": []}')`,
 };
+/** The only function anon may execute: the free-plan keep-alive ping (reads no data). */
+const PUBLIC_RPCS: Record<string, string> = {
+  keepalive: `select public.keepalive()`,
+};
 const SERVICE_RPCS: Record<string, string> = {
   login_gate: `select public.login_gate('abcdef0123456789abcdef')`,
   login_record: `select public.login_record('00000000-0000-4000-8000-000000000000', false)`,
@@ -83,7 +87,7 @@ describe("security", () => {
        where n.nspname = 'public' order by 1`,
     );
     expect(res.rows.map((r) => r.proname)).toEqual(
-      Object.keys({ ...APP_RPCS, ...SERVICE_RPCS }).sort(),
+      Object.keys({ ...APP_RPCS, ...SERVICE_RPCS, ...PUBLIC_RPCS }).sort(),
     );
   });
 
@@ -97,7 +101,15 @@ describe("security", () => {
       }
     });
 
-    it("cannot call any RPC", async () => {
+    it("can only ping keepalive, which returns the time and nothing else", async () => {
+      const res = await asAnon(db, (tx) =>
+        tx.query<{ t: string }>("select public.keepalive() as t"),
+      );
+      expect(res.rows).toHaveLength(1);
+      expect(Object.keys(res.rows[0] ?? {})).toEqual(["t"]);
+    });
+
+    it("cannot call any other RPC", async () => {
       for (const [name, sql] of Object.entries({ ...APP_RPCS, ...SERVICE_RPCS })) {
         await expect(
           asAnon(db, (tx) => tx.query(sql)),
