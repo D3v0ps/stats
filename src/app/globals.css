@@ -2,7 +2,56 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/*
+ * The app has no dark theme. The variant is kept pointing at a `.dark` class that is never
+ * set, so the `dark:` utilities inside the shadcn components stay inert instead of following
+ * the OS colour scheme (Tailwind's default `dark` variant is prefers-color-scheme).
+ */
 @custom-variant dark (&:is(.dark *));
+
+/*
+ * MB brand palette. Tailwind's default colours are removed entirely so that only brand
+ * colours exist as utilities (no green, no stray greys). Each family has a base colour and
+ * three lighter tones: -300, -200, -100 (lightest).
+ */
+@theme {
+  --color-*: initial;
+  --color-white: #ffffff;
+  --color-black: #000000;
+
+  --color-antracit: #1e252b;
+  --color-antracit-300: #494e52;
+  --color-antracit-200: #8d9093;
+  --color-antracit-100: #c6c8c9;
+
+  --color-rod: #ff0c01;
+  --color-rod-300: #fe5d4a;
+  --color-rod-200: #ff998e;
+  --color-rod-100: #ffccc6;
+
+  --color-ljusgra: #d1d3d3;
+  --color-ljusgra-300: #d3d6d7;
+  --color-ljusgra-200: #e4e5e6;
+  --color-ljusgra-100: #f1f2f3;
+
+  --color-bla: #6ba2b9;
+  --color-bla-300: #7eacc0;
+  --color-bla-200: #aecbd7;
+  --color-bla-100: #d7e5eb;
+
+  --radius-card: 18px;
+  --shadow-soft: 0 1px 2px 0 rgb(30 37 43 / 0.04), 0 10px 28px -12px rgb(30 37 43 / 0.12);
+
+  --animate-draw: mb-draw 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
+  @keyframes mb-draw {
+    from {
+      stroke-dashoffset: 1;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+}
 
 @theme inline {
   --color-background: var(--background);
@@ -23,6 +72,10 @@
   --color-chart-3: var(--chart-3);
   --color-chart-2: var(--chart-2);
   --color-chart-1: var(--chart-1);
+  --color-chart-primary: var(--chart-primary);
+  --color-chart-secondary: var(--chart-secondary);
+  --color-chart-previous: var(--chart-previous);
+  --color-chart-highlight: var(--chart-highlight);
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
@@ -42,79 +95,85 @@
   --radius-sm: calc(var(--radius) * 0.6);
   --radius-md: calc(var(--radius) * 0.8);
   --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
+  /* 12px × 1.5 = 18px: shadcn cards (rounded-xl) get the brand card radius. */
+  --radius-xl: calc(var(--radius) * 1.5);
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
 }
 
 :root {
-  --background: oklch(1 0 0);
-  --foreground: oklch(0.145 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent: oklch(0.97 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  --background: #f1f2f3;
+  --foreground: #1e252b;
+  --card: #ffffff;
+  --card-foreground: #1e252b;
+  --popover: #ffffff;
+  --popover-foreground: #1e252b;
+  --primary: #1e252b;
+  --primary-foreground: #ffffff;
+  --secondary: #e4e5e6;
+  --secondary-foreground: #1e252b;
+  --muted: #e4e5e6;
+  --muted-foreground: #494e52;
+  --accent: #ff0c01;
+  --accent-foreground: #ffffff;
+  --destructive: #ff0c01;
+  --border: #e4e5e6;
+  /* Form field outlines need 3:1 against white (WCAG 1.4.11); #E4E5E6 would be ~1.2:1. */
+  --input: #8d9093;
+  --ring: #6ba2b9;
+  --chart-1: #1e252b;
+  --chart-2: #6ba2b9;
+  --chart-3: #d1d3d3;
+  --chart-4: #8d9093;
+  --chart-5: #aecbd7;
+  /* Chart roles (see src/components/brand/tokens.ts). Red only highlights. */
+  --chart-primary: var(--chart-1);
+  --chart-secondary: var(--chart-2);
+  --chart-previous: var(--chart-3);
+  --chart-highlight: #ff0c01;
+  --radius: 0.75rem;
+  --sidebar: #1e252b;
+  --sidebar-foreground: #ffffff;
+  --sidebar-primary: #ff0c01;
+  --sidebar-primary-foreground: #ffffff;
+  --sidebar-accent: #494e52;
+  --sidebar-accent-foreground: #ffffff;
+  --sidebar-border: #494e52;
+  --sidebar-ring: #6ba2b9;
 }
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+/* Presentation mode (board meetings, projector): antracit canvas, white type. */
+.theme-present {
+  --background: #1e252b;
+  --foreground: #ffffff;
+  --card: #1e252b;
+  --card-foreground: #ffffff;
+  --popover: #1e252b;
+  --popover-foreground: #ffffff;
+  --primary: #ffffff;
+  --primary-foreground: #1e252b;
+  --secondary: #494e52;
+  --secondary-foreground: #ffffff;
+  --muted: #494e52;
+  --muted-foreground: #c6c8c9;
+  --border: #494e52;
+  --input: #8d9093;
+  --chart-1: #ffffff;
+  --chart-2: #6ba2b9;
+  --chart-3: #8d9093;
+  --chart-4: #c6c8c9;
+  --chart-5: #aecbd7;
+  /* Custom properties inherit resolved values, so the role aliases must be restated here. */
+  --chart-primary: var(--chart-1);
+  --chart-secondary: var(--chart-2);
+  --chart-previous: var(--chart-3);
+  background-color: var(--background);
+  color: var(--foreground);
+}
+
+@utility num {
+  font-variant-numeric: tabular-nums;
 }
 
 @layer base {
@@ -131,4 +190,36 @@
   html {
     @apply font-sans;
   }
+  table {
+    font-variant-numeric: tabular-nums;
+  }
+}
+
+/* Motion: off for users who ask for it, in print and in frozen/static views. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+[data-static],
+[data-static] *,
+[data-static] *::before,
+[data-static] *::after {
+  animation: none !important;
+  transition: none !important;
 }
