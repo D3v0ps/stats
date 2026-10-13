@@ -4,13 +4,18 @@ import { describe, expect, it } from "vitest";
 import type { ChartData } from "@/lib/contracts";
 import { ANTRACIT, BLA, LJUSGRA, ROD } from "../tokens";
 import { MbBarChart, MbDonut, MbLineChart, MbStackedCompanyBar } from "./index";
-import { AXIS_TICK, axisTick } from "./chart-parts";
+import { AXIS_TICK, axisTick, fittedCategoryTick } from "./chart-parts";
 import {
+  CATEGORY_AXIS_MAX_SHARE,
+  CATEGORY_TICK_GAP,
   barFill,
   chartConfigFor,
   chartTableRows,
   donutSlices,
   donutTotal,
+  estimateTextWidth,
+  fitCategoryAxis,
+  fitLabel,
   formatAxisTick,
   formatChartValue,
   seriesDataKey,
@@ -292,5 +297,74 @@ describe("chart components (server render)", () => {
     expect(axisTick()).toBe(AXIS_TICK);
     expect(axisTick(12)).toBe(AXIS_TICK);
     expect(axisTick(7)).toEqual({ fill: "var(--muted-foreground)", fontSize: 7 });
+  });
+});
+
+describe("category axis of horizontal bars", () => {
+  // A fixed 7 px per character, roughly Montserrat at 12 px.
+  const measure = (text: string) => [...text].length * 7;
+
+  it("keeps a label that fits and cuts a longer one with an ellipsis", () => {
+    expect(fitLabel("Early Bird AB", 91, measure)).toBe("Early Bird AB");
+    expect(fitLabel("Early Bird AB", 90, measure)).toBe("Early Bird…");
+    // No space before the ellipsis.
+    expect(fitLabel("Early Bird AB", 49, measure)).toBe("Early…");
+    expect(fitLabel("Early Bird AB", 6, measure)).toBe("…");
+    for (const max of [10, 35, 63, 84]) {
+      const label = fitLabel("Göteborgs Stads Bostadsbolag AB", max, measure);
+      expect(measure(label)).toBeLessThanOrEqual(max);
+    }
+  });
+
+  it("is as wide as the longest label on a wide slide", () => {
+    const names = ["Early Bird AB", "Volvo", "Övriga"];
+    expect(fitCategoryAxis(names, 560, measure)).toEqual({
+      width: 13 * 7 + CATEGORY_TICK_GAP,
+      labels: names,
+    });
+  });
+
+  it("leaves the bars their room on a phone and never clips a name's first letters", () => {
+    const fit = fitCategoryAxis(["Göteborgs Stads Bostadsbolag AB", "Early Bird AB"], 300, measure);
+    expect(fit.width).toBeLessThanOrEqual(300 * CATEGORY_AXIS_MAX_SHARE);
+    expect(fit.labels).toEqual(["Göteborgs Stads…", "Early Bird AB"]);
+    for (const label of fit.labels) {
+      expect(measure(label) + CATEGORY_TICK_GAP).toBeLessThanOrEqual(fit.width);
+    }
+  });
+
+  it("estimates text widths on the server", () => {
+    expect(estimateTextWidth("Volvo", 10)).toBeCloseTo(31);
+    expect(fitCategoryAxis([], 300, measure)).toEqual({ width: CATEGORY_TICK_GAP, labels: [] });
+  });
+
+  it("draws a cut label with the full name as its title", () => {
+    const names = ["Göteborgs Stads Bostadsbolag AB", "Volvo"];
+    const tick = fittedCategoryTick(names, fitCategoryAxis(names, 300, measure), AXIS_TICK);
+    const draw = (value: string) =>
+      renderToStaticMarkup(createElement("svg", null, tick({ x: 112, y: 40, payload: { value } })));
+    expect(draw("Göteborgs Stads Bostadsbolag AB")).toBe(
+      '<svg><text x="112" y="40" dy="0.355em" text-anchor="end" fill="var(--muted-foreground)"' +
+        ' font-size="12"><title>Göteborgs Stads Bostadsbolag AB</title>Göteborgs Stads…</text></svg>',
+    );
+    expect(draw("Volvo")).toBe(
+      '<svg><text x="112" y="40" dy="0.355em" text-anchor="end" fill="var(--muted-foreground)"' +
+        ' font-size="12">Volvo</text></svg>',
+    );
+  });
+
+  it("renders a horizontal chart fitted to its width on the server", () => {
+    const names = ["Göteborgs Stads Bostadsbolag AB", "Early Bird AB"];
+    const data: ChartData = {
+      categories: names,
+      series: [{ key: "x", label: "Fakturerat", role: "primary", values: [3, 2] }],
+      unit: "kr",
+      highlightIndex: null,
+    };
+    // The server render has no canvas: the estimate stands in, and the data table keeps names whole.
+    const html = renderToStaticMarkup(
+      createElement(MbBarChart, { data, title: "Kunder", orientation: "horizontal", width: 300 }),
+    );
+    expect(html).toContain("Göteborgs Stads Bostadsbolag AB");
   });
 });

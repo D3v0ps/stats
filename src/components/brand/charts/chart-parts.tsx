@@ -1,10 +1,17 @@
 "use client";
 
 import Link from "next/link";
-import { useCallback, useRef, type ReactNode, type RefObject } from "react";
+import {
+  useCallback,
+  useMemo,
+  useRef,
+  useSyncExternalStore,
+  type ReactNode,
+  type RefObject,
+} from "react";
 import { usePrefersReducedMotion } from "@/hooks/use-media-query";
 import type { Unit } from "@/lib/contracts";
-import { formatChartValue } from "./chart-format";
+import { estimateTextWidth, formatChartValue, type CategoryAxisFit } from "./chart-format";
 
 /** Animate only when asked and the user has not requested reduced motion. */
 export function useChartAnimation(animate: boolean): boolean {
@@ -42,6 +49,71 @@ export const AXIS_TICK = { fill: "var(--muted-foreground)", fontSize: 12 } as co
 /** AXIS_TICK at another size (miniatures). */
 export function axisTick(fontSize: number = AXIS_TICK.fontSize) {
   return fontSize === AXIS_TICK.fontSize ? AXIS_TICK : { ...AXIS_TICK, fontSize };
+}
+
+function subscribeFonts(onChange: () => void) {
+  const fonts = document.fonts;
+  fonts.addEventListener("loading", onChange);
+  fonts.addEventListener("loadingdone", onChange);
+  return () => {
+    fonts.removeEventListener("loading", onChange);
+    fonts.removeEventListener("loadingdone", onChange);
+  };
+}
+
+/**
+ * Width in px of a text in the page font at `fontSize`, measured on a canvas (estimated on
+ * the server). Measured again once web fonts have loaded: Montserrat swaps in after the first
+ * paint and is wider than its fallback, so labels sized before the swap would be cut off.
+ */
+export function useTextMeasure(fontSize: number): (text: string) => number {
+  const fonts = useSyncExternalStore<FontFaceSetLoadStatus | "server">(
+    subscribeFonts,
+    () => document.fonts.status,
+    () => "server",
+  );
+  return useMemo(() => {
+    const context = fonts === "server" ? null : document.createElement("canvas").getContext("2d");
+    if (!context) return (text: string) => estimateTextWidth(text, fontSize);
+    context.font = `${fontSize}px ${getComputedStyle(document.body).fontFamily}`;
+    return (text: string) => context.measureText(text).width;
+  }, [fonts, fontSize]);
+}
+
+/**
+ * Draws the labels of a fitted category axis (see fitCategoryAxis); a cut label carries the
+ * full name as its SVG title.
+ */
+export function fittedCategoryTick(
+  categories: readonly string[],
+  fit: CategoryAxisFit,
+  style: { fill: string; fontSize: number },
+) {
+  const shown = new Map(categories.map((c, i) => [c, fit.labels[i] ?? c]));
+  return function renderCategoryTick(props: {
+    x: number | string;
+    y: number | string;
+    payload: { value?: unknown };
+    className?: string;
+  }): ReactNode {
+    const name = String(props.payload.value ?? "");
+    const label = shown.get(name) ?? name;
+    return (
+      <text
+        x={props.x}
+        y={props.y}
+        // Centred on the bar like Recharts' own tick text.
+        dy="0.355em"
+        textAnchor="end"
+        fill={style.fill}
+        fontSize={style.fontSize}
+        className={props.className}
+      >
+        {label === name ? null : <title>{name}</title>}
+        {label}
+      </text>
+    );
+  };
 }
 
 export interface CategoryDrill {

@@ -1,5 +1,6 @@
 "use client";
 
+import { useMemo } from "react";
 import {
   Bar,
   BarChart,
@@ -18,13 +19,23 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 import { ChartFigure } from "./ChartFigure";
-import { barFill, chartConfigFor, formatAxisTick, seriesStyles, toChartRows } from "./chart-format";
+import {
+  CATEGORY_TICK_GAP,
+  barFill,
+  chartConfigFor,
+  fitCategoryAxis,
+  formatAxisTick,
+  seriesStyles,
+  toChartRows,
+} from "./chart-format";
 import {
   CategoryLinkList,
   axisTick,
+  fittedCategoryTick,
   tooltipFormatter,
   useCategoryDrill,
   useChartAnimation,
+  useTextMeasure,
 } from "./chart-parts";
 import type { MbChartProps } from "./types";
 
@@ -33,6 +44,11 @@ export interface MbBarChartProps extends MbChartProps {
   orientation?: "vertical" | "horizontal";
   /** Print the value at the end of each bar (slides). */
   showValues?: boolean;
+  /**
+   * Chart width in px, when the caller lays the chart out (slides). Horizontal bars then fit
+   * their category axis to it (see fitCategoryAxis) instead of using yAxisWidth.
+   */
+  width?: number;
 }
 
 /**
@@ -51,6 +67,7 @@ export function MbBarChart({
   onCategoryClick,
   fontSize,
   yAxisWidth,
+  width,
   className,
 }: MbBarChartProps) {
   const animated = useChartAnimation(animate);
@@ -65,6 +82,12 @@ export function MbBarChart({
     height ??
     (horizontal ? Math.max(160, data.categories.length * (styles.length * 18 + 14)) : 280);
   const tickFormatter = (v: number) => formatAxisTick(v, data.unit);
+  const measure = useTextMeasure(tick.fontSize);
+  const categoryAxis = useMemo(
+    () =>
+      horizontal && width !== undefined ? fitCategoryAxis(data.categories, width, measure) : null,
+    [horizontal, width, data.categories, measure],
+  );
 
   return (
     <ChartFigure title={title} description={description} data={data} className={className}>
@@ -104,8 +127,9 @@ export function MbBarChart({
             interval={horizontal ? 0 : undefined}
             tickLine={false}
             axisLine={false}
-            width={yAxisWidth ?? "auto"}
-            tick={tick}
+            width={categoryAxis?.width ?? yAxisWidth ?? "auto"}
+            tick={categoryAxis ? fittedCategoryTick(data.categories, categoryAxis, tick) : tick}
+            {...(categoryAxis ? { tickSize: 0, tickMargin: CATEGORY_TICK_GAP } : {})}
             tickFormatter={horizontal ? undefined : tickFormatter}
           />
           <ChartTooltip

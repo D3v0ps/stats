@@ -147,3 +147,57 @@ export function chartTableRows(data: ChartData): { label: string; values: string
     values: data.series.map((s) => formatChartValue(s.values[index], data.unit)),
   }));
 }
+
+/** Room between a category label and its bar: Recharts' tick size (6) plus tick margin (2). */
+export const CATEGORY_TICK_GAP = 8;
+
+/** The most of a horizontal bar chart's width its category axis may take. */
+export const CATEGORY_AXIS_MAX_SHARE = 0.4;
+
+/** Text width when nothing can measure it (server render): about 0.62 em per character. */
+export function estimateTextWidth(text: string, fontSize: number): number {
+  return [...text].length * fontSize * 0.62;
+}
+
+/** `text` whole when it fits `maxWidth`, else as much of it as fits followed by "…". */
+export function fitLabel(
+  text: string,
+  maxWidth: number,
+  measure: (text: string) => number,
+): string {
+  if (measure(text) <= maxWidth) return text;
+  const chars = [...text];
+  const cut = (n: number) => `${chars.slice(0, n).join("").trimEnd()}…`;
+  // The longest prefix that fits; a longer prefix is never narrower.
+  let lo = 0;
+  let hi = chars.length - 1;
+  while (lo < hi) {
+    const mid = Math.ceil((lo + hi) / 2);
+    if (measure(cut(mid)) <= maxWidth) lo = mid;
+    else hi = mid - 1;
+  }
+  return cut(lo);
+}
+
+export interface CategoryAxisFit {
+  /** Axis width in px, the gap to the bars included. */
+  width: number;
+  /** The label shown per category, aligned with the categories. */
+  labels: string[];
+}
+
+/**
+ * The category axis of horizontal bars in a chart `chartWidth` px wide: as wide as its
+ * longest label, but at most CATEGORY_AXIS_MAX_SHARE of the chart so the bars keep their
+ * room on a phone. Longer labels are cut with "…" instead of running off the chart's edge.
+ */
+export function fitCategoryAxis(
+  categories: readonly string[],
+  chartWidth: number,
+  measure: (text: string) => number,
+): CategoryAxisFit {
+  const room = Math.max(0, chartWidth * CATEGORY_AXIS_MAX_SHARE - CATEGORY_TICK_GAP);
+  const labels = categories.map((c) => fitLabel(c, room, measure));
+  const widest = Math.max(0, ...labels.map(measure));
+  return { width: Math.ceil(widest) + CATEGORY_TICK_GAP, labels };
+}

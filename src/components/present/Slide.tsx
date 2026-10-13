@@ -135,7 +135,8 @@ function SlideVisualElement({
           case "columns":
             return <MbBarChart {...common} />;
           case "bars":
-            return <MbBarChart {...common} orientation="horizontal" showValues />;
+            // Names fit the chart's width: a phone gets cut names, never a clipped first letter.
+            return <MbBarChart {...common} width={width} orientation="horizontal" showValues />;
           case "stacked":
             return <MbStackedCompanyBar {...common} />;
           case "donut":
