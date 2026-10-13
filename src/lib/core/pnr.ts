@@ -181,8 +181,16 @@ const EMAIL_RE = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[a-z]{2,}$/iu;
 // Swedish numbers: trunk 0 (or +46/0046) followed by a non-zero area/mobile prefix.
 const PHONE_RE = /^(?:\+46|0046|0)[\s\-–()]*[1-9](?:[\s\-–()]*\d){6,10}$/u;
 // A postal code must look like one ("211 45", "SE-21145", "21145 Malmö"): bare five-digit
-// numbers are as often amounts or ids. A postal-code header still flags them.
-const POSTAL_RE = /^(?:se-\d{3}\s?\d{2}|\d{3}\s\d{2}|\d{5}(?=\s+\p{L}))(?:\s+\p{L}[\p{L}\s-]*)?$/iu;
+// numbers are as often amounts or ids. A postal-code header still flags them. The place
+// after the code has two letters or more and is no unit or currency: "12500 kr",
+// "12500 st" and "40000 h" are amounts and quantities ("Kristianstad" is still a place).
+const UNIT =
+  "(?:kr|kronor|sek|tkr|mkr|eur|usd|st|styck|stycken|pass|ggr|tim|timmar|timme|min|dag|dagar|dgr|km|mil|kg)";
+const PLACE = String.raw`\s+(?!${UNIT}(?!\p{L}))\p{L}{2}[\p{L}\s-]*`;
+const POSTAL_RE = new RegExp(
+  String.raw`^(?:(?:se-\d{3}\s?\d{2}|\d{3}\s\d{2})(?:${PLACE})?|\d{5}${PLACE})$`,
+  "iu",
+);
 // Money columns hold amounts whatever the digits look like, never postal codes.
 const AMOUNT_HEADER =
   /(?:belopp|summa|pris|lön|ersättning|kronor|amount|price|(?:^|[^\p{L}])(?:kr|sek)(?:$|[^\p{L}]))/u;

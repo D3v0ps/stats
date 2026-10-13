@@ -203,6 +203,28 @@ describe("detectPersonalColumn", () => {
     expect(detectPersonalColumn("Kolumn D", ["21145", "41301", "90325"]).kind).toBeNull();
   });
 
+  it.each(["Totalt", "Fakturerat", "Netto", "Antal", "Kolumn D"])(
+    "never takes five-digit amounts or quantities with a unit under %j for postal codes",
+    (header) => {
+      expect(detectPersonalColumn(header, ["12500 kr", "45000 kr", "33000 kr"]).kind).toBeNull();
+      expect(detectPersonalColumn(header, ["45000 SEK", "12500 kronor", "33000 kr."]).kind).toBe(
+        null,
+      );
+      expect(detectPersonalColumn(header, ["12500 st", "40000 tim", "40000 h"]).kind).toBeNull();
+      expect(detectPersonalColumn(header, ["12500 %", "211 45 kr", "SE-21145 st"]).kind).toBe(null);
+    },
+  );
+
+  it("takes a five-digit code followed by a place name for a postal code", () => {
+    expect(detectPersonalColumn("Kolumn D", ["21145 Malmö", "41301 Göteborg"]).kind).toBe(
+      "address",
+    );
+    // Places that begin like a unit are still places.
+    expect(
+      detectPersonalColumn("Kolumn D", ["29131 Kristianstad", "86131 Timrå", "81240 Storvik"]).kind,
+    ).toBe("address");
+  });
+
   it("still takes bare five-digit numbers for postal codes under a postal-code header", () => {
     expect(detectPersonalColumn("Postnr", ["21145", "41301"]).kind).toBe("address");
     expect(detectPersonalColumn("Zip", ["21145", "41301"]).kind).toBe("address");
