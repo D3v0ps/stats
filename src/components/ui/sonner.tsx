@@ -1,8 +1,21 @@
 "use client"
 
 import { useTheme } from "next-themes"
-import { Toaster as Sonner, type ToasterProps } from "sonner"
+import { Toaster as Sonner, type ToastClassnames, type ToasterProps } from "sonner"
 import { CircleCheckIcon, InfoIcon, TriangleAlertIcon, OctagonXIcon, Loader2Icon } from "lucide-react"
+
+// Sonner injects an unlayered stylesheet at runtime with black shadows and focus rings, grey
+// description text and a grey cancel/close fill. Unlayered rules beat Tailwind's layered
+// utilities, so the brand overrides are important (`!`). Rich colours stay off: their success
+// toast is green.
+const focusRing = "focus-visible:ring-3! focus-visible:ring-ring/50!"
+const toastClassNames: ToastClassnames = {
+  toast: `cn-toast shadow-md! ${focusRing}`,
+  description: "text-muted-foreground!",
+  actionButton: focusRing,
+  cancelButton: `bg-muted! ${focusRing}`,
+  closeButton: `hover:border-border! hover:bg-muted! ${focusRing}`,
+}
 
 const Toaster = ({ ...props }: ToasterProps) => {
   const { theme = "system" } = useTheme()
@@ -36,11 +49,7 @@ const Toaster = ({ ...props }: ToasterProps) => {
           "--border-radius": "var(--radius)",
         } as React.CSSProperties
       }
-      toastOptions={{
-        classNames: {
-          toast: "cn-toast",
-        },
-      }}
+      toastOptions={{ classNames: toastClassNames }}
       {...props}
     />
   )
