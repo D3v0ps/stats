@@ -180,7 +180,7 @@ export function useImportQueue(
         signaturesAt: rec.signaturesAt,
         sheetOrder: read.sheets.map((s) => s.name),
         companies: Object.fromEntries(
-          Object.entries(rec.sheets).map(([k, v]) => [k, v.companySuggestion?.company]),
+          Object.entries(rec.sheets).map(([k, v]) => [k, v.companySuggestion]),
         ),
         templates: recognitionTemplates,
       });

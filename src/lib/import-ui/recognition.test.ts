@@ -1,6 +1,9 @@
 import { describe, expect, it } from "vitest";
+import type { CompanyCode } from "@/lib/contracts";
+import type { CompanySuggestion } from "@/lib/ingest/recognize";
 import {
   companyFit,
+  contradictsCompany,
   planJobs,
   runsWithSavedTemplate,
   templateHeaderRows,
@@ -24,6 +27,13 @@ const t = (
 });
 
 const SIG = ["kund", "datum", "timmar", "status"];
+
+/** What suggestCompany returns for "MBR"/"MBAB" in a file name (0.9); weaker words score less. */
+const names = (company: CompanyCode, confidence = 0.9): CompanySuggestion => ({
+  company,
+  source: "filename",
+  confidence,
+});
 
 describe("planJobs", () => {
   it("picks a compatible template (column order does not matter)", () => {
@@ -52,21 +62,23 @@ describe("planJobs", () => {
   describe("templates with the same headers for different companies", () => {
     const mbab = t("mbab", SIG, { company: "MBAB", updatedAt: "2026-06-01" });
     const mbr = t("mbr", SIG, { company: "MBR", updatedAt: "2026-01-01" });
-    const plan = (templates: RecognitionTemplate[], company?: "MBAB" | "MBR", sig = SIG) =>
+    const plan = (templates: RecognitionTemplate[], company?: CompanySuggestion, sig = SIG) =>
       planJobs({
         defaultSheet: "Blad1",
         sheetForHint: {},
         signatures: { Blad1: sig },
-        companies: { Blad1: company },
+        companies: { Blad1: company ?? null },
         templates,
       });
     const picked = (jobs: ReturnType<typeof planJobs>) =>
       jobs[0]?.kind === "new" ? null : jobs[0]?.template.id;
 
     it("picks the template fixed to the company the file names, not the newest", () => {
-      expect(picked(plan([mbab, mbr], "MBR"))).toBe("mbr");
-      expect(picked(plan([mbr, mbab], "MBAB"))).toBe("mbab");
-      expect(picked(plan([{ ...mbab, updatedAt: "2025-01-01" }, mbr], "MBAB"))).toBe("mbab");
+      expect(picked(plan([mbab, mbr], names("MBR")))).toBe("mbr");
+      expect(picked(plan([mbr, mbab], names("MBAB")))).toBe("mbab");
+      expect(picked(plan([{ ...mbab, updatedAt: "2025-01-01" }, mbr], names("MBAB")))).toBe("mbab");
+      // A weak hint ("Miljonbemanning" alone) still breaks the tie.
+      expect(picked(plan([mbab, mbr], names("MBR", 0.6)))).toBe("mbr");
     });
 
     it("falls back to the newest when the file names no company", () => {
@@ -75,13 +87,14 @@ describe("planJobs", () => {
 
     it("prefers an open template over one fixed to the other company", () => {
       const open = t("open", SIG, { updatedAt: "2025-01-01" });
-      expect(picked(plan([mbab, open], "MBR"))).toBe("open");
-      expect(picked(plan([mbab, open], "MBAB"))).toBe("mbab");
+      expect(picked(plan([mbab, open], names("MBR")))).toBe("open");
+      expect(picked(plan([mbab, open], names("MBR", 0.8)))).toBe("open");
+      expect(picked(plan([mbab, open], names("MBAB")))).toBe("mbab");
     });
 
-    it("lets the company decide between equally changed templates, never over a closer one", () => {
+    it("lets a weak company hint decide between equally changed templates, never over a closer one", () => {
       const changed = ["kund", "datum", "antal timmar", "status"];
-      expect(plan([mbab, mbr], "MBR", changed)[0]).toMatchObject({
+      expect(plan([mbab, mbr], names("MBR", 0.8), changed)[0]).toMatchObject({
         kind: "drift",
         template: { id: "mbr" },
       });
@@ -89,9 +102,73 @@ describe("planJobs", () => {
         company: "MBAB",
       });
       const other = t("other", ["kund", "datum", "antal timmar", "y", "z"], { company: "MBR" });
+      expect(picked(plan([closer, other], names("MBR", 0.8), changed))).toBe("closer");
+    });
+
+    it("maps a file that clearly names the other company as new when only one template exists", () => {
+      // Saved for MB AB in one session, the MB Restart file uploaded later.
+      expect(plan([mbab], names("MBR"))).toEqual([{ kind: "new", sheetName: "Blad1" }]);
+      expect(plan([mbab], { company: "MBR", source: "meta", confidence: 0.98 })).toEqual([
+        { kind: "new", sheetName: "Blad1" },
+      ]);
+      expect(plan([mbr], names("MBAB", 0.85))).toEqual([{ kind: "new", sheetName: "Blad1" }]);
+    });
+
+    it("does not book the other company's file with a template that took its drift", () => {
+      // Workbuster added a column; accepting it on the MB AB file updated only that template.
+      const added = [...SIG, "kommun"];
+      const drifted = { ...mbab, headerSignature: added, updatedAt: "2026-10-01" };
+      expect(plan([drifted, mbr], names("MBR"), added)).toMatchObject([
+        { kind: "drift", template: { id: "mbr" }, diff: { added: ["kommun"] } },
+      ]);
+      expect(picked(plan([drifted, mbr], names("MBAB"), added))).toBe("mbab");
+    });
+
+    it("still uses the only template when the file names no company, or only weakly", () => {
+      expect(plan([mbab])).toMatchObject([{ kind: "known", template: { id: "mbab" } }]);
+      expect(plan([mbab], names("MBR", 0.8))).toMatchObject([
+        { kind: "known", template: { id: "mbab" } },
+      ]);
+    });
+
+    it("keeps a sheet's own template whatever company the file name says", () => {
+      const sig = ["post", "jan", "feb"];
+      const jobs = planJobs({
+        defaultSheet: "MB AB",
+        sheetForHint: { "MB AB": "MB AB", "MB Restart": "MB Restart" },
+        signatures: { "MB AB": sig, "MB Restart": sig },
+        sheetOrder: ["MB AB", "MB Restart"],
+        companies: { "MB AB": names("MBR"), "MB Restart": names("MBR") },
+        templates: [
+          t("ab", sig, { sheetHint: "MB AB", company: "MBAB" }),
+          t("r", sig, { sheetHint: "MB Restart", company: "MBR" }),
+        ],
+      });
       expect(
-        picked(plan([closer, other], "MBR", ["kund", "datum", "antal timmar", "status"])),
-      ).toBe("closer");
+        jobs.map((j) => [j.kind, j.sheetName, j.kind === "known" ? j.template.id : null]),
+      ).toEqual([
+        ["known", "MB AB", "ab"],
+        ["known", "MB Restart", "r"],
+      ]);
+    });
+
+    it("offers a sheet only the other company's template fits as new, next to known sheets", () => {
+      const budget = ["post", "jan", "feb"];
+      const kinds = (blad1: string[]) =>
+        planJobs({
+          defaultSheet: "Blad1",
+          sheetForHint: { Budget: "Budget" },
+          signatures: { Blad1: blad1, Budget: budget },
+          sheetOrder: ["Blad1", "Budget"],
+          companies: { Blad1: names("MBR"), Budget: names("MBR") },
+          templates: [mbab, t("budget", budget, { sheetHint: "Budget" })],
+        }).map((j) => [j.kind, j.sheetName]);
+      expect(kinds(SIG)).toEqual([
+        ["new", "Blad1"],
+        ["known", "Budget"],
+      ]);
+      // A ruled-out template that would not have fitted anyway adds no card.
+      expect(kinds(["kund", "belopp", "moms", "fakturanr"])).toEqual([["known", "Budget"]]);
     });
   });
 
@@ -335,6 +412,20 @@ describe("companyFit", () => {
   });
 });
 
+describe("contradictsCompany", () => {
+  it("rules out the other company's template on an org number or a name, not on weak hints", () => {
+    const mbab = { company: "MBAB" as const };
+    const orgNr: CompanySuggestion = { company: "MBR", source: "meta", confidence: 0.98 };
+    expect(contradictsCompany(mbab, orgNr)).toBe(true);
+    expect(contradictsCompany(mbab, names("MBR"))).toBe(true);
+    expect(contradictsCompany(mbab, names("MBR", 0.85))).toBe(true);
+    expect(contradictsCompany(mbab, names("MBR", 0.8))).toBe(false);
+    expect(contradictsCompany(mbab, names("MBAB"))).toBe(false);
+    expect(contradictsCompany(mbab, null)).toBe(false);
+    expect(contradictsCompany({}, names("MBR"))).toBe(false);
+  });
+});
+
 describe("runsWithSavedTemplate", () => {
   const saved = t("mbab", SIG, { company: "MBAB" });
   const card = {
@@ -342,9 +433,9 @@ describe("runsWithSavedTemplate", () => {
     signature: ["datum", "kund", "timmar", "status"],
     suggestions: { period: [], company: null },
   };
-  const naming = (company: "MBAB" | "MBR") => ({
+  const naming = (company: CompanyCode) => ({
     ...card,
-    suggestions: { period: [], company: { company, source: "filename" as const, confidence: 0.9 } },
+    suggestions: { period: [], company: names(company) },
   });
 
   it("runs other new or changed cards with the same headers", () => {
@@ -359,6 +450,25 @@ describe("runsWithSavedTemplate", () => {
   it("leaves a card for the other company to be mapped with a template of its own", () => {
     expect(runsWithSavedTemplate(saved, naming("MBR"))).toBe(false);
     expect(runsWithSavedTemplate(t("open", SIG), naming("MBR"))).toBe(true);
+    const own = t("r", SIG, { sheetHint: "MB Restart", company: "MBR" });
+    expect(runsWithSavedTemplate(own, { ...naming("MBAB"), sourceSheet: "MB Restart" })).toBe(true);
+  });
+
+  it("decides as planJobs does for the same file dropped after the save", () => {
+    const hints = [null, names("MBR", 0.6), names("MBR", 0.8), names("MBR"), names("MBAB")];
+    for (const company of hints) {
+      const dropped = planJobs({
+        defaultSheet: "Blad1",
+        sheetForHint: {},
+        signatures: { Blad1: card.signature },
+        companies: { Blad1: company },
+        templates: [saved],
+      });
+      const queued = { ...card, suggestions: { period: [], company } };
+      expect(runsWithSavedTemplate(saved, queued), JSON.stringify(company)).toBe(
+        dropped[0]?.kind === "known",
+      );
+    }
   });
 
   it("keeps a template saved for one sheet off the other sheets", () => {

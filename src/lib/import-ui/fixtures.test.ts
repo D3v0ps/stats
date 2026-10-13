@@ -44,9 +44,9 @@ function ok<T extends IngestResponse>(res: IngestResponse): T {
 const service = new IngestService();
 const TODAY = "2026-10-12";
 
-async function load(file: string): Promise<ReadResponse> {
+async function load(file: string, fileName = file): Promise<ReadResponse> {
   return ok<ReadResponse>(
-    await service.handle({ op: "read", fileId: file, fileName: file, bytes: fixtureBytes(file) }),
+    await service.handle({ op: "read", fileId: fileName, fileName, bytes: fixtureBytes(file) }),
   );
 }
 
@@ -236,12 +236,13 @@ function recognitionTemplates(files: string[]): RecognitionTemplate[] {
   );
 }
 
-async function recognize(file: string, templates: RecognitionTemplate[]) {
-  const read = await load(file);
+/** Recognize a fixture file, optionally uploaded under another file name. */
+async function recognize(file: string, templates: RecognitionTemplate[], fileName = file) {
+  const read = await load(file, fileName);
   const res = ok<RecognizeResponse>(
     await service.handle({
       op: "recognize",
-      fileId: file,
+      fileId: fileName,
       hints: templateHints(templates),
       today: TODAY,
     }),
@@ -251,7 +252,7 @@ async function recognize(file: string, templates: RecognitionTemplate[]) {
     sheetForHint: res.sheetForHint,
     signatures: Object.fromEntries(Object.entries(res.sheets).map(([k, v]) => [k, v.signature])),
     companies: Object.fromEntries(
-      Object.entries(res.sheets).map(([k, v]) => [k, v.companySuggestion?.company]),
+      Object.entries(res.sheets).map(([k, v]) => [k, v.companySuggestion]),
     ),
     sheetOrder: read.sheets.map((s) => s.name),
     templates,
@@ -291,6 +292,21 @@ describe("recognition of the fixture files", () => {
         ]);
       }
     }
+  });
+
+  it("maps the MB Restart deltagare file as new when only the MB AB template exists", async () => {
+    const [mbab] = recognitionTemplates(["workbuster_deltagare_MBAB.xlsx"]);
+    if (!mbab) throw new Error("MB AB template expected");
+    expect(await recognize("workbuster_deltagare_MBR.xlsx", [mbab])).toEqual([
+      { kind: "new", sheetName: expect.any(String) },
+    ]);
+    expect(await recognize("workbuster_deltagare_MBAB.xlsx", [mbab])).toMatchObject([
+      { kind: "known", template: { id: mbab.id } },
+    ]);
+    // The export's meta lines name MB Restart too, so a neutral file name changes nothing.
+    expect(
+      await recognize("workbuster_deltagare_MBR.xlsx", [mbab], "deltagare_export.xlsx"),
+    ).toEqual([{ kind: "new", sheetName: expect.any(String) }]);
   });
 
   it("splits the budget workbook into one job per sheet template", async () => {
