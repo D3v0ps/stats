@@ -24,7 +24,14 @@ import {
   setExportDate,
   usageOf,
 } from "../helpers/mapping";
-import { fixtureFile, reviewText, total, truthFacts, type TruthFact } from "../helpers/truth";
+import {
+  fixtureFile,
+  metricName,
+  reviewText,
+  total,
+  truthFacts,
+  type TruthFact,
+} from "../helpers/truth";
 import {
   SLOW,
   addFiles,
@@ -342,7 +349,11 @@ test("Workbuster deltagare MB Restart: dropped alone, not read with the MB AB te
   // Each company keeps its own participants: the MBR file replaced nothing of MB AB's.
   const metrics = ["aktiva_deltagare", "nya_deltagare"];
   await page.goto(`/utforska?matt=${metrics.join(",")}&grupp=bolag&manad=${SEP}`);
-  const rows = page.getByTestId("pivot").getByTestId("pivot-row");
+  const pivot = page.getByTestId("pivot");
+  const rows = pivot.getByTestId("pivot-row");
+  await expect(rows.first()).toBeVisible();
+  // The row's cells line up with the header cells: the group label first, then one per column.
+  const headers = await pivot.locator("thead th").allTextContents();
   for (const [company, file] of [
     ["MB AB", DELTAGARE_MBAB],
     ["MB Restart", DELTAGARE_MBR],
@@ -351,7 +362,11 @@ test("Workbuster deltagare MB Restart: dropped alone, not read with the MB AB te
     const row = rows.filter({ hasText: company });
     await expect(row).toHaveCount(1);
     for (const metric of metrics) {
-      await expect(row).toContainText(reviewText(metric, total(facts, metric, SEP)));
+      const column = headers.findIndex((h) => h.startsWith(metricName(metric)));
+      expect(column, `${metricName(metric)} column`).toBeGreaterThan(0);
+      // The value is the cell's first line; a delta badge may follow it.
+      const value = row.locator("th, td").nth(column).locator("span > span").first();
+      await expect(value).toHaveText(reviewText(metric, total(facts, metric, SEP)));
     }
   }
 });

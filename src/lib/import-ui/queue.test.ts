@@ -252,13 +252,7 @@ describe("queueReducer", () => {
         },
       ],
     });
-    expect(queueReducer(s, { type: "map_as_new", id: "b" })).toBe(s);
-    s = queueReducer(s, { type: "map_as_new", id: "a" });
-    expect(s[0]).toMatchObject({ status: "new", signature: ["kund", "datum", "frånvaro"] });
-    expect(s[0]).not.toHaveProperty("template");
-    expect(s[0]).not.toHaveProperty("drift");
-    expect(statusLabel(s[0]!)).toBe("Ny rapporttyp – mappa");
-    expect(queueReducer(s, { type: "map_as_new", id: "a" })).toBe(s);
+    expect(s[0]).toMatchObject({ status: "drift", template: TPL });
 
     const franvaro: TemplateRef = { ...TPL, id: "t2", name: "Frånvaro", datasetKey: "ip_franvaro" };
     s = queueReducer(s, {
@@ -272,6 +266,7 @@ describe("queueReducer", () => {
       template: franvaro,
       choices: { month: "2026-09" },
     });
+    expect(s[0]!.drift).toBeUndefined();
   });
 
   it("gives a known sheet and an unmapped sibling sheet a card each", () => {

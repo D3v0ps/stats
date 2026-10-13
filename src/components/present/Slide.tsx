@@ -5,6 +5,7 @@ import { Delta } from "@/components/brand/Delta";
 import { Heading } from "@/components/brand/Heading";
 import { MbBarChart, MbDonut, MbLineChart, MbStackedCompanyBar } from "@/components/brand/charts";
 import type { ResolvedSlide } from "@/lib/contracts/slides";
+import { formatNumber } from "@/lib/core/format-sv";
 import { TOTAL_ROW_LABEL } from "@/lib/metrics";
 import {
   headlineScale,
@@ -55,7 +56,9 @@ export function Slide({
   const emphasis = slideEmphasis(slide);
   const number = slide.number;
   const label =
-    index !== undefined && count !== undefined ? `Bild ${index + 1} av ${count}` : "Bild";
+    index !== undefined && count !== undefined
+      ? `Bild ${formatNumber(index + 1)} av ${formatNumber(count)}`
+      : "Bild";
   const vars = {
     "--headline-scale": headlineScale(slide.headline),
     "--number-scale": number ? numberScale(number.value === null ? "Saknas" : number.formatted) : 1,

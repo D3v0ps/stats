@@ -42,7 +42,6 @@ export interface ImportQueue {
   getDictionaries(keys: readonly string[]): Promise<Record<string, DictionaryEntry>>;
   rememberValues(dimension: string, entry: DictionaryEntry): void;
   templateSaved(itemId: string, template: StoredTemplate, headerRow?: number): void;
-  mapAsNew(id: string): void;
   markPublished(id: string, summary: string, publishedAt: string): void;
 }
 
@@ -328,10 +327,6 @@ export function useImportQueue(
     [],
   );
 
-  const mapAsNew = useCallback((id: string) => {
-    dispatch({ type: "map_as_new", id });
-  }, []);
-
   const markPublished = useCallback((id: string, summary: string, publishedAt: string) => {
     dispatch({ type: "published", id, summary, publishedAt });
   }, []);
@@ -347,7 +342,6 @@ export function useImportQueue(
       getDictionaries,
       rememberValues,
       templateSaved,
-      mapAsNew,
       markPublished,
     }),
     [
@@ -360,7 +354,6 @@ export function useImportQueue(
       getDictionaries,
       rememberValues,
       templateSaved,
-      mapAsNew,
       markPublished,
     ],
   );

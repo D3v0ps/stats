@@ -78,11 +78,12 @@ async function expectNoPersonalData(page: Page, where: string, konsult: Konsult)
 }
 
 /** Every slide of a deck, one at a time. */
-async function expectDeckClean(page: Page, where: string, konsult: Konsult) {
+// Each slide is opened by its own URL: a key press sent before hydration would be lost.
+async function expectDeckClean(page: Page, deckUrl: string, where: string, konsult: Konsult) {
   for (let n = 1; n <= SLIDES; n++) {
+    await page.goto(`${deckUrl}${deckUrl.includes("?") ? "&" : "?"}bild=${n}`);
     await expect(page.getByRole("region", { name: slideName(n, SLIDES) })).toBeVisible();
     await expectNoPersonalData(page, `${where}, bild ${n}`, konsult);
-    if (n < SLIDES) await page.keyboard.press("ArrowRight");
   }
 }
 
@@ -131,8 +132,12 @@ test("no names, personnummer or konsult values in reports @once", async ({ page 
     });
 
     await test.step("the live presentation and its notes", async () => {
-      await page.goto(`/presentera/${templateId}?manad=${REPORT_MONTH}`);
-      await expectDeckClean(page, "presentation", konsult);
+      await expectDeckClean(
+        page,
+        `/presentera/${templateId}?manad=${REPORT_MONTH}`,
+        "presentation",
+        konsult,
+      );
       await page.goto(`/presentera/${templateId}/manus?manad=${REPORT_MONTH}`);
       await expect(page.getByTestId("notes-window")).toBeVisible();
       await expectNoPersonalData(page, "talarmanus", konsult);
@@ -153,8 +158,7 @@ test("no names, personnummer or konsult values in reports @once", async ({ page 
     await test.step("the frozen report, its presentation, notes and print view", async () => {
       await expect(page.getByTestId("archive-lock")).toBeVisible();
       await expectNoPersonalData(page, "arkiv", konsult);
-      await page.goto(`/presentera/arkiv/${frozenId}`);
-      await expectDeckClean(page, "fryst presentation", konsult);
+      await expectDeckClean(page, `/presentera/arkiv/${frozenId}`, "fryst presentation", konsult);
       await page.goto(`/presentera/arkiv/${frozenId}/manus`);
       await expect(page.getByTestId("notes-window")).toBeVisible();
       await expectNoPersonalData(page, "fryst talarmanus", konsult);

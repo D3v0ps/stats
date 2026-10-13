@@ -290,10 +290,13 @@ function unreadableBarNames(slide: Locator): Promise<string[]> {
   }, BAR_NAMES);
 }
 
-test("the deck's bar charts show every name whole or cut with its full name", async ({ page }) => {
-  await page.goto(`/presentera/${seeded().template}?manad=${REPORT_MONTH}`);
+test("the deck's bar charts show every name whole or cut with its full name", async ({
+  page,
+}, testInfo) => {
   let names = 0;
   for (let n = 1; n <= STANDARD_SLIDES; n++) {
+    // Each slide by its own URL: a key press sent before hydration would be lost.
+    await page.goto(`/presentera/${seeded().template}?manad=${REPORT_MONTH}&bild=${n}`);
     const slide = page.getByRole("region", { name: slideName(n) });
     await expect(slide).toBeVisible();
     if ((await slide.locator('[data-visual="bars"]').count()) > 0) {
@@ -303,9 +306,15 @@ test("the deck's bar charts show every name whole or cut with its full name", as
       await expect
         .poll(() => unreadableBarNames(slide), { message: `${slideName(n)}: bar names` })
         .toEqual([]);
+      // On a projector the standard report's names fit, so a cut one means the axis is too narrow.
+      if (testInfo.project.name === "projektor") {
+        const cut = await labels.evaluateAll((els) =>
+          els.filter((el) => el.querySelector("title")).map((el) => el.textContent ?? ""),
+        );
+        expect(cut, `${slideName(n)}: names cut on a projector`).toEqual([]);
+      }
       names += await labels.count();
     }
-    if (n < STANDARD_SLIDES) await page.keyboard.press("ArrowRight");
   }
   // The standard report has horizontal bars (participants per verksamhet, top customers).
   expect(names).toBeGreaterThan(0);

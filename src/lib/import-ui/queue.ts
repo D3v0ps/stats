@@ -91,8 +91,6 @@ export type QueueAction =
   | { type: "sie_ready"; id: string; result: IngestResult }
   | { type: "duplicate"; id: string; publishedAt: string }
   | { type: "set_choices"; id: string; choices: UploadChoices }
-  /** A changed file that is really another report: it is mapped as a new report type. */
-  | { type: "map_as_new"; id: string }
   | {
       type: "template_saved";
       id: string;
@@ -261,15 +259,6 @@ export function queueReducer(state: QueueItem[], action: QueueAction): QueueItem
           status: missingChoices(next).length ? "needs_choices" : "running",
           result: undefined,
         };
-      });
-    case "map_as_new":
-      return update(state, action.id, (item) => {
-        if (item.status !== "drift") return item;
-        // The template it resembled stays as it is; the card now waits for a mapping of its own.
-        const next: QueueItem = { ...item, status: "new" };
-        delete next.template;
-        delete next.drift;
-        return next;
       });
     case "template_saved":
       return update(state, action.id, (item) => {

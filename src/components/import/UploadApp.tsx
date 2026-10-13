@@ -111,10 +111,9 @@ export function UploadApp({
           onUpdate={() =>
             setView({ kind: "map", id: item.id, base: { kind: "update", template, diff } })
           }
-          onMapAsNew={() => {
-            queue.mapAsNew(item.id);
-            setView({ kind: "map", id: item.id, base: { kind: "new" } });
-          }}
+          // The card keeps its drift state until a new template is saved, so backing out of the
+          // mapping still offers both choices.
+          onMapAsNew={() => setView({ kind: "map", id: item.id, base: { kind: "new" } })}
           onCancel={toQueue}
         />
       );

@@ -4,16 +4,17 @@ import { ArrowRight } from "lucide-react";
 import { Heading } from "@/components/brand/Heading";
 import { Button } from "@/components/ui/button";
 import type { UploadChoices } from "@/lib/contracts";
+import { formatNumber } from "@/lib/core/format-sv";
 import { queueCounts, type QueueItem } from "@/lib/import-ui/queue";
 import { DropZone } from "./DropZone";
 import { QueueCard } from "./QueueCard";
 
 function countsText(c: ReturnType<typeof queueCounts>): string {
-  const parts = [`${c.total} ${c.total === 1 ? "fil" : "filer"}`];
-  if (c.busy) parts.push(`${c.busy} läses`);
-  if (c.needsAction) parts.push(`${c.needsAction} behöver dig`);
-  if (c.ready) parts.push(`${c.ready} klara att granska`);
-  if (c.published) parts.push(`${c.published} publicerade`);
+  const parts = [`${formatNumber(c.total)} ${c.total === 1 ? "fil" : "filer"}`];
+  if (c.busy) parts.push(`${formatNumber(c.busy)} läses`);
+  if (c.needsAction) parts.push(`${formatNumber(c.needsAction)} behöver dig`);
+  if (c.ready) parts.push(`${formatNumber(c.ready)} klara att granska`);
+  if (c.published) parts.push(`${formatNumber(c.published)} publicerade`);
   return parts.join(" · ");
 }
 
@@ -91,7 +92,7 @@ export function QueueView({
                 onClick={() => onReview(readyIds)}
                 data-testid="review-all-button"
               >
-                Granska alla ({readyIds.length})
+                Granska alla ({formatNumber(readyIds.length)})
                 <ArrowRight aria-hidden="true" />
               </Button>
             ) : null}

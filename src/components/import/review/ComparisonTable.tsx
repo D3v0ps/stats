@@ -4,7 +4,7 @@ import { Flag } from "lucide-react";
 import { useState } from "react";
 import { Delta } from "@/components/brand/Delta";
 import { buildDelta } from "@/components/brand/delta-text";
-import { formatDeltaPercent, formatValue } from "@/lib/core/format-sv";
+import { formatDeltaPercent, formatNumber, formatValue } from "@/lib/core/format-sv";
 import type { ReviewRow } from "@/lib/import-ui/review";
 import { cn } from "@/lib/utils";
 
@@ -35,13 +35,15 @@ export function ComparisonTable({
   const fmt = (v: number | null, r: ReviewRow) =>
     formatValue(v, r.unit, { decimals: r.decimals ?? undefined });
 
+  const thresholdText = formatNumber(thresholdPct, Number.isInteger(thresholdPct) ? 0 : 1);
+
   return (
     <div className="flex flex-col gap-3">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <p className="text-sm text-muted-foreground" aria-live="polite">
           {flagged === 0
-            ? `Inga avvikelser över ${thresholdPct} % mot föregående månad.`
-            : `${flagged} ${flagged === 1 ? "värde avviker" : "värden avviker"} mer än ${thresholdPct} % mot föregående månad.`}
+            ? `Inga avvikelser över ${thresholdText} % mot föregående månad.`
+            : `${formatNumber(flagged)} ${flagged === 1 ? "värde avviker" : "värden avviker"} mer än ${thresholdText} % mot föregående månad.`}
         </p>
         {flagged > 0 ? (
           <label className="flex items-center gap-2 text-sm">

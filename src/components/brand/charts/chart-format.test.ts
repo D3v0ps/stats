@@ -353,7 +353,7 @@ describe("category axis of horizontal bars", () => {
     );
   });
 
-  it("renders a horizontal chart fitted to its width on the server", () => {
+  it("server-renders a fitted horizontal chart without a canvas", () => {
     const names = ["Göteborgs Stads Bostadsbolag AB", "Early Bird AB"];
     const data: ChartData = {
       categories: names,
