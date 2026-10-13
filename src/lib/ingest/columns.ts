@@ -245,6 +245,9 @@ export function suggestMappings(table: WorkingTable, opts: SuggestOptions = {}):
     const lowCardinality =
       distinct <= LOW_CARDINALITY || distinct / Math.max(1, texts.length) <= 0.5;
     if (idLike || dimensionKey || lowCardinality) {
+      // With a known dataset a column that fits none of its dimensions (kön, ärendenummer)
+      // has nothing to group on; asking for a grouping would only block saving.
+      if (!dimensionKey && opts.datasetKey) return { ...base, type: "text", usage: "ignore" };
       return {
         ...base,
         type: "text",

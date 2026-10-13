@@ -113,7 +113,7 @@ describe("suggestMappings", () => {
     expect(m.pass).toMatchObject({ usage: "measure", metricKey: "pass" });
   });
 
-  it("maps ids and low-cardinality text to dimensions; free text is ignored", () => {
+  it("maps ids and low-cardinality text to dimensions; the rest is left out", () => {
     expect(m["anställnings id"]).toMatchObject({
       type: "text",
       usage: "dimension",
@@ -121,13 +121,39 @@ describe("suggestMappings", () => {
       personal: false,
     });
     expect(m.kund).toMatchObject({ usage: "dimension", dimensionKey: "kund" });
-    expect(m.status).toMatchObject({ usage: "dimension" });
+    // Low-cardinality text that fits none of the dataset's dimensions has nothing to group on.
+    expect(m.status).toMatchObject({ usage: "ignore", keep: true });
     expect(m.status!.dimensionKey).toBeUndefined();
     expect(m.kommentar).toMatchObject({ usage: "ignore", keep: true });
   });
 
+  it("asks for a grouping only while the dataset is unknown", () => {
+    const t = table(["status"], [["Aktiv"], ["Avslutad"], ["Aktiv"]]);
+    expect(suggestMappings(t)[0]).toMatchObject({ usage: "dimension" });
+    expect(suggestMappings(t, { datasetKey: "ip_timmar" })[0]).toMatchObject({ usage: "ignore" });
+  });
+
+  it("leaves out cases columns that fit no dimension (kön, ärendenummer)", () => {
+    const x = suggestMappings(
+      table(
+        ["deltagarens referensnummer", "kön", "ärendenummer", "stad", "startdatum"],
+        [
+          ["4340437", "Man", "101782470", "Gislaved", "2024-12-23"],
+          ["4350465", "Kvinna", "101888971", "Burseryd", "2025-02-14"],
+        ],
+      ),
+      { datasetKey: "wb_deltagare" },
+    );
+    expect(x[0]).toMatchObject({ usage: "case_key" });
+    expect(x[1]).toMatchObject({ usage: "ignore" });
+    expect(x[2]).toMatchObject({ usage: "ignore" });
+    expect(x[3]).toMatchObject({ usage: "dimension", dimensionKey: "ort" });
+    expect(x[4]).toMatchObject({ usage: "case_start" });
+  });
+
   it("suggests only dimensions that belong to the dataset", () => {
     const x = suggestMappings(table(["ort"], [["Malmö"], ["Lund"]]), { datasetKey: "ip_timmar" });
+    expect(x[0]).toMatchObject({ usage: "ignore" });
     expect(x[0]!.dimensionKey).toBeUndefined();
     const y = suggestMappings(table(["ort"], [["Malmö"], ["Lund"]]), {
       datasetKey: "wb_deltagare",
@@ -149,7 +175,7 @@ describe("suggestMappings", () => {
     );
     expect(m[0]).toMatchObject({ usage: "dimension", dimensionKey: "kostnadsstalle" });
     expect(m[1]).toMatchObject({ usage: "dimension", dimensionKey: "kontogrupp" });
-    expect(m[2]).toMatchObject({ usage: "dimension" });
+    expect(m[2]).toMatchObject({ usage: "ignore" });
     expect(m[3]).toMatchObject({ usage: "measure", type: "amount" });
   });
 

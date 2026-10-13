@@ -412,7 +412,7 @@ export function validateMapping(state: MappingState, catalog: MappingCatalog): M
     if (!f) continue;
     if (f.usage === "dimension") {
       if (!f.dimensionKey) {
-        block(`Kolumnen ”${column}”: välj vad den ska grupperas på.`);
+        block(`Kolumnen ”${column}”: välj vad den ska grupperas på, eller ”Ta inte med”.`);
         continue;
       }
       if (!dataset.dimensions.includes(f.dimensionKey)) {
@@ -827,6 +827,8 @@ export function setDataset(
     const next = { ...f };
     if (next.metricKey && !allowedMetrics.has(next.metricKey)) delete next.metricKey;
     if (next.dimensionKey && !dims.includes(next.dimensionKey)) delete next.dimensionKey;
+    // A grouping the new dataset has no dimension for is left out rather than left blank.
+    if (next.usage === "dimension" && !next.dimensionKey) next.usage = "ignore";
     fields[c] = next;
   }
   const dataset = datasetOf(catalog, datasetKey);

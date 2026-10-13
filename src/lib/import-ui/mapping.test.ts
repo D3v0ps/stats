@@ -186,6 +186,16 @@ describe("edits", () => {
     expect(moveColumn(s, "nope", "kund")).toBe(s);
   });
 
+  it("leaves out a grouping the new dataset has no dimension for", () => {
+    const s = setDataset(timmar(), "ip_fakturering", SEED_CATALOG);
+    expect(s.fields.kund).toMatchObject({ usage: "dimension", dimensionKey: "kund" });
+    const cases = setDataset(timmar(), "wb_deltagare", SEED_CATALOG);
+    expect(cases.fields.kund).toEqual({ type: "text", usage: "ignore" });
+    expect(
+      validateMapping(cases, SEED_CATALOG).some((p) => p.message.includes("grupperas på")),
+    ).toBe(false);
+  });
+
   it("re-suggests on a dataset change and drops metrics of other datasets", () => {
     const s = setDataset(timmar(), "ip_franvaro", SEED_CATALOG, [
       {
