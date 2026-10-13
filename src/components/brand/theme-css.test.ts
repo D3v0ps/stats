@@ -1,8 +1,9 @@
 // src/app/globals.css is the theme contract for every module: check it against the brand spec
 // and against tokens.ts, so the two can never drift apart.
-import { readdirSync, readFileSync } from "node:fs";
+import { readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { Scanner } from "@tailwindcss/oxide";
 import { compile } from "tailwindcss";
 import { describe, expect, it } from "vitest";
 import { cssColorOffenders } from "./palette-audit";
@@ -37,21 +38,6 @@ function resolveStylesheet(id: string, base: string): string {
   const file = typeof entry === "string" ? entry : entry?.style;
   if (!file) throw new Error(`No stylesheet export for ${id}`);
   return path.join(dir, file);
-}
-
-/**
- * Class candidates in src/**, split roughly like Tailwind's scanner: Tailwind drops what is
- * not a class. Splitting once more without the single quote keeps classes that contain one.
- */
-function sourceCandidates(): Set<string> {
-  const candidates = new Set<string>();
-  const src = path.join(ROOT, "src");
-  for (const file of readdirSync(src, { recursive: true, encoding: "utf8" })) {
-    if (!/\.(tsx?|css)$/.test(file)) continue;
-    const text = readFileSync(path.join(src, file), "utf8");
-    for (const word of [...text.split(/[\s"'`]+/), ...text.split(/[\s"`]+/)]) candidates.add(word);
-  }
-  return candidates;
 }
 
 describe("globals.css theme", () => {
@@ -104,7 +90,7 @@ describe("globals.css theme", () => {
     expect(code).not.toMatch(/green|emerald|lime/i);
   });
 
-  it("casts every Tailwind shadow in antracit, keeping Tailwind's geometry", () => {
+  it("casts all of Tailwind's shadows in antracit, keeping Tailwind's geometry", () => {
     // Tailwind declares its deprecated unsized keys in an `inline reference` block. Ours must
     // be in the same kind of block, or the bare utilities compile differently.
     const deprecatedAt = tailwindCss.indexOf("@theme default inline reference {");
@@ -124,7 +110,7 @@ describe("globals.css theme", () => {
     }
   });
 
-  it("compiles the classes used in src/** to palette colours only", async () => {
+  it("compiles the classes the build finds to palette colours only", async () => {
     const compiler = await compile(css, {
       base: path.dirname(GLOBALS),
       loadStylesheet: async (id, base) => {
@@ -132,7 +118,12 @@ describe("globals.css theme", () => {
         return { path: file, base: path.dirname(file), content: readFileSync(file, "utf8") };
       },
     });
-    const output = compiler.build([...sourceCandidates()]);
+    // The scan @tailwindcss/turbopack runs: the whole project (the build's working directory,
+    // minus what .gitignore lists) plus any `@source`.
+    const scanner = new Scanner({
+      sources: [{ base: ROOT, pattern: "**/*", negated: false }, ...compiler.sources],
+    });
+    const output = compiler.build(scanner.scan());
     // shadcn's overlay shadows are in there, so the check has something to bite on.
     expect(output).toContain(".shadow-md");
     expect(cssColorOffenders(output)).toEqual([]);
@@ -145,7 +136,7 @@ describe("globals.css theme", () => {
     expect(filter).toContain(`${dropShadow}(0 1px 2px rgb(30 37 43 / 0.1)) ${dropShadow}(`);
   });
 
-  it("has the 18px card radius, a soft shadow and no dark theme", () => {
+  it("has the 18px card radius, --shadow-soft and no dark theme", () => {
     const theme = block("@theme");
     expect(theme["--radius-card"]).toBe("18px");
     expect(theme["--shadow-soft"]).toBeTruthy();
