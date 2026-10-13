@@ -353,6 +353,7 @@ test("Workbuster deltagare MB Restart: dropped alone, not read with the MB AB te
   const rows = pivot.getByTestId("pivot-row");
   await expect(rows.first()).toBeVisible();
   // The row's cells line up with the header cells: the group label first, then one per column.
+  // Right-aligned headers start with their sort arrow, so a name is looked for anywhere in them.
   const headers = await pivot.locator("thead th").allTextContents();
   for (const [company, file] of [
     ["MB AB", DELTAGARE_MBAB],
@@ -362,7 +363,7 @@ test("Workbuster deltagare MB Restart: dropped alone, not read with the MB AB te
     const row = rows.filter({ hasText: company });
     await expect(row).toHaveCount(1);
     for (const metric of metrics) {
-      const column = headers.findIndex((h) => h.startsWith(metricName(metric)));
+      const column = headers.findIndex((h) => h.includes(metricName(metric)));
       expect(column, `${metricName(metric)} column`).toBeGreaterThan(0);
       // The value is the cell's first line; a delta badge may follow it.
       const value = row.locator("th, td").nth(column).locator("span > span").first();
