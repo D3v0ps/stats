@@ -1,10 +1,15 @@
 // src/app/globals.css is the theme contract for every module: check it against the brand spec
 // and against tokens.ts, so the two can never drift apart.
 import { readFileSync } from "node:fs";
+import path from "node:path";
+import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import { BRAND_COLORS, PALETTE } from "./tokens";
 
-const css = readFileSync(new URL("../../app/globals.css", import.meta.url), "utf8");
+const ROOT = fileURLToPath(new URL("../../../", import.meta.url));
+const GLOBALS = path.join(ROOT, "src/app/globals.css");
+const css = readFileSync(GLOBALS, "utf8");
+const tailwindCss = readFileSync(path.join(ROOT, "node_modules/tailwindcss/index.css"), "utf8");
 
 /** Custom properties declared directly inside the first block whose selector is `selector`. */
 function block(selector: string): Record<string, string> {
@@ -66,6 +71,20 @@ describe("globals.css theme", () => {
     expect(hexes.filter((hex) => !allowed.has(hex))).toEqual([]);
     const code = css.replace(/\/\*[\s\S]*?\*\//g, "");
     expect(code).not.toMatch(/green|emerald|lime/i);
+  });
+
+  it("casts every Tailwind shadow in antracit, keeping Tailwind's geometry", () => {
+    const theme = block("@theme");
+    const flat = (value: string) => value.replace(/\s+/g, " ").trim().toLowerCase();
+    const black = [...tailwindCss.matchAll(/(--[\w-]*shadow[\w-]*):\s*([^;]+);/g)].filter(
+      ([, , value]) => value!.includes("rgb(0 0 0"),
+    );
+    // Box, inset, drop and text shadows plus the deprecated unsized keys.
+    expect(black.length).toBeGreaterThanOrEqual(24);
+    for (const [, name, value] of black) {
+      const antracit = value!.replaceAll("rgb(0 0 0 /", "rgb(30 37 43 /");
+      expect(flat(theme[name!] ?? "missing"), name).toBe(flat(antracit));
+    }
   });
 
   it("has the 18px card radius, a soft shadow and no dark theme", () => {

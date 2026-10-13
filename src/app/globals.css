@@ -43,6 +43,43 @@
   --radius-card: 18px;
   --shadow-soft: 0 1px 2px 0 rgb(30 37 43 / 0.04), 0 10px 28px -12px rgb(30 37 43 / 0.12);
 
+  /*
+   * Tailwind's shadow scales keep their geometry but are cast in antracit instead of black.
+   * `--color-*: initial` does not reach these, and resetting them would make the shadcn
+   * components' shadows silently stop compiling. The last three are Tailwind's deprecated
+   * unsized keys, still used by the bare utilities.
+   */
+  --shadow-2xs: 0 1px rgb(30 37 43 / 0.05);
+  --shadow-xs: 0 1px 2px 0 rgb(30 37 43 / 0.05);
+  --shadow-sm: 0 1px 3px 0 rgb(30 37 43 / 0.1), 0 1px 2px -1px rgb(30 37 43 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(30 37 43 / 0.1), 0 2px 4px -2px rgb(30 37 43 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(30 37 43 / 0.1), 0 4px 6px -4px rgb(30 37 43 / 0.1);
+  --shadow-xl: 0 20px 25px -5px rgb(30 37 43 / 0.1), 0 8px 10px -6px rgb(30 37 43 / 0.1);
+  --shadow-2xl: 0 25px 50px -12px rgb(30 37 43 / 0.25);
+  --inset-shadow-2xs: inset 0 1px rgb(30 37 43 / 0.05);
+  --inset-shadow-xs: inset 0 1px 1px rgb(30 37 43 / 0.05);
+  --inset-shadow-sm: inset 0 2px 4px rgb(30 37 43 / 0.05);
+  --drop-shadow-xs: 0 1px 1px rgb(30 37 43 / 0.05);
+  --drop-shadow-sm: 0 1px 2px rgb(30 37 43 / 0.15);
+  --drop-shadow-md: 0 3px 3px rgb(30 37 43 / 0.12);
+  --drop-shadow-lg: 0 4px 4px rgb(30 37 43 / 0.15);
+  --drop-shadow-xl: 0 9px 7px rgb(30 37 43 / 0.1);
+  --drop-shadow-2xl: 0 25px 25px rgb(30 37 43 / 0.15);
+  --text-shadow-2xs: 0px 1px 0px rgb(30 37 43 / 0.15);
+  --text-shadow-xs: 0px 1px 1px rgb(30 37 43 / 0.2);
+  --text-shadow-sm:
+    0px 1px 0px rgb(30 37 43 / 0.075), 0px 1px 1px rgb(30 37 43 / 0.075),
+    0px 2px 2px rgb(30 37 43 / 0.075);
+  --text-shadow-md:
+    0px 1px 1px rgb(30 37 43 / 0.1), 0px 1px 2px rgb(30 37 43 / 0.1),
+    0px 2px 4px rgb(30 37 43 / 0.1);
+  --text-shadow-lg:
+    0px 1px 2px rgb(30 37 43 / 0.1), 0px 3px 2px rgb(30 37 43 / 0.1),
+    0px 4px 8px rgb(30 37 43 / 0.1);
+  --shadow: 0 1px 3px 0 rgb(30 37 43 / 0.1), 0 1px 2px -1px rgb(30 37 43 / 0.1);
+  --shadow-inner: inset 0 2px 4px 0 rgb(30 37 43 / 0.05);
+  --drop-shadow: 0 1px 2px rgb(30 37 43 / 0.1), 0 1px 1px rgb(30 37 43 / 0.06);
+
   --animate-draw: mb-draw 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
   @keyframes mb-draw {
     from {
