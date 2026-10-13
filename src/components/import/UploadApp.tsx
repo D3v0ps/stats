@@ -111,6 +111,10 @@ export function UploadApp({
           onUpdate={() =>
             setView({ kind: "map", id: item.id, base: { kind: "update", template, diff } })
           }
+          onMapAsNew={() => {
+            queue.mapAsNew(item.id);
+            setView({ kind: "map", id: item.id, base: { kind: "new" } });
+          }}
           onCancel={toQueue}
         />
       );

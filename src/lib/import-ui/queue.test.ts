@@ -230,6 +230,50 @@ describe("queueReducer", () => {
     expect(d[1]).toMatchObject({ status: "drift", template: TPL });
   });
 
+  it("maps a changed file as a new report type without touching the template it resembled", () => {
+    // Intelliplan frånvaro shares enough columns with the timmar template to score as drift.
+    let s = queueReducer([...reading("a"), ...reading("b")], {
+      type: "recognized",
+      id: "a",
+      jobs: [
+        {
+          kind: "drift",
+          sheetName: "Blad1",
+          signature: ["kund", "datum", "frånvaro"],
+          suggestions: SUG,
+          template: TPL,
+          diff: {
+            added: ["frånvaro"],
+            removed: ["timmar"],
+            renamed: [],
+            reordered: false,
+            compatible: false,
+          },
+        },
+      ],
+    });
+    expect(queueReducer(s, { type: "map_as_new", id: "b" })).toBe(s);
+    s = queueReducer(s, { type: "map_as_new", id: "a" });
+    expect(s[0]).toMatchObject({ status: "new", signature: ["kund", "datum", "frånvaro"] });
+    expect(s[0]).not.toHaveProperty("template");
+    expect(s[0]).not.toHaveProperty("drift");
+    expect(statusLabel(s[0]!)).toBe("Ny rapporttyp – mappa");
+    expect(queueReducer(s, { type: "map_as_new", id: "a" })).toBe(s);
+
+    const franvaro: TemplateRef = { ...TPL, id: "t2", name: "Frånvaro", datasetKey: "ip_franvaro" };
+    s = queueReducer(s, {
+      type: "template_saved",
+      id: "a",
+      template: franvaro,
+      requires: { month: true, company: false, asOfDate: false },
+    });
+    expect(s[0]).toMatchObject({
+      status: "running",
+      template: franvaro,
+      choices: { month: "2026-09" },
+    });
+  });
+
   it("gives a known sheet and an unmapped sibling sheet a card each", () => {
     const s = queueReducer(reading(), {
       type: "recognized",
