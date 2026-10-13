@@ -105,16 +105,22 @@ describe("globals.css theme", () => {
   });
 
   it("casts every Tailwind shadow in antracit, keeping Tailwind's geometry", () => {
+    // Tailwind declares its deprecated unsized keys in an `inline reference` block. Ours must
+    // be in the same kind of block, or the bare utilities compile differently.
+    const deprecatedAt = tailwindCss.indexOf("@theme default inline reference {");
+    expect(deprecatedAt).toBeGreaterThan(0);
     const theme = block("@theme");
+    const deprecated = block("@theme inline reference");
     const flat = (value: string) => value.replace(/\s+/g, " ").trim().toLowerCase();
     const black = [...tailwindCss.matchAll(/(--[\w-]*shadow[\w-]*):\s*([^;]+);/g)].filter(
       ([, , value]) => value!.includes("rgb(0 0 0"),
     );
     // Box, inset, drop and text shadows plus the deprecated unsized keys.
     expect(black.length).toBeGreaterThanOrEqual(24);
-    for (const [, name, value] of black) {
+    for (const { 1: name, 2: value, index } of black) {
+      const ours = index > deprecatedAt ? deprecated : theme;
       const antracit = value!.replaceAll("rgb(0 0 0 /", "rgb(30 37 43 /");
-      expect(flat(theme[name!] ?? "missing"), name).toBe(flat(antracit));
+      expect(flat(ours[name!] ?? "missing"), name).toBe(flat(antracit));
     }
   });
 
@@ -130,6 +136,13 @@ describe("globals.css theme", () => {
     // shadcn's overlay shadows are in there, so the check has something to bite on.
     expect(output).toContain(".shadow-md");
     expect(cssColorOffenders(output)).toEqual([]);
+
+    // The bare utility named after the deprecated key, cut out of it at runtime so the scan
+    // does not find it in this file.
+    const dropShadow = "--drop-shadow".slice(2);
+    const filter = compiler.build([dropShadow]);
+    expect(filter).not.toContain(`${dropShadow}(var(`);
+    expect(filter).toContain(`${dropShadow}(0 1px 2px rgb(30 37 43 / 0.1)) ${dropShadow}(`);
   });
 
   it("has the 18px card radius, a soft shadow and no dark theme", () => {

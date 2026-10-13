@@ -46,8 +46,7 @@
   /*
    * Tailwind's shadow scales keep their geometry but are cast in antracit instead of black.
    * `--color-*: initial` does not reach these, and resetting them would make the shadcn
-   * components' shadows silently stop compiling. The last three are Tailwind's deprecated
-   * unsized keys, still used by the bare utilities.
+   * components' shadows silently stop compiling.
    */
   --shadow-2xs: 0 1px rgb(30 37 43 / 0.05);
   --shadow-xs: 0 1px 2px 0 rgb(30 37 43 / 0.05);
@@ -76,9 +75,6 @@
   --text-shadow-lg:
     0px 1px 2px rgb(30 37 43 / 0.1), 0px 3px 2px rgb(30 37 43 / 0.1),
     0px 4px 8px rgb(30 37 43 / 0.1);
-  --shadow: 0 1px 3px 0 rgb(30 37 43 / 0.1), 0 1px 2px -1px rgb(30 37 43 / 0.1);
-  --shadow-inner: inset 0 2px 4px 0 rgb(30 37 43 / 0.05);
-  --drop-shadow: 0 1px 2px rgb(30 37 43 / 0.1), 0 1px 1px rgb(30 37 43 / 0.06);
 
   --animate-draw: mb-draw 900ms cubic-bezier(0.22, 1, 0.36, 1) both;
   @keyframes mb-draw {
@@ -89,6 +85,18 @@
       stroke-dashoffset: 0;
     }
   }
+}
+
+/*
+ * Tailwind's deprecated unsized shadow keys, still used by the bare `shadow`, `shadow-inner`
+ * and `drop-shadow` utilities. They need Tailwind's own `inline reference` block: as theme
+ * variables, `drop-shadow(var(--drop-shadow))` would wrap two shadows in one filter function,
+ * which is invalid and drops every filter on the element.
+ */
+@theme inline reference {
+  --shadow: 0 1px 3px 0 rgb(30 37 43 / 0.1), 0 1px 2px -1px rgb(30 37 43 / 0.1);
+  --shadow-inner: inset 0 2px 4px 0 rgb(30 37 43 / 0.05);
+  --drop-shadow: 0 1px 2px rgb(30 37 43 / 0.1), 0 1px 1px rgb(30 37 43 / 0.06);
 }
 
 @theme inline {
