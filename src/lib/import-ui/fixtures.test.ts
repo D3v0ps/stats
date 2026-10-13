@@ -209,6 +209,20 @@ describe("fixture files through the mapping helpers", () => {
     expect(preview.rows).toHaveLength(20);
     expect(preview.sums.timmar?.sum).toBeGreaterThan(0);
   });
+
+  it("keeps five-digit order amounts instead of removing them as postal codes", async () => {
+    const file = "workbuster_ordrar_MBAB.xlsx";
+    const res = await inspect(file, templatesOf(file)[0]!);
+    expect(res.columns.find((c) => c.name === "belopp")).toMatchObject({
+      personal: false,
+      locked: false,
+    });
+    expect(res.suggestions.find((s) => s.column === "belopp")).toMatchObject({
+      usage: "measure",
+      keep: true,
+      personal: false,
+    });
+  });
 });
 
 function recognitionTemplates(files: string[]): RecognitionTemplate[] {

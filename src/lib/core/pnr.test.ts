@@ -194,6 +194,32 @@ describe("detectPersonalColumn", () => {
     ).toBe("address");
   });
 
+  it("takes values for postal codes only when they are written like one", () => {
+    expect(detectPersonalColumn("Kolumn D", ["211 45", "413 01", "903 25"]).kind).toBe("address");
+    expect(detectPersonalColumn("Kolumn D", ["SE-21145", "SE-41301"]).kind).toBe("address");
+    expect(detectPersonalColumn("Kolumn D", ["21145 Malmö", "41301 Göteborg"]).kind).toBe(
+      "address",
+    );
+    expect(detectPersonalColumn("Kolumn D", ["21145", "41301", "90325"]).kind).toBeNull();
+  });
+
+  it("still takes bare five-digit numbers for postal codes under a postal-code header", () => {
+    expect(detectPersonalColumn("Postnr", ["21145", "41301"]).kind).toBe("address");
+    expect(detectPersonalColumn("Zip", ["21145", "41301"]).kind).toBe("address");
+  });
+
+  it.each(["Belopp", "Summa", "Belopp (kr)", "Pris", "Lön", "Ersättning"])(
+    "never takes five-digit amounts under %j for postal codes",
+    (header) => {
+      expect(detectPersonalColumn(header, ["12500", "45000", "21145", "99999"]).kind).toBeNull();
+      expect(detectPersonalColumn(header, ["211 45", "413 01"]).kind).toBeNull();
+    },
+  );
+
+  it("keeps finding personnummer under an amount header", () => {
+    expect(detectPersonalColumn("Belopp", [PNR, SAMORDNING, "12500"]).kind).toBe("pnr");
+  });
+
   it("detects names under person-ish headers by values", () => {
     expect(
       detectPersonalColumn("Konsult", ["Anna Svensson", "Svensson, Bo", "Karin Öberg"]).kind,

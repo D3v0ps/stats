@@ -180,7 +180,12 @@ export function columnContainsPersonnummer(values: Iterable<unknown>): boolean {
 const EMAIL_RE = /^[^\s@<>()[\]\\,;:"]+@[^\s@<>()[\]\\,;:"]+\.[a-z]{2,}$/iu;
 // Swedish numbers: trunk 0 (or +46/0046) followed by a non-zero area/mobile prefix.
 const PHONE_RE = /^(?:\+46|0046|0)[\s\-–()]*[1-9](?:[\s\-–()]*\d){6,10}$/u;
-const POSTAL_RE = /^(?:se-)?\d{3}\s?\d{2}(?:\s+\p{L}[\p{L}\s-]*)?$/iu;
+// A postal code must look like one ("211 45", "SE-21145", "21145 Malmö"): bare five-digit
+// numbers are as often amounts or ids. A postal-code header still flags them.
+const POSTAL_RE = /^(?:se-\d{3}\s?\d{2}|\d{3}\s\d{2}|\d{5}(?=\s+\p{L}))(?:\s+\p{L}[\p{L}\s-]*)?$/iu;
+// Money columns hold amounts whatever the digits look like, never postal codes.
+const AMOUNT_HEADER =
+  /(?:belopp|summa|pris|lön|ersättning|kronor|amount|price|(?:^|[^\p{L}])(?:kr|sek)(?:$|[^\p{L}]))/u;
 const STREET_RE =
   /^\p{L}[\p{L}\s.-]*(?:gatan|gata|vägen|väg|gränd|torget|torg|plan|allén|allé|backe|backen|stigen|leden|stråket|esplanaden|promenaden)\s+\d+\s*\p{L}?(?:\s|,|$)/iu;
 const PERSON_NAME_RE =
@@ -244,7 +249,8 @@ function ratio(samples: string[], test: (s: string) => boolean): number {
  * - pnr: header keyword, or >= 30 % of non-empty samples are personnummer
  *   (also 9-digit ones that lost their leading zero in Excel; values win over
  *   the header: "Anställnings-id" holding personnummer is pnr)
- * - email/phone/address: header keyword or >= 50 % of samples match
+ * - email/phone/address: header keyword or >= 50 % of samples match (postal codes by
+ *   value only when written like one, and never under an amount header such as "Belopp")
  * - name: header keyword, or a person-ish header ("Konsult") with name-like values
  * - birthdate: header keyword only
  * Anställnings-id, GEN and other internal ids are not personal by default.
@@ -276,7 +282,8 @@ export function detectPersonalColumn(header: string, samples: string[]): Persona
     return { kind: "phone", confidence: Math.min(0.9, 0.4 + phoneShare / 2) };
   }
 
-  const addressShare = ratio(values, (s) => POSTAL_RE.test(s) || STREET_RE.test(s));
+  const amount = AMOUNT_HEADER.test(h);
+  const addressShare = ratio(values, (s) => (!amount && POSTAL_RE.test(s)) || STREET_RE.test(s));
   if (addressShare >= 0.5 && !orgQualified && !idLike) {
     return { kind: "address", confidence: Math.min(0.85, 0.35 + addressShare / 2) };
   }
