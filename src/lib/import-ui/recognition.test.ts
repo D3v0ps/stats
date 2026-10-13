@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { CompanyCode } from "@/lib/contracts";
-import type { CompanySuggestion } from "@/lib/ingest/recognize";
+import { suggestCompany, type CompanySuggestion } from "@/lib/ingest/recognize";
 import {
   companyFit,
   contradictsCompany,
@@ -29,7 +29,10 @@ const t = (
 
 const SIG = ["kund", "datum", "timmar", "status"];
 
-/** What suggestCompany returns for "MBR"/"MBAB" in a file name (0.9); weaker words score less. */
+/**
+ * What suggestCompany returns for "MBR"/"MBAB" in a file name (0.9). The only weak word is a
+ * bare "Miljonbemanning", which names MBAB at 0.6.
+ */
 const names = (company: CompanyCode, confidence = 0.9): CompanySuggestion => ({
   company,
   source: "filename",
@@ -74,13 +77,14 @@ describe("planJobs", () => {
       });
     const picked = (jobs: ReturnType<typeof planJobs>) =>
       jobs[0]?.kind === "new" ? null : jobs[0]?.template.id;
+    const newerMbr = { ...mbr, updatedAt: "2026-09-01" };
 
     it("picks the template fixed to the company the file names, not the newest", () => {
       expect(picked(plan([mbab, mbr], names("MBR")))).toBe("mbr");
       expect(picked(plan([mbr, mbab], names("MBAB")))).toBe("mbab");
       expect(picked(plan([{ ...mbab, updatedAt: "2025-01-01" }, mbr], names("MBAB")))).toBe("mbab");
       // A weak hint ("Miljonbemanning" alone) still breaks the tie.
-      expect(picked(plan([mbab, mbr], names("MBR", 0.6)))).toBe("mbr");
+      expect(picked(plan([newerMbr, mbab], names("MBAB", 0.6)))).toBe("mbab");
     });
 
     it("falls back to the newest when the file names no company", () => {
@@ -90,21 +94,21 @@ describe("planJobs", () => {
     it("prefers an open template over one fixed to the other company", () => {
       const open = t("open", SIG, { updatedAt: "2025-01-01" });
       expect(picked(plan([mbab, open], names("MBR")))).toBe("open");
-      expect(picked(plan([mbab, open], names("MBR", 0.8)))).toBe("open");
+      expect(picked(plan([newerMbr, open], names("MBAB", 0.6)))).toBe("open");
       expect(picked(plan([mbab, open], names("MBAB")))).toBe("mbab");
     });
 
     it("lets a weak company hint decide between equally changed templates, never over a closer one", () => {
       const changed = ["kund", "datum", "antal timmar", "status"];
-      expect(plan([mbab, mbr], names("MBR", 0.8), changed)[0]).toMatchObject({
+      expect(plan([newerMbr, mbab], names("MBAB", 0.6), changed)[0]).toMatchObject({
         kind: "drift",
-        template: { id: "mbr" },
+        template: { id: "mbab" },
       });
       const closer = t("closer", ["kund", "datum", "antal timmar", "status", "x"], {
-        company: "MBAB",
+        company: "MBR",
       });
-      const other = t("other", ["kund", "datum", "antal timmar", "y", "z"], { company: "MBR" });
-      expect(picked(plan([closer, other], names("MBR", 0.8), changed))).toBe("closer");
+      const other = t("other", ["kund", "datum", "antal timmar", "y", "z"], { company: "MBAB" });
+      expect(picked(plan([closer, other], names("MBAB", 0.6), changed))).toBe("closer");
     });
 
     it("maps a file that clearly names the other company as new when only one template exists", () => {
@@ -114,6 +118,10 @@ describe("planJobs", () => {
         { kind: "new", sheetName: "Blad1" },
       ]);
       expect(plan([mbr], names("MBAB", 0.85))).toEqual([{ kind: "new", sheetName: "Blad1" }]);
+      // "Restart" alone in the file name is enough.
+      expect(plan([mbab], suggestCompany("deltagare restart.xlsx", [])!)).toEqual([
+        { kind: "new", sheetName: "Blad1" },
+      ]);
     });
 
     it("does not book the other company's file with a template that took its drift", () => {
@@ -128,8 +136,8 @@ describe("planJobs", () => {
 
     it("still uses the only template when the file names no company, or only weakly", () => {
       expect(plan([mbab])).toMatchObject([{ kind: "known", template: { id: "mbab" } }]);
-      expect(plan([mbab], names("MBR", 0.8))).toMatchObject([
-        { kind: "known", template: { id: "mbab" } },
+      expect(plan([mbr], suggestCompany("miljonbemanning.xlsx", [])!)).toMatchObject([
+        { kind: "known", template: { id: "mbr" } },
       ]);
     });
 
@@ -489,6 +497,11 @@ describe("runsWithSavedTemplate", () => {
 
   it("leaves a card for the other company to be mapped with a template of its own", () => {
     expect(runsWithSavedTemplate(saved, naming("MBR"))).toBe(false);
+    const restart = {
+      ...card,
+      suggestions: { period: [], company: suggestCompany("restart.xlsx", []) },
+    };
+    expect(runsWithSavedTemplate(saved, restart)).toBe(false);
     expect(runsWithSavedTemplate(t("open", SIG), naming("MBR"))).toBe(true);
     const own = t("r", SIG, { sheetHint: "MB Restart", company: "MBR" });
     expect(runsWithSavedTemplate(own, { ...naming("MBAB"), sourceSheet: "MB Restart" })).toBe(true);

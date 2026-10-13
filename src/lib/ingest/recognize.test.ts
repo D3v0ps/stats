@@ -172,4 +172,13 @@ describe("suggestCompany", () => {
   it("does not take 'Miljonbemanning Restart AB' for MBAB", () => {
     expect(suggestCompany("x.xlsx", ["Miljonbemanning Restart AB"])?.company).toBe("MBR");
   });
+
+  it("is as sure of a bare 'Restart' as of 'MB AB', and unsure of a bare 'Miljonbemanning'", () => {
+    expect(suggestCompany("deltagare restart.xlsx", [])?.confidence).toBe(0.85);
+    expect(suggestCompany("Restart_2026-09.xlsx", [])?.confidence).toBe(0.85);
+    expect(suggestCompany("x.xlsx", ["Kund: MB AB"])?.confidence).toBe(0.85);
+    expect(suggestCompany("miljonbemanning.xlsx", [])?.confidence).toBe(0.6);
+    // Names for both companies, equally sure: neither is suggested.
+    expect(suggestCompany("MB AB och Restart.xlsx", [])).toBeNull();
+  });
 });

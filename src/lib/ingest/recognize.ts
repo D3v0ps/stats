@@ -224,7 +224,8 @@ function tokenScores(text: string): { company: CompanyCode; confidence: number }
   if (seq("miljonbemanning", "restart") || seq("mb", "restart")) {
     out.push({ company: "MBR", confidence: 0.9 });
   } else if (has("restart")) {
-    out.push({ company: "MBR", confidence: 0.8 });
+    // "Restart" is the distinctive part of MBR's name: as sure as "MB AB" is for MBAB.
+    out.push({ company: "MBR", confidence: 0.85 });
   }
   if (seq("miljonbemanning", "ab")) out.push({ company: "MBAB", confidence: 0.9 });
   if (seq("mb", "ab")) out.push({ company: "MBAB", confidence: 0.85 });

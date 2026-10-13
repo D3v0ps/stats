@@ -101,8 +101,8 @@ export function companyFit(
 
 /**
  * From this confidence the company a file names rules out templates fixed to the other
- * company: an org number (0.98), or "MBR", "MB Restart", "MB AB" and the like in the file
- * name or meta lines. A bare "Restart" or "Miljonbemanning" is weaker and only ranks.
+ * company: an org number (0.98), or "MBR", "MB Restart", "Restart", "MB AB" and the like in
+ * the file name or meta lines. A bare "Miljonbemanning" is weaker and only ranks.
  */
 export const CONFIDENT_COMPANY = 0.85;
 
