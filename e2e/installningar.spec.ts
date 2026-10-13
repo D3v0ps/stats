@@ -3,6 +3,7 @@
 // Settings apply to everyone at once, so the round trips run once (laptop) and restore the
 // original through the service role even when a step fails.
 import type { Page } from "@playwright/test";
+import { formatNumber } from "@/lib/core/format-sv";
 import { deleteAlias, updateDimensionValue } from "@/lib/db/repo/catalog";
 import { reopenPeriod, setDeviationThresholdPct, SETTING_DEFAULTS } from "@/lib/db/repo/settings";
 import { SETTINGS_SECTIONS } from "@/lib/settings-ui/sections";
@@ -104,13 +105,13 @@ test.describe("round trips @once", () => {
       await expect(threshold).toHaveValue("25");
       await threshold.fill("30");
       await page.getByTestId("review-save").click();
-      await toast(page, "Avvikelsegränsen är 30 %.");
+      await toast(page, `Avvikelsegränsen är ${formatNumber(30)} %.`);
       await page.reload();
       await expect(threshold).toHaveValue("30");
 
-      await page.getByRole("button", { name: "Återställ till 25 %" }).click();
+      await page.getByRole("button", { name: `Återställ till ${formatNumber(25)} %` }).click();
       await page.getByTestId("review-save").click();
-      await toast(page, "Avvikelsegränsen är 25 %.");
+      await toast(page, `Avvikelsegränsen är ${formatNumber(25)} %.`);
       await page.reload();
       await expect(threshold).toHaveValue("25");
     } finally {

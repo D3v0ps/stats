@@ -1,6 +1,7 @@
 // Spec B: with the timmar template saved (Spec A), a fresh page load recognises files by
 // itself. The same file again is a duplicate, a changed file stops before anything is read, and
 // the UTF-16 CSV export of the same month replaces the published September numbers.
+import { formatNumber } from "@/lib/core/format-sv";
 import { formatMonthShort } from "@/lib/core/month";
 import { expect, test } from "../fixtures";
 import { fixtureFile, metricName, reviewText, total, truthFacts } from "../helpers/truth";
@@ -76,7 +77,7 @@ test("timmar: duplicate, changed columns and a replacing re-upload", async ({ pa
   // The year is left out when the replaced version is from the current year.
   const replaced = serverDateToday().replace(` ${FIXED_NOW.getFullYear()}`, "");
   await expect(panel.getByTestId("published-summary")).toHaveText(
-    `Publicerat: 2 mått, ${formatMonthShort("2026-09")}, MB AB. Ersatte version från ${replaced}.`,
+    `Publicerat: ${formatNumber(2)} mått, ${formatMonthShort("2026-09")}, MB AB. Ersatte version från ${replaced}.`,
     SLOW,
   );
   await page.getByTestId("back-button").click();

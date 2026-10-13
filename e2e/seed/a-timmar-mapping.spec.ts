@@ -64,7 +64,9 @@ test("timmar: map the September file by hand, publish it, then August by itself"
 
   await expectStatus(queueCard(page, SEP), "new");
   await expectStatus(queueCard(page, AUG), "new");
-  await expect(page.getByTestId("queue-counts")).toHaveText("2 filer · 2 behöver dig");
+  await expect(page.getByTestId("queue-counts")).toHaveText(
+    `${formatNumber(2)} filer · ${formatNumber(2)} behöver dig`,
+  );
   await expect(queueCard(page, SEP).getByTestId("status-chip")).toHaveText("Ny rapporttyp – mappa");
 
   // Mapping.
@@ -104,7 +106,7 @@ test("timmar: map the September file by hand, publish it, then August by itself"
 
   await page.getByTestId("company-mbab").check();
   await expect(mapping).toContainText(
-    `Visar 20 av ${formatNumber(counts.includedShifts ?? 0)} rader efter stegen, ${formatNumber(filtered)} rader bortfiltrerade.`,
+    `Visar ${formatNumber(20)} av ${formatNumber(counts.includedShifts ?? 0)} rader efter stegen, ${formatNumber(filtered)} rader bortfiltrerade.`,
   );
 
   await page.getByTestId("save-template-button").click();
@@ -130,11 +132,13 @@ test("timmar: map the September file by hand, publish it, then August by itself"
   await expect(table.getByRole("row").filter({ hasText: metricName("pass") })).toContainText(
     reviewText("pass", total(sep, "pass")),
   );
-  await expect(panel).toContainText("Inga avvikelser över 25 % mot föregående månad.");
+  await expect(panel).toContainText(
+    `Inga avvikelser över ${formatNumber(25)} % mot föregående månad.`,
+  );
 
   await panel.getByTestId("publish-button").click();
   await expect(panel.getByTestId("published-summary")).toHaveText(
-    `Publicerat: 2 mått, ${formatMonthShort("2026-09")}, MB AB.`,
+    `Publicerat: ${formatNumber(2)} mått, ${formatMonthShort("2026-09")}, MB AB.`,
     SLOW,
   );
 
@@ -157,11 +161,13 @@ test("timmar: map the September file by hand, publish it, then August by itself"
   ).toContainText(reviewText("timmar", total(aug, "timmar")));
   await augPanel.getByTestId("publish-button").click();
   await expect(augPanel.getByTestId("published-summary")).toHaveText(
-    `Publicerat: 2 mått, ${formatMonthShort("2026-08")}, MB AB.`,
+    `Publicerat: ${formatNumber(2)} mått, ${formatMonthShort("2026-08")}, MB AB.`,
     SLOW,
   );
 
   await page.getByTestId("back-button").click();
-  await expect(page.getByTestId("queue-counts")).toHaveText("2 filer · 2 publicerade");
+  await expect(page.getByTestId("queue-counts")).toHaveText(
+    `${formatNumber(2)} filer · ${formatNumber(2)} publicerade`,
+  );
   expect(workerClosed, "the ingest worker stopped and parsing fell back").toBe(false);
 });

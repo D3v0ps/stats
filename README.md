@@ -36,8 +36,6 @@ pnpm e2e --project=laptop    # uppladdningarna (seed-*) och en skärmstorlek
 
 Projekten körs i ordning. `seed-a` till `seed-e` publicerar exempelfilerna genom
 uppladdningssidan och bygger på varandra, så ett steg som misslyckas hoppar över stegen efter.
-Frånvarorapporten känns i dag igen som en ändrad tidrapport och kan inte mappas som en egen
-rapport, så `seed-c` sparar dess mall direkt i den lokala databasen innan filen laddas upp.
 `projektor`, `laptop` och `mobil` läser datan i tre skärmstorlekar, och `sist` byter lösenordet
 fram och tillbaka och loggar ut alla enheter. Tester märkta `@once` ändrar data (rapporter,
 inställningar, spärren) och körs bara i `laptop`.

@@ -3,14 +3,17 @@
 // the frozen version and its print view. Once (laptop): it creates a template, deleted at the
 // end, and a frozen report, which can never be deleted (so its title is unique).
 import type { Page } from "@playwright/test";
+import { formatNumber } from "@/lib/core/format-sv";
 import { DEFAULT_REPORT_NAME, defaultReportSpec } from "@/lib/present/default-report";
 import { expect, test } from "./fixtures";
 import {
   REPORT_MONTH,
+  STANDARD_SLIDES,
   freezeThroughUi,
   insertReportTemplate,
   removeReportTemplate,
   reportTemplateCount,
+  slideName,
 } from "./helpers/reports";
 import { checkView } from "./helpers/visual";
 
@@ -22,8 +25,10 @@ const blur = (page: Page) =>
   page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
 
 async function expectSlide(page: Page, n: number) {
-  await expect(page.getByTestId("deck-counter")).toHaveText(`${n} / 9`);
-  await expect(page.getByRole("region", { name: `Bild ${n} av 9` })).toBeVisible();
+  await expect(page.getByTestId("deck-counter")).toHaveText(
+    `${formatNumber(n)} / ${formatNumber(STANDARD_SLIDES)}`,
+  );
+  await expect(page.getByRole("region", { name: slideName(n) })).toBeVisible();
   if (n === 1) await expect.poll(() => new URL(page.url()).searchParams.get("bild")).toBeNull();
   else await expect.poll(() => new URL(page.url()).searchParams.get("bild")).toBe(String(n));
 }
@@ -39,7 +44,7 @@ async function standardTemplate(page: Page): Promise<string> {
   await page.goto("/rapporter");
   await page.getByTestId("create-default-report").click();
   const card = page.getByTestId("template-card").filter({ hasText: DEFAULT_REPORT_NAME });
-  await expect(card).toContainText("9 bilder");
+  await expect(card).toContainText(`${formatNumber(STANDARD_SLIDES)} bilder`);
   const href = await card.getByTestId("edit-link").getAttribute("href");
   const id = href?.split("/").pop();
   if (!id) throw new Error("The new template's editor link is missing.");
@@ -70,7 +75,7 @@ test("create, edit, present, freeze and print a board report @once", async ({ pa
       await page.keyboard.press("ArrowRight");
       await expectSlide(page, 2);
       // Slides show headlines in capitals.
-      await expect(page.getByRole("region", { name: "Bild 2 av 9" })).toContainText(HEADLINE, {
+      await expect(page.getByRole("region", { name: slideName(2) })).toContainText(HEADLINE, {
         ignoreCase: true,
       });
       await page.keyboard.press("PageDown");
@@ -100,17 +105,17 @@ test("create, edit, present, freeze and print a board report @once", async ({ pa
       ]);
       await expect(notes).toHaveURL(new RegExp(`/presentera/${templateId}/manus`));
       await expect(notes.getByRole("heading", { level: 1, name: "Talarmanus" })).toBeVisible();
-      await expect(notes.getByText("Bild 2 av 9", { exact: true })).toBeVisible();
+      await expect(notes.getByText(slideName(2), { exact: true })).toBeVisible();
       await expect(notes.getByTestId("notes-text")).toHaveText(NOTES);
       await checkView(notes, "rapport-manus");
 
       await blur(page);
       await page.keyboard.press("ArrowRight");
       await expectSlide(page, 3);
-      await expect(notes.getByText("Bild 3 av 9", { exact: true })).toBeVisible();
+      await expect(notes.getByText(slideName(3), { exact: true })).toBeVisible();
 
       await notes.getByRole("button", { name: "Nästa bild" }).click();
-      await expect(notes.getByText("Bild 4 av 9", { exact: true })).toBeVisible();
+      await expect(notes.getByText(slideName(4), { exact: true })).toBeVisible();
       await expectSlide(page, 4);
       await notes.close();
     });
@@ -122,7 +127,9 @@ test("create, edit, present, freeze and print a board report @once", async ({ pa
       const slides = page.getByRole("list", { name: "Bilder" }).getByRole("listitem");
       await expect(slides).toHaveCount(9);
       await expect(
-        page.getByRole("link", { name: new RegExp(`^Presentera från bild 2: ${HEADLINE}`, "i") }),
+        page.getByRole("link", {
+          name: new RegExp(`^Presentera från bild ${formatNumber(2)}: ${HEADLINE}`, "i"),
+        }),
       ).toBeVisible();
       return id;
     });
@@ -132,7 +139,7 @@ test("create, edit, present, freeze and print a board report @once", async ({ pa
       await page.waitForURL(`**/presentera/arkiv/${frozenId}`);
       await expectSlide(page, 1);
       await page.keyboard.press("ArrowRight");
-      await expect(page.getByRole("region", { name: "Bild 2 av 9" })).toContainText(HEADLINE, {
+      await expect(page.getByRole("region", { name: slideName(2) })).toContainText(HEADLINE, {
         ignoreCase: true,
       });
       await page.getByTestId("deck-exit").click();

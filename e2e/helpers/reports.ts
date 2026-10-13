@@ -3,6 +3,7 @@
 // numbers on the server for a signed-in app user. Frozen reports can never be deleted, so specs
 // that need one look it up by a fixed title first and freeze only when it is missing.
 import { expect, type Page } from "@playwright/test";
+import { formatNumber } from "@/lib/core/format-sv";
 import type { ReportTemplateSpec } from "@/lib/contracts/slides";
 import { createReportTemplate, deleteReportTemplate } from "@/lib/db/repo/reports";
 import { defaultReportSpec } from "@/lib/present/default-report";
@@ -12,6 +13,13 @@ import { resolveLocalSupabase } from "./local-supabase";
 
 /** The month every report view shows: the last month the fixtures cover. */
 export const REPORT_MONTH = "2026-09";
+
+/** Slides in the standard report. */
+export const STANDARD_SLIDES = defaultReportSpec().slides.length;
+
+/** A slide's name in a deck and its notes window, e.g. "Bild 3 av 9". */
+export const slideName = (n: number, count = STANDARD_SLIDES) =>
+  `Bild ${formatNumber(n)} av ${formatNumber(count)}`;
 
 const admin = () => createE2eAdminClient(resolveLocalSupabase());
 

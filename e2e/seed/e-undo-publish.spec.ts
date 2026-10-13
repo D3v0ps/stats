@@ -1,6 +1,7 @@
 // Spec E: undoing a publish in Historik. Spec B's UTF-16 export replaced the September numbers
 // Spec A published; undoing it (a reason is required) makes Spec A's file the current version of
 // September again. Nothing is deleted: the undone upload stays in the list.
+import { formatNumber } from "@/lib/core/format-sv";
 import { formatMonthShort } from "@/lib/core/month";
 import { expect, test } from "../fixtures";
 import { serverDateToday } from "../helpers/upload";
@@ -29,7 +30,7 @@ test("undo the replacing September upload", async ({ page }) => {
   await expect(dialog).toBeHidden();
 
   await expect(page.getByTestId("retract-notice")).toHaveText(
-    `${UTF16}: Publiceringen är ångrad. Föregående version är tillbaka för 1 månad.`,
+    `${UTF16}: Publiceringen är ångrad. Föregående version är tillbaka för ${formatNumber(1)} månad.`,
   );
   await expect(row(UTF16)).toHaveAttribute("data-status", "retracted");
   await expect(row(UTF16)).toContainText(`Återkallad ${serverDateToday()}: ${REASON}`);

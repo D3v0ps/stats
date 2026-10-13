@@ -1,7 +1,7 @@
 // Spec D: Fortnox SIE files need no template. The company comes from the organisation number:
 // one file per company is reviewed and published together, and a file from an unknown company
 // stops in the queue.
-import { formatAmount } from "@/lib/core/format-sv";
+import { formatAmount, formatNumber } from "@/lib/core/format-sv";
 import { expect, test } from "../fixtures";
 import { sieFile, sieTruth } from "../helpers/truth";
 import {
@@ -64,7 +64,7 @@ test("SIE: both companies from the org number, an unknown company stops", async 
 
   await page.getByTestId("publish-all-button").click();
   await expect(page.getByRole("status").filter({ hasText: "publicerade" })).toHaveText(
-    "2 filer publicerade.",
+    `${formatNumber(2)} filer publicerade.`,
     SLOW,
   );
   await expect(mbab.getByTestId("published-summary")).toContainText("MB AB");

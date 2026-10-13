@@ -1,10 +1,11 @@
 // Every route at every viewport, with the seeded data: no horizontal overflow, only brand
 // colours, no CSP violation (fixtures.ts) and a screenshot per view. Also a few states worth a
-// look: a chart tooltip, an open select, a dialog, a toast and the mobile menu.
+// look: a chart tooltip, an open select, a dialog, a toast and the mobile menu; and the deck's
+// bar charts, which clip their own content, so a cut-off name never shows up as overflow.
 //
 // Read-only apart from its own report template (deleted afterwards) and the shared frozen
 // standard report, which the first spec that needs it freezes (frozen reports cannot be deleted).
-import type { Page } from "@playwright/test";
+import type { Locator, Page } from "@playwright/test";
 import { defaultReportSpec } from "@/lib/present/default-report";
 import { SETTINGS_SECTIONS } from "@/lib/settings-ui/sections";
 import { expect, test } from "./fixtures";
@@ -13,8 +14,10 @@ import { dimensionValueId, someImportTemplateId } from "./helpers/catalog";
 import {
   FROZEN_STANDARD_TITLE,
   REPORT_MONTH,
+  STANDARD_SLIDES,
   insertReportTemplate,
   removeReportTemplate,
+  slideName,
 } from "./helpers/reports";
 import { checkView } from "./helpers/visual";
 
@@ -100,12 +103,12 @@ const VIEWS: View[] = [
   {
     name: "presentera",
     path: ({ template }) => `/presentera/${template}?manad=${REPORT_MONTH}`,
-    ready: (page) => expect(page.getByRole("region", { name: "Bild 1 av 9" })).toBeVisible(),
+    ready: (page) => expect(page.getByRole("region", { name: slideName(1) })).toBeVisible(),
   },
   {
     name: "presentera-bild-8",
     path: ({ template }) => `/presentera/${template}?manad=${REPORT_MONTH}&bild=8`,
-    ready: (page) => expect(page.getByRole("region", { name: "Bild 8 av 9" })).toBeVisible(),
+    ready: (page) => expect(page.getByRole("region", { name: slideName(8) })).toBeVisible(),
   },
   {
     name: "presentera-manus",
@@ -120,7 +123,7 @@ const VIEWS: View[] = [
   {
     name: "arkiv-presentera",
     path: ({ frozen }) => `/presentera/arkiv/${frozen}?bild=5`,
-    ready: (page) => expect(page.getByRole("region", { name: "Bild 5 av 9" })).toBeVisible(),
+    ready: (page) => expect(page.getByRole("region", { name: slideName(5) })).toBeVisible(),
   },
   {
     name: "arkiv-manus",
@@ -235,4 +238,75 @@ test.describe("states", () => {
     await expect(page.getByRole("dialog", { name: "Meny" })).toBeVisible();
     await checkView(page, "mobil-meny", { fullPage: false });
   });
+});
+
+/** The category labels of a horizontal bar chart (Recharts draws them in their own layer). */
+const BAR_NAMES = ".recharts-yAxis-tick-labels text";
+
+/**
+ * The category names of a slide's horizontal bars that a reader cannot read whole: drawn
+ * outside what the chart shows (its SVG and every clipping box around it), or cut short
+ * without "…" and the full name as the label's title.
+ */
+function unreadableBarNames(slide: Locator): Promise<string[]> {
+  return slide.evaluate((section, selector) => {
+    const problems: string[] = [];
+    for (const figure of section.querySelectorAll('[data-slot="chart-figure"]')) {
+      const svg = figure.querySelector("svg.recharts-surface");
+      if (!svg) continue;
+      const names = [...figure.querySelectorAll('th[scope="row"]')].map(
+        (th) => th.textContent?.trim() ?? "",
+      );
+      let { left, right } = svg.getBoundingClientRect();
+      for (let el = svg.parentElement; el; el = el.parentElement) {
+        if (getComputedStyle(el).overflowX === "visible") continue;
+        const box = el.getBoundingClientRect();
+        left = Math.max(left, box.left);
+        right = Math.min(right, box.right);
+      }
+      for (const label of svg.querySelectorAll(selector)) {
+        const shown = [...label.childNodes]
+          .filter((n) => n.nodeName !== "title")
+          .map((n) => n.textContent ?? "")
+          .join("");
+        const name = label.querySelector("title")?.textContent ?? shown;
+        const box = label.getBoundingClientRect();
+        if (box.left < left - 0.5 || box.right > right + 0.5) {
+          problems.push(
+            `"${shown}" is drawn at ${Math.round(box.left)}–${Math.round(box.right)} px, ` +
+              `the chart shows ${Math.round(left)}–${Math.round(right)} px`,
+          );
+        }
+        if (!names.includes(name)) problems.push(`"${name}" is no category of the chart`);
+        else if (
+          shown !== name &&
+          !(shown.endsWith("…") && name.startsWith(shown.slice(0, -1).trimEnd()))
+        ) {
+          problems.push(`"${shown}" is not a cut "${name}"`);
+        }
+      }
+    }
+    return problems;
+  }, BAR_NAMES);
+}
+
+test("the deck's bar charts show every name whole or cut with its full name", async ({ page }) => {
+  await page.goto(`/presentera/${seeded().template}?manad=${REPORT_MONTH}`);
+  let names = 0;
+  for (let n = 1; n <= STANDARD_SLIDES; n++) {
+    const slide = page.getByRole("region", { name: slideName(n) });
+    await expect(slide).toBeVisible();
+    if ((await slide.locator('[data-visual="bars"]').count()) > 0) {
+      const labels = slide.locator(BAR_NAMES);
+      await expect(labels.first()).toBeVisible();
+      // Polled: the labels are measured again once the web font has loaded.
+      await expect
+        .poll(() => unreadableBarNames(slide), { message: `${slideName(n)}: bar names` })
+        .toEqual([]);
+      names += await labels.count();
+    }
+    if (n < STANDARD_SLIDES) await page.keyboard.press("ArrowRight");
+  }
+  // The standard report has horizontal bars (participants per verksamhet, top customers).
+  expect(names).toBeGreaterThan(0);
 });

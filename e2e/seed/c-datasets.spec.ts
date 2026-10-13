@@ -5,11 +5,8 @@
 import type { Locator, Page } from "@playwright/test";
 import { formatNumber } from "@/lib/core/format-sv";
 import { formatMonthShort } from "@/lib/core/month";
-import { createTemplate } from "@/lib/db/repo/templates";
 import { formatMonthSpan } from "@/lib/import-ui/months";
 import { expect, test } from "../fixtures";
-import { createE2eAdminClient } from "../helpers/admin";
-import { resolveLocalSupabase } from "../helpers/local-supabase";
 import {
   PRESENTATION_CUSTOMER,
   addTool,
@@ -27,14 +24,9 @@ import {
   setExportDate,
   usageOf,
 } from "../helpers/mapping";
+import { fixtureFile, reviewText, total, truthFacts, type TruthFact } from "../helpers/truth";
 import {
-  fixtureFile,
-  manifestTemplates,
-  total,
-  truthFacts,
-  type TruthFact,
-} from "../helpers/truth";
-import {
+  SLOW,
   addFiles,
   comparisonRow,
   expectPhase,
@@ -58,6 +50,8 @@ const DELTAGARE_MBAB = "workbuster_deltagare_MBAB.xlsx";
 const DELTAGARE_MBR = "workbuster_deltagare_MBR.xlsx";
 const ORDRAR = "workbuster_ordrar_MBAB.xlsx";
 const BUDGET = "budget_2026.xlsx";
+/** Spec A's template, which the frånvaro file resembles. */
+const TIMMAR_TEMPLATE = "Intelliplan – timmar och pass";
 
 // The truth of the cases files ends with the last complete month (fixtures/README.md).
 const CASES_EXPORT_DATE = "2026-09-30";
@@ -65,7 +59,7 @@ const SEP = "2026-09";
 
 const monthsOf = (facts: readonly TruthFact[]) => [...new Set(facts.map((f) => f.month))].sort();
 const published = (metrics: number, months: string[], company: string) =>
-  `Publicerat: ${metrics} mått, ${formatMonthSpan(months)}, ${company}.`;
+  `Publicerat: ${formatNumber(metrics)} mått, ${formatMonthSpan(months)}, ${company}.`;
 
 /**
  * A cases file is read as soon as its template is saved, up to the export date the file states
@@ -139,6 +133,9 @@ test("Intelliplan fakturering: grouped report, month per upload", async ({ page 
   await openUploadPage(page);
   await addFiles(page, [fixtureFile(FAKTURERING)]);
   const card = queueCard(page, FAKTURERING);
+  // Order matters: this runs before the frånvaro test saves its template. Four of the eight
+  // columns the two reports have between them are shared, exactly the drift limit, so after it
+  // this file would open as a changed frånvaro report instead of a new one.
   await expectStatus(card, "new");
   await openMapping(page, card);
 
@@ -173,26 +170,47 @@ test("Intelliplan fakturering: grouped report, month per upload", async ({ page 
   await publish(panel, published(2, [SEP], "MB AB"));
 });
 
-test("Intelliplan frånvaro: a Windows-1252 CSV read with its saved template", async ({ page }) => {
-  // The absence report shares five of its six columns with the time report, so the upload page
-  // only offers to update the timmar template for it, never to map it as a report of its own.
-  // Its manifest template is saved the way the mapping view saves one, before the page loads;
-  // the file itself goes through the upload page.
-  test.info().annotations.push({
-    type: "issue",
-    description: `${FRANVARO} is recognised as a changed timmar report and cannot be mapped as new`,
-  });
-  const admin = createE2eAdminClient(resolveLocalSupabase());
-  for (const template of manifestTemplates(FRANVARO)) await createTemplate(admin, template);
-
+test("Intelliplan frånvaro: a changed timmar report mapped as a new report type", async ({
+  page,
+}) => {
   const facts = truthFacts(FRANVARO);
   await openUploadPage(page);
   await addFiles(page, [fixtureFile(FRANVARO)]);
   const card = queueCard(page, FRANVARO);
-  await expectStatus(card, "ready");
-  await card.getByTestId("review-button").click();
+  // The absence report shares five of its six columns with the time report.
+  await expectStatus(card, "drift");
+  await card.getByTestId("drift-button").click();
+  const drift = page.getByTestId("drift-view");
+  await expect(drift).toContainText(`liknar rapporten ”${TIMMAR_TEMPLATE}”`);
+  await drift.getByTestId("map-as-new-button").click();
+
+  // A report type of its own, not an update of the timmar template: the dataset is chosen
+  // afresh, and the review below names the new template.
+  await expect(page.getByRole("heading", { level: 2, name: "Mappa rapporten" })).toBeVisible();
+  await expect(page.getByTestId("mapping-view")).toBeVisible(SLOW);
+  await expect(page.getByTestId("dataset-select")).toBeEnabled();
+  await expect(page.getByTestId("dataset-select")).toHaveValue("");
+  await chooseDataset(page, "ip_franvaro");
+  await expect(page.getByTestId("template-name")).toHaveValue("Intelliplan – frånvaro");
+  await expect(page.getByTestId("removed-row").filter({ hasText: "Konsult" })).toContainText(
+    "Personuppgift",
+  );
+  await expect(usageOf(page, "datum")).toHaveValue("period");
+  await groupBy(page, "frånvaroorsak", "franvarotyp");
+  await measure(page, "timmar", "sjuktimmar", "hours");
+  // No catalog metric counts unauthorised absence.
+  await filterRows(page, "frånvaroorsak", "equals", "Olovlig frånvaro");
+  await cleanColumn(page, "timmar", "hours");
+  await replacePostnord(page);
+  await addTool(page, "counter", async (d) => {
+    await d.getByTestId("tool-metric").selectOption("sjukpass");
+  });
+  await page.getByTestId("company-mbab").check();
+  await saveTemplate(page);
+
   const panel = reviewPanel(page, FRANVARO);
   await expectPhase(panel, "ready");
+  await expect(panel).toContainText(`Intelliplan – frånvaro · ${formatMonthShort(SEP)} · MB AB`);
   await expectReviewValue(panel, "sjuktimmar", SEP, total(facts, "sjuktimmar"));
   await expectReviewValue(panel, "sjukpass", SEP, total(facts, "sjukpass"));
   await publish(panel, published(2, [SEP], "MB AB"));
@@ -289,7 +307,9 @@ async function reviewDeltagare(page: Page, fileName: string, company: "MB AB" | 
   await page.getByTestId("back-button").click();
 }
 
-test("Workbuster deltagare: each company gets its own template", async ({ page }) => {
+test("Workbuster deltagare MB AB: its own template; the MBR file dropped with it waits", async ({
+  page,
+}) => {
   await openUploadPage(page);
   await addFiles(page, [fixtureFile(DELTAGARE_MBAB), fixtureFile(DELTAGARE_MBR)]);
   await expectStatus(queueCard(page, DELTAGARE_MBAB), "new");
@@ -298,13 +318,42 @@ test("Workbuster deltagare: each company gets its own template", async ({ page }
   await mapDeltagare(page, DELTAGARE_MBAB, "MB AB");
   await reviewDeltagare(page, DELTAGARE_MBAB, "MB AB");
 
-  // The files have the same columns, but the MBR file names its own company: the MB AB
-  // template left it for a template of its own.
+  // The files have the same columns, but the MBR file names its own company: saving the MB AB
+  // template did not read it. It is dropped again by itself in the next test.
+  await expectStatus(queueCard(page, DELTAGARE_MBAB), "published");
   await expectStatus(queueCard(page, DELTAGARE_MBR), "new");
+  await removeFromQueue(page, DELTAGARE_MBR);
+});
+
+test("Workbuster deltagare MB Restart: dropped alone, not read with the MB AB template", async ({
+  page,
+}) => {
+  await openUploadPage(page);
+  await addFiles(page, [fixtureFile(DELTAGARE_MBR)]);
+  // Only the MB AB template fits its columns, but the file names MB Restart.
+  const card = queueCard(page, DELTAGARE_MBR);
+  await expectStatus(card, "new");
+  await expect(card.getByTestId("status-chip")).toHaveText("Ny rapporttyp – mappa");
+
   await mapDeltagare(page, DELTAGARE_MBR, "MB Restart");
   await reviewDeltagare(page, DELTAGARE_MBR, "MB Restart");
-  await expectStatus(queueCard(page, DELTAGARE_MBAB), "published");
-  await expectStatus(queueCard(page, DELTAGARE_MBR), "published");
+  await expectStatus(card, "published");
+
+  // Each company keeps its own participants: the MBR file replaced nothing of MB AB's.
+  const metrics = ["aktiva_deltagare", "nya_deltagare"];
+  await page.goto(`/utforska?matt=${metrics.join(",")}&grupp=bolag&manad=${SEP}`);
+  const rows = page.getByTestId("pivot").getByTestId("pivot-row");
+  for (const [company, file] of [
+    ["MB AB", DELTAGARE_MBAB],
+    ["MB Restart", DELTAGARE_MBR],
+  ] as const) {
+    const facts = truthFacts(file);
+    const row = rows.filter({ hasText: company });
+    await expect(row).toHaveCount(1);
+    for (const metric of metrics) {
+      await expect(row).toContainText(reviewText(metric, total(facts, metric, SEP)));
+    }
+  }
 });
 
 test("Workbuster ordrar: the Belopp column stays a measure", async ({ page }) => {
@@ -396,7 +445,9 @@ async function reviewBudgetSheet(page: Page, sheet: "MB AB" | "MB Restart", flag
   await expect(panel.getByTestId("comparison-table").locator("tr[data-flagged]")).toHaveCount(
     flags,
   );
-  await expect(panel).toContainText(`${flags} värden avviker mer än 25 % mot föregående månad.`);
+  await expect(panel).toContainText(
+    `${formatNumber(flags)} värden avviker mer än ${formatNumber(25)} % mot föregående månad.`,
+  );
   for (const month of months) {
     await expectReviewValue(
       panel,
