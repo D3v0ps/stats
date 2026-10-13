@@ -1,5 +1,5 @@
-// Översikt with the data the seed project published (timmar for MB AB, SIE for both
-// companies), then a drill from a KPI card into Utforska. Read-only.
+// Översikt with the data the seed projects published (timmar for MB AB, SIE and participant
+// lists for both companies), then a drill from a KPI card into Utforska. Read-only.
 import { expect, test } from "./fixtures";
 import {
   kpiText,
@@ -14,6 +14,9 @@ import {
 const MONTH = "2026-09";
 const TIMMAR = truthFacts("intelliplan_timmar_MBAB_2026-09.xlsx");
 const SIE = ["mbab_2026_psaldo.se", "mbr_2026_trans_only.se"];
+const DELTAGARE = ["workbuster_deltagare_MBAB.xlsx", "workbuster_deltagare_MBR.xlsx"].flatMap(
+  truthFacts,
+);
 const sumOfCompanies = (group: string) =>
   SIE.reduce((sum, file) => sum + ledgerGroupTotal(file, group, MONTH), 0);
 
@@ -35,8 +38,13 @@ test("KPI cards show the published September numbers", async ({ page }) => {
   await expect(page.getByTestId("widget-intakter")).toContainText(
     kpiText("intakter", sumOfCompanies("intakter")),
   );
-  // No participant list was published.
-  await expect(page.getByTestId("widget-aktiva-deltagare")).toContainText("Saknas");
+  // Both companies' participants in September (a snapshot: summed over companies, not months).
+  await expect(page.getByTestId("widget-aktiva-deltagare")).toContainText(
+    kpiText("aktiva_deltagare", total(DELTAGARE, "aktiva_deltagare", MONTH)),
+  );
+  await expect(page.getByTestId("widget-nya-deltagare")).toContainText(
+    kpiText("nya_deltagare", total(DELTAGARE, "nya_deltagare", MONTH)),
+  );
 });
 
 test("a KPI card drills into Utforska and down to customers", async ({ page }) => {

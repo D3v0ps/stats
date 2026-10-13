@@ -2,10 +2,20 @@
 // by hand (dataset, a column left out, six steps, a counter, the company), its new customers are
 // accepted in the review and it is published; the August file is then read with the saved
 // template by itself. The other projects read this data.
-import type { Locator } from "@playwright/test";
 import { formatNumber } from "@/lib/core/format-sv";
 import { formatMonthShort } from "@/lib/core/month";
 import { expect, test } from "../fixtures";
+import {
+  PRESENTATION_CUSTOMER,
+  addTool,
+  chooseDataset,
+  cleanColumn,
+  filterRows,
+  groupBy,
+  ignoreColumns,
+  metricOf,
+  replacePostnord,
+} from "../helpers/mapping";
 import {
   distinctValues,
   fixtureFile,
@@ -27,7 +37,6 @@ import {
 
 const SEP = "intelliplan_timmar_MBAB_2026-09.xlsx";
 const AUG = "intelliplan_timmar_MBAB_2026-08.xlsx";
-const PRESENTATION_CUSTOMER = "Miljonbemanning Presentation (Stockholm)";
 
 test("timmar: map the September file by hand, publish it, then August by itself", async ({
   page,
@@ -72,59 +81,23 @@ test("timmar: map the September file by hand, publish it, then August by itself"
     "Personuppgift",
   );
 
-  await page.getByTestId("dataset-select").selectOption("ip_timmar");
-  await expect(page.getByLabel("Mått för kolumnen timmar", { exact: true })).toHaveValue("timmar");
+  await chooseDataset(page, "ip_timmar");
+  await expect(metricOf(page, "timmar")).toHaveValue("timmar");
   await expect(page.getByTestId("template-name")).toHaveValue("Intelliplan – timmar och pass");
   // Status is only needed by a filter step.
-  await page.getByLabel("Användning för kolumnen status", { exact: true }).selectOption("ignore");
+  await ignoreColumns(page, ["status"]);
 
-  const steps = page.getByTestId("step-list").getByRole("listitem");
-  const addTool = async (kind: string, fill: (dialog: Locator) => Promise<void>) => {
-    const before = await steps.count();
-    await page.getByTestId(`tool-${kind}`).click();
-    const dialog = page.getByTestId("tool-dialog");
-    await expect(dialog).toBeVisible();
-    await fill(dialog);
-    await dialog.getByTestId("tool-dialog-submit").click();
-    await expect(dialog).toBeHidden();
-    await expect(steps).toHaveCount(before + 1);
-  };
-
-  await addTool("filter", async (d) => {
-    await d.getByTestId("tool-column").selectOption("kund");
-    await d.getByLabel("Villkor").selectOption("equals");
-    await d.getByTestId("tool-value").fill(PRESENTATION_CUSTOMER);
-  });
-  await addTool("filter", async (d) => {
-    await d.getByTestId("tool-column").selectOption("anställnings id");
-    await d.getByLabel("Villkor").selectOption("empty");
-  });
-  await addTool("filter", async (d) => {
-    await d.getByTestId("tool-column").selectOption("status");
-    await d.getByLabel("Villkor").selectOption("equals");
-    await d.getByTestId("tool-value").fill("Makulerad");
-  });
-  await addTool("clean", async (d) => {
-    await d.getByTestId("tool-column").selectOption("timmar");
-    await d.getByLabel("Vad står i kolumnen?").selectOption("hours");
-  });
-  await addTool("replace", async (d) => {
-    await d.getByTestId("tool-column").selectOption("kund");
-    await d.getByTestId("tool-find").fill("Postnord");
-    await d.getByTestId("tool-replace").fill("PostNord AB");
-    await d.getByLabel("Var?", { exact: true }).selectOption("whole_cell");
-  });
-  await addTool("constant", async (d) => {
+  await filterRows(page, "kund", "equals", PRESENTATION_CUSTOMER);
+  await filterRows(page, "anställnings id", "empty");
+  await filterRows(page, "status", "equals", "Makulerad");
+  await cleanColumn(page, "timmar", "hours");
+  await replacePostnord(page);
+  await addTool(page, "constant", async (d) => {
     await d.getByTestId("tool-column").fill("verksamhet");
     await d.getByTestId("tool-value").fill("Bemanning");
   });
-  await page
-    .getByLabel("Användning för kolumnen verksamhet", { exact: true })
-    .selectOption("dimension");
-  await page
-    .getByLabel("Gruppera på för kolumnen verksamhet", { exact: true })
-    .selectOption("verksamhet");
-  await addTool("counter", async (d) => {
+  await groupBy(page, "verksamhet", "verksamhet");
+  await addTool(page, "counter", async (d) => {
     await d.getByTestId("tool-metric").selectOption("pass");
   });
   await expect(page.getByTestId("step-list")).toContainText("Räkna rader som ”Pass”");

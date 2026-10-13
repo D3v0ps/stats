@@ -3,6 +3,7 @@
 import { readFileSync } from "node:fs";
 import path from "node:path";
 import { z } from "zod";
+import { ImportTemplateSchema, type ImportTemplate } from "@/lib/contracts";
 import { CATALOG_ACCOUNT_GROUPS, CATALOG_METRICS } from "@/lib/contracts/catalog";
 import { formatValue } from "@/lib/core/format-sv";
 
@@ -28,6 +29,7 @@ const ManifestSchema = z.object({
       file: z.string(),
       truth: z.string(),
       counts: z.record(z.string(), z.number()).optional(),
+      templates: z.array(ImportTemplateSchema).optional(),
     }),
   ),
 });
@@ -62,6 +64,11 @@ export function truthFacts(file: string): TruthFact[] {
 /** Row counts the fixture generator recorded (rows read, filtered out, …). */
 export function truthCounts(file: string): Record<string, number> {
   return manifestEntry(file).counts ?? {};
+}
+
+/** The import templates that reproduce a file's truth (fixtures/README.md, manifest.json). */
+export function manifestTemplates(file: string): ImportTemplate[] {
+  return manifestEntry(file).templates ?? [];
 }
 
 export function total(facts: readonly TruthFact[], metricKey: string, month?: string): number {

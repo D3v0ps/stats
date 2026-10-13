@@ -32,7 +32,7 @@ function seedStep(step: string, dependencies: string[]): Project {
 }
 
 // The viewport projects read what the whole seed chain published.
-const SEEDED = ["seed-b", "seed-d"];
+const SEEDED = ["seed-c", "seed-e"];
 
 export default defineConfig({
   testDir: "./e2e",
@@ -54,10 +54,13 @@ export default defineConfig({
   },
   projects: [
     // Publish the fixtures through the real upload UI. A: timmar mapped by hand; B: duplicate,
-    // drift and a replacing re-upload of A's month; D: SIE.
+    // drift and a replacing re-upload of A's month; D: SIE; C: every other dataset (its
+    // customers extend A's catalog); E: undoes B's replace.
     seedStep("a", []),
     seedStep("b", ["seed-a"]),
     seedStep("d", ["seed-a"]),
+    seedStep("c", ["seed-b", "seed-d"]),
+    seedStep("e", ["seed-b", "seed-d"]),
     {
       name: "projektor",
       testIgnore: [SEED, LAST],

@@ -15,10 +15,11 @@ pnpm dev
 ## Tester från början till slut
 
 Playwright-sviten i `e2e/` kör appen i en riktig webbläsare mot en **lokal** Supabase. Den laddar
-upp exempelfilerna i `fixtures/` genom uppladdningssidan, publicerar dem och kontrollerar sedan
-översikten, Utforska och inloggningen. Den rör aldrig det driftsatta projektet: sviten bygger och
-startar appen själv med den lokala stackens värden, och Supabase-adressen måste peka på den egna
-datorn (127.0.0.1, localhost eller ::1), annars avbryts körningen innan något händer.
+upp exempelfilerna i `fixtures/` genom uppladdningssidan, publicerar dem, ångrar en publicering i
+Historik och kontrollerar sedan översikten, Utforska och inloggningen. Den rör aldrig det
+driftsatta projektet: sviten bygger och startar appen själv med den lokala stackens värden, och
+Supabase-adressen måste peka på den egna datorn (127.0.0.1, localhost eller ::1), annars avbryts
+körningen innan något händer.
 
 **Förutsättningar**
 
@@ -35,6 +36,8 @@ pnpm e2e --project=laptop    # uppladdningarna (seed-*) och en skärmstorlek
 
 Projekten körs i ordning. `seed-a` till `seed-e` publicerar exempelfilerna genom
 uppladdningssidan och bygger på varandra, så ett steg som misslyckas hoppar över stegen efter.
+Frånvarorapporten känns i dag igen som en ändrad tidrapport och kan inte mappas som en egen
+rapport, så `seed-c` sparar dess mall direkt i den lokala databasen innan filen laddas upp.
 `projektor`, `laptop` och `mobil` läser datan i tre skärmstorlekar, och `sist` byter lösenordet
 fram och tillbaka och loggar ut alla enheter.
 
