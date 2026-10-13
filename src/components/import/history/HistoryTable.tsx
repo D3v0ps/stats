@@ -67,7 +67,8 @@ export function HistoryTable({ rows }: { rows: HistoryRow[] }) {
         </p>
       ) : null}
       <div className="rounded-card bg-card shadow-soft">
-        <div className="hidden grid-cols-[minmax(12rem,2fr)_minmax(10rem,1.5fr)_7rem_8rem_8rem_7rem_minmax(9rem,auto)] gap-3 border-b border-border px-5 py-3 text-[11px] tracking-[0.06em] text-antracit-300 uppercase lg:grid">
+        {/* Columns from xl: beside the sidebar, narrower screens stack the rows instead. */}
+        <div className="hidden grid-cols-[minmax(0,2fr)_minmax(0,1.5fr)_6rem_7rem_8rem_6.5rem_10rem] gap-3 border-b border-border px-5 py-3 text-[11px] tracking-[0.06em] text-antracit-300 uppercase xl:grid">
           <span>Fil</span>
           <span>Rapport</span>
           <span>Bolag</span>
@@ -80,7 +81,7 @@ export function HistoryTable({ rows }: { rows: HistoryRow[] }) {
           {rows.map((r) => (
             <li
               key={r.id}
-              className="grid grid-cols-1 gap-2 px-5 py-4 text-sm lg:grid-cols-[minmax(12rem,2fr)_minmax(10rem,1.5fr)_7rem_8rem_8rem_7rem_minmax(9rem,auto)] lg:items-center lg:gap-3"
+              className="grid grid-cols-1 gap-2 px-5 py-4 text-sm xl:grid-cols-[minmax(0,2fr)_minmax(0,1.5fr)_6rem_7rem_8rem_6.5rem_10rem] xl:items-center xl:gap-3"
               data-testid="history-row"
               data-status={r.status}
             >
@@ -94,16 +95,16 @@ export function HistoryTable({ rows }: { rows: HistoryRow[] }) {
                   </span>
                 ) : null}
               </span>
-              <span className="text-muted-foreground lg:text-foreground">{r.report}</span>
+              <span className="text-muted-foreground xl:text-foreground">{r.report}</span>
               <span>{r.companies}</span>
               <span className="num">{r.months}</span>
               <span>
                 <StatusChip tone={TONE[r.status]}>{r.statusLabel}</StatusChip>
               </span>
-              <span className={cn("num", "text-muted-foreground lg:text-foreground")}>
+              <span className={cn("num", "text-muted-foreground xl:text-foreground")}>
                 {r.publishedAt}
               </span>
-              <span className="lg:text-right">
+              <span className="xl:text-right">
                 {r.canRetract ? (
                   <Button
                     variant="outline"

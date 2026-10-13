@@ -93,7 +93,8 @@ export default async function TemplateDetailPage({ params, searchParams }: PageP
         description={`${dataset} · ${description.kindLabel}`}
         actions={<TemplateDeleteButton id={template.id} name={template.name} uses={uses} />}
       >
-        <div className="grid gap-6 xl:grid-cols-[minmax(0,1fr)_18rem]">
+        {/* grid-cols-1: on phones the columns table scrolls in its card, not the page. */}
+        <div className="grid grid-cols-1 gap-6 xl:grid-cols-[minmax(0,1fr)_18rem]">
           <div className="flex flex-col gap-6">
             <div className={CARD}>
               <Heading level={3} className="mb-1">

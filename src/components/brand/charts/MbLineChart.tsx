@@ -79,7 +79,8 @@ export function MbLineChart({
             tickFormatter={(v: number) => formatAxisTick(v, data.unit)}
           />
           <ChartTooltip
-            cursor={{ stroke: "var(--border)" }}
+            // The cursor is a path: without fill="none" it is filled with SVG's default black.
+            cursor={{ stroke: "var(--border)", fill: "none" }}
             content={<ChartTooltipContent formatter={tooltipFormatter(data.unit)} />}
           />
           {styles.length > 1 ? (
