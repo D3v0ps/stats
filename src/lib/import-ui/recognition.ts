@@ -9,10 +9,16 @@
 // matched against the sheet read at that row. Templates with the same headers
 // but different fixed companies (one per company) are told apart by the company
 // the file itself names; a file that clearly names one company is never run with
-// a template fixed to the other.
+// a template fixed to the other, unless the template's own sheet is named after
+// its company (a budget workbook with one sheet per company).
 import type { CompanyCode, CompanySource, SignatureDiff } from "@/lib/contracts";
 import { normalizeHeader } from "@/lib/core/normalize";
-import { diffSignature, matchTemplates, type CompanySuggestion } from "@/lib/ingest/recognize";
+import {
+  diffSignature,
+  matchTemplates,
+  suggestCompany,
+  type CompanySuggestion,
+} from "@/lib/ingest/recognize";
 import type { QueueItem } from "./queue";
 
 export interface RecognitionTemplate {
@@ -113,6 +119,19 @@ export function contradictsCompany(
   );
 }
 
+/**
+ * The template's sheet hint names the company the template fixes ("MB AB", "MB Restart"): on
+ * that sheet the sheet, not the file, says which company. A generic name ("Blad1", "Deltagare")
+ * is shared by both companies' exports and says nothing.
+ */
+export function sheetNamesCompany(t: Pick<RecognitionTemplate, "company" | "sheetHint">): boolean {
+  return (
+    t.company !== undefined &&
+    t.sheetHint !== undefined &&
+    suggestCompany(t.sheetHint, [])?.company === t.company
+  );
+}
+
 /** Below this header overlap a file is a new report type, not a changed one. */
 export const DRIFT_MIN_SCORE = 0.5;
 
@@ -205,10 +224,10 @@ export function planJobs(input: RecognitionInput): Job[] {
       x.m.diff.compatible || x.m.score >= DRIFT_MIN_SCORE || isOwn(x.t);
     // The two companies' exports share headers, so a file that clearly names one company
     // must not be booked with the other's template, however well it matches. A sheet's own
-    // template (by hint) stays: there the sheet, not the file name, says which company.
+    // template stays when the sheet is named after the template's company.
     const suggestion = input.companies?.[sheet];
     const ruledOut = (x: (typeof matches)[number]) =>
-      !isOwn(x.t) && contradictsCompany(x.t, suggestion);
+      !(isOwn(x.t) && sheetNamesCompany(x.t)) && contradictsCompany(x.t, suggestion);
     // A sheet that has its own templates (by hint) prefers them over generic ones. The
     // company only decides between otherwise equal matches: one template per company.
     const company = suggestion?.company;
@@ -293,8 +312,8 @@ export function runsWithSavedTemplate(
   if (template.sheetHint && item.sourceSheet && item.sourceSheet !== template.sheetHint) {
     return false;
   }
-  const ownSheet = template.sheetHint !== undefined && item.sourceSheet === template.sheetHint;
-  if (!ownSheet && contradictsCompany(template, item.suggestions.company)) return false;
+  const namedSheet = item.sourceSheet === template.sheetHint && sheetNamesCompany(template);
+  if (!namedSheet && contradictsCompany(template, item.suggestions.company)) return false;
   return diffSignature(template.headerSignature, item.signature).compatible;
 }
 

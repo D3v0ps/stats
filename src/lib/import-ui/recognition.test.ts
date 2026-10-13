@@ -6,6 +6,7 @@ import {
   contradictsCompany,
   planJobs,
   runsWithSavedTemplate,
+  sheetNamesCompany,
   templateHeaderRows,
   templateHints,
   toRecognitionTemplate,
@@ -34,6 +35,7 @@ const names = (company: CompanyCode, confidence = 0.9): CompanySuggestion => ({
   source: "filename",
   confidence,
 });
+const MBR_ORG_NR: CompanySuggestion = { company: "MBR", source: "meta", confidence: 0.98 };
 
 describe("planJobs", () => {
   it("picks a compatible template (column order does not matter)", () => {
@@ -150,6 +152,32 @@ describe("planJobs", () => {
         ["known", "MB AB", "ab"],
         ["known", "MB Restart", "r"],
       ]);
+    });
+
+    it("lets the file's company rule on a hinted sheet whose generic name names no company", () => {
+      // Saved from a multi-sheet MB AB export, so the template remembers its sheet; the
+      // MB Restart export has the same sheet names.
+      const plan = (hint: string, company: CompanySuggestion, templates: RecognitionTemplate[]) =>
+        planJobs({
+          defaultSheet: hint,
+          sheetForHint: { [hint]: hint },
+          signatures: { [hint]: SIG, Info: ["om", "rapporten"] },
+          sheetOrder: [hint, "Info"],
+          companies: { [hint]: company, Info: company },
+          templates,
+        });
+      for (const hint of ["Blad1", "Deltagare"]) {
+        const ab = t("ab", SIG, { sheetHint: hint, company: "MBAB" });
+        expect(plan(hint, names("MBR"), [ab])).toEqual([{ kind: "new", sheetName: hint }]);
+        expect(plan(hint, MBR_ORG_NR, [ab])).toEqual([{ kind: "new", sheetName: hint }]);
+        expect(plan(hint, names("MBAB"), [ab])).toMatchObject([
+          { kind: "known", template: { id: "ab" } },
+        ]);
+        const r = t("r", SIG, { sheetHint: hint, company: "MBR", updatedAt: "2025-01-01" });
+        expect(plan(hint, names("MBR"), [ab, r])).toMatchObject([
+          { kind: "known", template: { id: "r" } },
+        ]);
+      }
     });
 
     it("offers a sheet only the other company's template fits as new, next to known sheets", () => {
@@ -412,6 +440,18 @@ describe("companyFit", () => {
   });
 });
 
+describe("sheetNamesCompany", () => {
+  it("is true only when the sheet hint names the company the template fixes", () => {
+    expect(sheetNamesCompany({ sheetHint: "MB AB", company: "MBAB" })).toBe(true);
+    expect(sheetNamesCompany({ sheetHint: "MB Restart", company: "MBR" })).toBe(true);
+    expect(sheetNamesCompany({ sheetHint: "MB Restart", company: "MBAB" })).toBe(false);
+    expect(sheetNamesCompany({ sheetHint: "Blad1", company: "MBAB" })).toBe(false);
+    expect(sheetNamesCompany({ sheetHint: "Deltagare", company: "MBR" })).toBe(false);
+    expect(sheetNamesCompany({ sheetHint: "MB AB" })).toBe(false);
+    expect(sheetNamesCompany({ company: "MBAB" })).toBe(false);
+  });
+});
+
 describe("contradictsCompany", () => {
   it("rules out the other company's template on an org number or a name, not on weak hints", () => {
     const mbab = { company: "MBAB" as const };
@@ -454,20 +494,54 @@ describe("runsWithSavedTemplate", () => {
     expect(runsWithSavedTemplate(own, { ...naming("MBAB"), sourceSheet: "MB Restart" })).toBe(true);
   });
 
+  it("leaves the other company's card on a generically named sheet", () => {
+    // Both companies' multi-sheet exports dropped together, the MB AB one mapped first.
+    for (const hint of ["Blad1", "Deltagare"]) {
+      const hinted = t("ab", SIG, { sheetHint: hint, company: "MBAB" });
+      const on = { sourceSheet: hint };
+      expect(runsWithSavedTemplate(hinted, { ...naming("MBR"), ...on })).toBe(false);
+      expect(
+        runsWithSavedTemplate(hinted, {
+          ...card,
+          ...on,
+          suggestions: { period: [], company: MBR_ORG_NR },
+        }),
+      ).toBe(false);
+      expect(runsWithSavedTemplate(hinted, { ...naming("MBAB"), ...on })).toBe(true);
+      expect(runsWithSavedTemplate(hinted, { ...card, ...on })).toBe(true);
+    }
+  });
+
   it("decides as planJobs does for the same file dropped after the save", () => {
-    const hints = [null, names("MBR", 0.6), names("MBR", 0.8), names("MBR"), names("MBAB")];
-    for (const company of hints) {
-      const dropped = planJobs({
-        defaultSheet: "Blad1",
-        sheetForHint: {},
-        signatures: { Blad1: card.signature },
-        companies: { Blad1: company },
-        templates: [saved],
-      });
-      const queued = { ...card, suggestions: { period: [], company } };
-      expect(runsWithSavedTemplate(saved, queued), JSON.stringify(company)).toBe(
-        dropped[0]?.kind === "known",
-      );
+    const hints = [
+      null,
+      names("MBR", 0.6),
+      names("MBR", 0.8),
+      names("MBR"),
+      MBR_ORG_NR,
+      names("MBAB"),
+    ];
+    const templates = [
+      saved,
+      t("blad1", SIG, { company: "MBAB", sheetHint: "Blad1" }),
+      t("named", SIG, { company: "MBAB", sheetHint: "MB AB" }),
+    ];
+    for (const template of templates) {
+      const sheet = template.sheetHint ?? "Blad1";
+      for (const company of hints) {
+        const dropped = planJobs({
+          defaultSheet: sheet,
+          sheetForHint: template.sheetHint ? { [sheet]: sheet } : {},
+          signatures: { [sheet]: card.signature },
+          companies: { [sheet]: company },
+          templates: [template],
+        });
+        const queued = { ...card, sourceSheet: sheet, suggestions: { period: [], company } };
+        expect(
+          runsWithSavedTemplate(template, queued),
+          `${template.id} ${JSON.stringify(company)}`,
+        ).toBe(dropped[0]?.kind === "known");
+      }
     }
   });
 
