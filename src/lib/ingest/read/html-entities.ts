@@ -20,7 +20,7 @@ const NAMED: ReadonlyMap<string, string> = new Map([
   ["gt", ">"],
   ["quot", '"'],
   ["apos", "'"],
-  // The rest of Windows-1252, which Swedish exports also write as references.
+  // The rest of Windows-1252 (0x80–0x9F), which Swedish exports also write as references.
   ["euro", "€"],
   ["sbquo", "‚"],
   ["fnof", "ƒ"],
@@ -48,15 +48,22 @@ const NAMED: ReadonlyMap<string, string> = new Map([
   ["oelig", "œ"],
   ["zcaron", "ž"],
   ["Yuml", "Ÿ"],
+  // Not in Windows-1252: the minus sign and HTML 4's spacing and format characters.
   ["minus", "−"],
-  ["ensp", " "],
-  ["emsp", " "],
-  ["thinsp", " "],
-  ["zwnj", "‌"],
-  ["zwj", "‍"],
-  ["lrm", "‎"],
-  ["rlm", "‏"],
+  ["ensp", "\u2002"],
+  ["emsp", "\u2003"],
+  ["thinsp", "\u2009"],
+  ["zwnj", "\u200c"],
+  ["zwj", "\u200d"],
+  ["lrm", "\u200e"],
+  ["rlm", "\u200f"],
 ]);
+
+// References to direction marks and embeddings are dropped, not decoded. They carry no text,
+// only display direction, yet a header written "Kund&lrm;" would get a signature that
+// silently differs from the "kund" on screen. normalizeHeader is not the place to strip
+// them: its output is a stored key.
+const BIDI_CONTROL = /^\p{Bidi_Control}$/u;
 
 // What SheetJS decodes itself stays escaped: the markup characters, whose decoding would
 // change the document's structure, and the no-break space, which SheetJS reads as a space.
@@ -81,7 +88,8 @@ function fromCodePoint(cp: number): string {
 /**
  * Decode the named (Latin-1 and Windows-1252) and numeric character references of an HTML
  * document before SheetJS parses it. Unknown names and references without the closing ";"
- * stay as written, and every reference is decoded once ("&amp;ouml;" stays literal text).
+ * stay as written, every reference is decoded once ("&amp;ouml;" stays literal text) and
+ * references to direction marks are removed.
  */
 export function decodeCharacterReferences(html: string): string {
   return html.replace(REFERENCE, (ref, hex?: string, dec?: string, name?: string) => {
@@ -90,6 +98,7 @@ export function decodeCharacterReferences(html: string): string {
         ? NAMED.get(name)
         : fromCodePoint(hex !== undefined ? parseInt(hex, 16) : Number(dec));
     if (char === undefined) return ref;
+    if (BIDI_CONTROL.test(char)) return "";
     return LEAVE_ESCAPED.get(char) ?? char;
   });
 }

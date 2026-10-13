@@ -294,6 +294,14 @@ describe("readWorkbook – html '.xls'", () => {
       ["<b>", "<i> &ouml;"],
     ]);
   });
+
+  it("drops referenced direction marks, so headers read as shown", () => {
+    const marked = readWorkbook(
+      utf8(`<table><tr><th>Kund&lrm;</th><th>&#x200F;Ort</th></tr></table>`),
+      "kundlista.xls",
+    );
+    expect(marked.sheets[0]!.rows[0]!.map((c) => c.v)).toEqual(["Kund", "Ort"]);
+  });
 });
 
 describe("readWorkbook – sie, pdf, xml", () => {

@@ -27,6 +27,19 @@ describe("decodeCharacterReferences", () => {
     expect(decodeCharacterReferences("&#150; &#128; &#133;")).toBe("– € …");
   });
 
+  it("decodes the minus sign and the HTML 4 spacing and joiner references", () => {
+    expect(decodeCharacterReferences("&minus;5 a&ensp;b&emsp;c&thinsp;d e&zwnj;f&zwj;g")).toBe(
+      "−5 a b c d e‌f‍g",
+    );
+  });
+
+  it("drops direction marks and embeddings instead of decoding them", () => {
+    expect(decodeCharacterReferences("Kund&lrm; &rlm;Ort")).toBe("Kund Ort");
+    expect(
+      decodeCharacterReferences("a&#8206;b&#x200F;c&#x202B;d&#x202C;e&#x2067;f&#x2069;g&#1564;h"),
+    ).toBe("abcdefgh");
+  });
+
   it("replaces references to nothing, surrogates and out-of-range code points", () => {
     expect(decodeCharacterReferences("&#0;&#xD800;&#x110000;")).toBe("���");
   });
