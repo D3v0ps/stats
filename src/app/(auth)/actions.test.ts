@@ -71,6 +71,8 @@ async function run<T>(
 
 beforeEach(() => {
   vi.useFakeTimers();
+  mocks.headers = new Headers({ "x-forwarded-for": "203.0.113.7, 10.0.0.1" });
+  vi.stubEnv("VERCEL", undefined);
   vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "https://abcdefgh.supabase.co");
   vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "sb_publishable_test");
   vi.stubEnv("SUPABASE_SECRET_KEY", "sb_secret_test");
@@ -136,6 +138,22 @@ describe("login", () => {
       p_attempt_id: ATTEMPT,
       p_ok: false,
     });
+    expect(ms).toBeGreaterThanOrEqual(MIN_RESPONSE_MS);
+  });
+
+  it("on Vercel throttles by the edge's x-vercel-forwarded-for, not a sent x-forwarded-for", async () => {
+    vi.stubEnv("VERCEL", "1");
+    mocks.headers = new Headers({
+      "x-forwarded-for": "198.51.100.66",
+      "x-vercel-forwarded-for": "203.0.113.7",
+    });
+    mocks.rpc.mockResolvedValue({
+      data: { allowed: false, retry_after_s: 600, delay_ms: 0, attempt_id: null },
+      error: null,
+    });
+    const { result, ms } = await run(() => login(INITIAL_LOGIN_STATE, form("gissning")));
+    expect(mocks.rpc).toHaveBeenCalledWith("login_gate", { p_ip_hash: HASH });
+    expect(result).toMatchObject({ error: LOGIN_ERROR });
     expect(ms).toBeGreaterThanOrEqual(MIN_RESPONSE_MS);
   });
 

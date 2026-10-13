@@ -34,10 +34,21 @@ export const LoginFormSchema = z.object({
   password: z.string().min(1).max(PASSWORD_MAX_LENGTH),
 });
 
-/** First x-forwarded-for entry (set by Vercel's edge), else x-real-ip, else "unknown". */
-export function clientIp(headers: Pick<Headers, "get">): string {
-  const forwarded = headers.get("x-forwarded-for")?.split(",")[0]?.trim();
-  const candidate = forwarded || headers.get("x-real-ip")?.trim() || "";
+function firstEntry(headers: Pick<Headers, "get">, name: string): string {
+  return headers.get(name)?.split(",")[0]?.trim() ?? "";
+}
+
+/**
+ * The client IP the throttle counts attempts for, or "unknown". On Vercel the edge itself
+ * sets x-vercel-forwarded-for to the client IP, so it comes first, then x-real-ip and
+ * x-forwarded-for. Elsewhere `next start` passes a client-sent x-forwarded-for on as is;
+ * it stays first so local and e2e runs can pick their own lockout bucket.
+ */
+export function clientIp(headers: Pick<Headers, "get">, platform: { vercel: boolean }): string {
+  const order = platform.vercel
+    ? ["x-vercel-forwarded-for", "x-real-ip", "x-forwarded-for"]
+    : ["x-forwarded-for", "x-real-ip"];
+  const candidate = order.map((name) => firstEntry(headers, name)).find(Boolean) ?? "";
   // Header values are attacker-controlled: bound the length before hashing.
   return candidate ? candidate.slice(0, 64) : "unknown";
 }

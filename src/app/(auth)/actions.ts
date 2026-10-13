@@ -63,7 +63,8 @@ async function attemptLogin(formData: FormData): Promise<Outcome> {
   // parallel requests cannot all slip past the gate before any of them is recorded.
   let attemptId: string | null = null;
   if (admin) {
-    const hash = ipHash(clientIp(await headers()), env.env.loginEmail);
+    const ip = clientIp(await headers(), { vercel: Boolean(process.env.VERCEL) });
+    const hash = ipHash(ip, env.env.loginEmail);
     const gate = await admin.rpc("login_gate", { p_ip_hash: hash });
     if (gate.error) {
       // Fail closed: without the throttle nobody gets to guess.

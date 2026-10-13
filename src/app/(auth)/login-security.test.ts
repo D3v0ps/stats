@@ -19,20 +19,60 @@ import {
 import { PASSWORD_MAX_LENGTH } from "./login-state";
 
 describe("clientIp", () => {
+  const LOCAL = { vercel: false };
+  const VERCEL = { vercel: true };
+
   it("takes the first x-forwarded-for entry", () => {
-    expect(clientIp(new Headers({ "x-forwarded-for": " 203.0.113.7 , 10.0.0.1" }))).toBe(
+    expect(clientIp(new Headers({ "x-forwarded-for": " 203.0.113.7 , 10.0.0.1" }), LOCAL)).toBe(
       "203.0.113.7",
     );
   });
 
   it("falls back to x-real-ip and then to a constant", () => {
-    expect(clientIp(new Headers({ "x-real-ip": "198.51.100.2" }))).toBe("198.51.100.2");
-    expect(clientIp(new Headers({ "x-forwarded-for": "" }))).toBe("unknown");
-    expect(clientIp(new Headers())).toBe("unknown");
+    expect(clientIp(new Headers({ "x-real-ip": "198.51.100.2" }), LOCAL)).toBe("198.51.100.2");
+    expect(clientIp(new Headers({ "x-forwarded-for": "" }), LOCAL)).toBe("unknown");
+    expect(clientIp(new Headers(), LOCAL)).toBe("unknown");
   });
 
   it("bounds attacker-controlled header length", () => {
-    expect(clientIp(new Headers({ "x-forwarded-for": "x".repeat(500) }))).toHaveLength(64);
+    expect(clientIp(new Headers({ "x-forwarded-for": "x".repeat(500) }), LOCAL)).toHaveLength(64);
+    expect(
+      clientIp(new Headers({ "x-vercel-forwarded-for": "x".repeat(500) }), VERCEL),
+    ).toHaveLength(64);
+  });
+
+  it("outside Vercel keeps x-forwarded-for first, so local and e2e runs isolate by it", () => {
+    const headers = new Headers({
+      "x-vercel-forwarded-for": "203.0.113.7",
+      "x-real-ip": "203.0.113.8",
+      "x-forwarded-for": "e2e-lockout-a",
+    });
+    expect(clientIp(headers, LOCAL)).toBe("e2e-lockout-a");
+  });
+
+  it("on Vercel takes x-vercel-forwarded-for over a client-sent x-forwarded-for", () => {
+    const headers = new Headers({
+      "x-forwarded-for": "198.51.100.66",
+      "x-real-ip": "203.0.113.8",
+      "x-vercel-forwarded-for": " 203.0.113.7 , 10.0.0.1",
+    });
+    expect(clientIp(headers, VERCEL)).toBe("203.0.113.7");
+  });
+
+  it("on Vercel falls back to x-real-ip, then the first x-forwarded-for entry", () => {
+    expect(
+      clientIp(
+        new Headers({ "x-real-ip": "203.0.113.8", "x-forwarded-for": "198.51.100.66" }),
+        VERCEL,
+      ),
+    ).toBe("203.0.113.8");
+    expect(
+      clientIp(new Headers({ "x-vercel-forwarded-for": " ", "x-real-ip": "203.0.113.8" }), VERCEL),
+    ).toBe("203.0.113.8");
+    expect(clientIp(new Headers({ "x-forwarded-for": "203.0.113.9, 10.0.0.1" }), VERCEL)).toBe(
+      "203.0.113.9",
+    );
+    expect(clientIp(new Headers(), VERCEL)).toBe("unknown");
   });
 });
 
