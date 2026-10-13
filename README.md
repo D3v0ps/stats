@@ -39,7 +39,22 @@ uppladdningssidan och bygger på varandra, så ett steg som misslyckas hoppar ö
 Frånvarorapporten känns i dag igen som en ändrad tidrapport och kan inte mappas som en egen
 rapport, så `seed-c` sparar dess mall direkt i den lokala databasen innan filen laddas upp.
 `projektor`, `laptop` och `mobil` läser datan i tre skärmstorlekar, och `sist` byter lösenordet
-fram och tillbaka och loggar ut alla enheter.
+fram och tillbaka och loggar ut alla enheter. Tester märkta `@once` ändrar data (rapporter,
+inställningar, spärren) och körs bara i `laptop`.
+
+**Kontroller på varje sida**
+
+- Varje test misslyckas om webbläsaren rapporterar ett brott mot Content-Security-Policy, i alla
+  fönster testet öppnar. `e2e/csp.spec.ts` kontrollerar dessutom att varje `<script>` i sidans
+  HTML har svarets nonce.
+- `e2e/visual.spec.ts` går igenom varje sida och några lägen (diagramtips, öppen lista, dialog,
+  toast, mobilmenyn) i alla tre storlekar. Den underkänner sidor som är bredare än fönstret och
+  färger utanför varumärkets palett (`src/components/brand/tokens.ts`), och bifogar en
+  skärmbild per vy i `test-results/`.
+- `e2e/personal-data.spec.ts` kontrollerar att inga namn eller personnummer från exempelfilerna
+  och inga konsultvärden syns i presentationer, frysta rapporter, talarmanus eller utskrifter.
+- Frysta rapporter kan aldrig tas bort, så de ligger kvar i den lokala databasen till nästa
+  nollställning.
 
 **Vad varje körning gör**
 

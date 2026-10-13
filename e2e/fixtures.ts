@@ -1,8 +1,11 @@
 // The test object every spec imports. Signed in by default: each worker logs in through the UI
 // once, on first use, and keeps the session as an in-memory storageState (no token file on
-// disk). Specs opt out with test.use({ anonymous: true }).
+// disk). Specs opt out with test.use({ anonymous: true }). Every test fails on a
+// Content-Security-Policy violation in any page of its browser context.
 import { test as base, expect } from "@playwright/test";
 import { ANONYMOUS, loginThroughUi, type StorageState } from "./helpers/auth";
+import { formatCspViolations, recordCspViolations } from "./helpers/csp";
+import { frozenStandardReport } from "./helpers/reports";
 import { documentationIp } from "./helpers/throttle";
 
 interface Options {
@@ -17,6 +20,8 @@ interface Options {
 
 interface WorkerFixtures {
   signedInState: () => Promise<StorageState>;
+  /** Id of the shared frozen standard report, frozen on first use when the database has none. */
+  frozenReport: () => Promise<string>;
 }
 
 export const test = base.extend<Options, WorkerFixtures>({
@@ -43,6 +48,33 @@ export const test = base.extend<Options, WorkerFixtures>({
     },
     { scope: "worker" },
   ],
+
+  frozenReport: [
+    async ({ browser, signedInState }, use, workerInfo) => {
+      let id: Promise<string> | null = null;
+      await use(() => {
+        id ??= (async () => {
+          const context = await browser.newContext({
+            baseURL: workerInfo.project.use.baseURL,
+            storageState: await signedInState(),
+          });
+          try {
+            return await frozenStandardReport(await context.newPage());
+          } finally {
+            await context.close();
+          }
+        })();
+        return id;
+      });
+    },
+    { scope: "worker" },
+  ],
+
+  context: async ({ context }, use) => {
+    const violations = await recordCspViolations(context);
+    await use(context);
+    if (violations.length > 0) throw new Error(formatCspViolations(violations));
+  },
 
   storageState: async ({ anonymous, signedInState }, use) => {
     await use(anonymous ? ANONYMOUS : await signedInState());

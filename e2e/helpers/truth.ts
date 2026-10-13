@@ -2,6 +2,7 @@
 // Swedish formatters, so specs assert what a reader sees ("3 117 h", "−33 tkr").
 import { readFileSync } from "node:fs";
 import path from "node:path";
+import * as XLSX from "xlsx";
 import { z } from "zod";
 import { ImportTemplateSchema, type ImportTemplate } from "@/lib/contracts";
 import { CATALOG_ACCOUNT_GROUPS, CATALOG_METRICS } from "@/lib/contracts/catalog";
@@ -135,4 +136,39 @@ export function kpiText(metricKey: string, value: number): string {
 
 export function metricName(metricKey: string): string {
   return metric(metricKey).name;
+}
+
+/** Every value under a header cell of the first sheet (the header may sit below a title). */
+function columnValues(file: string, header: string): string[] {
+  const workbook = XLSX.read(readFileSync(fixtureFile(file)));
+  const sheet = workbook.Sheets[workbook.SheetNames[0] ?? ""];
+  if (!sheet) throw new Error(`${file} has no sheet`);
+  const rows = XLSX.utils.sheet_to_json<unknown[]>(sheet, { header: 1, defval: "" });
+  const headerRow = rows.findIndex((r) => r.some((c) => String(c).trim() === header));
+  const column = rows[headerRow]?.findIndex((c) => String(c).trim() === header) ?? -1;
+  if (column < 0) throw new Error(`${file} has no column ${header}`);
+  return rows
+    .slice(headerRow + 1)
+    .map((r) => String(r[column] ?? "").trim())
+    .filter((v) => v !== "");
+}
+
+/**
+ * The people in the fixtures, consultants (Intelliplan) and AF participants (Workbuster), as
+ * "Förnamn Efternamn" and as "Efternamn, Förnamn" (the frånvaro export). Names are never
+ * stored, so no page may ever show one.
+ */
+export function fixturePersonNames(): string[] {
+  const names = new Set([
+    ...columnValues("intelliplan_timmar_MBAB_2026-09.xlsx", "Konsult"),
+    ...columnValues("intelliplan_fakturering_MBAB_2026-09.xlsx", "Konsult"),
+    ...columnValues("intelliplan_konsulter_MBAB.xlsx", "Namn"),
+    ...columnValues("workbuster_deltagare_MBAB.xlsx", "Namn"),
+    ...columnValues("workbuster_deltagare_MBR.xlsx", "Namn"),
+  ]);
+  for (const name of [...names]) {
+    const [first, ...last] = name.split(" ");
+    if (first && last.length > 0) names.add(`${last.join(" ")}, ${first}`);
+  }
+  return [...names];
 }
