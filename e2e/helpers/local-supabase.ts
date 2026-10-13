@@ -9,13 +9,13 @@ import { z } from "zod";
 export const E2E_LOGIN_EMAIL = "e2e@mbstats.test";
 
 const ROOT = path.resolve(__dirname, "..", "..");
-const LOOPBACK_HOSTS = new Set(["127.0.0.1", "localhost", "[::1]", "::1"]);
+// URL.hostname keeps the brackets of an IPv6 address.
+const LOOPBACK_HOSTS = new Set(["127.0.0.1", "localhost", "[::1]"]);
 
 export interface LocalSupabase {
   url: string;
   publishableKey: string;
   secretKey: string;
-  dbUrl: string;
 }
 
 // The runner resolves the values once and caches them here; workers inherit process.env.
@@ -23,19 +23,16 @@ const ENV_NAMES = {
   url: "E2E_SUPABASE_URL",
   publishableKey: "E2E_SUPABASE_PUBLISHABLE_KEY",
   secretKey: "E2E_SUPABASE_SECRET_KEY",
-  dbUrl: "E2E_SUPABASE_DB_URL",
 } as const satisfies Record<keyof LocalSupabase, string>;
 
 const LocalSupabaseSchema = z.object({
   url: z.url({ protocol: /^https?$/ }),
   publishableKey: z.string().min(1),
   secretKey: z.string().min(1),
-  dbUrl: z.url({ protocol: /^postgres(ql)?$/ }),
 });
 
 const StatusSchema = z.object({
   API_URL: z.string(),
-  DB_URL: z.string(),
   PUBLISHABLE_KEY: z.string(),
   SECRET_KEY: z.string(),
 });
@@ -82,7 +79,6 @@ function validated(candidate: Record<keyof LocalSupabase, string | undefined>, s
     throw new Error(`Invalid local Supabase values from ${source}: ${fields.join(", ")}.`);
   }
   assertLoopback(parsed.data.url, "The Supabase URL");
-  assertLoopback(parsed.data.dbUrl, "The database URL");
   return parsed.data;
 }
 
@@ -107,29 +103,30 @@ function fromStatus(): LocalSupabase {
       url: status.data.API_URL,
       publishableKey: status.data.PUBLISHABLE_KEY,
       secretKey: status.data.SECRET_KEY,
-      dbUrl: status.data.DB_URL,
     },
     "supabase status",
   );
 }
 
 /**
- * The local stack's URL, keys and database URL: from the E2E_SUPABASE_* variables when they are
- * set (all four), else from `supabase status`. The result is cached in process.env so test
- * workers, which re-import the config, reuse it instead of calling the CLI again.
+ * The local stack's URL and keys: from the E2E_SUPABASE_* variables when they are set (all
+ * three), else from `supabase status`. The result is cached in process.env so test workers,
+ * which re-import the config, reuse it instead of calling the CLI again. The database reset and
+ * the throttle cleanup always go through the CLI's own stack (this repo's supabase/config.toml),
+ * so the variables must describe that same stack.
  */
 export function resolveLocalSupabase(): LocalSupabase {
   const fromEnv = {
     url: process.env[ENV_NAMES.url],
     publishableKey: process.env[ENV_NAMES.publishableKey],
     secretKey: process.env[ENV_NAMES.secretKey],
-    dbUrl: process.env[ENV_NAMES.dbUrl],
   };
   const given = Object.values(fromEnv).filter((v) => v !== undefined && v !== "").length;
-  if (given > 0 && given < 4) {
+  const all = Object.keys(ENV_NAMES).length;
+  if (given > 0 && given < all) {
     throw new Error(`Set all of ${Object.values(ENV_NAMES).join(", ")}, or none of them.`);
   }
-  const env = given === 4 ? validated(fromEnv, "E2E_SUPABASE_*") : fromStatus();
+  const env = given === all ? validated(fromEnv, "E2E_SUPABASE_*") : fromStatus();
   for (const key of Object.keys(ENV_NAMES) as (keyof LocalSupabase)[]) {
     process.env[ENV_NAMES[key]] = env[key];
   }
@@ -146,7 +143,7 @@ function runLocalSql(sql: string): void {
 }
 
 // `db query -o json` prints a bare array, or { rows } when the CLI thinks an agent runs it.
-const QueryOutputSchema = z.union([
+export const QueryOutputSchema = z.union([
   z.array(z.record(z.string(), z.unknown())),
   z.object({ rows: z.array(z.record(z.string(), z.unknown())) }).transform((o) => o.rows),
 ]);

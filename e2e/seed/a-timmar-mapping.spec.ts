@@ -3,6 +3,7 @@
 // accepted in the review and it is published; the August file is then read with the saved
 // template by itself. The other projects read this data.
 import type { Locator } from "@playwright/test";
+import { formatNumber } from "@/lib/core/format-sv";
 import { formatMonthShort } from "@/lib/core/month";
 import { expect, test } from "../fixtures";
 import {
@@ -42,10 +43,12 @@ test("timmar: map the September file by hand, publish it, then August by itself"
   await openUploadPage(page);
   await expect(page.getByTestId("drop-zone")).toContainText("Släpp månadens filer här");
 
-  const workerStarted = page.waitForEvent("worker");
-  await addFiles(page, [fixtureFile(AUG), fixtureFile(SEP)]);
   // The ingest worker falls back to the main thread without telling the UI; a blocked worker
-  // (for instance by a CSP) must still fail this spec.
+  // (for instance by a CSP) must still fail this spec, with a message that says so.
+  const workerStarted = page.waitForEvent("worker", { timeout: 30_000 }).catch(() => {
+    throw new Error("The ingest worker did not start: parsing fell back to the main thread.");
+  });
+  await addFiles(page, [fixtureFile(AUG), fixtureFile(SEP)]);
   const worker = await workerStarted;
   let workerClosed = false;
   worker.on("close", () => (workerClosed = true));
@@ -128,7 +131,7 @@ test("timmar: map the September file by hand, publish it, then August by itself"
 
   await page.getByTestId("company-mbab").check();
   await expect(mapping).toContainText(
-    `Visar 20 av ${counts.includedShifts} rader efter stegen, ${filtered} rader bortfiltrerade.`,
+    `Visar 20 av ${formatNumber(counts.includedShifts ?? 0)} rader efter stegen, ${formatNumber(filtered)} rader bortfiltrerade.`,
   );
 
   await page.getByTestId("save-template-button").click();
@@ -137,7 +140,9 @@ test("timmar: map the September file by hand, publish it, then August by itself"
   const panel = reviewPanel(page, SEP);
   await expectPhase(panel, "values");
   const customers = distinctValues(sep, "timmar", "kund").length;
-  await expect(panel.getByTestId("unknown-values")).toContainText(`Kund (${customers} nya)`);
+  await expect(panel.getByTestId("unknown-values")).toContainText(
+    `Kund (${formatNumber(customers)} nya)`,
+  );
   await panel.getByRole("button", { name: "Lägg till alla som nya" }).click();
   await expectPhase(panel, "ready");
   await expect(panel).toContainText(

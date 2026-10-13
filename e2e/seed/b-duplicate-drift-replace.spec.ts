@@ -42,12 +42,19 @@ test("timmar: duplicate, changed columns and a replacing re-upload", async ({ pa
   const drift = page.getByTestId("drift-view");
   await expect(drift).toContainText(`liknar rapporten ”${TEMPLATE}”`);
   await expect(drift).toContainText("Ingenting har lästs in.");
-  const changes = page.getByTestId("drift-changes");
-  await expect(changes.getByRole("listitem").filter({ hasText: "Omdöpt kolumn" })).toContainText(
-    /timmar.*antal timmar/,
+  // fixtures/README.md §2: added, removed and "not compatible" are the contract; a rename is a
+  // hint that a similarity-based detector may report as a removed plus an added column.
+  const changes = (
+    await page.getByTestId("drift-changes").getByRole("listitem").allInnerTexts()
+  ).map((text) => text.replace(/\s+/g, " ").trim());
+  expect(changes).toContain("Ny kolumn: avdelning");
+  const renamed = changes.some((c) =>
+    /^Omdöpt kolumn( \(troligen\))?: timmar antal timmar$/.test(c),
   );
-  await expect(changes.getByRole("listitem").filter({ hasText: "Ny kolumn:" })).toContainText(
-    "avdelning",
+  const removedAndAdded =
+    changes.includes("Saknad kolumn: timmar") && changes.includes("Ny kolumn: antal timmar");
+  expect(renamed || removedAndAdded, `timmar → antal timmar in ${JSON.stringify(changes)}`).toBe(
+    true,
   );
   await page.getByTestId("drift-cancel-button").click();
   await removeFromQueue(page, SEP);
