@@ -19,7 +19,12 @@ import {
   toTemplateConfig,
   validateMapping,
 } from "./mapping";
-import { planJobs, templateHints, type RecognitionTemplate } from "./recognition";
+import {
+  planJobs,
+  templateHints,
+  toRecognitionTemplate,
+  type RecognitionTemplate,
+} from "./recognition";
 import {
   MANIFEST,
   SEED_CATALOG,
@@ -227,15 +232,7 @@ describe("fixture files through the mapping helpers", () => {
 
 function recognitionTemplates(files: string[]): RecognitionTemplate[] {
   return files.flatMap((file) =>
-    templatesOf(file).map((t, i) => ({
-      id: `${file}#${i}`,
-      name: t.name,
-      datasetKey: t.datasetKey,
-      kind: t.config.kind,
-      version: t.version,
-      headerSignature: t.headerSignature,
-      ...(t.sheetHint ? { sheetHint: t.sheetHint } : {}),
-    })),
+    templatesOf(file).map((t, i) => toRecognitionTemplate({ ...t, id: `${file}#${i}` })),
   );
 }
 
@@ -253,6 +250,9 @@ async function recognize(file: string, templates: RecognitionTemplate[]) {
     defaultSheet: res.defaultSheet,
     sheetForHint: res.sheetForHint,
     signatures: Object.fromEntries(Object.entries(res.sheets).map(([k, v]) => [k, v.signature])),
+    companies: Object.fromEntries(
+      Object.entries(res.sheets).map(([k, v]) => [k, v.companySuggestion?.company]),
+    ),
     sheetOrder: read.sheets.map((s) => s.name),
     templates,
   });
@@ -268,6 +268,28 @@ describe("recognition of the fixture files", () => {
       expect(jobs, f.file).toHaveLength(1);
       expect(jobs[0]?.kind, f.file).toBe("known");
       if (jobs[0]?.kind === "known") expect(jobs[0].template.datasetKey).toBe(f.datasetKey);
+    }
+  });
+
+  it("tells the Workbuster deltagare templates of the two companies apart", async () => {
+    const files = ["workbuster_deltagare_MBAB.xlsx", "workbuster_deltagare_MBR.xlsx"];
+    const [mbab, mbr] = recognitionTemplates(files);
+    if (!mbab || !mbr) throw new Error("one template per company expected");
+    expect(mbab.headerSignature).toEqual(mbr.headerSignature);
+    for (const [newer, older] of [
+      [mbab, mbr],
+      [mbr, mbab],
+    ] as const) {
+      const templates = [
+        { ...newer, updatedAt: "2026-10-01" },
+        { ...older, updatedAt: "2026-01-01" },
+      ];
+      for (const file of files) {
+        const jobs = await recognize(file, templates);
+        expect(jobs, file).toMatchObject([
+          { kind: "known", template: { company: entry(file).choices.company } },
+        ]);
+      }
     }
   });
 

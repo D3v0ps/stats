@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
+  companyFit,
   planJobs,
+  runsWithSavedTemplate,
   templateHeaderRows,
   templateHints,
   toRecognitionTemplate,
@@ -45,6 +47,52 @@ describe("planJobs", () => {
       ],
     });
     expect(jobs[0]?.kind === "known" && jobs[0].template.id).toBe("new");
+  });
+
+  describe("templates with the same headers for different companies", () => {
+    const mbab = t("mbab", SIG, { company: "MBAB", updatedAt: "2026-06-01" });
+    const mbr = t("mbr", SIG, { company: "MBR", updatedAt: "2026-01-01" });
+    const plan = (templates: RecognitionTemplate[], company?: "MBAB" | "MBR", sig = SIG) =>
+      planJobs({
+        defaultSheet: "Blad1",
+        sheetForHint: {},
+        signatures: { Blad1: sig },
+        companies: { Blad1: company },
+        templates,
+      });
+    const picked = (jobs: ReturnType<typeof planJobs>) =>
+      jobs[0]?.kind === "new" ? null : jobs[0]?.template.id;
+
+    it("picks the template fixed to the company the file names, not the newest", () => {
+      expect(picked(plan([mbab, mbr], "MBR"))).toBe("mbr");
+      expect(picked(plan([mbr, mbab], "MBAB"))).toBe("mbab");
+      expect(picked(plan([{ ...mbab, updatedAt: "2025-01-01" }, mbr], "MBAB"))).toBe("mbab");
+    });
+
+    it("falls back to the newest when the file names no company", () => {
+      expect(picked(plan([mbr, mbab]))).toBe("mbab");
+    });
+
+    it("prefers an open template over one fixed to the other company", () => {
+      const open = t("open", SIG, { updatedAt: "2025-01-01" });
+      expect(picked(plan([mbab, open], "MBR"))).toBe("open");
+      expect(picked(plan([mbab, open], "MBAB"))).toBe("mbab");
+    });
+
+    it("lets the company decide between equally changed templates, never over a closer one", () => {
+      const changed = ["kund", "datum", "antal timmar", "status"];
+      expect(plan([mbab, mbr], "MBR", changed)[0]).toMatchObject({
+        kind: "drift",
+        template: { id: "mbr" },
+      });
+      const closer = t("closer", ["kund", "datum", "antal timmar", "status", "x"], {
+        company: "MBAB",
+      });
+      const other = t("other", ["kund", "datum", "antal timmar", "y", "z"], { company: "MBR" });
+      expect(
+        picked(plan([closer, other], "MBR", ["kund", "datum", "antal timmar", "status"])),
+      ).toBe("closer");
+    });
   });
 
   it("offers drift for a close but changed file and new for a different one", () => {
@@ -261,5 +309,61 @@ describe("planJobs", () => {
         config: { kind: "table", headerRow: 3 },
       }),
     ).toMatchObject({ headerRow: 3 });
+  });
+
+  it("carries a fixed company, and no company when it is chosen per upload or by column", () => {
+    const repo = (company: { kind: "fixed"; company: "MBR" } | { kind: "per_upload" }) =>
+      toRecognitionTemplate({
+        id: "x",
+        name: "n",
+        datasetKey: "wb_deltagare",
+        version: 1,
+        headerSignature: ["a"],
+        config: { kind: "cases", company },
+      });
+    expect(repo({ kind: "fixed", company: "MBR" }).company).toBe("MBR");
+    expect(repo({ kind: "per_upload" })).not.toHaveProperty("company");
+  });
+});
+
+describe("companyFit", () => {
+  it("is 1 for the same company, -1 for the other and 0 when either is open", () => {
+    expect(companyFit({ company: "MBAB" }, "MBAB")).toBe(1);
+    expect(companyFit({ company: "MBAB" }, "MBR")).toBe(-1);
+    expect(companyFit({ company: "MBAB" }, undefined)).toBe(0);
+    expect(companyFit({}, "MBR")).toBe(0);
+  });
+});
+
+describe("runsWithSavedTemplate", () => {
+  const saved = t("mbab", SIG, { company: "MBAB" });
+  const card = {
+    status: "new" as const,
+    signature: ["datum", "kund", "timmar", "status"],
+    suggestions: { period: [], company: null },
+  };
+  const naming = (company: "MBAB" | "MBR") => ({
+    ...card,
+    suggestions: { period: [], company: { company, source: "filename" as const, confidence: 0.9 } },
+  });
+
+  it("runs other new or changed cards with the same headers", () => {
+    expect(runsWithSavedTemplate(saved, card)).toBe(true);
+    expect(runsWithSavedTemplate(saved, { ...card, status: "drift" })).toBe(true);
+    expect(runsWithSavedTemplate(saved, naming("MBAB"))).toBe(true);
+    expect(runsWithSavedTemplate(saved, { ...card, status: "ready" })).toBe(false);
+    expect(runsWithSavedTemplate(saved, { ...card, signature: ["kund", "belopp"] })).toBe(false);
+    expect(runsWithSavedTemplate(saved, { ...card, signature: undefined })).toBe(false);
+  });
+
+  it("leaves a card for the other company to be mapped with a template of its own", () => {
+    expect(runsWithSavedTemplate(saved, naming("MBR"))).toBe(false);
+    expect(runsWithSavedTemplate(t("open", SIG), naming("MBR"))).toBe(true);
+  });
+
+  it("keeps a template saved for one sheet off the other sheets", () => {
+    const hinted = t("ab", SIG, { sheetHint: "MB AB" });
+    expect(runsWithSavedTemplate(hinted, { ...card, sourceSheet: "MB Restart" })).toBe(false);
+    expect(runsWithSavedTemplate(hinted, { ...card, sourceSheet: "MB AB" })).toBe(true);
   });
 });

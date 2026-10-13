@@ -6,10 +6,13 @@
 // map. Other visible sheets laid out like a sheet that is handled (the second
 // company's budget sheet) become new report types too, so no sheet is skipped
 // without the user seeing it. A template whose header row was picked by hand is
-// matched against the sheet read at that row.
-import type { SignatureDiff } from "@/lib/contracts";
+// matched against the sheet read at that row. Templates with the same headers
+// but different fixed companies (one per company) are told apart by the company
+// the file itself names.
+import type { CompanyCode, CompanySource, SignatureDiff } from "@/lib/contracts";
 import { normalizeHeader } from "@/lib/core/normalize";
 import { diffSignature, matchTemplates } from "@/lib/ingest/recognize";
+import type { QueueItem } from "./queue";
 
 export interface RecognitionTemplate {
   id: string;
@@ -22,6 +25,8 @@ export interface RecognitionTemplate {
   updatedAt?: string;
   /** 0-based header row saved with the template (picked by hand). */
   headerRow?: number;
+  /** The company every row is booked to, when the template fixes one. */
+  company?: CompanyCode;
 }
 
 /**
@@ -55,11 +60,12 @@ export interface TemplateLike {
   headerSignature: string[];
   sheetHint?: string;
   updatedAt?: string;
-  config: { kind: "table" | "cases" | "sie"; headerRow?: number };
+  config: { kind: "table" | "cases" | "sie"; headerRow?: number; company?: CompanySource };
 }
 
 export function toRecognitionTemplate(t: TemplateLike): RecognitionTemplate {
   const headerRow = t.config.kind === "sie" ? undefined : t.config.headerRow;
+  const company = t.config.company?.kind === "fixed" ? t.config.company.company : undefined;
   return {
     id: t.id,
     name: t.name,
@@ -70,7 +76,20 @@ export function toRecognitionTemplate(t: TemplateLike): RecognitionTemplate {
     ...(t.sheetHint ? { sheetHint: t.sheetHint } : {}),
     ...(t.updatedAt ? { updatedAt: t.updatedAt } : {}),
     ...(headerRow !== undefined ? { headerRow } : {}),
+    ...(company ? { company } : {}),
   };
+}
+
+/**
+ * How a template's fixed company fits the company a file names (file name, org number,
+ * meta lines; see suggestCompany): 1 the same, -1 the other one, 0 when either is open.
+ */
+export function companyFit(
+  template: Pick<RecognitionTemplate, "company">,
+  suggested: CompanyCode | undefined,
+): -1 | 0 | 1 {
+  if (template.company === undefined || suggested === undefined) return 0;
+  return template.company === suggested ? 1 : -1;
 }
 
 /** Below this header overlap a file is a new report type, not a changed one. */
@@ -86,6 +105,8 @@ export interface RecognitionInput {
   signaturesAt?: Record<string, Record<number, string[]>>;
   /** Sheet order of the workbook, for a stable job order. */
   sheetOrder?: string[];
+  /** sheet name -> company the file names (suggestCompany), if any. */
+  companies?: Record<string, CompanyCode | undefined>;
   templates: readonly RecognitionTemplate[];
 }
 
@@ -157,13 +178,16 @@ export function planJobs(input: RecognitionInput): Job[] {
       const s = signatureFor(t, sheet, input);
       return matchTemplates(s.signature, [t]).map((m) => ({ m, t, s }));
     });
-    // A sheet that has its own templates (by hint) prefers them over generic ones.
+    // A sheet that has its own templates (by hint) prefers them over generic ones. The
+    // company only decides between otherwise equal matches: one template per company.
+    const company = input.companies?.[sheet];
     const ranked = matches.sort(
       (a, b) =>
         Number(b.m.diff.compatible) - Number(a.m.diff.compatible) ||
         Number(ownSheet(b.t, input) === sheet) - Number(ownSheet(a.t, input) === sheet) ||
         Number(Boolean(b.t.sheetHint)) - Number(Boolean(a.t.sheetHint)) ||
         b.m.score - a.m.score ||
+        companyFit(b.t, company) - companyFit(a.t, company) ||
         (b.t.updatedAt ?? "").localeCompare(a.t.updatedAt ?? "") ||
         (a.t.id < b.t.id ? -1 : a.t.id > b.t.id ? 1 : 0),
     );
@@ -218,6 +242,23 @@ export function planJobs(input: RecognitionInput): Job[] {
   return order.length > 0
     ? jobs.sort((a, b) => order.indexOf(a.sheetName) - order.indexOf(b.sheetName))
     : jobs;
+}
+
+/**
+ * Whether a just-saved template runs another queued card right away: a new or changed
+ * card with compatible headers on the template's sheet, unless the card names another
+ * company than the one the template fixes (that card gets a template of its own).
+ */
+export function runsWithSavedTemplate(
+  template: RecognitionTemplate,
+  item: Pick<QueueItem, "status" | "signature" | "sourceSheet" | "suggestions">,
+): boolean {
+  if ((item.status !== "new" && item.status !== "drift") || !item.signature) return false;
+  if (template.sheetHint && item.sourceSheet && item.sourceSheet !== template.sheetHint) {
+    return false;
+  }
+  if (companyFit(template, item.suggestions.company?.company) < 0) return false;
+  return diffSignature(template.headerSignature, item.signature).compatible;
 }
 
 export interface DriftChange {

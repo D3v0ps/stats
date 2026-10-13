@@ -6,7 +6,6 @@
 // and the lookup step need. State transitions live in the pure queue reducer.
 import { useCallback, useEffect, useMemo, useReducer, useRef, useState } from "react";
 import type { UploadChoices } from "@/lib/contracts";
-import { diffSignature } from "@/lib/ingest/recognize";
 import { findDuplicate, type PublishedFile } from "@/lib/db/repo/import-extra";
 import type { StoredTemplate } from "@/lib/db/repo/templates";
 import { accountGroupContext, type UploadAccountGroup } from "@/lib/import-ui/budget";
@@ -23,6 +22,7 @@ import {
 } from "@/lib/import-ui/queue";
 import {
   planJobs,
+  runsWithSavedTemplate,
   templateHeaderRows,
   templateHints,
   toRecognitionTemplate,
@@ -179,6 +179,9 @@ export function useImportQueue(
         ),
         signaturesAt: rec.signaturesAt,
         sheetOrder: read.sheets.map((s) => s.name),
+        companies: Object.fromEntries(
+          Object.entries(rec.sheets).map(([k, v]) => [k, v.companySuggestion?.company]),
+        ),
         templates: recognitionTemplates,
       });
       const outcomes: JobOutcome[] = jobs.map((job) => {
@@ -314,16 +317,9 @@ export function useImportQueue(
       const requires = requiredChoices(template.config);
       dispatch({ type: "template_saved", id: itemId, template: ref, requires, headerRow });
       // Other dropped files of the same new (or changed) report type run with it right away.
+      const recognition = toRecognitionTemplate(template);
       for (const other of itemsRef.current) {
-        if (
-          other.id === itemId ||
-          (other.status !== "new" && other.status !== "drift") ||
-          !other.signature
-        )
-          continue;
-        if (template.sheetHint && other.sourceSheet && other.sourceSheet !== template.sheetHint)
-          continue;
-        if (diffSignature(template.headerSignature, other.signature).compatible) {
+        if (other.id !== itemId && runsWithSavedTemplate(recognition, other)) {
           dispatch({ type: "template_saved", id: other.id, template: ref, requires });
         }
       }
