@@ -13,6 +13,9 @@ const montserrat = localFont({
 /**
  * Last-resort error page (the root layout itself failed). Swedish, brand styled, without the
  * error's message or stack; the digest matches the server log.
+ *
+ * Its prerendered copy, which Next serves as the static 500 page, has no CSP nonce: there its
+ * scripts are blocked and the retry button does nothing, so the text also says to reload.
  */
 export default function GlobalError({
   error,

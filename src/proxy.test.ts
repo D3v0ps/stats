@@ -1,5 +1,7 @@
 import { NextRequest } from "next/server";
 import { unstable_doesMiddlewareMatch } from "next/experimental/testing/server";
+// What Next renders with: it must find the proxy's nonce in the policy.
+import { getScriptNonceFromHeader } from "next/dist/server/app-render/get-script-nonce-from-header";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { config, isPublicPath, proxy } from "./proxy";
 
@@ -10,8 +12,12 @@ function stubSupabaseEnv() {
   vi.stubEnv("NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY", "sb_publishable_test");
 }
 
-function request(path: string, cookies: Record<string, string> = {}) {
-  const req = new NextRequest(new URL(path, "https://stats.example.se"));
+function request(
+  path: string,
+  cookies: Record<string, string> = {},
+  base = "https://stats.example.se",
+) {
+  const req = new NextRequest(new URL(path, base));
   for (const [name, value] of Object.entries(cookies)) req.cookies.set(name, value);
   return req;
 }
@@ -21,6 +27,28 @@ const location = (res: Response) => {
   const value = res.headers.get("location");
   return value ? new URL(value).pathname : null;
 };
+
+const CSP = "content-security-policy";
+const directive = (policy: string, name: string) =>
+  policy
+    .split("; ")
+    .find((part) => part === name || part.startsWith(`${name} `))
+    ?.split(" ")
+    .slice(1);
+
+/** A pass-through whose policy the browser enforces and whose nonce Next stamps on scripts. */
+function expectCsp(res: Response): string {
+  expect(isNext(res)).toBe(true);
+  const policy = res.headers.get(CSP) ?? "";
+  expect(policy).toMatch(/^default-src 'self'; script-src 'self' 'nonce-[^']+' 'strict-dynamic'/);
+  // Next renders with the request headers, which reach it only through these overrides.
+  expect(res.headers.get("x-middleware-override-headers")?.split(",")).toContain(CSP);
+  expect(res.headers.get(`x-middleware-request-${CSP}`)).toBe(policy);
+  const nonce = getScriptNonceFromHeader(policy);
+  expect(nonce).toBeDefined();
+  expect(policy).toContain(`'nonce-${nonce}'`);
+  return policy;
+}
 
 afterEach(() => {
   vi.unstubAllEnvs();
@@ -84,16 +112,24 @@ describe("proxy without Supabase configuration", () => {
 
   it("lets the login page render its configuration notice", async () => {
     vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
-    const res = await proxy(request("/logga-in"));
-    expect(isNext(res)).toBe(true);
+    const policy = expectCsp(await proxy(request("/logga-in")));
+    expect(directive(policy, "connect-src")).toEqual(["'self'"]);
+  });
+
+  it("still sends the policy on public paths", async () => {
+    vi.stubEnv("NEXT_PUBLIC_SUPABASE_URL", "");
+    expectCsp(await proxy(request("/delad/token")));
   });
 });
 
 describe("proxy with Supabase configured", () => {
-  it("passes share links and assets through untouched", async () => {
+  it("passes share links and assets through without a session check", async () => {
     stubSupabaseEnv();
-    expect(isNext(await proxy(request("/delad/token")))).toBe(true);
+    const fetchSpy = vi.fn();
+    vi.stubGlobal("fetch", fetchSpy);
+    expectCsp(await proxy(request("/delad/token")));
     expect(isNext(await proxy(request("/brand/x.png")))).toBe(true);
+    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it("redirects anonymous visitors to /logga-in", async () => {
@@ -109,7 +145,55 @@ describe("proxy with Supabase configured", () => {
 
   it("shows the login page to anonymous visitors", async () => {
     stubSupabaseEnv();
-    expect(isNext(await proxy(request("/logga-in")))).toBe(true);
+    const policy = expectCsp(await proxy(request("/logga-in")));
+    expect(directive(policy, "connect-src")).toEqual(["'self'", SUPABASE_URL]);
+  });
+
+  describe("Content-Security-Policy", () => {
+    it("uses a fresh nonce for every request", async () => {
+      stubSupabaseEnv();
+      const nonces = new Set<string | undefined>();
+      for (let i = 0; i < 5; i++) {
+        nonces.add(getScriptNonceFromHeader(expectCsp(await proxy(request("/logga-in")))));
+      }
+      expect(nonces.size).toBe(5);
+    });
+
+    it("replaces a policy the client sent", async () => {
+      stubSupabaseEnv();
+      const req = request("/logga-in");
+      req.headers.set(CSP, "script-src 'nonce-chosenbytheclient'");
+      expect(expectCsp(await proxy(req))).not.toContain("chosenbytheclient");
+    });
+
+    it("is strict in production on a public host", async () => {
+      stubSupabaseEnv();
+      vi.stubEnv("NODE_ENV", "production");
+      const policy = expectCsp(await proxy(request("/logga-in")));
+      expect(directive(policy, "script-src")).not.toContain("'unsafe-eval'");
+      expect(directive(policy, "upgrade-insecure-requests")).toEqual([]);
+    });
+
+    it("allows eval and plain http in development", async () => {
+      stubSupabaseEnv();
+      vi.stubEnv("NODE_ENV", "development");
+      const policy = expectCsp(await proxy(request("/logga-in")));
+      expect(directive(policy, "script-src")).toContain("'unsafe-eval'");
+      expect(directive(policy, "upgrade-insecure-requests")).toBeUndefined();
+    });
+
+    it("does not upgrade requests for a production build on a loopback host", async () => {
+      stubSupabaseEnv();
+      vi.stubEnv("NODE_ENV", "production");
+      const byUrl = expectCsp(await proxy(request("/logga-in", {}, "http://localhost:3200")));
+      expect(directive(byUrl, "upgrade-insecure-requests")).toBeUndefined();
+      // The browser's Host header wins over the URL, which next start builds from its bind address.
+      const req = request("/logga-in");
+      req.headers.set("host", "127.0.0.1:3200");
+      const byHost = expectCsp(await proxy(req));
+      expect(directive(byHost, "upgrade-insecure-requests")).toBeUndefined();
+      expect(directive(byHost, "script-src")).not.toContain("'unsafe-eval'");
+    });
   });
 
   describe("signed in", () => {
@@ -166,8 +250,7 @@ describe("proxy with Supabase configured", () => {
     it("lets signed-in users through to protected pages", async () => {
       stubSupabaseEnv();
       stubAuthServer();
-      const res = await proxy(request("/utforska", sessionCookie));
-      expect(isNext(res)).toBe(true);
+      expectCsp(await proxy(request("/utforska", sessionCookie)));
     });
 
     it("sends signed-in users away from the login page", async () => {
@@ -218,6 +301,34 @@ describe("proxy with Supabase configured", () => {
       );
       // Responses that set auth cookies must never be cached by a CDN.
       expect(res.headers.get("cache-control")).toMatch(/no-store/);
+    });
+
+    it("keeps the policy on the response that carries refreshed cookies", async () => {
+      stubSupabaseEnv();
+      vi.stubGlobal(
+        "fetch",
+        vi.fn(async (input: RequestInfo | URL) => {
+          const url = String(input instanceof Request ? input.url : input);
+          if (url.includes("/auth/v1/token?grant_type=refresh_token")) {
+            return Response.json({
+              access_token: accessToken,
+              token_type: "bearer",
+              expires_in: 3600,
+              expires_at: now + 3600,
+              refresh_token: "new-refresh-token",
+              user,
+            });
+          }
+          if (url.endsWith("/auth/v1/user")) return Response.json(user);
+          return new Response("{}", { status: 404 });
+        }),
+      );
+      // setAll replaces the response; the page must still render with the policy it carries.
+      const res = await proxy(request("/utforska", expiredCookie("expired.token.sig")));
+      expectCsp(res);
+      const refreshed = res.headers.getSetCookie().find((c) => c.startsWith("sb-abcdefgh"));
+      expect(refreshed).toBeDefined();
+      expect(res.headers.get("x-middleware-request-cookie")).toContain(refreshed!.split(";")[0]);
     });
 
     it("clears a revoked session's cookies on the way to /logga-in", async () => {

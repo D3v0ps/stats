@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import localFont from "next/font/local";
+import { connection } from "next/server";
 import "./globals.css";
 
 // Montserrat (SIL OFL 1.1, see ./fonts/OFL.txt), self-hosted so builds never depend on Google Fonts.
@@ -19,7 +20,10 @@ export const viewport: Viewport = {
   themeColor: "#1E252B",
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // Render per request, /_not-found included: only then does Next stamp the proxy's CSP nonce
+  // on the scripts. A prerendered page has none and would never hydrate.
+  await connection();
   return (
     <html lang="sv" className={`${montserrat.variable} h-full antialiased`}>
       <body className="min-h-full">{children}</body>

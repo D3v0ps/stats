@@ -1,10 +1,16 @@
-// Next 16 proxy (formerly middleware): keeps the Supabase session cookies fresh and sends
-// anonymous visitors to /logga-in. Not a security boundary: protected pages and actions still
-// call requireSession() themselves.
+// Next 16 proxy (formerly middleware): sets the per-request Content-Security-Policy, keeps the
+// Supabase session cookies fresh and sends anonymous visitors to /logga-in. Not a security
+// boundary: protected pages and actions still call requireSession() themselves.
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { checkPublicEnv } from "@/lib/db/env";
 import { LOGIN_PATH, sessionFromClaims } from "@/lib/db/session";
+import {
+  buildContentSecurityPolicy,
+  createNonce,
+  CSP_HEADER,
+  isLoopbackHost,
+} from "@/lib/security/csp";
 
 const PUBLIC_EXACT = new Set([
   LOGIN_PATH,
@@ -46,15 +52,32 @@ function redirectTo(request: NextRequest, pathname: string, refreshed?: NextResp
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const isLogin = pathname === LOGIN_PATH;
-  if (!isLogin && isPublicPath(pathname)) return NextResponse.next();
-
   const env = checkPublicEnv();
+
+  const policy = buildContentSecurityPolicy({
+    nonce: createNonce(),
+    dev: process.env.NODE_ENV === "development",
+    supabaseUrl: env.ok ? env.env.supabaseUrl : null,
+    secureTransport: !isLoopbackHost(request.headers.get("host") ?? request.nextUrl.host),
+  });
+  // Next reads the nonce from the request's policy (forwarded by NextResponse.next({ request }))
+  // and stamps it on its scripts; the browser enforces the copy on the response. Redirects need
+  // none: the browser fetches their target with a fresh nonce.
+  request.headers.set(CSP_HEADER, policy);
+  const passThrough = () => {
+    const response = NextResponse.next({ request });
+    response.headers.set(CSP_HEADER, policy);
+    return response;
+  };
+
+  if (!isLogin && isPublicPath(pathname)) return passThrough();
+
   if (!env.ok) {
     // Nothing can be authenticated without Supabase: the login page explains what is missing.
-    return isLogin ? NextResponse.next() : redirectTo(request, LOGIN_PATH);
+    return isLogin ? passThrough() : redirectTo(request, LOGIN_PATH);
   }
 
-  let response = NextResponse.next({ request });
+  let response = passThrough();
   const supabase = createServerClient(env.env.supabaseUrl, env.env.supabasePublishableKey, {
     cookies: {
       getAll() {
@@ -62,7 +85,7 @@ export async function proxy(request: NextRequest) {
       },
       setAll(cookiesToSet, headers) {
         for (const { name, value } of cookiesToSet) request.cookies.set(name, value);
-        response = NextResponse.next({ request });
+        response = passThrough();
         for (const { name, value, options } of cookiesToSet) {
           response.cookies.set(name, value, options);
         }
