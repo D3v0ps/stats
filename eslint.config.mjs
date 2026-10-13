@@ -20,6 +20,12 @@ const eslintConfig = defineConfig([
     "playwright-report/**",
     "test-results/**",
   ]),
+  {
+    // Playwright fixtures hand their value to the test through a callback named `use`, which
+    // the React hooks rule mistakes for React's use().
+    files: ["e2e/**/*.ts"],
+    rules: { "react-hooks/rules-of-hooks": "off" },
+  },
 ]);
 
 export default eslintConfig;
