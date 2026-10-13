@@ -123,13 +123,10 @@ describe("proxy without Supabase configuration", () => {
 });
 
 describe("proxy with Supabase configured", () => {
-  it("passes share links and assets through without a session check", async () => {
+  it("lets anonymous visitors open share links and assets", async () => {
     stubSupabaseEnv();
-    const fetchSpy = vi.fn();
-    vi.stubGlobal("fetch", fetchSpy);
     expectCsp(await proxy(request("/delad/token")));
     expect(isNext(await proxy(request("/brand/x.png")))).toBe(true);
-    expect(fetchSpy).not.toHaveBeenCalled();
   });
 
   it("redirects anonymous visitors to /logga-in", async () => {
@@ -166,33 +163,20 @@ describe("proxy with Supabase configured", () => {
       expect(expectCsp(await proxy(req))).not.toContain("chosenbytheclient");
     });
 
-    it("is strict in production on a public host", async () => {
+    it("is strict in production and still works over plain http", async () => {
       stubSupabaseEnv();
       vi.stubEnv("NODE_ENV", "production");
-      const policy = expectCsp(await proxy(request("/logga-in")));
+      // next start opened through its network address: upgrading would send /_next/static to https.
+      const policy = expectCsp(await proxy(request("/logga-in", {}, "http://192.168.1.20:3000")));
       expect(directive(policy, "script-src")).not.toContain("'unsafe-eval'");
-      expect(directive(policy, "upgrade-insecure-requests")).toEqual([]);
+      expect(directive(policy, "upgrade-insecure-requests")).toBeUndefined();
     });
 
-    it("allows eval and plain http in development", async () => {
+    it("allows eval in development", async () => {
       stubSupabaseEnv();
       vi.stubEnv("NODE_ENV", "development");
       const policy = expectCsp(await proxy(request("/logga-in")));
       expect(directive(policy, "script-src")).toContain("'unsafe-eval'");
-      expect(directive(policy, "upgrade-insecure-requests")).toBeUndefined();
-    });
-
-    it("does not upgrade requests for a production build on a loopback host", async () => {
-      stubSupabaseEnv();
-      vi.stubEnv("NODE_ENV", "production");
-      const byUrl = expectCsp(await proxy(request("/logga-in", {}, "http://localhost:3200")));
-      expect(directive(byUrl, "upgrade-insecure-requests")).toBeUndefined();
-      // The browser's Host header wins over the URL, which next start builds from its bind address.
-      const req = request("/logga-in");
-      req.headers.set("host", "127.0.0.1:3200");
-      const byHost = expectCsp(await proxy(req));
-      expect(directive(byHost, "upgrade-insecure-requests")).toBeUndefined();
-      expect(directive(byHost, "script-src")).not.toContain("'unsafe-eval'");
     });
   });
 
@@ -232,20 +216,29 @@ describe("proxy with Supabase configured", () => {
 
     function stubAuthServer() {
       // HS256 tokens are verified by asking the Auth server for the user.
-      vi.stubGlobal(
-        "fetch",
-        vi.fn(async (input: RequestInfo | URL) => {
-          const url = String(input instanceof Request ? input.url : input);
-          if (url.endsWith("/auth/v1/user")) {
-            return new Response(JSON.stringify(user), {
-              status: 200,
-              headers: { "content-type": "application/json" },
-            });
-          }
-          return new Response("{}", { status: 404 });
-        }),
-      );
+      const authServer = vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input instanceof Request ? input.url : input);
+        if (url.endsWith("/auth/v1/user")) {
+          return new Response(JSON.stringify(user), {
+            status: 200,
+            headers: { "content-type": "application/json" },
+          });
+        }
+        return new Response("{}", { status: 404 });
+      });
+      vi.stubGlobal("fetch", authServer);
+      return authServer;
     }
+
+    it("passes share links and assets through without verifying the session", async () => {
+      stubSupabaseEnv();
+      // The Auth server would accept the session, so only the public-path short-circuit keeps
+      // the proxy from asking it.
+      const authServer = stubAuthServer();
+      expectCsp(await proxy(request("/delad/token", sessionCookie)));
+      expect(isNext(await proxy(request("/brand/x.png", sessionCookie)))).toBe(true);
+      expect(authServer).not.toHaveBeenCalled();
+    });
 
     it("lets signed-in users through to protected pages", async () => {
       stubSupabaseEnv();

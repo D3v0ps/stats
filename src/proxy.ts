@@ -5,12 +5,7 @@ import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
 import { checkPublicEnv } from "@/lib/db/env";
 import { LOGIN_PATH, sessionFromClaims } from "@/lib/db/session";
-import {
-  buildContentSecurityPolicy,
-  createNonce,
-  CSP_HEADER,
-  isLoopbackHost,
-} from "@/lib/security/csp";
+import { buildContentSecurityPolicy, createNonce, CSP_HEADER } from "@/lib/security/csp";
 
 const PUBLIC_EXACT = new Set([
   LOGIN_PATH,
@@ -58,7 +53,6 @@ export async function proxy(request: NextRequest) {
     nonce: createNonce(),
     dev: process.env.NODE_ENV === "development",
     supabaseUrl: env.ok ? env.env.supabaseUrl : null,
-    secureTransport: !isLoopbackHost(request.headers.get("host") ?? request.nextUrl.host),
   });
   // Next reads the nonce from the request's policy (forwarded by NextResponse.next({ request }))
   // and stamps it on its scripts; the browser enforces the copy on the response. Redirects need

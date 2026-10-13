@@ -15,8 +15,6 @@ export interface CspOptions {
   dev: boolean;
   /** NEXT_PUBLIC_SUPABASE_URL: the browser calls Supabase Auth itself (password change, token refresh). */
   supabaseUrl: string | null;
-  /** False on loopback hosts, where a production build is served over plain http (e2e). */
-  secureTransport: boolean;
 }
 
 /** 16 random bytes, base64. */
@@ -25,38 +23,21 @@ export function createNonce(): string {
   return btoa(String.fromCharCode(...bytes));
 }
 
-/** True for localhost, *.localhost, 127.0.0.0/8 and ::1, with or without a port (a Host header). */
-export function isLoopbackHost(host: string): boolean {
-  let hostname: string;
-  try {
-    hostname = new URL(`http://${host}`).hostname;
-  } catch {
-    return false;
-  }
-  return (
-    hostname === "localhost" ||
-    hostname.endsWith(".localhost") ||
-    hostname === "[::1]" ||
-    /^127\.\d+\.\d+\.\d+$/.test(hostname)
-  );
-}
+// scheme://host[:port] and nothing else. URL keeps ";" and "," in a host name, so an env value
+// such as https://x;sandbox would otherwise add a directive, or with "," a second policy.
+const ORIGIN = /^https?:\/\/(?:[a-z0-9-]+(?:\.[a-z0-9-]+)*|\[[0-9a-f:]+\])(?::\d{1,5})?$/i;
 
 function httpOrigin(url: string | null): string | null {
   if (!url) return null;
   try {
-    const parsed = new URL(url);
-    return parsed.protocol === "https:" || parsed.protocol === "http:" ? parsed.origin : null;
+    const { origin } = new URL(url);
+    return ORIGIN.test(origin) ? origin : null;
   } catch {
     return null;
   }
 }
 
-export function buildContentSecurityPolicy({
-  nonce,
-  dev,
-  supabaseUrl,
-  secureTransport,
-}: CspOptions): string {
+export function buildContentSecurityPolicy({ nonce, dev, supabaseUrl }: CspOptions): string {
   if (!NONCE.test(nonce)) throw new Error("CSP nonce must be base64");
   const supabase = httpOrigin(supabaseUrl);
   const directives: [string, ...string[]][] = [
@@ -85,8 +66,9 @@ export function buildContentSecurityPolicy({
     ["base-uri", "'none'"],
     ["form-action", "'self'"],
     ["frame-ancestors", "'none'"],
+    // No upgrade-insecure-requests: HSTS already keeps deployments on https, and the directive
+    // would send /_next/static to https on a production build served over plain http (next
+    // start opened through its network address).
   ];
-  // Local Supabase and loopback production builds are plain http.
-  if (!dev && secureTransport) directives.push(["upgrade-insecure-requests"]);
   return directives.map((directive) => directive.join(" ")).join("; ");
 }
