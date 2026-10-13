@@ -275,6 +275,25 @@ describe("readWorkbook – html '.xls'", () => {
     expect(wb1252.encoding).toBe("windows-1252");
     expect(wb1252.sheets[0]!.rows[0]![0]!.v).toBe("Göteborg");
   });
+
+  it("decodes named and numeric character references in cells", () => {
+    const entities = readWorkbook(
+      utf8(
+        `<table><tr><th>Arbetsst&auml;lle</th><th>Kund</th></tr>` +
+          `<tr><td>S&ouml;dert&auml;lje&nbsp;</td><td>Ica &amp; Coop</td></tr>` +
+          `<tr><td>&Aring;rsta</td><td>&#214;rebro &#xE5;keri</td></tr>` +
+          `<tr><td>&lt;b&gt;</td><td>&#60;i&#62; &amp;ouml;</td></tr></table>`,
+      ),
+      "kundlista.xls",
+    );
+    const rows = entities.sheets[0]!.rows.map((r) => r.map((c) => c.v));
+    expect(rows).toEqual([
+      ["Arbetsställe", "Kund"],
+      ["Södertälje ", "Ica & Coop"],
+      ["Årsta", "Örebro åkeri"],
+      ["<b>", "<i> &ouml;"],
+    ]);
+  });
 });
 
 describe("readWorkbook – sie, pdf, xml", () => {

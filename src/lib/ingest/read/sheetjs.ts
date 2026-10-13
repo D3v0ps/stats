@@ -5,6 +5,7 @@ import * as XLSX from "xlsx";
 import type { CellRange, RawCell, RawSheet } from "@/lib/contracts";
 import { EMPTY_CELL } from "../cells";
 import { hasDateTokens } from "../formats";
+import { decodeCharacterReferences } from "./html-entities";
 
 export interface SheetJsResult {
   sheets: RawSheet[];
@@ -140,10 +141,13 @@ function stackSheets(sheets: RawSheet[]): RawSheet[] {
 
 /**
  * HTML tables saved as ".xls". raw:true keeps every cell as the text shown:
- * SheetJS would otherwise read "8,5" as 85 and guess US dates.
+ * SheetJS would otherwise read "8,5" as 85 and guess US dates. Character
+ * references ("&ouml;", "&#246;") are decoded first, since SheetJS knows few.
  */
 export function readHtmlWorkbook(html: string): SheetJsResult {
-  const result = toResult(XLSX.read(html, { ...BASE_OPTS, type: "string", raw: true }));
+  const result = toResult(
+    XLSX.read(decodeCharacterReferences(html), { ...BASE_OPTS, type: "string", raw: true }),
+  );
   return { ...result, sheets: stackSheets(result.sheets) };
 }
 

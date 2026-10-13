@@ -318,6 +318,18 @@ describe("recognition of the fixture files", () => {
     expect(jobs).toEqual([{ kind: "new", sheetName: expect.any(String) }]);
   });
 
+  it("decodes the HTML entities of the kundlista", async () => {
+    const file = "intelliplan_kundlista.xls";
+    await load(file);
+    const res = ok<InspectResponse>(await service.handle({ op: "inspect", fileId: file }));
+    expect(res.signature).toEqual(["kundnummer", "kundnamn", "arbetsställe"]);
+    const samples = res.columns.flatMap((c) => c.samples);
+    expect(samples).toEqual(
+      expect.arrayContaining(["Budbee Södertälje", "Terminal Södertälje", "Västberga"]),
+    );
+    expect(samples.some((s) => /&\w+;/.test(s))).toBe(false);
+  });
+
   it("suggests month and company for per-upload files", async () => {
     await load("intelliplan_fakturering_MBAB_2026-09.xlsx");
     const res = ok<RecognizeResponse>(
