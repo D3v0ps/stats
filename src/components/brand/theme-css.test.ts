@@ -1,9 +1,9 @@
 // src/app/globals.css is the theme contract for every module: check it against the brand spec
 // and against tokens.ts, so the two can never drift apart.
 import { readFileSync } from "node:fs";
+import { createRequire } from "node:module";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import { Scanner } from "@tailwindcss/oxide";
 import { compile } from "tailwindcss";
 import { describe, expect, it } from "vitest";
 import { cssColorOffenders } from "./palette-audit";
@@ -13,6 +13,17 @@ const ROOT = fileURLToPath(new URL("../../../", import.meta.url));
 const GLOBALS = path.join(ROOT, "src/app/globals.css");
 const css = readFileSync(GLOBALS, "utf8");
 const tailwindCss = readFileSync(path.join(ROOT, "node_modules/tailwindcss/index.css"), "utf8");
+
+/** The part of @tailwindcss/oxide this test uses. */
+interface Oxide {
+  Scanner: new (options: { sources: { base: string; pattern: string; negated: boolean }[] }) => {
+    scan(): string[];
+  };
+}
+// The build's own scanner: oxide as @tailwindcss/turbopack resolves it, so a bump of the loader
+// can never leave this test scanning with another version.
+const turbopack = createRequire(import.meta.url).resolve("@tailwindcss/turbopack");
+const { Scanner } = createRequire(turbopack)("@tailwindcss/oxide") as Oxide;
 
 /** Custom properties declared directly inside the first block whose selector is `selector`. */
 function block(selector: string): Record<string, string> {
