@@ -1,9 +1,11 @@
 // src/app/globals.css is the theme contract for every module: check it against the brand spec
 // and against tokens.ts, so the two can never drift apart.
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { compile } from "tailwindcss";
 import { describe, expect, it } from "vitest";
+import { cssColorOffenders } from "./palette-audit";
 import { BRAND_COLORS, PALETTE } from "./tokens";
 
 const ROOT = fileURLToPath(new URL("../../../", import.meta.url));
@@ -21,6 +23,35 @@ function block(selector: string): Record<string, string> {
     vars[match[1]!] = match[2]!.trim().toLowerCase();
   }
   return vars;
+}
+
+/** An `@import` as Tailwind resolves it: a relative path, or a package's `style` export. */
+function resolveStylesheet(id: string, base: string): string {
+  if (id.startsWith(".")) return path.resolve(base, id);
+  const name = id.split("/", id.startsWith("@") ? 2 : 1).join("/");
+  const dir = path.join(ROOT, "node_modules", name);
+  const pkg = JSON.parse(readFileSync(path.join(dir, "package.json"), "utf8")) as {
+    exports?: Record<string, string | { style?: string }>;
+  };
+  const entry = pkg.exports?.[`.${id.slice(name.length)}`];
+  const file = typeof entry === "string" ? entry : entry?.style;
+  if (!file) throw new Error(`No stylesheet export for ${id}`);
+  return path.join(dir, file);
+}
+
+/**
+ * Class candidates in src/**, split roughly like Tailwind's scanner: Tailwind drops what is
+ * not a class. Splitting once more without the single quote keeps classes that contain one.
+ */
+function sourceCandidates(): Set<string> {
+  const candidates = new Set<string>();
+  const src = path.join(ROOT, "src");
+  for (const file of readdirSync(src, { recursive: true, encoding: "utf8" })) {
+    if (!/\.(tsx?|css)$/.test(file)) continue;
+    const text = readFileSync(path.join(src, file), "utf8");
+    for (const word of [...text.split(/[\s"'`]+/), ...text.split(/[\s"`]+/)]) candidates.add(word);
+  }
+  return candidates;
 }
 
 describe("globals.css theme", () => {
@@ -85,6 +116,20 @@ describe("globals.css theme", () => {
       const antracit = value!.replaceAll("rgb(0 0 0 /", "rgb(30 37 43 /");
       expect(flat(theme[name!] ?? "missing"), name).toBe(flat(antracit));
     }
+  });
+
+  it("compiles the classes used in src/** to palette colours only", async () => {
+    const compiler = await compile(css, {
+      base: path.dirname(GLOBALS),
+      loadStylesheet: async (id, base) => {
+        const file = resolveStylesheet(id, base);
+        return { path: file, base: path.dirname(file), content: readFileSync(file, "utf8") };
+      },
+    });
+    const output = compiler.build([...sourceCandidates()]);
+    // shadcn's overlay shadows are in there, so the check has something to bite on.
+    expect(output).toContain(".shadow-md");
+    expect(cssColorOffenders(output)).toEqual([]);
   });
 
   it("has the 18px card radius, a soft shadow and no dark theme", () => {
